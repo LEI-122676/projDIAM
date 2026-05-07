@@ -11,8 +11,12 @@ const Header = () => {
       </div>
       <span className="breadcrumb">Páginas / Perfil</span>
       <div className="auth-group">
-        <span className="login-text">Registar/Login</span>
-        <span className="logout-text">Sair</span>
+        <button className="login-text" onClick={() => window.location.href = '/login'}>
+          Registar/Login
+        </button>
+        <button className="logout-text" onClick={() => window.location.href = '/login'}>
+          Sair
+        </button>
       </div>
     </header>
   );
