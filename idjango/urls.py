@@ -9,7 +9,7 @@ urlpatterns = [
     path('api/receitas/', views.receitas),
     path('api/receitas/<int:receita_id>', views.receita_detail),
 
-    path('api/evento/', views.eventos),
+    path('api/eventos/', views.eventos),
     path('api/eventos/<int:evento_id>', views.evento_detail),
 
     path('api/ingredientes/', views.ingredientes),
