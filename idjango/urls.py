@@ -5,6 +5,7 @@ app_name = 'idjango'
 urlpatterns = [
     path('api/utilizadores/', views.utilizadores),
     path('api/utilizadores/<int:utilizador_id>', views.utilizador_detail),
+    path('api/utilizadores/<int:utilizador_id>/frigorifico', views.utilizador_frigorifico),
 
     path('api/receitas/', views.receitas),
     path('api/receitas/<int:receita_id>', views.receita_detail),
@@ -14,4 +15,10 @@ urlpatterns = [
 
     path('api/ingredientes/', views.ingredientes),
     path('api/ingredientes/<int:ingrediente_id>', views.ingrediente_detail),
+
+    path('api/frigorificos/', views.frigorificos),
+    path('api/frigorificos/<int:frigorifico_id>', views.frigorifico_detail),
+
+    path('api/comentarios/', views.comentarios),
+    path('api/comentarios/<int:comentario_id>', views.comentario_detail),
 ]

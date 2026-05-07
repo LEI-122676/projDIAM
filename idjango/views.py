@@ -1,3 +1,227 @@
-from django.shortcuts import render
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework import status
+from .serializers import * # (1)
+from .models import *
+import os
 
-# Create your views here.
+QUERY_LIMIT = int(os.environ.get('QUERY_LIMIT', 50))
+
+@api_view(['GET', 'POST']) # (2)
+def utilizadores(request):
+
+    if request.method == 'GET': # (3)
+        utilizador_list = Utilizador.objects.all()
+        serializer = UtilizadorSerializer(utilizador_list, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST': # (3)
+        serializer = UtilizadorSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE']) # (2) e (4)
+def utilizador_detail(request, utilizador_id):
+    try:
+        utilizador = Utilizador.objects.get(pk=utilizador_id)
+    except Utilizador.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = UtilizadorSerializer(utilizador)
+        return Response(serializer.data)
+
+    if request.method == 'PUT':
+        serializer = UtilizadorSerializer(utilizador, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+    elif request.method == 'DELETE':
+        utilizador.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def utilizador_frigorifico(request, utilizador_id):
+    try:
+        utilizador = Utilizador.objects.get(pk=utilizador_id)
+        # Find the fridge linked to this Utilizador's user
+        frigorifico = Frigorifico.objects.get(usuario=utilizador.utilizador)
+    except Utilizador.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    except Frigorifico.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+        
+    if request.method == 'GET':
+        serializer = FrigorificoSerializer(frigorifico)
+        return Response(serializer.data)
+    
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'POST'])
+def receitas(request):
+    if request.method == 'GET':
+        receita_list = Receita.objects.all()[:QUERY_LIMIT]
+        serializer = ReceitaSerializer(receita_list, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = ReceitaSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def receita_detail(request, receita_id):
+    try:
+        receita = Receita.objects.get(pk=receita_id)
+    except Receita.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = ReceitaSerializer(receita)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = ReceitaSerializer(receita, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+    elif request.method == 'DELETE':
+        receita.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'POST'])
+def eventos(request):
+    if request.method == 'GET':
+        evento_list = Evento.objects.all()
+        serializer = EventoSerializer(evento_list, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = EventoSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT', 'DELETE'])
+def evento_detail(request, evento_id):
+    try:
+        evento = Evento.objects.get(pk=evento_id)
+    except Evento.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        serializer = EventoSerializer(evento, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+    elif request.method == 'DELETE':
+        evento.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'POST'])
+def ingredientes(request):
+    if request.method == 'GET':
+        ingrediente_list = Ingrediente.objects.all()
+        serializer = IngredienteSerializer(ingrediente_list, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = IngredienteSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def ingrediente_detail(request, ingrediente_id):
+    try:
+        ingrediente = Ingrediente.objects.get(pk=ingrediente_id)
+    except Ingrediente.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = IngredienteSerializer(ingrediente)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = IngredienteSerializer(ingrediente, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+    elif request.method == 'DELETE':
+        ingrediente.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'POST'])
+def frigorificos(request):
+    if request.method == 'GET':
+        frigorifico_list = Frigorifico.objects.all()
+        serializer = FrigorificoSerializer(frigorifico_list, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = FrigorificoSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def frigorifico_detail(request, frigorifico_id):
+    try:
+        frigorifico = Frigorifico.objects.get(pk=frigorifico_id)
+    except Frigorifico.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = FrigorificoSerializer(frigorifico)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = FrigorificoSerializer(frigorifico, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+    elif request.method == 'DELETE':
+        frigorifico.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'POST'])
+def comentarios(request):
+    if request.method == 'GET':
+        comentarios_list = Comentario.objects.all()
+        serializer = ComentarioSerializer(comentarios_list, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = ComentarioSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def comentario_detail(request, comentario_id):
+    try:
+        comentario = Comentario.objects.get(pk=comentario_id)
+    except Comentario.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = ComentarioSerializer(comentario)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = ComentarioSerializer(comentario, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+    elif request.method == 'DELETE':
+        comentario.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
