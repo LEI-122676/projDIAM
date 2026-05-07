@@ -260,3 +260,112 @@ html, body, #root {
     cursor: pointer;
     transition: transform 0.2s;
 }
+
+.registarion-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* CONTAINER PRINCIPAL DA AUTH */
+.auth-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 60px 20px;
+    background-color: #ffffff; /* Fundo branco como na imagem */
+    position: relative;
+}
+
+/* SEÇÕES (LOGIN E REGISTO) */
+.auth-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Alinhado à esquerda como na imagem */
+    padding: 0 10%;
+    max-width: 500px;
+}
+
+.auth-title {
+    font-size: 48px;
+    color: #2E4A35;
+    margin-bottom: 40px;
+    font-weight: 700;
+    border-bottom: none;
+}
+
+
+/* FORMULÁRIOS E INPUTS */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 90%;
+}
+
+.auth-input {
+    width: 150%;
+    padding: 15px 25px;
+    border: 1.5px solid #EAE6D6; /* Cor da borda suave */
+    border-radius: 30px; /* Inputs ovais */
+    font-size: 1rem;
+    color: #716259;
+    outline: none;
+    background-color: #f5f5f5;
+    transition: border-color 0.2s;
+}
+
+.auth-input::placeholder {
+    color: #8c8a8a;
+}
+
+.auth-input:focus {
+    border-color: #2E4A35;
+}
+
+/* BOTÕES */
+.btn-auth {
+    background-color: #344938; /* Verde escuro da imagem */
+    color: white;
+    border: none;
+    padding: 15px 45px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    width: fit-content;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+
+.btn-auth:hover {
+    background-color: #233a2a;
+}
+
+/* DIVISOR CENTRAL (LINHA E O "OR") */
+.auth-divider {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: #EAEAEA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateX(-50%);
+}
+
+.auth-divider span {
+    background-color: #ffffff;
+    padding: 20px 0;
+    color: #D1D1D1;
+    font-style: italic;
+    font-size: 1.8rem;
+    font-family: serif; /* Estilo mais elegante para o "OR" */
+}

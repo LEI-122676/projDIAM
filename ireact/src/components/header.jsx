@@ -1,11 +1,12 @@
 import React from 'react'; // Adicionado o nome React para garantir compatibilidade
 import '../css/styles.css';
+import forks from '../assets/forks.svg';
 
 const Header = () => {
   return (
     <header className="header">
       <div className="logo">
-        <div style={{ width: '30px', height: '30px', background: '#2E4A35',  borderRadius: '6px' }}></div>
+        <img src={forks} alt="Forks" />
         <span className="brand-name">iFridge</span>
       </div>
       <span className="breadcrumb">Páginas / Perfil</span>
