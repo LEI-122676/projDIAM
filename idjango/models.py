@@ -11,12 +11,15 @@ class Evento(models.Model):
     data = models.DateField()
     descricao = models.TextField()
     participantes = models.ForeignKey(User, on_delete=models.CASCADE, related_name='eventos_inscritos')
+    capacidade_max = models.IntegerField()
 
 class Receita(models.Model):
     nome = models.CharField(max_length=50)
     autor = models.ForeignKey(User, on_delete=models.CASCADE)
     instrucao = models.TextField()
     ingredientes = models.ManyToManyField(Ingrediente)
+    classificacao = models.FloatField()
+    comentarios = models
 
 class Frigorifico(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -26,3 +29,6 @@ class Utilizador(models.Model):
     utilizador = models.OneToOneField(User, on_delete=models.CASCADE)       # "extends"
     eventos = models.ManyToManyField(Evento, on_delte=models.DO_NOTHING)
     receitas = models.ManyToManyField(Receita, on_delete=models.DO_NOTHING)
+
+#class Comentario(models.Model):
+#    utilizador = models.
