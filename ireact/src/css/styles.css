@@ -31,10 +31,19 @@ html, body, #root {
     background-color: #ffffff;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: 0 40px;
     border-bottom: 1px solid #EAEAEA;
     flex-shrink: 0;
+    gap: 30px;
+}
+
+/* Container que joga o login/logout para a direita */
+.auth-group {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .main-wrapper {
@@ -45,13 +54,12 @@ html, body, #root {
 
 /* 3. SIDEBAR */
 .sidebar {
-    width: 240px; /* Um pouco mais larga para melhor escala */
+    width: 240px;
     background-color: #FDFBEE;
     border-right: 1px solid #EAEAEA;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    /* Faz o conteúdo começar mais abaixo do topo */
     padding-top: 20px;
 }
 
@@ -63,7 +71,6 @@ html, body, #root {
     display: flex;
     align-items: center;
     gap: 20px;
-    /* Aumentado o padding vertical para as "caixas" serem maiores */
     padding: 22px 40px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -75,7 +82,7 @@ html, body, #root {
 }
 
 .nav-icon-img {
-    width: 28px; /* Ícones ligeiramente maiores */
+    width: 28px;
     height: 28px;
     object-fit: contain;
     filter: invert(41%) sepia(11%) saturate(1200%) hue-rotate(345deg) brightness(95%) contrast(85%);
@@ -84,13 +91,11 @@ html, body, #root {
 
 .nav-item span {
     font-weight: 700;
-    font-size: 1.2rem; /* Texto ligeiramente maior */
+    font-size: 1.2rem;
     letter-spacing: -0.01em;
     color: #716259;
-    transition: color 0.2s ease;
 }
 
-/* Efeito Hover Sincronizado */
 .nav-item:hover .nav-icon-img {
     filter: invert(21%) sepia(15%) saturate(2500%) hue-rotate(92deg) brightness(90%) contrast(90%);
 }
@@ -132,7 +137,7 @@ html, body, #root {
 .shortcut-card {
     background-color: #FDFBEE;
     border: 1px solid #D1CDBC;
-    padding: 25px; /* Shortcut cards maiores */
+    padding: 25px;
     border-radius: 15px;
     text-align: center;
     font-weight: 700;
@@ -202,11 +207,25 @@ html, body, #root {
     padding: 5px 0;
 }
 
-/* BOTÕES */
-.profile-actions {
-    display: flex;
-    gap: 15px;
-    margin-top: 20px;
+/* 6. BOTÕES E LINKS DE AUTENTICAÇÃO */
+.login-text, .logout-text {
+    cursor: pointer;
+    font-weight: 600;
+    color: #716259;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.login-text:hover {
+    color: #2E4A35;
+    background-color: #f0f7f1;
+}
+
+.logout-text:hover {
+    color: #cc3300;
+    background-color: #fff5f5;
 }
 
 .btn-profile-pill {
@@ -230,11 +249,9 @@ html, body, #root {
     color: #716259;
 }
 
-/* HEADER AUXILIARES */
 .logo { display: flex; align-items: center; gap: 12px; }
 .brand-name { font-size: 24px; font-weight: 800; color: #2E4A35; letter-spacing: -0.5px; }
 .breadcrumb { color: #A0A0A0; font-size: 0.9rem; }
-.logout-text { cursor: pointer; font-weight: 600; color: #716259; margin-right: 15px;}
 
 .header-profile-img {
     width: 38px;
