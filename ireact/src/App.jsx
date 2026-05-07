@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import './App.css'
-import Perfil from "./components/header.jsx";
+import Perfil from "./components/perfil.jsx";
 
 
 function App() {
