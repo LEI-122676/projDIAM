@@ -5,6 +5,9 @@ from django.contrib.auth.models import User
 class Ingrediente(models.Model):
     nome = models.CharField(max_length=50)
 
+    def __str__ (self):
+        return self.nome
+
 class Evento(models.Model):
     nome = models.CharField(max_length=50)
     criador = models.ForeignKey(User, on_delete=models.CASCADE, related_name='eventos_criados')
@@ -12,6 +15,9 @@ class Evento(models.Model):
     descricao = models.TextField()
     participantes = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='eventos_inscritos')
     capacidade_max = models.IntegerField()
+
+    def __str__ (self):
+        return self.nome
 
 class Frigorifico(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -30,7 +36,13 @@ class Receita(models.Model):
     classificacao = models.FloatField()
     comentarios = models.ForeignKey(Comentario, on_delete=models.DO_NOTHING)
 
+    def __str__ (self):
+        return self.nome
+
 class Utilizador(models.Model):
     utilizador = models.OneToOneField(User, on_delete=models.CASCADE)       # "extends"
     eventos = models.ManyToManyField(Evento)
     receitas = models.ManyToManyField(Receita)
+
+    def __str__ (self):
+        return self.utilizador.email
