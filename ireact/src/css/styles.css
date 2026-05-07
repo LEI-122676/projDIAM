@@ -52,55 +52,112 @@ html, body, #root {
     overflow: hidden;
 }
 
-/* 3. SIDEBAR */
+/* --- SIDEBAR BASE --- */
 .sidebar {
-    width: 240px;
+    width: 280px;
     background-color: #FDFBEE;
     border-right: 1px solid #EAEAEA;
-    flex-shrink: 0;
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    padding-top: 20px;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
 }
 
-.nav-list {
-    list-style: none;
+.sidebar.closed {
+    width: 85px;
 }
 
+/* --- HEADER DA SIDEBAR (BOTÃO À DIREITA) --- */
+.sidebar-header-only {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 30px 28px;
+    height: 70px;
+
+    background-color: #f6f4e9;
+}
+
+
+
+.sidebar.closed .sidebar-header-only {
+    /* Centraliza o botão quando fechado */
+    justify-content: center;
+    padding: 30px 0;
+}
+
+/* --- BOTÃO HAMBÚRGUER / X --- */
+.hamburger-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    width: 30px;
+    height: 30px;
+    transition: transform 0.2s;
+}
+
+.hamburger-btn .line {
+    width: 100%;
+    height: 3px;
+    background-color: #D1CDBC;
+    border-radius: 2px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Animação para o X */
+.hamburger-btn.is-active .line:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+}
+
+.hamburger-btn.is-active .line:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-btn.is-active .line:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+}
+
+/* --- RESTANTE DOS ITENS (REPETIÇÃO DO ESTILO INTER BOLD) --- */
 .nav-item {
     display: flex;
     align-items: center;
+    height: 70px;
+    padding: 0 28px;
     gap: 20px;
-    padding: 22px 40px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    color: #716259;
+    transition: background-color 0.2s;
 }
 
 .nav-item:hover {
     background-color: #F0EEE3;
 }
 
+.nav-text {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: #716259;
+    white-space: nowrap;
+}
+
 .nav-icon-img {
     width: 28px;
     height: 28px;
-    object-fit: contain;
+    flex-shrink: 0;
     filter: invert(41%) sepia(11%) saturate(1200%) hue-rotate(345deg) brightness(95%) contrast(85%);
-    transition: filter 0.2s ease;
 }
 
-.nav-item span {
-    font-weight: 700;
-    font-size: 1.2rem;
-    letter-spacing: -0.01em;
-    color: #716259;
-}
-
+/* Hover Effects */
 .nav-item:hover .nav-icon-img {
     filter: invert(21%) sepia(15%) saturate(2500%) hue-rotate(92deg) brightness(90%) contrast(90%);
 }
 
-.nav-item:hover span {
+.nav-item:hover .nav-text {
     color: #2E4A35;
 }
 
@@ -259,4 +316,96 @@ html, body, #root {
     object-fit: contain;
     cursor: pointer;
     transition: transform 0.2s;
+}
+
+/* --- HOME PAGE STYLES --- */
+
+.content-home {
+    flex: 1;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centraliza verticalmente o conteúdo */
+    padding: 50px;
+}
+
+.home-container {
+    text-align: center;
+    max-width: 800px;
+    width: 100%;
+}
+
+.home-welcome-title {
+    font-size: 50px;
+    font-weight: 800;
+    color: #2E4A35;
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+}
+
+.home-subtitle {
+    font-size: 1.2rem;
+    color: #716259;
+    margin-bottom: 40px;
+}
+
+/* Barra de Pesquisa Central */
+.search-container {
+    display: flex;
+    gap: 15px;
+    background: #FDFBEE;
+    padding: 10px;
+    border-radius: 50px;
+    border: 2px solid #EAEAEA;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-bottom: 50px;
+}
+
+.main-search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    color: #4A3A31;
+}
+
+.btn-search-home {
+    background-color: #2E4A35;
+    color: white;
+    border: none;
+    padding: 0 35px;
+    border-radius: 40px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-search-home:hover {
+    background-color: #233a2a;
+}
+
+/* Ações Rápidas */
+.home-quick-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.quick-card {
+    padding: 20px 40px;
+    background-color: #ffffff;
+    border: 1px solid #D1CDBC;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: 700;
+    color: #2E4A35;
+    transition: all 0.2s;
+}
+
+.quick-card:hover {
+    background-color: #F0EEE3;
+    transform: translateY(-2px);
 }

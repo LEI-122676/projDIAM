@@ -1,4 +1,4 @@
-import React from 'react'; // Adicionado o nome React para garantir compatibilidade
+import 'react'; // Adicionado o nome React para garantir compatibilidade
 import '../css/styles.css';
 
 const Header = () => {
