@@ -1,6 +1,6 @@
 import 'react';
-import Header from './Header'; // Ajusta o caminho se necessário
-import Sidebar from './Sidebar'; // Ajusta o caminho se necessário
+import Header from './header'; // Ajusta o caminho se necessário
+import Sidebar from './sidebar'; // Ajusta o caminho se necessário
 import '../css/styles.css';
 
 const Perfil = () => {
