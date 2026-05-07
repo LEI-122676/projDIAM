@@ -22,6 +22,7 @@ class Frigorifico(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE)
     ingredientes = models.ManyToManyField(Ingrediente)
 
-
-#criar classe utilizador com classe user aninhado para poder adicionar atributos
-#(ver final do ppt semana 10)
+class Utilizador(models.Model):
+    utilizador = models.OneToOneField(User, on_delete=models.CASCADE)       # "extends"
+    eventos = models.ManyToManyField(Evento, on_delte=models.DO_NOTHING)
+    receitas = models.ManyToManyField(Receita, on_delete=models.DO_NOTHING)
