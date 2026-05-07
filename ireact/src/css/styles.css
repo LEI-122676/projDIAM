@@ -1,11 +1,13 @@
 /* styles.css */
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
 /* 1. RESET E DEFINIÇÕES BASE */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 html, body, #root {
@@ -13,14 +15,14 @@ html, body, #root {
     width: 100%;
     background-color: #FDFBEE;
     color: #4A3A31;
-    overflow: hidden; /* Impede scroll na janela principal */
+    overflow: hidden;
 }
 
-/* 2. ESTRUTURA PRINCIPAL (LAVOUT) */
+/* 2. ESTRUTURA PRINCIPAL (LAYOUT) */
 .body-wrapper {
     display: flex;
     flex-direction: column;
-    height: 100vh; /* Ocupa 100% da altura da viewport */
+    height: 100vh;
     width: 100vw;
 }
 
@@ -32,24 +34,25 @@ html, body, #root {
     justify-content: space-between;
     padding: 0 40px;
     border-bottom: 1px solid #EAEAEA;
-    flex-shrink: 0; /* Impede que o header encolha */
+    flex-shrink: 0;
 }
 
 .main-wrapper {
     display: flex;
-    flex: 1; /* Ocupa todo o espaço restante abaixo do header */
+    flex: 1;
     overflow: hidden;
 }
 
 /* 3. SIDEBAR */
 .sidebar {
-    width: 280px;
+    width: 240px; /* Um pouco mais larga para melhor escala */
     background-color: #FDFBEE;
     border-right: 1px solid #EAEAEA;
-    padding: 30px 0;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
+    /* Faz o conteúdo começar mais abaixo do topo */
+    padding-top: 20px;
 }
 
 .nav-list {
@@ -59,39 +62,53 @@ html, body, #root {
 .nav-item {
     display: flex;
     align-items: center;
-    gap: 15px;
-    padding: 15px 40px;
+    gap: 20px;
+    /* Aumentado o padding vertical para as "caixas" serem maiores */
+    padding: 22px 40px;
     cursor: pointer;
     transition: all 0.2s ease;
     color: #716259;
 }
 
-.nav-item svg {
-    width: 24px;
-    height: 24px;
-    fill: currentColor;
+.nav-item:hover {
+    background-color: #F0EEE3;
+}
+
+.nav-icon-img {
+    width: 28px; /* Ícones ligeiramente maiores */
+    height: 28px;
+    object-fit: contain;
+    filter: invert(41%) sepia(11%) saturate(1200%) hue-rotate(345deg) brightness(95%) contrast(85%);
+    transition: filter 0.2s ease;
 }
 
 .nav-item span {
-    font-weight: 500;
-    font-size: 1.1rem;
+    font-weight: 700;
+    font-size: 1.2rem; /* Texto ligeiramente maior */
+    letter-spacing: -0.01em;
+    color: #716259;
+    transition: color 0.2s ease;
 }
 
-.nav-item:hover {
-    background-color: #F0EEE3;
+/* Efeito Hover Sincronizado */
+.nav-item:hover .nav-icon-img {
+    filter: invert(21%) sepia(15%) saturate(2500%) hue-rotate(92deg) brightness(90%) contrast(90%);
+}
+
+.nav-item:hover span {
     color: #2E4A35;
 }
 
-/* 4. CONTEÚDO PRINCIPAL (SCROLLÁVEL) */
+/* 4. CONTEÚDO PRINCIPAL */
 .content-profile {
     flex: 1;
     background-color: #ffffff;
     padding: 50px;
-    overflow-y: auto; /* Permite scroll apenas aqui */
+    overflow-y: auto;
 }
 
 .profile-grid {
-    max-width: 1100px; /* Centra o conteúdo em ecrãs muito largos */
+    max-width: 1100px;
     margin: 0 auto;
 }
 
@@ -115,10 +132,10 @@ html, body, #root {
 .shortcut-card {
     background-color: #FDFBEE;
     border: 1px solid #D1CDBC;
-    padding: 20px;
+    padding: 25px; /* Shortcut cards maiores */
     border-radius: 15px;
     text-align: center;
-    font-weight: 600;
+    font-weight: 700;
     color: #2E4A35;
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
@@ -130,7 +147,6 @@ html, body, #root {
     background-color: #F0EEE3;
 }
 
-/* CARD DE DETALHES */
 .profile-details-card {
     background: #ffffff;
     border: 1px solid #EAEAEA;
@@ -159,6 +175,7 @@ html, body, #root {
 .user-names h2 {
     font-size: 28px;
     color: #2E4A35;
+    font-weight: 700;
 }
 
 .user-names p {
@@ -166,16 +183,16 @@ html, body, #root {
     font-size: 1.1rem;
 }
 
-/* INFO LIST */
 .user-extra-info h3 {
     margin-bottom: 15px;
     color: #2E4A35;
+    font-weight: 700;
 }
 
 .user-extra-info ul {
     list-style: none;
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Divide a info em duas colunas no laptop */
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
 
@@ -193,7 +210,7 @@ html, body, #root {
 }
 
 .btn-profile-pill {
-    padding: 12px 35px;
+    padding: 14px 40px;
     border-radius: 50px;
     font-weight: 700;
     font-size: 1rem;
@@ -207,24 +224,22 @@ html, body, #root {
     color: white;
 }
 
-.btn-profile-pill:not(.secondary):hover {
-    background-color: #233a2a;
-}
-
 .btn-profile-pill.secondary {
     background-color: white;
     border: 2px solid #D1CDBC;
     color: #716259;
 }
 
-.btn-profile-pill.secondary:hover {
-    background-color: #FDFBEE;
-    border-color: #4A3A31;
-    color: #4A3A31;
-}
-
-/* AJUSTES PARA LOGO E BREADCRUMB */
+/* HEADER AUXILIARES */
 .logo { display: flex; align-items: center; gap: 12px; }
 .brand-name { font-size: 24px; font-weight: 800; color: #2E4A35; letter-spacing: -0.5px; }
 .breadcrumb { color: #A0A0A0; font-size: 0.9rem; }
-.logout-text { cursor: pointer; font-weight: 600; color: #716259; }
+.logout-text { cursor: pointer; font-weight: 600; color: #716259; margin-right: 15px;}
+
+.header-profile-img {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
