@@ -9,10 +9,10 @@ const Header = () => {
   const navigate = useNavigate(); // Inicializa o hook
   return (
     <header className="header">
-      <div className="logo">
+      <button onClick={() => navigate('/')} className="logo">
         <img src={forks} alt="Forks" />
         <span className="brand-name">iFridge</span>
-      </div>
+      </button>
       <span className="breadcrumb">Páginas / Perfil</span>
       <div className="auth-group">
         <button className="login-text" onClick={() => navigate('/login')}>
