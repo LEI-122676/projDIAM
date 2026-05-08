@@ -11,9 +11,9 @@ class Ingrediente(models.Model):
 
 class Evento(models.Model):
     nome = models.CharField(max_length=50)
-    criador = models.ForeignKey(User, on_delete=models.CASCADE, related_name='eventos_criados', null=True)
+    criador = models.ForeignKey(User, on_delete=models.CASCADE, related_name='eventos_criados')
     data = models.DateTimeField(auto_now_add=True)
-    descricao = models.TextField(default=os.environ.get('EVENTO_DESCRICAO_DEFAULT', ''))
+    descricao = models.TextField()
     participantes = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='eventos_inscritos', null=True)
     capacidade_max = models.IntegerField(default=int(os.environ.get('EVENTO_CAPACIDADE_MAX_DEFAULT', 30)))
 
@@ -30,7 +30,7 @@ class Comentario(models.Model):
     data = models.DateTimeField(auto_now_add=True)
 
 class Receita(models.Model):
-    nome = models.CharField(max_length=50, default=os.environ.get('RECEITA_NOME_DEFAULT', 'Receita Sem Nome'))
+    nome = models.CharField(max_length=50)
     autor = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     instrucao = models.TextField(default=os.environ.get('RECEITA_INSTRUCAO_DEFAULT', ''))
     ingredientes = models.ManyToManyField(Ingrediente)
@@ -41,7 +41,7 @@ class Receita(models.Model):
         return self.nome
 
 class Utilizador(models.Model):
-    utilizador = models.OneToOneField(User, on_delete=models.CASCADE, null=True)       # "extends"
+    utilizador = models.OneToOneField(User, on_delete=models.CASCADE)       # "extends"
     eventos = models.ManyToManyField(Evento)
     receitas = models.ManyToManyField(Receita)
 
