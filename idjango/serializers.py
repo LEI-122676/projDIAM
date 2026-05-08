@@ -1,23 +1,32 @@
 from rest_framework import serializers
-from .models import Ingrediente, Evento, Receita, Frigorifico
+from .models import Ingrediente, Evento, Receita, Frigorifico, Utilizador, Comentario
 
 class IngredienteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingrediente
-        fields = ('id', 'nome')
+        fields = '__all__'
 
 class EventoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Evento
-        fields = ('id', 'nome', 'criador', 'data', 'descricao', 'participantes')
+        fields = '__all__'
 
+class ComentarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comentario
+        fields = '__all__'
 
 class ReceitaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Receita
-        fields = ('id', 'nome', 'autor', 'instrucao', 'ingredientes')
+        fields = '__all__'
 
 class FrigorificoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Receita
-        fields = ('id', 'usuario', 'ingredientes')
+        model = Frigorifico
+        fields = '__all__'
+
+class UtilizadorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Utilizador
+        fields = '__all__'
