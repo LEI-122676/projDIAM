@@ -37,7 +37,7 @@ class Receita(models.Model):
     guardadores = models.ManyToManyField(Utilizador, related_name='receitas_guardadas')
 
     nome = models.CharField(max_length=50)
-    instrucao = models.TextField(default=os.environ.get('RECEITA_INSTRUCAO_DEFAULT', ''))
+    instrucao = models.JSONField(default=list)
     classificacao = models.FloatField(default=float(os.environ.get('RECEITA_CLASSIFICACAO_DEFAULT', 0.0)))
 
     def __str__ (self):
