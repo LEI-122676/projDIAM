@@ -79,32 +79,63 @@ html, body, #root {
     background-color: #f6f4e9;
 }
 
-
-
 .sidebar.closed .sidebar-header-only {
     /* Centraliza o botão quando fechado */
     justify-content: center;
     padding: 30px 0;
 }
 
-/* --- BOTÃO HAMBÚRGUER / X --- */
+/* --- HEADER DA SIDEBAR COM EXPLORAR --- */
+.sidebar-header-section {
+    display: flex;
+    align-items: center;
+    height: 90px;
+    padding: 0 28px;
+    transition: all 0.3s ease;
+    justify-content: space-between;
+}
+
+/* Quando fechada, o texto desaparece via React e centralizamos o botão */
+.sidebar.closed .sidebar-header-section {
+    justify-content: center;
+    padding: 0;
+}
+
+.explore-text {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #716259;
+    letter-spacing: -0.02em;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+/* --- REFORÇO NO BOTÃO --- */
 .hamburger-btn {
-    background: none;
+    background-color: transparent;
     border: none;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     gap: 6px;
-    width: 30px;
-    height: 30px;
-    transition: transform 0.2s;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    flex-shrink: 0; /* Impede o botão de deformar */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 
 .hamburger-btn .line {
     width: 100%;
     height: 3px;
-    background-color: #D1CDBC;
+    background-color: #716259;
     border-radius: 2px;
     transition: all 0.3s ease-in-out;
 }
@@ -517,4 +548,125 @@ html, body, #root {
 .quick-card:hover {
     background-color: #F0EEE3;
     transform: translateY(-2px);
+}
+/* --- PÁGINA FRIGORÍFICO --- */
+
+.content-frigorifico {
+    flex: 1;
+    background-color: #ffffff;
+    padding: 50px;
+    overflow-y: auto;
+}
+
+.fridge-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.fridge-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+}
+
+.btn-mostrar-receitas {
+    background-color: #2E4A35;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 50px; /* Estilo pill do teu design */
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+/* Card de Input */
+.fridge-input-card {
+    background-color: #ffffff;
+    border: 1px solid #EAEAEA;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    margin-bottom: 40px;
+}
+
+.fridge-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+}
+
+.input-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.input-group label {
+    color: #4A3A31;
+    font-size: 1.1rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 20px;
+    border: 1px solid #D1CDBC;
+    border-radius: 8px;
+    background-color: #FDFBEE;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+}
+
+.btn-guardar {
+    background-color: #2E4A35;
+    color: white;
+    border: none;
+    padding: 12px 40px;
+    border-radius: 50px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* Grid de Ingredientes */
+.ingredients-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.ingredient-tag {
+    background-color: #FDFBEE;
+    border-radius: 12px;
+    width: 180px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border: 1px solid #EAEAEA;
+}
+
+.ingredient-name {
+    font-weight: 700;
+    color: #4A3A31;
+    font-size: 0.9rem;
+}
+
+.remove-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #000;
+    font-weight: bold;
+}
+
+.remove-btn:hover {
+    color: #ff0000;
 }
