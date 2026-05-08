@@ -537,6 +537,17 @@ html, body, #root {
     transition: background 0.2s;
 }
 
+.btn-search-bar {
+    background-color: transparent;
+    color: white;
+    border: none;
+    padding: 0 35px;
+    border-radius: 40px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
 .btn-search-home:hover {
     background-color: #233a2a;
 }
