@@ -20,8 +20,8 @@ class Utilizador(models.Model):
         return self.user.email
 
 class Evento(models.Model):
-    criador = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
-    inscritos = models.ManyToManyField(Utilizador)
+    criador = models.ForeignKey(Utilizador, on_delete=models.CASCADE, related_name='eventos_criados')
+    inscritos = models.ManyToManyField(Utilizador, related_name='eventos_inscritos')
 
     nome = models.CharField(max_length=50)
     data = models.DateTimeField(auto_now_add=True)
@@ -32,9 +32,9 @@ class Evento(models.Model):
         return self.nome
 
 class Receita(models.Model):
-    criador = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
+    criador = models.ForeignKey(Utilizador, on_delete=models.CASCADE, related_name='criador_receita')
     ingredientes = models.ManyToManyField(Ingrediente)
-    guardadores = models.ManyToManyField(Utilizador)
+    guardadores = models.ManyToManyField(Utilizador, related_name='receitas_guardadas')
 
     nome = models.CharField(max_length=50)
     instrucao = models.TextField(default=os.environ.get('RECEITA_INSTRUCAO_DEFAULT', ''))
