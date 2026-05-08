@@ -862,3 +862,225 @@ html, body, #root {
     color: #4A3A31;
     font-size: 0.95rem;
 }
+
+/* --- PÁGINA: CRIAR RECEITA --- */
+
+.create-recipe-container {
+    display: flex;
+    gap: 60px;
+    width: 100%;
+    align-items: flex-start;
+}
+
+.recipe-form-section {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.recipe-image-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    position: sticky;
+    top: 50px;
+}
+
+/* Labels e Inputs */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-group label {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #4A3A31;
+    text-align: left;
+}
+
+.input-beige {
+    background-color: #FDFBEE;
+    border: 1px solid #EAE6D6;
+    border-radius: 15px;
+    padding: 15px 20px;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    width: 100%;
+}
+
+/* Listas Dinâmicas (Passos e Ingredientes) */
+.dynamic-list-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.item-number {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: #4A3A31;
+    min-width: 25px;
+}
+
+.btn-add-dashed {
+    width: 100%;
+    background: transparent;
+    border: 2px dashed #D1CDBC;
+    border-radius: 50px;
+    padding: 12px;
+    color: #D1CDBC;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: 40px; /* Alinhado com o input, não com o número */
+    max-width: calc(100% - 40px);
+}
+
+.btn-add-dashed:hover {
+    border-color: #344938;
+    color: #344938;
+    background-color: #fcfaf0;
+}
+
+/* Upload de Imagem */
+.image-upload-placeholder {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border: 2px dashed #D1CDBC;
+    border-radius: 20px;
+    background-color: #FDFBEE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.image-upload-placeholder img {
+    width: 80px;
+    opacity: 0.5;
+}
+
+/* Botões de Ação */
+.create-actions-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-cancel {
+    background-color: white;
+    border: 1.5px solid #4A3A31;
+    color: #4A3A31;
+    padding: 12px 35px;
+    border-radius: 30px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-create-submit {
+    background-color: #344938;
+    color: white;
+    border: none;
+    padding: 12px 45px;
+    border-radius: 30px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* --- PÁGINA: DETALHE DA RECEITA --- */
+
+.recipe-view-container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 100%;
+}
+
+/* Secção Superior: Imagem + Mini Lista de Passos */
+.recipe-top-row {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.recipe-main-image {
+    flex: 2;
+    aspect-ratio: 16 / 9;
+    background-color: #FDFBEE;
+    border: 1px solid #EAEAEA;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.recipe-steps-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.step-nav-item {
+    background: #ffffff;
+    border: 1px solid #EAEAEA;
+    padding: 15px;
+    text-align: center;
+    border-radius: 8px;
+    color: #716259;
+    font-weight: 600;
+}
+
+/* Secção Inferior: Descrições + Ingredientes */
+.recipe-bottom-row {
+    display: flex;
+    gap: 40px;
+}
+
+.recipe-descriptions-column {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.recipe-ingredients-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Boxes de conteúdo (Bege claro) */
+.content-box-light {
+    background-color: #F6F4E9; /* Bege muito claro da imagem */
+    border-radius: 15px;
+    padding: 25px;
+    min-height: 100px;
+    color: #4A3A31;
+    text-align: left;
+}
+
+.section-subtitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #4A3A31;
+    margin-bottom: 15px;
+    display: block;
+    text-align: left;
+}
+
+/* Grupo de Botões posicionado abaixo do índice de passos */
+.view-actions-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    justify-content: center;
+}

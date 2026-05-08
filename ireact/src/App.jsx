@@ -6,6 +6,11 @@ import Eventos from "./components/eventos/descobrirEventos.jsx";
 import Receitas from "./components/receitas/explorar_receitas.jsx";
 import Login from "./components/perfil-frigorifico-login/login.jsx";
 import CriarEvento from "./components/eventos/criarEvento.jsx";
+import Receitas from "./components/receitas/explorar_receitas.jsx";
+import CriarReceita from "./components/receitas/criar_receita.jsx";
+import VerReceita from "./components/receitas/detalhes_receita.jsx";
+import AsMinhasReceitas from "./components/receitas/minhas_receitas.jsx";
+import Login from "./components/perfil-frigorifico-login/login.jsx";
 
 function App() {
     return (
@@ -14,13 +19,15 @@ function App() {
         <Route path="/" element={<Homepage/>} />
         
         <Route path="/perfil" element={<Perfil/>} />
+        <Route path="/perfil/minhas-receitas" element={<AsMinhasReceitas/>} />
         <Route path="/frigorifico" element={<Frigorifico/>} />
         <Route path="/login" element={<Login/>} />
-        
         <Route path="/receitas" element={<Receitas/>} />
-        
         <Route path="/eventos" element={<Eventos/>} />
         <Route path="/eventos/criarEvento" element={<CriarEvento/>} />
+        <Route path="/receitas" element={<Receitas/>} />
+        <Route path="/receitas/criar-receita" element={<CriarReceita/>} />
+        <Route path="/receitas/ver-receita" element={<VerReceita/>} />
       </Routes>
     </BrowserRouter>
   )

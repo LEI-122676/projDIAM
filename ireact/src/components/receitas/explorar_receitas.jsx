@@ -1,11 +1,13 @@
-import React from 'react'; // Corrigido aqui
+import 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
 import iconeLupa from "../../assets/lupa.svg";
 import iconeFiltro from "../../assets/filtro.svg";
 import iconeFrig from "../../assets/frigorifico.svg";
+import {useNavigate} from "react-router-dom";
 
 const ExplorarReceitas = () => {
+    const navigate = useNavigate();
     const recipesPlaceholder = [
         "Receita A", "Receita B", "Receita C", "Receita D", "Receita E",
         "Receita F", "Receita G", "Receita H", "Receita I", "Receita J",
@@ -40,7 +42,7 @@ const ExplorarReceitas = () => {
                                     <img src={iconeFrig} alt="Frigorifico" className="recipe-icon-svg" style={{marginLeft: '8px'}} />
                                 </button>
 
-                                <button className="btn-add-recipe">+</button>
+                                <button className="btn-add-recipe" onClick={() => navigate('/receitas/criar-receita')}>+</button>
                             </div>
                         </div>
 
