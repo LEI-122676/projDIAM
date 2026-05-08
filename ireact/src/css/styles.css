@@ -748,6 +748,19 @@ html, body, #root {
     color: #4A3A31;
 }
 
+.event-search-box {
+    border: 1px solid #D1CDBC !important;
+    border-radius: 10px !important;
+    background-color: #FDFBEE !important;
+    padding: 12px 45px 12px 20px !important;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    font-size: 1rem;
+    color: #4A3A31;
+}
+
+
 /* 5. Ícones SVG Padronizados */
 .recipe-icon-svg {
     width: 20px !important;

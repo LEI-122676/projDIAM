@@ -36,7 +36,7 @@ const ExplorarEventos = () => {
 
                             <div className="recipes-action-bar">
                                 <div className="recipes-search-container">
-                                <form onSubmit={handleSearch} className="main-search-input recipe-search-box">
+                                <form onSubmit={handleSearch} className="main-search-input event-search-box">
                                     <input
                                         type="text"
                                         placeholder="Pesquisar eventos"
@@ -47,7 +47,7 @@ const ExplorarEventos = () => {
                                     <button type="submit"  onClick={handleSearch} className="btn-search-bar">
                                         <img src={iconeLupa} alt="Lupa" style={{ width: '20px', height: '20px' }} />
                                     </button>
-                                    </form>
+                                </form>
                             </div>
 
                             <div className="recipes-button-group">
