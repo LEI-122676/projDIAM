@@ -339,7 +339,19 @@ html, body, #root {
     color: #716259;
 }
 
-.logo { display: flex; align-items: center; gap: 12px; }
+.logo { 
+    display: flex; 
+    align-items: 
+    center; 
+    gap: 12px; 
+    cursor: pointer;
+    font-weight: 600;
+    padding: 10px 20px; 
+    background-color: transparent; 
+    border-radius: 30px; 
+    border: 2px transparent solid; 
+    width: fit-content;
+}
 .brand-name { font-size: 24px; font-weight: 800; color: #2E4A35; letter-spacing: -0.5px; }
 .breadcrumb { color: #A0A0A0; font-size: 0.9rem; }
 
