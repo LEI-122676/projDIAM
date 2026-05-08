@@ -1,21 +1,21 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-from .serializers import * # (1)
+from .serializers import *
 from .models import *
 import os
 
 QUERY_LIMIT = int(os.environ.get('QUERY_LIMIT', 50))
 
-@api_view(['GET', 'POST']) # (2)
+@api_view(['GET', 'POST'])
 def utilizadores(request):
 
-    if request.method == 'GET': # (3)
+    if request.method == 'GET': 
         utilizador_list = Utilizador.objects.all()
         serializer = UtilizadorSerializer(utilizador_list, many=True)
         return Response(serializer.data)
 
-    elif request.method == 'POST': # (3)
+    elif request.method == 'POST':
         serializer = UtilizadorSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -23,7 +23,7 @@ def utilizadores(request):
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE']) # (2) e (4)
+@api_view(['GET', 'PUT', 'DELETE'])
 def utilizador_detail(request, utilizador_id):
     try:
         utilizador = Utilizador.objects.get(pk=utilizador_id)
@@ -50,7 +50,6 @@ def utilizador_detail(request, utilizador_id):
 def utilizador_frigorifico(request, utilizador_id):
     try:
         utilizador = Utilizador.objects.get(pk=utilizador_id)
-        # Find the fridge linked to this Utilizador's user
         frigorifico = Frigorifico.objects.get(usuario=utilizador.utilizador)
     except Utilizador.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
