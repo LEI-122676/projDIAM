@@ -3,8 +3,6 @@ import Perfil from "./components/perfil-frigorifico-login/perfil.jsx";
 import Homepage from "./components/homepage.jsx";
 import Frigorifico from "./components/perfil-frigorifico-login/frigorifico.jsx";
 import Eventos from "./components/eventos/descobrirEventos.jsx";
-import Receitas from "./components/receitas/explorar_receitas.jsx";
-import Login from "./components/perfil-frigorifico-login/login.jsx";
 import CriarEvento from "./components/eventos/criarEvento.jsx";
 import Receitas from "./components/receitas/explorar_receitas.jsx";
 import CriarReceita from "./components/receitas/criar_receita.jsx";
