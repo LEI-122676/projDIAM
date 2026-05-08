@@ -1,7 +1,7 @@
 import 'react';
-import Header from './header'; // Ajusta o caminho se necessário
-import Sidebar from './sidebar'; // Ajusta o caminho se necessário
-import '../css/styles.css';
+import Header from '../maincomponents/header.jsx'; // Ajusta o caminho se necessário
+import Sidebar from '../maincomponents/sidebar.jsx'; // Ajusta o caminho se necessário
+import '../../css/styles.css';
 
 const Perfil = () => {
   return (

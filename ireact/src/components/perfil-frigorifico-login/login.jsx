@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Header from './header'; 
-import Sidebar from './sidebar'; 
-import '../css/styles.css';
+import Header from '../maincomponents/header.jsx';
+import Sidebar from '../maincomponents/sidebar.jsx';
+import '../../css/styles.css';
 
 const Login = () => {
   

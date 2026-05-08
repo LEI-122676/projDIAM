@@ -1,8 +1,8 @@
 import  { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from './header.jsx';
-import Sidebar from './sidebar.jsx';
-import '../css/styles.css';
+import Header from '../maincomponents/header.jsx';
+import Sidebar from '../maincomponents/sidebar.jsx';
+import '../../css/styles.css';
 
 const Frigorifico = () => {
   const [ingredientes, setIngredientes] = useState(['Ingrediente A']);
