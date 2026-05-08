@@ -1,7 +1,7 @@
 import  { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from './header.jsx';
-import Sidebar from './sidebar.jsx';
+import Header from './maincomponents/header.jsx';
+import Sidebar from './maincomponents/sidebar.jsx';
 import '../css/styles.css';
 
 const Home = () => {
