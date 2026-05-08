@@ -299,11 +299,13 @@ html, body, #root {
 .login-text, .logout-text {
     cursor: pointer;
     font-weight: 600;
-    color: #716259;
+    color: #faf9f8;
     padding: 8px 16px;
-    border-radius: 8px;
+    border-radius: 30px;
     transition: all 0.2s ease;
     font-size: 0.95rem;
+    border: none;
+    background-color: #344938;
 }
 
 .login-text:hover {

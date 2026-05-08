@@ -1,6 +1,6 @@
 import 'react'; // Adicionado o nome React para garantir compatibilidade
-import '../css/styles.css';
-import forks from '../assets/forks.svg';
+import '../../css/styles.css';
+import forks from '../../assets/forks.svg';
 import { useNavigate } from 'react-router-dom'; // Importante para a navegação
 
 
