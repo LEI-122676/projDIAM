@@ -65,7 +65,7 @@ const Login = () => {
           </section>
 
           <div className="auth-divider">
-            <span>OR</span>
+            <span>OU</span>
           </div>
 
 
