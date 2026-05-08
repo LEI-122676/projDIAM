@@ -50,7 +50,7 @@ def utilizador_detail(request, utilizador_id):
 def utilizador_frigorifico(request, utilizador_id):
     try:
         utilizador = Utilizador.objects.get(pk=utilizador_id)
-        frigorifico = Frigorifico.objects.get(usuario=utilizador.utilizador)
+        frigorifico = Frigorifico.objects.get(utilizador=utilizador.user)
     except Utilizador.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     except Frigorifico.DoesNotExist:

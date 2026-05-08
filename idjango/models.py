@@ -9,9 +9,19 @@ class Ingrediente(models.Model):
     def __str__(self):
         return self.nome
 
+class Frigorifico(models.Model):
+    ingredientes = models.ManyToManyField(Ingrediente)
+
+class Utilizador(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)       # "extends"
+    frigorifico = models.OneToOneField(Frigorifico, on_delete=models.DO_NOTHING, null=True)
+
+    def __str__ (self):
+        return self.user.email
+
 class Evento(models.Model):
-    criador = models.ForeignKey(User, on_delete=models.CASCADE, related_name='eventos_criados')
-    participantes = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='eventos_inscritos', null=True)
+    criador = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
+    inscritos = models.ManyToManyField(Utilizador)
 
     nome = models.CharField(max_length=50)
     data = models.DateTimeField(auto_now_add=True)
@@ -21,19 +31,10 @@ class Evento(models.Model):
     def __str__(self):
         return self.nome
 
-class Comentario(models.Model):
-    utilizador = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    texto = models.TextField()
-    data = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Utilizador: {self.utilizador}\nTexto:{self.texto}"
-
 class Receita(models.Model):
-    autor = models.ForeignKey(User, on_delete=models.CASCADE)
-    comentarios = models.ForeignKey(Comentario, on_delete=models.DO_NOTHING, null=True)
+    criador = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
     ingredientes = models.ManyToManyField(Ingrediente)
+    guardadores = models.ManyToManyField(Utilizador)
 
     nome = models.CharField(max_length=50)
     instrucao = models.TextField(default=os.environ.get('RECEITA_INSTRUCAO_DEFAULT', ''))
@@ -42,14 +43,12 @@ class Receita(models.Model):
     def __str__ (self):
         return self.nome
 
-class Utilizador(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)       # "extends"
-    eventos = models.ManyToManyField(Evento)
-    receitas = models.ManyToManyField(Receita)
+class Comentario(models.Model):
+    utilizador = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
+    receita = models.ForeignKey(Receita, on_delete=models.DO_NOTHING, null=True)
 
-    def __str__ (self):
-        return self.utilizador.email
+    texto = models.TextField()
+    data = models.DateTimeField(auto_now_add=True)
 
-class Frigorifico(models.Model):
-    utilizador = models.OneToOneField(Utilizador, on_delete=models.CASCADE)
-    ingredientes = models.ManyToManyField(Ingrediente)
+    def __str__(self):
+        return f"Utilizador: {self.utilizador}\nTexto:{self.texto}"
