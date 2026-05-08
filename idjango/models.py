@@ -19,10 +19,6 @@ class Evento(models.Model):
     def __str__ (self):
         return self.nome
 
-class Frigorifico(models.Model):
-    usuario = models.OneToOneField(User, on_delete=models.CASCADE)
-    ingredientes = models.ManyToManyField(Ingrediente)
-
 class Comentario(models.Model):
     utilizador = models.ForeignKey(User, on_delete=models.CASCADE)
     texto = models.TextField()
@@ -46,3 +42,7 @@ class Utilizador(models.Model):
 
     def __str__ (self):
         return self.utilizador.email
+
+class Frigorifico(models.Model):
+    usuario = models.OneToOneField(Utilizador, on_delete=models.CASCADE)
+    ingredientes = models.ManyToManyField(Ingrediente)
