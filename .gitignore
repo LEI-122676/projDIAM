@@ -30,15 +30,16 @@ build/
 
 # Python / Django
 __pycache__/
+**/__pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
 env/
 venv/
-.env
+#.env
 .venv/
 pip-log.txt
 pip-delete-this-directory.txt
-db.sqlite3
+#db.sqlite3
 media/
