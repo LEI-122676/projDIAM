@@ -1,16 +1,130 @@
-import 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
 import '../../css/styles.css'
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 const CriarReceita = () => {
     const navigate = useNavigate();
-    /* LOGICA (DJANGO/REACT):
-       - Use useState para listas: const [passos, setPassos] = useState(['']);
-       - Função para adicionar campo: setPassos([...passos, '']);
-       - Para os ingredientes, você pode usar um <datalist> para sugerir opções vindas do banco.
-    */
+
+    const [nome, setNome] = useState('');
+    const [passos, setPassos] = useState(['']);
+    const [ingredientesList, setIngredientesList] = useState(['']);
+
+    const [dbIngredientes, setDbIngredientes] = useState([]);
+    const [utilizadorId, setUtilizadorId] = useState(null);
+
+    useEffect(() => {
+        // Fetch ingredientes from Django
+        axios.get('http://localhost:8000/idjango/api/ingredientes/')
+            .then(res => setDbIngredientes(res.data))
+            .catch(err => console.error("Erro ao carregar ingredientes:", err));
+
+        // Verify authentication
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+            navigate('/login');
+            return;
+        }
+        setUtilizadorId(userId);
+    }, []);
+
+    const handleAddPasso = () => setPassos([...passos, '']);
+    const handlePassoChange = (index, value) => {
+        const newPassos = [...passos];
+        newPassos[index] = value;
+        setPassos(newPassos);
+    };
+
+    const handleRemovePasso = (index) => {
+        const newPassos = [...passos];
+        newPassos.splice(index, 1);
+        setPassos(newPassos);
+    };
+
+    const handleAddIngrediente = () => setIngredientesList([...ingredientesList, '']);
+    const handleIngredienteChange = (index, value) => {
+        const newIngredientes = [...ingredientesList];
+        newIngredientes[index] = value;
+        setIngredientesList(newIngredientes);
+    };
+
+    const handleRemoveIngrediente = (index) => {
+        const newIngredientes = [...ingredientesList];
+        newIngredientes.splice(index, 1);
+        setIngredientesList(newIngredientes);
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        if (!nome) {
+            alert('Por favor, dê um nome à receita.');
+            return;
+        }
+
+        if (!utilizadorId) {
+            alert('Não foi possível encontrar um utilizador (criador) na base de dados para associar a receita.');
+            return;
+        }
+
+        const passosFormatados = passos
+            .filter(p => p.trim() !== '')
+            .map((p, index) => {
+                const prefix = `Passo ${index + 1}: `;
+                if (p.startsWith(prefix)) return p;
+                if (p.match(/^Passo \d+:/)) {
+                    return prefix + p.replace(/^Passo \d+:\s*/, '');
+                }
+                return prefix + p;
+            });
+
+        if (passosFormatados.length === 0) {
+            alert('Por favor, adicione pelo menos um passo.');
+            return;
+        }
+
+        const idsIngredientes = [];
+        for (let ing of ingredientesList) {
+            if (ing.trim() === '') continue;
+            const found = dbIngredientes.find(dbI => dbI.nome.toLowerCase() === ing.trim().toLowerCase());
+            if (found) {
+                idsIngredientes.push(found.id);
+            } else {
+                alert(`O ingrediente "${ing}" não foi encontrado na base de dados. Por favor, escolha um ingrediente existente.`);
+                return;
+            }
+        }
+
+        if (idsIngredientes.length === 0) {
+            alert('Por favor, adicione pelo menos um ingrediente.');
+            return;
+        }
+
+        const payload = {
+            nome: nome,
+            instrucao: passosFormatados,
+            criador: utilizadorId,
+            ingredientes: idsIngredientes,
+            guardadores: [],
+            classificacao: 0.0
+        };
+
+        axios.post('http://localhost:8000/idjango/api/receitas/', payload)
+            .then(res => {
+                alert('Receita criada com sucesso!');
+                navigate(-1);
+            })
+            .catch(err => {
+                console.error(err);
+                if (err.response && err.response.data) {
+                    alert('Erro ao criar receita: ' + JSON.stringify(err.response.data));
+                } else {
+                    alert('Erro de conexão ao criar receita.');
+                }
+            });
+    };
 
     return (
         <div className="body-wrapper">
@@ -20,58 +134,72 @@ const CriarReceita = () => {
                 <main className="content-profile">
                     <h1 className="page-title-underline">Criar Receita</h1>
                     <div className="create-recipe-container">
-                        {/* COLUNA ESQUERDA: FORMULÁRIO */}
                         <div className="recipe-form-section">
-                            {/* NOME */}
                             <div className="form-group">
                                 <label>Nome*:</label>
                                 <input
                                     type="text"
                                     className="input-beige"
                                     placeholder="Dê um nome à sua receita"
+                                    value={nome}
+                                    onChange={(e) => setNome(e.target.value)}
+                                    style={{ color: 'black' }}
                                 />
                             </div>
 
-                            {/* PASSOS */}
                             <div className="form-group">
                                 <label>Passos*:</label>
-                                {/* Mapear os passos aqui */}
-                                <div className="dynamic-list-item">
-                                    <span className="item-number">1.</span>
-                                    <input type="text" className="input-beige" placeholder="Primeiro passo da receita..." />
-                                </div>
-                                <button className="btn-add-dashed">+</button>
+                                {passos.map((passo, index) => (
+                                    <div key={index} className="dynamic-list-item" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                                        <span className="item-number">{index + 1}.</span>
+                                        <input
+                                            type="text"
+                                            className="input-beige"
+                                            placeholder="Descreva o passo da receita..."
+                                            value={passo}
+                                            onChange={(e) => handlePassoChange(index, e.target.value)}
+                                            style={{ flex: 1, marginRight: '10px', color: 'black' }}
+                                        />
+                                        {passos.length > 1 && (
+                                            <button className="btn-cancel" style={{ padding: '5px 10px', fontSize: '12px' }} onClick={() => handleRemovePasso(index)}>X</button>
+                                        )}
+                                    </div>
+                                ))}
+                                <button className="btn-add-dashed" onClick={handleAddPasso}>+</button>
                             </div>
 
-                            {/* INGREDIENTES */}
                             <div className="form-group">
                                 <label>Ingredientes*:</label>
-                                {/* Mapear os ingredientes aqui */}
-                                <div className="dynamic-list-item">
-                                    <span className="item-number">1.</span>
-                                    <input
-                                        type="text"
-                                        className="input-beige"
-                                        placeholder="Nome do ingrediente..."
-                                        list="lista-ingredientes" // Aqui conecta com a escolha da lista
-                                    />
-                                    {/* Exemplo de como fazer a pessoa "escolher da lista" */}
-                                    <datalist id="lista-ingredientes">
-                                        <option value="Tomate" />
-                                        <option value="Cebola" />
-                                        <option value="Alho" />
-                                        {/* Essas opções virão do seu banco Django */}
-                                    </datalist>
-                                </div>
-                                <button className="btn-add-dashed">+</button>
+                                {ingredientesList.map((ingrediente, index) => (
+                                    <div key={index} className="dynamic-list-item" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                                        <span className="item-number">{index + 1}.</span>
+                                        <input
+                                            type="text"
+                                            className="input-beige"
+                                            placeholder="Nome do ingrediente..."
+                                            list="lista-ingredientes"
+                                            value={ingrediente}
+                                            onChange={(e) => handleIngredienteChange(index, e.target.value)}
+                                            style={{ flex: 1, marginRight: '10px', color: 'black' }}
+                                        />
+                                        {ingredientesList.length > 1 && (
+                                            <button className="btn-cancel" style={{ padding: '5px 10px', fontSize: '12px' }} onClick={() => handleRemoveIngrediente(index)}>X</button>
+                                        )}
+                                    </div>
+                                ))}
+                                <datalist id="lista-ingredientes">
+                                    {dbIngredientes.map(dbI => (
+                                        <option key={dbI.id} value={dbI.nome} />
+                                    ))}
+                                </datalist>
+                                <button className="btn-add-dashed" onClick={handleAddIngrediente}>+</button>
                             </div>
                         </div>
 
-                        {/* COLUNA DIREITA: IMAGEM E BOTÕES */}
                         <div className="recipe-image-section">
                             <div className="create-actions-group">
                                 <button className="btn-cancel" onClick={() => navigate(-1)} >Cancelar</button>
-                                <button className="btn-create-submit">Criar</button>
+                                <button className="btn-create-submit" onClick={handleSubmit}>Criar</button>
                             </div>
                         </div>
 
