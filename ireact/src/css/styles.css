@@ -1347,3 +1347,54 @@ html, body, #root {
 .recipe-card-saved {
     cursor: pointer;
 }
+
+/* Receitas/Popups */
+.text-black { color: black !important; }
+.btn-filter-fridge.active { background-color: #628169 !important; color: white !important; }
+.btn-filter-fridge.active .recipe-icon-svg { filter: brightness(0) invert(1) !important; }
+.icon-mr-8 { margin-right: 8px !important; }
+.icon-ml-8 { margin-left: 8px !important; }
+.mt-20 { margin-top: 20px !important; }
+.mt-30 { margin-top: 30px !important; }
+.mt-50 { margin-top: 50px !important; }
+.text-empty-state { grid-column: 1 / -1; color: #888; }
+.text-empty-state-center { grid-column: 1 / -1; text-align: center; margin-top: 20px; }
+.recipe-icon-large { font-size: 40px; color: #D1CDBC; }
+.cursor-pointer { cursor: pointer; }
+.profile-grid-full { margin: 0; max-width: 100%; }
+.flex-center { display: flex; justify-content: center; align-items: center; }
+.loading-container { padding: 50px; text-align: center; }
+.recipe-header-container { text-align: left; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+.recipe-rating-text { font-size: 18px; font-weight: bold; color: #628169; }
+.recipe-main-icon { font-size: 80px; color: #D1CDBC; font-weight: 100; }
+.mt-auto { margin-top: auto; }
+.recipe-bottom-row-flex { display: flex; gap: 20px; flex-wrap: wrap; }
+.recipe-col-2 { flex: 2; min-width: 300px; }
+.recipe-col-1 { flex: 1; min-width: 250px; }
+.mb-15 { margin-bottom: 15px; }
+.ingredients-box { min-height: 150px; color: black !important; }
+.ingredients-list-ul { padding-left: 20px; margin: 0; }
+.rating-title { margin: 0; color: #444; }
+.star-active { color: #f1c40f; }
+.star-inactive { color: #ccc; }
+.dynamic-list-item-flex { display: flex; align-items: center; margin-bottom: 10px; }
+.flex-input-black { flex: 1; margin-right: 10px; color: black !important; }
+.btn-cancel-small { padding: 5px 10px; font-size: 12px; }
+
+/* Fridge specific utilities */
+.fridge-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+.m-0 { margin: 0; }
+.btn-rounded-20 { border-radius: 20px; }
+.fridge-input-card-custom { background-color: #F8F6F0; padding: 25px; border-radius: 15px; border: 1px solid #D1CDBC; margin-bottom: 40px; }
+.fridge-form-flex { display: flex; gap: 20px; align-items: flex-end; }
+.flex-1 { flex: 1; }
+.fridge-label { color: #4A3A31; margin-bottom: 10px; display: block; font-weight: bold; }
+.select-fridge { height: 50px; cursor: pointer; }
+.btn-add-fridge { width: auto; padding: 0 30px; height: 50px; font-size: 16px; }
+.fridge-content-title { color: #628169; margin-bottom: 20px; border-bottom: 2px solid #D1CDBC; padding-bottom: 10px; }
+.ingredients-grid-flex { display: flex; flex-wrap: wrap; gap: 15px; }
+.fridge-empty-text { font-style: italic; color: #888; }
+.ingredient-tag-custom { display: flex; align-items: center; background-color: #e2ddcc; padding: 10px 20px; border-radius: 25px; color: #4A3A31; font-weight: 600; width: auto; height: auto; }
+.remove-btn-custom { background: transparent; border: none; color: #8b4b4b; cursor: pointer; font-weight: bold; font-size: 18px; margin-right: 10px; display: flex; align-items: center; position: static; }
+
+

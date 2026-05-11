@@ -11,6 +11,9 @@ import PopupModal from '../maincomponents/PopupModal.jsx';
 const AsMinhasReceitas = () => {
     const navigate = useNavigate();
 
+    const RECEITAS_URL = 'http://localhost:8000/idjango/api/receitas/';
+    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api/utilizadores/';
+
     const [receitas, setReceitas] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [isFridgeFilterActive, setIsFridgeFilterActive] = useState(false);
@@ -28,7 +31,7 @@ const AsMinhasReceitas = () => {
         }
 
         // Carrega todas as receitas
-        axios.get('http://localhost:8000/idjango/api/receitas/')
+        axios.get(RECEITAS_URL)
             .then(res => setReceitas(res.data))
             .catch(err => console.error("Erro ao carregar receitas:", err));
     }, [userId, navigate]);
@@ -42,7 +45,7 @@ const AsMinhasReceitas = () => {
             return;
         }
 
-        axios.get(`http://localhost:8000/idjango/api/utilizadores/${userId}/frigorifico`)
+        axios.get(`${UTILIZADORES_URL}${userId}/frigorifico`)
             .then(res => {
                 const ingredientes = res.data.ingredientes;
                 if (!ingredientes || ingredientes.length === 0) {
@@ -100,7 +103,7 @@ const AsMinhasReceitas = () => {
             <div className="main-wrapper">
                 <Sidebar />
                 <main className="content-profile">
-                    <div className="profile-grid" style={{ margin: '0', maxWidth: '100%' }}>
+                    <div className="profile-grid profile-grid-full">
 
                         <h1 className="page-title-underline">As Minhas Receitas</h1>
 
@@ -109,10 +112,9 @@ const AsMinhasReceitas = () => {
                                 <input
                                     type="text"
                                     placeholder="Pesquisar receitas..."
-                                    className="main-search-input recipe-search-box"
+                                    className="main-search-input recipe-search-box text-black"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    style={{ color: 'black' }}
                                 />
                                 <img src={iconeLupa} alt="Lupa" className="recipe-icon-svg search-icon-pos" />
                             </div>
@@ -121,11 +123,10 @@ const AsMinhasReceitas = () => {
                                 <button
                                     className={`btn-filter-fridge ${isFridgeFilterActive ? 'active' : ''}`}
                                     onClick={handleFridgeFilterToggle}
-                                    style={isFridgeFilterActive ? { backgroundColor: '#628169', color: 'white' } : {}}
                                 >
-                                    <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg" style={{ marginRight: '8px', filter: isFridgeFilterActive ? 'brightness(0) invert(1)' : 'none' }} />
+                                    <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg icon-mr-8" />
                                     Frigorífico
-                                    <img src={iconeFrig} alt="Frigorifico" className="recipe-icon-svg" style={{ marginLeft: '8px', filter: isFridgeFilterActive ? 'brightness(0) invert(1)' : 'none' }} />
+                                    <img src={iconeFrig} alt="Frigorifico" className="recipe-icon-svg icon-ml-8" />
                                 </button>
 
                                 <button className="btn-add-recipe" onClick={() => navigate('/receitas/criar-receita')}>+</button>
@@ -133,9 +134,9 @@ const AsMinhasReceitas = () => {
                         </div>
 
                         {/* SECÇÃO: CRIADAS POR MIM */}
-                        <div style={{ marginTop: '30px' }}>
+                        <div className="mt-30">
                             <h2 className="my-recipes-section-title">Criadas por Mim</h2>
-                            <div className="recipes-grid" style={{ marginTop: '20px' }}>
+                            <div className="recipes-grid mt-20">
                                 {criadasPorMim.map((receita) => (
                                     <div
                                         key={`criada-${receita.id}`}
@@ -143,7 +144,7 @@ const AsMinhasReceitas = () => {
                                         onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
                                     >
                                         <div className="recipe-image-placeholder">
-                                            <span style={{ fontSize: '40px', color: '#D1CDBC' }}>✕</span>
+                                            <span className="recipe-icon-large">✕</span>
                                         </div>
                                         <div className="recipe-card-footer">
                                             <span className="ingredient-name">{receita.nome}</span>
@@ -151,7 +152,7 @@ const AsMinhasReceitas = () => {
                                     </div>
                                 ))}
                                 {criadasPorMim.length === 0 && (
-                                    <p style={{ gridColumn: '1 / -1', color: '#888' }}>
+                                    <p className="text-empty-state">
                                         Ainda não tens nenhuma receita criada.
                                     </p>
                                 )}
@@ -159,9 +160,9 @@ const AsMinhasReceitas = () => {
                         </div>
 
                         {/* SECÇÃO: RECEITAS GUARDADAS */}
-                        <div style={{ marginTop: '50px' }}>
+                        <div className="mt-50">
                             <h2 className="my-recipes-section-title">Receitas Guardadas</h2>
-                            <div className="recipes-grid" style={{ marginTop: '20px' }}>
+                            <div className="recipes-grid mt-20">
                                 {receitasGuardadas.map((receita) => (
                                     <div
                                         key={`guardada-${receita.id}`}
@@ -169,7 +170,7 @@ const AsMinhasReceitas = () => {
                                         onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
                                     >
                                         <div className="recipe-image-placeholder">
-                                            <span style={{ fontSize: '40px', color: '#D1CDBC' }}>✕</span>
+                                            <span className="recipe-icon-large">✕</span>
                                         </div>
                                         <div className="recipe-card-footer">
                                             <span className="ingredient-name">{receita.nome}</span>
@@ -177,7 +178,7 @@ const AsMinhasReceitas = () => {
                                     </div>
                                 ))}
                                 {receitasGuardadas.length === 0 && (
-                                    <p style={{ gridColumn: '1 / -1', color: '#888' }}>
+                                    <p className="text-empty-state">
                                         Ainda não guardaste nenhuma receita.
                                     </p>
                                 )}

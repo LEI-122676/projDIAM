@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -26,6 +26,10 @@ const VerReceita = () => {
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
+    const INGREDIENTES_URL = 'http://localhost:8000/idjango/api/ingredientes/';
+    const RECEITA_URL = 'http://localhost:8000/idjango/api/receitas/'
+    const COMENTARIOS_URL = 'http://localhost:8000/idjango/api/comentarios/'
+
     const showLoginPopup = (actionMessage) => {
         setPopupConfig({
             isOpen: true,
@@ -44,13 +48,13 @@ const VerReceita = () => {
             return;
         }
 
-        // Carrega ingredientes para conseguirmos mapear os IDs para nomes
-        axios.get('http://localhost:8000/idjango/api/ingredientes/')
+        // Ingredientes para conseguirmos os IDs para nomes
+        axios.get(INGREDIENTES_URL)
             .then(res => setDbIngredientes(res.data))
             .catch(err => console.error(err));
 
-        // Carrega a Receita
-        axios.get(`http://localhost:8000/idjango/api/receitas/${recipeId}`)
+        // Receita
+        axios.get(RECEITA_URL + recipeId)
             .then(res => {
                 setReceita(res.data);
                 if (userId && res.data.guardadores.includes(parseInt(userId))) {
@@ -59,8 +63,8 @@ const VerReceita = () => {
             })
             .catch(err => console.error(err));
 
-        // Carrega Comentários
-        axios.get('http://localhost:8000/idjango/api/comentarios/')
+        // Comentários
+        axios.get(COMENTARIOS_URL)
             .then(res => {
                 const recipeComments = res.data.filter(c => c.receita === parseInt(recipeId));
                 setComentarios(recipeComments);
@@ -69,7 +73,7 @@ const VerReceita = () => {
             
     }, [recipeId, userId, navigate]);
 
-    // Lógica para Guardar/Remover Receita
+    // Guardar/Remover Receita
     const handleGuardar = () => {
         if (!userId) {
             showLoginPopup('guardar esta receita');
@@ -87,7 +91,7 @@ const VerReceita = () => {
         
         const updatedReceita = { ...receita, guardadores: newGuardadores };
         
-        axios.put(`http://localhost:8000/idjango/api/receitas/${recipeId}`, updatedReceita)
+        axios.put(RECEITA_URL + recipeId, updatedReceita)
             .then(res => {
                 setReceita(res.data);
                 setGuardado(!isAlreadySaved);
@@ -96,15 +100,14 @@ const VerReceita = () => {
             .catch(err => console.error(err));
     };
 
-    // Lógica para Classificar
-    const handleClassificar = () => {
+    // Avaliações
+    const handleAvaliar = () => {
         if (!userId) {
             showLoginPopup('avaliar esta receita');
             return;
         }
-        
-        // Vamos fazer uma média simples com a classificação que já lá estava
-        let novaMedia = receita.classificacao;
+
+        let novaMedia;
         if (receita.classificacao === 0) {
             novaMedia = novaClassificacao;
         } else {
@@ -113,15 +116,15 @@ const VerReceita = () => {
 
         const updatedReceita = { ...receita, classificacao: parseFloat(novaMedia.toFixed(1)) };
         
-        axios.put(`http://localhost:8000/idjango/api/receitas/${recipeId}`, updatedReceita)
+        axios.put(RECEITA_URL + recipeId, updatedReceita)
             .then(res => {
                 setReceita(res.data);
-                alert("Obrigado pela tua classificação!");
+                alert("Obrigado pela sua avaliação!");
             })
             .catch(err => console.error(err));
     };
 
-    // Lógica para Comentar
+    // Comentar
     const handleAddComentario = () => {
         if (!userId) {
             showLoginPopup('comentar nesta receita');
@@ -135,7 +138,7 @@ const VerReceita = () => {
             texto: novoComentario
         };
 
-        axios.post('http://localhost:8000/idjango/api/comentarios/', payload)
+        axios.post(COMENTARIOS_URL, payload)
             .then(res => {
                 setComentarios([...comentarios, res.data]);
                 setNovoComentario('');
@@ -143,7 +146,7 @@ const VerReceita = () => {
             .catch(err => console.error(err));
     };
 
-    if (!receita) return <div style={{padding: '50px', textAlign: 'center'}}>A carregar receita...</div>;
+    if (!receita) return <div className="loading-container">A carregar receita...</div>;
 
     return (
         <div className="body-wrapper">
@@ -152,9 +155,9 @@ const VerReceita = () => {
                 <Sidebar />
                 <main className="content-profile">
 
-                    <div style={{ textAlign: 'left', marginBottom: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div className="recipe-header-container">
                         <h1 className="page-title-underline">{receita.nome}</h1>
-                        <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#628169' }}>
+                        <div className="recipe-rating-text">
                             ⭐ {receita.classificacao.toFixed(1)} / 5
                         </div>
                     </div>
@@ -163,16 +166,15 @@ const VerReceita = () => {
 
                         {/* PARTE SUPERIOR */}
                         <div className="recipe-top-row">
-                            <div className="recipe-main-image" style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                                <span style={{ fontSize: '80px', color: '#D1CDBC', fontWeight: '100' }}>🍲</span>
+                            <div className="recipe-main-image flex-center">
+                                <span className="recipe-main-icon">🍲</span>
                             </div>
 
                             <div className="recipe-steps-nav">
                                 {receita.instrucao.map((passo, index) => (
                                     <div 
                                         key={index} 
-                                        className="step-nav-item"
-                                        style={{ cursor: 'pointer' }}
+                                        className="step-nav-item cursor-pointer"
                                         onClick={() => {
                                             const el = document.getElementById(`passo-${index}`);
                                             if (el) {
@@ -185,24 +187,24 @@ const VerReceita = () => {
                                     </div>
                                 ))}
 
-                                <div className="view-actions-group" style={{ marginTop: 'auto' }}>
+                                <div className="view-actions-group mt-auto">
                                     <button className="btn-cancel" onClick={() => navigate('/receitas')}>Voltar</button>
                                     <button 
                                         className="btn-create-submit" 
                                         onClick={handleGuardar}
                                         style={guardado ? { backgroundColor: '#8a9b8e' } : {}}
                                     >
-                                        {guardado ? 'Guardado ✓' : 'Guardar'}
+                                        {guardado ? 'Guardado' : 'Guardar'}
                                     </button>
                                 </div>
                             </div>
                         </div>
 
                         {/* PARTE INFERIOR */}
-                        <div className="recipe-bottom-row" style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                        <div className="recipe-bottom-row recipe-bottom-row-flex">
 
                             {/* Coluna de Descrição dos Passos */}
-                            <div className="recipe-descriptions-column" style={{ flex: '2', minWidth: '300px' }}>
+                            <div className="recipe-descriptions-column recipe-col-2">
                                 {receita.instrucao.map((passo, index) => {
                                     // Separa o título (Passo X:) do resto do texto
                                     const hasPrefix = passo.match(/^(Passo \d+:\s*)(.*)/);
@@ -210,9 +212,9 @@ const VerReceita = () => {
                                     const description = hasPrefix ? hasPrefix[2] : passo;
 
                                     return (
-                                        <div key={index} id={`passo-${index}`} className="step-detail" style={{ marginBottom: '15px' }}>
+                                        <div key={index} id={`passo-${index}`} className="step-detail mb-15">
                                             <label className="section-subtitle">{subtitle}</label>
-                                            <div className="content-box-light" style={{ color: 'black' }}>
+                                            <div className="content-box-light text-black">
                                                 {description}
                                             </div>
                                         </div>
@@ -221,10 +223,10 @@ const VerReceita = () => {
                             </div>
 
                             {/* Coluna de Ingredientes */}
-                            <div className="recipe-ingredients-column" style={{ flex: '1', minWidth: '250px' }}>
+                            <div className="recipe-ingredients-column recipe-col-1">
                                 <label className="section-subtitle">Ingredientes</label>
-                                <div className="content-box-light" style={{ minHeight: '150px', color: 'black' }}>
-                                    <ul style={{ paddingLeft: '20px', margin: 0 }}>
+                                <div className="content-box-light ingredients-box">
+                                    <ul className="ingredients-list-ul">
                                         {receita.ingredientes.map((ingId, idx) => {
                                             const ingObj = dbIngredientes.find(i => i.id === ingId);
                                             return <li key={idx}>{ingObj ? ingObj.nome : `Ingrediente #${ingId}`}</li>;
@@ -235,13 +237,12 @@ const VerReceita = () => {
 
                                 {/* Secção de Classificação */}
                                 <div className="rating-section">
-                                    <label className="section-subtitle" style={{ margin: 0, color: '#444' }}>Avaliar Receita</label>
+                                    <label className="section-subtitle rating-title">Avaliar Receita</label>
                                     <div className="rating-stars">
                                         {[1, 2, 3, 4, 5].map(star => (
                                             <span 
                                                 key={star}
-                                                className="star-icon"
-                                                style={{ color: star <= novaClassificacao ? '#f1c40f' : '#ccc' }}
+                                                className={`star-icon ${star <= novaClassificacao ? 'star-active' : 'star-inactive'}`}
                                                 onClick={() => setNovaClassificacao(star)}
                                             >
                                                 ★
@@ -249,7 +250,7 @@ const VerReceita = () => {
                                         ))}
                                         <button 
                                             className="btn-create-submit btn-rate" 
-                                            onClick={handleClassificar} 
+                                            onClick={handleAvaliar} 
                                         >
                                             Avaliar
                                         </button>

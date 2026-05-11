@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
@@ -17,29 +17,34 @@ const Frigorifico = () => {
     const [ingredienteSelecionado, setIngredienteSelecionado] = useState('');
     
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
-    const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
+
+    const INGREDIENTES_URL = 'http://localhost:8000/idjango/api/ingredientes/';
+    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api/utilizadores/';
+    const FRIGORIFICOS_URL = 'http://localhost:8000/idjango/api/frigorificos/';
 
     useEffect(() => {
         if (!userId) {
-            setPopupConfig({
-                isOpen: true,
-                title: 'Acesso Restrito',
-                message: 'Precisas de iniciar sessão para aceder ao teu frigorífico.',
-                singleButton: false,
-                confirmText: 'Iniciar Sessão',
-                onConfirm: () => navigate('/login'),
-                onCancel: () => navigate('/')
-            });
+            setTimeout(() => {
+                setPopupConfig({
+                    isOpen: true,
+                    title: 'Acesso Restrito',
+                    message: 'Precisas de iniciar sessão para aceder ao teu frigorífico.',
+                    singleButton: false,
+                    confirmText: 'Iniciar Sessão',
+                    onConfirm: () => navigate('/login'),
+                    onCancel: () => navigate('/')
+                });
+            }, 0);
             return;
         }
 
-        // 1. Carregar todos os ingredientes disponíveis no sistema
-        axios.get('http://localhost:8000/idjango/api/ingredientes/')
+        // 1. Ingredientes disponíveis no django
+        axios.get(INGREDIENTES_URL)
             .then(res => setDbIngredientes(res.data))
             .catch(err => console.error("Erro ao carregar ingredientes da base de dados", err));
 
-        // 2. Carregar o frigorífico atual do utilizador
-        axios.get(`http://localhost:8000/idjango/api/utilizadores/${userId}/frigorifico`)
+        // 2. Frigorífico do utilizador
+        axios.get(`${UTILIZADORES_URL}${userId}/frigorifico`)
             .then(res => {
                 setFridgeId(res.data.id);
                 setIngredientesFrigorificoIds(res.data.ingredientes || []);
@@ -56,10 +61,10 @@ const Frigorifico = () => {
             return;
         }
         
-        axios.put(`http://localhost:8000/idjango/api/frigorificos/${fridgeId}`, {
+        axios.put(`${FRIGORIFICOS_URL}${fridgeId}`, {
             ingredientes: novaListaIds
         })
-        .then(res => {
+        .then(() => {
             setIngredientesFrigorificoIds(novaListaIds);
         })
         .catch(err => {
@@ -104,22 +109,21 @@ const Frigorifico = () => {
                 <main className="content-frigorifico">
                     <div className="fridge-container">
                         
-                        <div className="fridge-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-                            <h1 className="page-title-underline" style={{ margin: 0 }}>O Meu Frigorífico</h1>
-                            <button className="btn-create-submit" onClick={irParaReceitas} style={{ borderRadius: '20px' }}>
+                        <div className="fridge-header fridge-header-flex">
+                            <h1 className="page-title-underline m-0">O Meu Frigorífico</h1>
+                            <button className="btn-create-submit btn-rounded-20" onClick={irParaReceitas}>
                                 Mostrar Receitas
                             </button>
                         </div>
 
-                        <section className="fridge-input-card" style={{ backgroundColor: '#F8F6F0', padding: '25px', borderRadius: '15px', border: '1px solid #D1CDBC', marginBottom: '40px' }}>
-                            <form onSubmit={adicionarIngrediente} className="fridge-form" style={{ display: 'flex', gap: '20px', alignItems: 'flex-end' }}>
-                                <div className="form-group" style={{ flex: 1 }}>
-                                    <label style={{ color: '#4A3A31', marginBottom: '10px', display: 'block', fontWeight: 'bold' }}>Adicionar Ingrediente:</label>
+                        <section className="fridge-input-card fridge-input-card-custom">
+                            <form onSubmit={adicionarIngrediente} className="fridge-form fridge-form-flex">
+                                <div className="form-group flex-1">
+                                    <label className="fridge-label">Adicionar Ingrediente:</label>
                                     <select 
-                                        className="input-beige" 
+                                        className="input-beige select-fridge" 
                                         value={ingredienteSelecionado} 
                                         onChange={(e) => setIngredienteSelecionado(e.target.value)}
-                                        style={{ height: '50px', cursor: 'pointer' }}
                                     >
                                         <option value="">-- Selecione um ingrediente --</option>
                                         {ingredientesDisponiveis.map(ing => (
@@ -127,37 +131,29 @@ const Frigorifico = () => {
                                         ))}
                                     </select>
                                 </div>
-                                <button type="submit" className="btn-add-recipe" style={{ width: 'auto', padding: '0 30px', height: '50px', fontSize: '16px' }}>
+                                <button type="submit" className="btn-add-recipe btn-add-fridge">
                                     Adicionar
                                 </button>
                             </form>
                         </section>
 
-                        <h3 style={{ color: '#628169', marginBottom: '20px', borderBottom: '2px solid #D1CDBC', paddingBottom: '10px' }}>
+                        <h3 className="fridge-content-title">
                             Conteúdo Atual ({ingredientesFrigorificoIds.length})
                         </h3>
 
-                        <section className="ingredients-grid" style={{ display: 'flex', flexWrap: 'wrap', gap: '15px' }}>
+                        <section className="ingredients-grid ingredients-grid-flex">
                             {ingredientesFrigorificoIds.length === 0 ? (
-                                <p style={{ fontStyle: 'italic', color: '#888' }}>O teu frigorífico está vazio! Adiciona os teus ingredientes acima.</p>
+                                <p className="fridge-empty-text">O teu frigorífico está vazio! Adiciona os teus ingredientes acima.</p>
                             ) : (
                                 ingredientesFrigorificoIds.map((id) => {
                                     const obj = dbIngredientes.find(i => i.id === id);
                                     const nome = obj ? obj.nome : `Ingrediente #${id}`;
                                     
                                     return (
-                                        <div key={id} className="ingredient-tag" style={{ 
-                                            display: 'flex', alignItems: 'center', backgroundColor: '#e2ddcc', 
-                                            padding: '10px 20px', borderRadius: '25px', color: '#4A3A31', fontWeight: '600' 
-                                        }}>
+                                        <div key={id} className="ingredient-tag ingredient-tag-custom">
                                             <button 
-                                                className="remove-btn" 
+                                                className="remove-btn remove-btn-custom" 
                                                 onClick={() => removerIngrediente(id)}
-                                                style={{ 
-                                                    background: 'transparent', border: 'none', color: '#8b4b4b', 
-                                                    cursor: 'pointer', fontWeight: 'bold', fontSize: '18px', marginRight: '10px',
-                                                    display: 'flex', alignItems: 'center'
-                                                }}
                                             >
                                                 ✕
                                             </button>
