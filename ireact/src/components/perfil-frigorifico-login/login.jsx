@@ -2,36 +2,53 @@ import  { useState } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
 import '../../css/styles.css';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
   
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
   const [usernameLogin, setUsernameLogin] = useState('');
   const [passwordLogin, setPasswordLogin] = useState('');
 
+  const SIGN_UP_URL = 'http://localhost:8000/idjango/api/signup/';
+  const SIGN_IN_URL = 'http://localhost:8000/idjango/api/login/';
+
   const handleLogin = (e) => {
     e.preventDefault();
-    if (usernameLogin && passwordLogin) {
-      console.log('Login bem-sucedido:', { usernameLogin, passwordLogin });
-    } else {
+    if (!usernameLogin || !passwordLogin) {
       alert('Por favor, preencha todos os campos de login');
+      return;
     }
+   
+    axios.post(SIGN_IN_URL, { username : usernameLogin, password : passwordLogin}, {withCredentials: true}).then( () => {
+      console.log('logged in');
+      navigate('/');
+    })
+    .catch( () => console.log('login failed'))
   };
 
   const handleRegister = (e) => {
     e.preventDefault();
-    if (username && email && password && confirmPassword) {
-      if (password === confirmPassword) {
-        console.log('Registro bem-sucedido:', { username, email, password });
-      } else {
-        alert('As senhas não coincidem');
-      }
-    } else {
+    if (!username || !email || !password || !confirmPassword) {
       alert('Por favor, preencha todos os campos de registo');
+      return;
     }
+    if (password !== confirmPassword) {
+      alert('As passwords não coincidem');
+      return;
+    }
+      
+    axios.post(SIGN_UP_URL, { username, password, email}).then( response => {
+        console.log('Signup successful!', response.data.msg);
+        navigate(-1);
+    }).catch( err => console.log('Signup failed...', err.response.data.msg));
   };
 
   return (
