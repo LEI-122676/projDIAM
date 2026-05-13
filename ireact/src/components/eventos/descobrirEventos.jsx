@@ -76,7 +76,7 @@ const ExplorarEventos = () => {
                 <main className="content-profile">
                     {/* Alinhado à esquerda */}
                     <div className="profile-grid" style={{ margin: '0', maxWidth: '100%' }}>
-                        { userName ? <><h1 className="page-title-underline">Descobrir Eventos - {userName}</h1></>:
+                        { userName ? <><h1 className="page-title-underline">Descobrir Eventos</h1></>:
                         <><h1 className="page-title-underline">Descobrir Eventos</h1></>}
                             <div className="recipes-action-bar">
                                 <div className="recipes-search-container">
@@ -107,7 +107,7 @@ const ExplorarEventos = () => {
                                 <div 
                                     key={evento.id || index} 
                                     className="recipe-card" 
-                                    onClick={() => navigate('eventos/verEvento', { state: { id: evento.id } })}
+                                    onClick={() => navigate('verEvento', { state: { id: evento.id } })}
                                     style={{ cursor: 'pointer' }}
                                 >
                                     <div className="recipe-image-placeholder">

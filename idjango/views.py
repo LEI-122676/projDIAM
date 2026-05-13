@@ -121,14 +121,16 @@ def eventos(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['PUT', 'DELETE'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def evento_detail(request, evento_id):
     try:
         evento = Evento.objects.get(pk=evento_id)
     except Evento.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'PUT':
+    if request.method == 'GET':
+        serializer = EventoSerializer(evento)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
         serializer = EventoSerializer(evento, data=request.data)
         if serializer.is_valid():
             serializer.save()
