@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
 import iconeLupa from "../../assets/lupa.svg";
@@ -24,11 +24,14 @@ const ExplorarReceitas = () => {
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-    useEffect(() => {
-        // Carrega todas as receitas
+    const getReceitas = () => {
         axios.get(RECEITAS_URL)
             .then(res => setReceitas(res.data))
             .catch(err => console.error("Erro ao carregar receitas:", err));
+    };
+
+    useEffect(() => {
+        getReceitas();
     }, []);
 
     const handleFridgeFilterToggle = (forceOpen = false) => {

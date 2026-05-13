@@ -15,7 +15,6 @@ const Sidebar = () => {
   return (
     <nav className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
       <div className="sidebar-header-section">
-        {/* Adicionado o texto Explorar que aparece apenas quando a sidebar está aberta */}
         {isOpen && <span className="explore-text">Explorar</span>}
 
         <button
