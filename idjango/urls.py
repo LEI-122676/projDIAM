@@ -27,5 +27,6 @@ urlpatterns = [
     path('api/logout/', views.logout_view),
 
     path('api/user/', views.user_view),
+    path('api/user_view__Id/', views.user_view_Id),
 ]
 

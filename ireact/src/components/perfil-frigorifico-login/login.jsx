@@ -27,10 +27,12 @@ const Login = () => {
       return;
     }
    
-    axios.post(SIGN_IN_URL, { username : usernameLogin, password : passwordLogin}, {withCredentials: true}).then( () => {
-      console.log('logged in');
-      navigate('/');
-    })
+    axios.post(SIGN_IN_URL, { username: usernameLogin, password: passwordLogin }, { withCredentials: true })
+      .then((response) => {
+        localStorage.setItem('utilizadorId', response.data.utilizadorId);
+        console.log('logged in');
+        navigate(-1);
+      })
     .catch( () => console.log('login failed'))
   };
 
@@ -45,8 +47,9 @@ const Login = () => {
       return;
     }
       
-    axios.post(SIGN_UP_URL, { username, password, email}).then( response => {
+    axios.post(SIGN_UP_URL, { username, password, email}, { withCredentials: true }).then( response => {
         console.log('Signup successful!', response.data.msg);
+        localStorage.setItem('utilizadorId', response.data.utilizadorId);
         navigate(-1);
     }).catch( err => console.log('Signup failed...', err.response.data.msg));
   };

@@ -134,8 +134,13 @@ def eventos(request):
     elif request.method == 'POST':
         serializer = EventoSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
+            evento = serializer.save()
+            if evento.criador:
+                evento.inscritos.add(evento.criador)
+            serializer = EventoSerializer(evento)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT', 'DELETE'])
@@ -283,7 +288,8 @@ def login_view(request):
     user = authenticate(request, username=username, password=password)
     if user is not None:
         login(request, user) # Criação da sessão
-        return Response({'msg': 'user logged in'})
+        utilizador = Utilizador.objects.get(user=user)
+        return Response({'msg': 'user logged in', 'utilizadorId': utilizador.id})
     else:
         return Response({'msg': 'invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
     
@@ -297,3 +303,9 @@ def logout_view(request):
 @permission_classes([IsAuthenticated])
 def user_view(request):
     return Response({'username': request.user.username})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_view_Id(request):
+    return Response({'user_id': request.user.id})
+

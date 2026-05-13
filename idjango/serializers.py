@@ -7,6 +7,12 @@ class IngredienteSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class EventoSerializer(serializers.ModelSerializer):
+    inscritos = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=Utilizador.objects.all(),
+        required=False
+    )
+    
     class Meta:
         model = Evento
         fields = '__all__'
