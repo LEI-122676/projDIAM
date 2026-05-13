@@ -12,6 +12,9 @@ const ExplorarReceitas = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const autoFilterAttempted = useRef(false);
+
+    const RECEITAS_URL = 'http://localhost:8000/idjango/api/receitas/';
+    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api/utilizadores/';
     
     const [receitas, setReceitas] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -23,21 +26,14 @@ const ExplorarReceitas = () => {
 
     useEffect(() => {
         // Carrega todas as receitas
-        axios.get('http://localhost:8000/idjango/api/receitas/')
+        axios.get(RECEITAS_URL)
             .then(res => setReceitas(res.data))
             .catch(err => console.error("Erro ao carregar receitas:", err));
     }, []);
 
-    useEffect(() => {
-        if (location.state?.autoFridge && !autoFilterAttempted.current) {
-            autoFilterAttempted.current = true;
-            handleFridgeFilterToggle(true); // Pass true to force it open
-        }
-    }, [location]);
-
     const handleFridgeFilterToggle = (forceOpen = false) => {
         const userId = localStorage.getItem('userId');
-        
+
         if (!userId) {
             setPopupConfig({
                 isOpen: true,
@@ -58,7 +54,7 @@ const ExplorarReceitas = () => {
         }
 
         // Tenta ir buscar o frigorífico do utilizador
-        axios.get(`http://localhost:8000/idjango/api/utilizadores/${userId}/frigorifico`)
+        axios.get(`${UTILIZADORES_URL}${userId}/frigorifico`)
             .then(res => {
                 const ingredientes = res.data.ingredientes;
                 if (!ingredientes || ingredientes.length === 0) {
@@ -89,6 +85,13 @@ const ExplorarReceitas = () => {
                 });
             });
     };
+    
+    useEffect(() => {
+        if (location.state?.autoFridge && !autoFilterAttempted.current) {
+            autoFilterAttempted.current = true;
+            handleFridgeFilterToggle(true);
+        }
+    }, [location]);
 
     const handleAddRecipeClick = () => {
         const userId = localStorage.getItem('userId');
@@ -132,7 +135,7 @@ const ExplorarReceitas = () => {
             <div className="main-wrapper">
                 <Sidebar />
                 <main className="content-profile">
-                    <div className="profile-grid" style={{ margin: '0', maxWidth: '100%' }}>
+                    <div className="profile-grid profile-grid-full">
 
                         <h1 className="page-title-underline">Descobrir Receitas</h1>
 
@@ -141,10 +144,9 @@ const ExplorarReceitas = () => {
                                 <input
                                     type="text"
                                     placeholder="Pesquisar receitas..."
-                                    className="main-search-input recipe-search-box"
+                                    className="main-search-input recipe-search-box text-black"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    style={{ color: 'black' }}
                                 />
                                 <img src={iconeLupa} alt="Lupa" className="recipe-icon-svg search-icon-pos" />
                             </div>
@@ -153,11 +155,10 @@ const ExplorarReceitas = () => {
                                 <button 
                                     className={`btn-filter-fridge ${isFridgeFilterActive ? 'active' : ''}`}
                                     onClick={handleFridgeFilterToggle}
-                                    style={isFridgeFilterActive ? { backgroundColor: '#628169', color: 'white' } : {}}
                                 >
-                                    <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg" style={{marginRight: '8px', filter: isFridgeFilterActive ? 'brightness(0) invert(1)' : 'none'}} />
+                                    <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg icon-mr-8" />
                                     Frigorífico
-                                    <img src={iconeFrig} alt="Frigorifico" className="recipe-icon-svg" style={{marginLeft: '8px', filter: isFridgeFilterActive ? 'brightness(0) invert(1)' : 'none'}} />
+                                    <img src={iconeFrig} alt="Frigorifico" className="recipe-icon-svg icon-ml-8" />
                                 </button>
 
                                 <button className="btn-add-recipe" onClick={handleAddRecipeClick}>+</button>
@@ -168,12 +169,11 @@ const ExplorarReceitas = () => {
                             {filteredReceitas.map((receita, index) => (
                                 <div 
                                     key={receita.id || index} 
-                                    className="recipe-card" 
+                                    className="recipe-card cursor-pointer" 
                                     onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
-                                    style={{ cursor: 'pointer' }}
                                 >
                                     <div className="recipe-image-placeholder">
-                                        <span style={{ fontSize: '40px', color: '#D1CDBC' }}>✕</span>
+                                        <span className="recipe-icon-large">✕</span>
                                     </div>
                                     <div className="recipe-card-footer">
                                         <span className="ingredient-name">{receita.nome}</span>
@@ -181,7 +181,7 @@ const ExplorarReceitas = () => {
                                 </div>
                             ))}
                             {filteredReceitas.length === 0 && (
-                                <p style={{ gridColumn: '1 / -1', textAlign: 'center', marginTop: '20px' }}>
+                                <p className="text-empty-state-center">
                                     Nenhuma receita encontrada com estes critérios.
                                 </p>
                             )}

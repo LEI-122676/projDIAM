@@ -15,9 +15,11 @@ const CriarReceita = () => {
     const [dbIngredientes, setDbIngredientes] = useState([]);
     const [utilizadorId, setUtilizadorId] = useState(null);
 
+    const INGREDIENTES_URL = 'http://localhost:8000/idjango/api/ingredientes/';
+    const RECEITAS_URL = 'http://localhost:8000/idjango/api/receitas/';
+
     useEffect(() => {
-        // Fetch ingredientes from Django
-        axios.get('http://localhost:8000/idjango/api/ingredientes/')
+        axios.get(INGREDIENTES_URL)
             .then(res => setDbIngredientes(res.data))
             .catch(err => console.error("Erro ao carregar ingredientes:", err));
 
@@ -111,8 +113,8 @@ const CriarReceita = () => {
             classificacao: 0.0
         };
 
-        axios.post('http://localhost:8000/idjango/api/receitas/', payload)
-            .then(res => {
+        axios.post(RECEITAS_URL, payload)
+            .then(() => {
                 alert('Receita criada com sucesso!');
                 navigate(-1);
             })
@@ -139,29 +141,27 @@ const CriarReceita = () => {
                                 <label>Nome*:</label>
                                 <input
                                     type="text"
-                                    className="input-beige"
+                                    className="input-beige text-black"
                                     placeholder="Dê um nome à sua receita"
                                     value={nome}
                                     onChange={(e) => setNome(e.target.value)}
-                                    style={{ color: 'black' }}
                                 />
                             </div>
 
                             <div className="form-group">
                                 <label>Passos*:</label>
                                 {passos.map((passo, index) => (
-                                    <div key={index} className="dynamic-list-item" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                                    <div key={index} className="dynamic-list-item dynamic-list-item-flex">
                                         <span className="item-number">{index + 1}.</span>
                                         <input
                                             type="text"
-                                            className="input-beige"
+                                            className="input-beige flex-input-black"
                                             placeholder="Descreva o passo da receita..."
                                             value={passo}
                                             onChange={(e) => handlePassoChange(index, e.target.value)}
-                                            style={{ flex: 1, marginRight: '10px', color: 'black' }}
                                         />
                                         {passos.length > 1 && (
-                                            <button className="btn-cancel" style={{ padding: '5px 10px', fontSize: '12px' }} onClick={() => handleRemovePasso(index)}>X</button>
+                                            <button className="btn-cancel btn-cancel-small" onClick={() => handleRemovePasso(index)}>X</button>
                                         )}
                                     </div>
                                 ))}
@@ -171,19 +171,18 @@ const CriarReceita = () => {
                             <div className="form-group">
                                 <label>Ingredientes*:</label>
                                 {ingredientesList.map((ingrediente, index) => (
-                                    <div key={index} className="dynamic-list-item" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                                    <div key={index} className="dynamic-list-item dynamic-list-item-flex">
                                         <span className="item-number">{index + 1}.</span>
                                         <input
                                             type="text"
-                                            className="input-beige"
+                                            className="input-beige flex-input-black"
                                             placeholder="Nome do ingrediente..."
                                             list="lista-ingredientes"
                                             value={ingrediente}
                                             onChange={(e) => handleIngredienteChange(index, e.target.value)}
-                                            style={{ flex: 1, marginRight: '10px', color: 'black' }}
                                         />
                                         {ingredientesList.length > 1 && (
-                                            <button className="btn-cancel" style={{ padding: '5px 10px', fontSize: '12px' }} onClick={() => handleRemoveIngrediente(index)}>X</button>
+                                            <button className="btn-cancel btn-cancel-small" onClick={() => handleRemoveIngrediente(index)}>X</button>
                                         )}
                                     </div>
                                 ))}
