@@ -1,4 +1,4 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
@@ -9,33 +9,33 @@ import PopupModal from '../maincomponents/PopupModal.jsx';
 const Frigorifico = () => {
     const navigate = useNavigate();
     const userId = localStorage.getItem('userId');
-    
+
     const [fridgeId, setFridgeId] = useState(null);
     const [ingredientesFrigorificoIds, setIngredientesFrigorificoIds] = useState([]);
-    
+
     const [dbIngredientes, setDbIngredientes] = useState([]);
     const [ingredienteSelecionado, setIngredienteSelecionado] = useState('');
-    
-    const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
 
+    const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
     const INGREDIENTES_URL = 'http://localhost:8000/idjango/api/ingredientes/';
     const UTILIZADORES_URL = 'http://localhost:8000/idjango/api/utilizadores/';
     const FRIGORIFICOS_URL = 'http://localhost:8000/idjango/api/frigorificos/';
 
     useEffect(() => {
         if (!userId) {
-            setTimeout(() => {
-                setPopupConfig({
-                    isOpen: true,
-                    title: 'Acesso Restrito',
-                    message: 'Precisas de iniciar sessão para aceder ao teu frigorífico.',
-                    singleButton: false,
-                    confirmText: 'Iniciar Sessão',
-                    onConfirm: () => navigate('/login'),
-                    onCancel: () => navigate('/')
-                });
-            }, 0);
-            return;
+            const timeoutId = setTimeout(() => {
+            setPopupConfig({
+                isOpen: true,
+                title: 'Acesso Restrito',
+                message: 'Precisas de iniciar sessão para aceder ao teu frigorífico.',
+                singleButton: false,
+                confirmText: 'Iniciar Sessão',
+                onConfirm: () => navigate('/login'),
+                onCancel: () => navigate('/')
+            });
+        }, 0);
+
+        return () => clearTimeout(timeoutId);
         }
 
         // 1. Ingredientes disponíveis no django
@@ -60,17 +60,17 @@ const Frigorifico = () => {
             alert("Ainda não tens um frigorífico configurado no servidor.");
             return;
         }
-        
+
         axios.put(`${FRIGORIFICOS_URL}${fridgeId}`, {
             ingredientes: novaListaIds
         })
-        .then(() => {
-            setIngredientesFrigorificoIds(novaListaIds);
-        })
-        .catch(err => {
-            console.error("Erro ao atualizar frigorífico:", err);
-            alert("Falha ao sincronizar o teu frigorífico. Tenta novamente.");
-        });
+            .then(() => {
+                setIngredientesFrigorificoIds(novaListaIds);
+            })
+            .catch(err => {
+                console.error("Erro ao atualizar frigorífico:", err);
+                alert("Falha ao sincronizar o teu frigorífico. Tenta novamente.");
+            });
     };
 
     const adicionarIngrediente = (e) => {
@@ -108,7 +108,7 @@ const Frigorifico = () => {
                 <Sidebar />
                 <main className="content-frigorifico">
                     <div className="fridge-container">
-                        
+
                         <div className="fridge-header fridge-header-flex">
                             <h1 className="page-title-underline m-0">O Meu Frigorífico</h1>
                             <button className="btn-create-submit btn-rounded-20" onClick={irParaReceitas}>
@@ -120,9 +120,9 @@ const Frigorifico = () => {
                             <form onSubmit={adicionarIngrediente} className="fridge-form fridge-form-flex">
                                 <div className="form-group flex-1">
                                     <label className="fridge-label">Adicionar Ingrediente:</label>
-                                    <select 
-                                        className="input-beige select-fridge" 
-                                        value={ingredienteSelecionado} 
+                                    <select
+                                        className="input-beige select-fridge"
+                                        value={ingredienteSelecionado}
                                         onChange={(e) => setIngredienteSelecionado(e.target.value)}
                                     >
                                         <option value="">-- Selecione um ingrediente --</option>
@@ -148,11 +148,11 @@ const Frigorifico = () => {
                                 ingredientesFrigorificoIds.map((id) => {
                                     const obj = dbIngredientes.find(i => i.id === id);
                                     const nome = obj ? obj.nome : `Ingrediente #${id}`;
-                                    
+
                                     return (
                                         <div key={id} className="ingredient-tag ingredient-tag-custom">
-                                            <button 
-                                                className="remove-btn remove-btn-custom" 
+                                            <button
+                                                className="remove-btn remove-btn-custom"
                                                 onClick={() => removerIngrediente(id)}
                                             >
                                                 ✕
@@ -167,8 +167,8 @@ const Frigorifico = () => {
                     </div>
                 </main>
             </div>
-            
-            <PopupModal 
+
+            <PopupModal
                 isOpen={popupConfig.isOpen}
                 title={popupConfig.title}
                 message={popupConfig.message}

@@ -57,10 +57,10 @@ def utilizador_detail(request, utilizador_id):
 def utilizador_frigorifico(request, utilizador_id):
     try:
         utilizador = Utilizador.objects.get(pk=utilizador_id)
-        frigorifico = Frigorifico.objects.get(utilizador=utilizador.user)
+        frigorifico = utilizador.frigorifico
+        if not frigorifico:
+            return Response(status=status.HTTP_404_NOT_FOUND)
     except Utilizador.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    except Frigorifico.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
         
     if request.method == 'GET':
@@ -77,10 +77,32 @@ def receitas(request):
         serializer = ReceitaSerializer(receita_list, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
-        serializer = ReceitaSerializer(data=request.data)
+        import re
+        
+        # Copiamos os dados para que possamos modificá-los antes da validação do serializer
+        try:
+            data = request.data.copy()
+        except AttributeError:
+            data = request.data
+            
+        if 'instrucao' in data and isinstance(data['instrucao'], list):
+            formatted_passos = []
+            for i, passo in enumerate(data['instrucao']):
+                if isinstance(passo, str):
+                    prefix = f"Passo {i+1}: "
+                    if not passo.startswith(prefix):
+                        # Limpa qualquer formatação "Passo N:" antiga que o utilizador possa ter enviado
+                        passo_limpo = re.sub(r'^Passo \d+:\s*', '', passo)
+                        formatted_passos.append(f"{prefix}{passo_limpo}")
+                    else:
+                        formatted_passos.append(passo)
+            data['instrucao'] = formatted_passos
+
+        serializer = ReceitaSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])
