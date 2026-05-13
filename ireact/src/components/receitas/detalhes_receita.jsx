@@ -42,18 +42,13 @@ const VerReceita = () => {
         });
     };
 
-    useEffect(() => {
-        if (!recipeId) {
-            navigate('/receitas');
-            return;
-        }
-
-        // Ingredientes para conseguirmos os IDs para nomes
+    const getIngredientes = () => {
         axios.get(INGREDIENTES_URL)
             .then(res => setDbIngredientes(res.data))
             .catch(err => console.error(err));
+    };
 
-        // Receita
+    const getReceita = () => {
         axios.get(RECEITA_URL + recipeId)
             .then(res => {
                 setReceita(res.data);
@@ -62,14 +57,26 @@ const VerReceita = () => {
                 }
             })
             .catch(err => console.error(err));
+    };
 
-        // Comentários
+    const getComentarios = () => {
         axios.get(COMENTARIOS_URL)
             .then(res => {
                 const recipeComments = res.data.filter(c => c.receita === parseInt(recipeId));
                 setComentarios(recipeComments);
             })
             .catch(err => console.error(err));
+    };
+
+    useEffect(() => {
+        if (!recipeId) {
+            navigate('/receitas');
+            return;
+        }
+
+        getIngredientes();
+        getReceita();
+        getComentarios();
             
     }, [recipeId, userId, navigate]);
 

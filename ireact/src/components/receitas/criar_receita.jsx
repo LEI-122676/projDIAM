@@ -18,10 +18,14 @@ const CriarReceita = () => {
     const INGREDIENTES_URL = 'http://localhost:8000/idjango/api/ingredientes/';
     const RECEITAS_URL = 'http://localhost:8000/idjango/api/receitas/';
 
-    useEffect(() => {
+    const getIngredientes = () => {
         axios.get(INGREDIENTES_URL)
             .then(res => setDbIngredientes(res.data))
             .catch(err => console.error("Erro ao carregar ingredientes:", err));
+    };
+
+    useEffect(() => {
+        getIngredientes();
 
         // Verify authentication
         const userId = localStorage.getItem('userId');

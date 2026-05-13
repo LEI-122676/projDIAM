@@ -21,29 +21,13 @@ const Frigorifico = () => {
     const UTILIZADORES_URL = 'http://localhost:8000/idjango/api/utilizadores/';
     const FRIGORIFICOS_URL = 'http://localhost:8000/idjango/api/frigorificos/';
 
-    useEffect(() => {
-        if (!userId) {
-            const timeoutId = setTimeout(() => {
-            setPopupConfig({
-                isOpen: true,
-                title: 'Acesso Restrito',
-                message: 'Precisas de iniciar sessão para aceder ao teu frigorífico.',
-                singleButton: false,
-                confirmText: 'Iniciar Sessão',
-                onConfirm: () => navigate('/login'),
-                onCancel: () => navigate('/')
-            });
-        }, 0);
-
-        return () => clearTimeout(timeoutId);
-        }
-
-        // 1. Ingredientes disponíveis no django
+    const getIngredientes = () => {
         axios.get(INGREDIENTES_URL)
             .then(res => setDbIngredientes(res.data))
             .catch(err => console.error("Erro ao carregar ingredientes da base de dados", err));
+    };
 
-        // 2. Frigorífico do utilizador
+    const getFrigorifico = () => {
         axios.get(`${UTILIZADORES_URL}${userId}/frigorifico`)
             .then(res => {
                 setFridgeId(res.data.id);
@@ -52,6 +36,27 @@ const Frigorifico = () => {
             .catch(err => {
                 console.error("Erro ao carregar frigorífico do utilizador", err);
             });
+    };
+
+    useEffect(() => {
+        if (!userId) {
+            const timeoutId = setTimeout(() => {
+                setPopupConfig({
+                    isOpen: true,
+                    title: 'Acesso Restrito',
+                    message: 'Precisas de iniciar sessão para aceder ao teu frigorífico.',
+                    singleButton: false,
+                    confirmText: 'Iniciar Sessão',
+                    onConfirm: () => navigate('/login'),
+                    onCancel: () => navigate('/')
+                });
+            }, 0);
+
+            return () => clearTimeout(timeoutId);
+        }
+
+        getIngredientes();
+        getFrigorifico();
     }, [userId, navigate]);
 
     // Função para atualizar na BD
