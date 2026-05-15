@@ -43,7 +43,7 @@ venv\Scripts\activate
 source venv/bin/activate
 
 # 3. Instalar o Django e as dependências (se tiverem dependências extra como django-cors-headers, adicionem aqui)
-pip install django
+pip install django djangorestframework django-cors-headers
 
 # 4. Preparar a base de dados
 python manage.py migrate
