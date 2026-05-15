@@ -48,8 +48,15 @@ const Login = () => {
       alert('As passwords não coincidem');
       return;
     }
+
+    const formData = new FormData();
+    formData.append('firstName', firstName);
+    formData.append('lastName', lastName);
+    formData.append('username', username);
+    formData.append('password', password);
+    formData.append('email', email);
       
-    axios.post(SIGN_UP_URL, { firstName, lastName, username, password, email}, { withCredentials: true }).then( response => {
+    axios.post(SIGN_UP_URL, formData, { withCredentials: true }).then( response => {
         console.log('Signup successful!', response.data.msg);
         localStorage.setItem('utilizadorId', response.data.utilizadorId);
         navigate(-1);
