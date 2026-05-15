@@ -84,65 +84,24 @@ const VerEvento = () => {
             <div className="main-wrapper">
                 <Sidebar />
                 <main className="content-profile">
-                    <div className="event-header-container">
-                        {/* Title and Buttons Section */}
-                        <div className="event-title-section">
-                            <h1 className="page-title-underline">{evento.nome}</h1>
-                            <div className="event-actions">
-                                <button className="btn-voltar" onClick={() => navigate(-1)}>Voltar</button>
-                                <button 
-                                    className={inscrito ? "btn-join joined" : "btn-join"} 
-                                    onClick={handleJoin}
-                                >
-                                    {inscrito ? 'Sair' : 'Join'}
-                                </button>
+                    <h1 className="page-title-underline">{evento.nome}</h1>
+                    <div className="create-recipe-container">
+                        <div className="recipe-form-section">
+                            <div className="form-group">
+                                <label>Descrição:</label>
+                                <label>{evento.descricao}</label>
+                            </div>
+                        </div> 
+                        <div className="recipe-image-section">
+                            <div className="create-actions-group">
+                                <button className="btn-cancel" onClick={() => navigate(-1)} >Voltar</button>
+                                <button className="btn-create-submit">Criar</button>
                             </div>
                         </div>
 
-                        {/* Event Details Grid */}
-                        <div className="event-grid-layout">
-                            <div className="event-info-main">
-                                <p className="event-meta-info">
-                                    <span className="icon">👤</span> <strong>Organizado por:</strong> {evento.criador_nome || 'Organizador'}
-                                </p>
-                                <p className="event-meta-info">
-                                    <span className="icon">📅</span> <strong>Data:</strong> {new Date(evento.data).toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' })}
-                                </p>
-                                
-                                <div className="description-section">
-                                    <h3>Descrição:</h3>
-                                    <div className="description-box-beige">
-                                        {evento.descricao}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Main Image Placeholder */}
-                            <div className="event-image-placeholder-large">
-                                <div className="placeholder-x">✕</div>
-                            </div>
-                        </div>
-
-                        {/* Bottom Row: Secondary Image and Schedule */}
-                        <div className="event-bottom-grid">
-                            <div className="event-image-placeholder-small">
-                                <div className="placeholder-x">✕</div>
-                            </div>
-
-                            <div className="schedule-section">
-                                <h3>Horário</h3>
-                                <ul className="schedule-list">
-                                    <li><strong>12:00</strong> Recepção</li>
-                                    <li><strong>13:30</strong> Início da Atividade</li>
-                                    <li><strong>15:00</strong> Coffee Break</li>
-                                    <li><strong>16:30</strong> Encerramento</li>
-                                </ul>
-                            </div>
-                        </div>
                     </div>
                 </main>
-            </div>
-
+              </div>
             <PopupModal 
                 isOpen={popupConfig.isOpen}
                 title={popupConfig.title}
