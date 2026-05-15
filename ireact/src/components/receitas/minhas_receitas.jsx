@@ -1,21 +1,19 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
 import iconeLupa from "../../assets/lupa.svg";
 import iconeFiltro from "../../assets/filtro.svg";
 import iconeFrig from "../../assets/frigorifico.svg";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import PopupModal from '../maincomponents/PopupModal.jsx';
 
-const ExplorarReceitas = () => {
+const AsMinhasReceitas = () => {
     const navigate = useNavigate();
-    const location = useLocation();
-    const autoFilterAttempted = useRef(false);
 
     const RECEITAS_URL = 'http://localhost:8000/idjango/api/receitas/';
     const UTILIZADORES_URL = 'http://localhost:8000/idjango/api/utilizadores/';
-    
+
     const [receitas, setReceitas] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [isFridgeFilterActive, setIsFridgeFilterActive] = useState(false);
@@ -24,39 +22,29 @@ const ExplorarReceitas = () => {
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-    const getReceitas = () => {
-        axios.get(RECEITAS_URL)
-            .then(res => setReceitas(res.data))
-            .catch(err => console.error("Erro ao carregar receitas:", err));
-    };
+    const userId = localStorage.getItem('userId');
 
     useEffect(() => {
-        getReceitas();
-    }, []);
-
-    const handleFridgeFilterToggle = (forceOpen = false) => {
-        const userId = localStorage.getItem('userId');
-
         if (!userId) {
-            setPopupConfig({
-                isOpen: true,
-                title: 'Acesso Restrito',
-                message: 'Precisas de iniciar sessão para utilizar o filtro do Frigorífico.',
-                singleButton: false,
-                confirmText: 'Iniciar Sessão',
-                onConfirm: () => navigate('/login'),
-                onCancel: closePopup
-            });
+            navigate('/login');
             return;
         }
 
-        if (isFridgeFilterActive && !forceOpen) {
+        // Carrega todas as receitas
+        axios.get(RECEITAS_URL)
+            .then(res => setReceitas(res.data))
+            .catch(err => console.error("Erro ao carregar receitas:", err));
+    }, [userId, navigate]);
+
+    const handleFridgeFilterToggle = () => {
+        if (!userId) return;
+
+        if (isFridgeFilterActive) {
             setIsFridgeFilterActive(false);
             setFridgeIngredients([]);
             return;
         }
 
-        // Tenta ir buscar o frigorífico do utilizador
         axios.get(`${UTILIZADORES_URL}${userId}/frigorifico`)
             .then(res => {
                 const ingredientes = res.data.ingredientes;
@@ -88,49 +76,26 @@ const ExplorarReceitas = () => {
                 });
             });
     };
-    
-    useEffect(() => {
-        if (location.state?.autoFridge && !autoFilterAttempted.current) {
-            autoFilterAttempted.current = true;
-            handleFridgeFilterToggle(true);
-        }
-    }, [location]);
 
-    const handleAddRecipeClick = () => {
-        const userId = localStorage.getItem('userId');
-        if (!userId) {
-            setPopupConfig({
-                isOpen: true,
-                title: 'Acesso Restrito',
-                message: 'Precisas de iniciar sessão para criar uma nova receita. Cria uma conta ou faz login para partilhares as tuas criações culinárias!',
-                singleButton: false,
-                confirmText: 'Iniciar Sessão',
-                onConfirm: () => navigate('/login'),
-                onCancel: closePopup
-            });
-        } else {
-            navigate('/receitas/criar-receita');
-        }
-    };
-
+    // Filtrar primeiro pelas condições globais (texto e frigorífico)
     const filteredReceitas = receitas.filter(receita => {
-        // Filtro da barra de pesquisa
         const nomeReceita = receita.nome || "";
         const matchesSearch = nomeReceita.toLowerCase().includes(searchQuery.toLowerCase());
-        
-        // Filtro do frigorífico (mostrar apenas receitas onde temos os ingredientes)
+
         let matchesFridge = true;
         if (isFridgeFilterActive && fridgeIngredients.length > 0) {
-            // Verifica se tem TODOS os ingredientes necessários para a receita
             if (!receita.ingredientes || receita.ingredientes.length === 0) {
-                 matchesFridge = false; // Se a receita não tem ingredientes, ignorar
+                matchesFridge = false;
             } else {
-                 matchesFridge = receita.ingredientes.every(ingId => fridgeIngredients.includes(ingId));
+                matchesFridge = receita.ingredientes.every(ingId => fridgeIngredients.includes(ingId));
             }
         }
-
         return matchesSearch && matchesFridge;
     });
+
+    // Dividir em Criadas vs Guardadas
+    const criadasPorMim = filteredReceitas.filter(r => r.criador === parseInt(userId));
+    const receitasGuardadas = filteredReceitas.filter(r => r.guardadores.includes(parseInt(userId)) && r.criador !== parseInt(userId));
 
     return (
         <div className="body-wrapper">
@@ -140,7 +105,7 @@ const ExplorarReceitas = () => {
                 <main className="content-profile">
                     <div className="profile-grid profile-grid-full">
 
-                        <h1 className="page-title-underline">Descobrir Receitas</h1>
+                        <h1 className="page-title-underline">As Minhas Receitas</h1>
 
                         <div className="recipes-action-bar">
                             <div className="recipes-search-container">
@@ -155,7 +120,7 @@ const ExplorarReceitas = () => {
                             </div>
 
                             <div className="recipes-button-group">
-                                <button 
+                                <button
                                     className={`btn-filter-fridge ${isFridgeFilterActive ? 'active' : ''}`}
                                     onClick={handleFridgeFilterToggle}
                                 >
@@ -164,35 +129,66 @@ const ExplorarReceitas = () => {
                                     <img src={iconeFrig} alt="Frigorifico" className="recipe-icon-svg icon-ml-8" />
                                 </button>
 
-                                <button className="btn-add-recipe" onClick={handleAddRecipeClick}>+</button>
+                                <button className="btn-add-recipe" onClick={() => navigate('/receitas/criar-receita')}>+</button>
                             </div>
                         </div>
 
-                        <div className="recipes-grid">
-                            {filteredReceitas.map((receita, index) => (
-                                <div 
-                                    key={receita.id || index} 
-                                    className="recipe-card cursor-pointer" 
-                                    onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
-                                >
-                                    <div className="recipe-image-placeholder">
-                                        <span className="recipe-icon-large">✕</span>
+                        {/* SECÇÃO: CRIADAS POR MIM */}
+                        <div className="mt-30">
+                            <h2 className="my-recipes-section-title">Criadas por Mim</h2>
+                            <div className="recipes-grid mt-20">
+                                {criadasPorMim.map((receita) => (
+                                    <div
+                                        key={`criada-${receita.id}`}
+                                        className="recipe-card recipe-card-created"
+                                        onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
+                                    >
+                                        <div className="recipe-image-placeholder">
+                                            <span className="recipe-icon-large">✕</span>
+                                        </div>
+                                        <div className="recipe-card-footer">
+                                            <span className="ingredient-name">{receita.nome}</span>
+                                        </div>
                                     </div>
-                                    <div className="recipe-card-footer">
-                                        <span className="ingredient-name">{receita.nome}</span>
-                                    </div>
-                                </div>
-                            ))}
-                            {filteredReceitas.length === 0 && (
-                                <p className="text-empty-state-center">
-                                    Nenhuma receita encontrada com estes critérios.
-                                </p>
-                            )}
+                                ))}
+                                {criadasPorMim.length === 0 && (
+                                    <p className="text-empty-state">
+                                        Ainda não tens nenhuma receita criada.
+                                    </p>
+                                )}
+                            </div>
                         </div>
+
+                        {/* SECÇÃO: RECEITAS GUARDADAS */}
+                        <div className="mt-50">
+                            <h2 className="my-recipes-section-title">Receitas Guardadas</h2>
+                            <div className="recipes-grid mt-20">
+                                {receitasGuardadas.map((receita) => (
+                                    <div
+                                        key={`guardada-${receita.id}`}
+                                        className="recipe-card recipe-card-saved"
+                                        onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
+                                    >
+                                        <div className="recipe-image-placeholder">
+                                            <span className="recipe-icon-large">✕</span>
+                                        </div>
+                                        <div className="recipe-card-footer">
+                                            <span className="ingredient-name">{receita.nome}</span>
+                                        </div>
+                                    </div>
+                                ))}
+                                {receitasGuardadas.length === 0 && (
+                                    <p className="text-empty-state">
+                                        Ainda não guardaste nenhuma receita.
+                                    </p>
+                                )}
+                            </div>
+                        </div>
+
                     </div>
                 </main>
             </div>
-            
+
             <PopupModal 
                 isOpen={popupConfig.isOpen}
                 title={popupConfig.title}
@@ -207,4 +203,4 @@ const ExplorarReceitas = () => {
     );
 };
 
-export default ExplorarReceitas;
+export default AsMinhasReceitas;

@@ -1,9 +1,16 @@
+import django
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from .serializers import *
 from .models import *
 import os
+
+#Imports de Autenticação
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 QUERY_LIMIT = int(os.environ.get('QUERY_LIMIT', 50))
 
@@ -50,10 +57,10 @@ def utilizador_detail(request, utilizador_id):
 def utilizador_frigorifico(request, utilizador_id):
     try:
         utilizador = Utilizador.objects.get(pk=utilizador_id)
-        frigorifico = Frigorifico.objects.get(utilizador=utilizador.user)
+        frigorifico = utilizador.frigorifico
+        if not frigorifico:
+            return Response(status=status.HTTP_404_NOT_FOUND)
     except Utilizador.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    except Frigorifico.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
         
     if request.method == 'GET':
@@ -70,10 +77,32 @@ def receitas(request):
         serializer = ReceitaSerializer(receita_list, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
-        serializer = ReceitaSerializer(data=request.data)
+        import re
+        
+        # Copiamos os dados para que possamos modificá-los antes da validação do serializer
+        try:
+            data = request.data.copy()
+        except AttributeError:
+            data = request.data
+            
+        if 'instrucao' in data and isinstance(data['instrucao'], list):
+            formatted_passos = []
+            for i, passo in enumerate(data['instrucao']):
+                if isinstance(passo, str):
+                    prefix = f"Passo {i+1}: "
+                    if not passo.startswith(prefix):
+                        # Limpa qualquer formatação "Passo N:" antiga que o utilizador possa ter enviado
+                        passo_limpo = re.sub(r'^Passo \d+:\s*', '', passo)
+                        formatted_passos.append(f"{prefix}{passo_limpo}")
+                    else:
+                        formatted_passos.append(passo)
+            data['instrucao'] = formatted_passos
+
+        serializer = ReceitaSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -105,18 +134,25 @@ def eventos(request):
     elif request.method == 'POST':
         serializer = EventoSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
+            evento = serializer.save()
+            if evento.criador:
+                evento.inscritos.add(evento.criador)
+            serializer = EventoSerializer(evento)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['PUT', 'DELETE'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def evento_detail(request, evento_id):
     try:
         evento = Evento.objects.get(pk=evento_id)
     except Evento.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'PUT':
+    if request.method == 'GET':
+        serializer = EventoSerializer(evento)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
         serializer = EventoSerializer(evento, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -224,3 +260,54 @@ def comentario_detail(request, comentario_id):
         comentario.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+##Authenticação e autorização
+
+@api_view(['POST'])
+def signup(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+    email = request.data.get('email')
+    if not username or not password or not email:
+        return Response({'msg': 'invalid username/password/email'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if User.objects.filter(username=username).exists():
+        return Response({'msg': 'username already exists'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    user = User.objects.create_user(username=username, password=password, email=email)
+
+    novo_frigorifico = Frigorifico.objects.create()
+
+    Utilizador.objects.create(user=user, frigorifico=novo_frigorifico)
+    
+    return Response({'msg': 'user ' + user.username + ' created'}, status=status.HTTP_201_CREATED)
+
+@api_view(['POST'])
+def login_view(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user) # Criação da sessão
+        utilizador = Utilizador.objects.get(user=user)
+        return Response({'msg': 'user logged in', 'utilizadorId': utilizador.id})
+    else:
+        return Response({'msg': 'invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+    
+@api_view(['GET'])
+def logout_view(request):
+    logout(request)
+    return Response({'msg': 'user logged out'})
+
+# Endpoint para verificar se o utilizador está autenticado e obter o seu username
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_view(request):
+    return Response({'username': request.user.username})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_view_Id(request):
+    return Response({'user_id': request.user.id})
+
