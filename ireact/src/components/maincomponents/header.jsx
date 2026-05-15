@@ -15,11 +15,6 @@ const Header = () => {
 
   const [username, setUsername] = useState(null);
 
-  useEffect(() => {axios.get(URL_USER, {withCredentials: true})
-    .then( response => setUsername(response.data.username))
-    .catch( () => console.log("user not logged in"));
-  }, []);
-
 
   const handleLogout = () => {
     axios.get(URL_LOGOUT, {withCredentials: true})
@@ -27,6 +22,10 @@ const Header = () => {
     .catch( () => console.log('logout failed'));
   }
   
+  useEffect(() => {axios.get(URL_USER, {withCredentials: true})
+    .then( response => setUsername(response.data.username))
+    .catch( () => console.log("user not logged in"));
+  }, []);
 
   const navigate = useNavigate(); 
 
