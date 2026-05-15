@@ -8,7 +8,7 @@ import PopupModal from '../maincomponents/PopupModal.jsx';
 
 const Frigorifico = () => {
     const navigate = useNavigate();
-    const userId = localStorage.getItem('userId');
+    const userId = localStorage.getItem('utilizadorId');
 
     const [fridgeId, setFridgeId] = useState(null);
     const [ingredientesFrigorificoIds, setIngredientesFrigorificoIds] = useState([]);
@@ -31,7 +31,12 @@ const Frigorifico = () => {
         axios.get(`${UTILIZADORES_URL}${userId}/frigorifico`)
             .then(res => {
                 setFridgeId(res.data.id);
-                setIngredientesFrigorificoIds(res.data.ingredientes || []);
+                // Garantir que guardamos apenas uma lista de números (IDs)
+                const ingredientes = (res.data.ingredientes || []).map(item => {
+                    if (typeof item === 'object' && item !== null) return Number(item.id);
+                    return Number(item);
+                });
+                setIngredientesFrigorificoIds(ingredientes);
             })
             .catch(err => {
                 console.error("Erro ao carregar frigorífico do utilizador", err);
@@ -94,7 +99,14 @@ const Frigorifico = () => {
     };
 
     const removerIngrediente = (idParaRemover) => {
-        const novaLista = ingredientesFrigorificoIds.filter(id => id !== idParaRemover);
+        // Garantir que a comparação é feita com números e suporta objetos
+        const targetId = typeof idParaRemover === 'object' && idParaRemover !== null ? Number(idParaRemover.id) : Number(idParaRemover);
+        
+        const novaLista = ingredientesFrigorificoIds.filter(item => {
+            const currentId = typeof item === 'object' && item !== null ? Number(item.id) : Number(item);
+            return currentId !== targetId;
+        });
+        
         atualizarFrigorifico(novaLista);
     };
 
@@ -104,7 +116,13 @@ const Frigorifico = () => {
     };
 
     // Ingredientes que AINDA NÃO estão no frigorífico
-    const ingredientesDisponiveis = dbIngredientes.filter(ing => !ingredientesFrigorificoIds.includes(ing.id));
+    const ingredientesDisponiveis = dbIngredientes.filter(ing => {
+        const fridgeIds = (ingredientesFrigorificoIds || []).map(item => {
+            if (typeof item === 'object' && item !== null) return Number(item.id);
+            return Number(item);
+        });
+        return !fridgeIds.includes(Number(ing.id));
+    });
 
     return (
         <div className="body-wrapper">
@@ -126,7 +144,7 @@ const Frigorifico = () => {
                                 <div className="form-group flex-1">
                                     <label className="fridge-label">Adicionar Ingrediente:</label>
                                     <select
-                                        className="input-beige select-fridge"
+                                        className="input-beige select-fridge text-black"
                                         value={ingredienteSelecionado}
                                         onChange={(e) => setIngredienteSelecionado(e.target.value)}
                                     >

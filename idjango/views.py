@@ -77,21 +77,37 @@ def receitas(request):
         serializer = ReceitaSerializer(receita_list, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
-        import re
-        
-        # Copiamos os dados para que possamos modificá-los antes da validação do serializer
-        try:
-            data = request.data.copy()
-        except AttributeError:
-            data = request.data
-            
-        if 'instrucao' in data and isinstance(data['instrucao'], list):
+        import re, json
+
+        # Para lidar com multipart/form-data (FormData) e listas (ingredientes)
+        if hasattr(request.data, 'getlist'):
+            data = request.data.dict() # Cria uma cópia básica
+            # Recupera as listas reais para campos ManyToMany
+            if 'ingredientes' in request.data:
+                data['ingredientes'] = request.data.getlist('ingredientes')
+            if 'guardadores' in request.data:
+                data['guardadores'] = request.data.getlist('guardadores')
+        else:
+            data = request.data.copy() if hasattr(request.data, 'copy') else request.data
+
+        # Tratar a instrução (pode vir como string JSON do FormData)
+        instrucao_raw = data.get('instrucao', [])
+        if isinstance(instrucao_raw, str):
+            try:
+                instrucao_raw = json.loads(instrucao_raw)
+            except (json.JSONDecodeError, ValueError):
+                # Se não for JSON válido, tenta tratar como string única numa lista
+                if instrucao_raw.strip():
+                    instrucao_raw = [instrucao_raw]
+                else:
+                    instrucao_raw = []
+
+        if isinstance(instrucao_raw, list):
             formatted_passos = []
-            for i, passo in enumerate(data['instrucao']):
+            for i, passo in enumerate(instrucao_raw):
                 if isinstance(passo, str):
                     prefix = f"Passo {i+1}: "
                     if not passo.startswith(prefix):
-                        # Limpa qualquer formatação "Passo N:" antiga que o utilizador possa ter enviado
                         passo_limpo = re.sub(r'^Passo \d+:\s*', '', passo)
                         formatted_passos.append(f"{prefix}{passo_limpo}")
                     else:
@@ -103,6 +119,7 @@ def receitas(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -302,9 +319,10 @@ def logout_view(request):
 
 # Endpoint para verificar se o utilizador está autenticado e obter o seu username
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def user_view(request):
-    return Response({'username': request.user.username})
+    if request.user.is_authenticated:
+        return Response({'username': request.user.username})
+    return Response({'username': None})
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

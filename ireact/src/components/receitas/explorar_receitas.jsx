@@ -26,7 +26,7 @@ const ExplorarReceitas = () => {
 
     const getReceitas = () => {
         axios.get(RECEITAS_URL)
-            .then(res => setReceitas(res.data))
+            .then(res => setReceitas(res.data || []))
             .catch(err => console.error("Erro ao carregar receitas:", err));
     };
 
@@ -34,8 +34,12 @@ const ExplorarReceitas = () => {
         getReceitas();
     }, []);
 
-    const handleFridgeFilterToggle = (forceOpen = false) => {
-        const userId = localStorage.getItem('userId');
+    const handleFridgeFilterToggle = (forceValue) => {
+        const userId = localStorage.getItem('utilizadorId');
+        
+        // Se forceValue for um booleano, usamos esse valor. 
+        // Se for um evento (onClick), ignoramos e alternamos o estado atual.
+        const shouldBeActive = typeof forceValue === 'boolean' ? forceValue : !isFridgeFilterActive;
 
         if (!userId) {
             setPopupConfig({
@@ -50,7 +54,7 @@ const ExplorarReceitas = () => {
             return;
         }
 
-        if (isFridgeFilterActive && !forceOpen) {
+        if (!shouldBeActive) {
             setIsFridgeFilterActive(false);
             setFridgeIngredients([]);
             return;
@@ -71,7 +75,7 @@ const ExplorarReceitas = () => {
                         onCancel: closePopup
                     });
                 } else {
-                    setFridgeIngredients(ingredientes);
+                    setFridgeIngredients(ingredientes || []);
                     setIsFridgeFilterActive(true);
                 }
             })
@@ -97,7 +101,7 @@ const ExplorarReceitas = () => {
     }, [location]);
 
     const handleAddRecipeClick = () => {
-        const userId = localStorage.getItem('userId');
+        const userId = localStorage.getItem('utilizadorId');
         if (!userId) {
             setPopupConfig({
                 isOpen: true,
@@ -118,14 +122,28 @@ const ExplorarReceitas = () => {
         const nomeReceita = receita.nome || "";
         const matchesSearch = nomeReceita.toLowerCase().includes(searchQuery.toLowerCase());
         
-        // Filtro do frigorífico (mostrar apenas receitas onde temos os ingredientes)
+        // Filtro do frigorífico (mostrar receitas que usam pelo menos um ingrediente do frigorífico)
         let matchesFridge = true;
-        if (isFridgeFilterActive && fridgeIngredients.length > 0) {
-            // Verifica se tem TODOS os ingredientes necessários para a receita
-            if (!receita.ingredientes || receita.ingredientes.length === 0) {
-                 matchesFridge = false; // Se a receita não tem ingredientes, ignorar
+        if (isFridgeFilterActive) {
+            if (fridgeIngredients.length === 0) {
+                matchesFridge = false;
+            } else if (!receita.ingredientes || receita.ingredientes.length === 0) {
+                matchesFridge = false; 
             } else {
-                 matchesFridge = receita.ingredientes.every(ingId => fridgeIngredients.includes(ingId));
+                // Obter IDs do frigorífico como números
+                const fridgeIds = (fridgeIngredients || []).map(id => {
+                    if (typeof id === 'object' && id !== null) return Number(id.id);
+                    return Number(id);
+                });
+                
+                // Filtra apenas as receitas que possuem TODOS os itens do seu frigorífico
+                    matchesFridge = fridgeIds.every(fId => {
+                    // Para cada item que VOCÊ tem, verificamos se ele está na RECEITA
+                    return (receita.ingredientes || []).some(ing => {
+                        const recipeIngId = typeof ing === 'object' && ing !== null ? Number(ing.id) : Number(ing);
+                        return recipeIngId === Number(fId);
+                    });
+                });
             }
         }
 
@@ -176,7 +194,15 @@ const ExplorarReceitas = () => {
                                     onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
                                 >
                                     <div className="recipe-image-placeholder">
-                                        <span className="recipe-icon-large">✕</span>
+                                        {receita.foto_url ? (
+                                            <img
+                                                src={`http://localhost:8000${receita.foto_url}`}
+                                                alt={receita.nome}
+                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                            />
+                                        ) : (
+                                            <span className="recipe-icon-large">🍲</span>
+                                        )}
                                     </div>
                                     <div className="recipe-card-footer">
                                         <span className="ingredient-name">{receita.nome}</span>

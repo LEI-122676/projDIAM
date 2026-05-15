@@ -1,19 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
 import '../../css/styles.css'
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import PopupModal from '../maincomponents/PopupModal.jsx';
 
 const CriarReceita = () => {
     const navigate = useNavigate();
+    const fileInputRef = useRef(null);
 
     const [nome, setNome] = useState('');
     const [passos, setPassos] = useState(['']);
     const [ingredientesList, setIngredientesList] = useState(['']);
+    const [foto, setFoto] = useState(null);
+    const [fotoPreview, setFotoPreview] = useState(null);
 
     const [dbIngredientes, setDbIngredientes] = useState([]);
     const [utilizadorId, setUtilizadorId] = useState(null);
+
+    const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
+    const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
     const INGREDIENTES_URL = 'http://localhost:8000/idjango/api/ingredientes/';
     const RECEITAS_URL = 'http://localhost:8000/idjango/api/receitas/';
@@ -25,16 +32,29 @@ const CriarReceita = () => {
     };
 
     useEffect(() => {
-        getIngredientes();
-
-        // Verify authentication
-        const userId = localStorage.getItem('userId');
+        const userId = localStorage.getItem('utilizadorId');
         if (!userId) {
-            navigate('/login');
+            setPopupConfig({
+                isOpen: true,
+                title: 'Acesso Restrito',
+                message: 'Precisas de iniciar sessão para criares uma receita.',
+                singleButton: false,
+                confirmText: 'Iniciar Sessão',
+                onConfirm: () => navigate('/login'),
+                onCancel: () => navigate('/')
+            });
             return;
         }
         setUtilizadorId(userId);
-    }, []);
+        getIngredientes();
+    }, [navigate]);
+
+    const handleFotoChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        setFoto(file);
+        setFotoPreview(URL.createObjectURL(file));
+    };
 
     const handleAddPasso = () => setPassos([...passos, '']);
     const handlePassoChange = (index, value) => {
@@ -42,7 +62,6 @@ const CriarReceita = () => {
         newPassos[index] = value;
         setPassos(newPassos);
     };
-
     const handleRemovePasso = (index) => {
         const newPassos = [...passos];
         newPassos.splice(index, 1);
@@ -55,41 +74,33 @@ const CriarReceita = () => {
         newIngredientes[index] = value;
         setIngredientesList(newIngredientes);
     };
-
     const handleRemoveIngrediente = (index) => {
         const newIngredientes = [...ingredientesList];
         newIngredientes.splice(index, 1);
         setIngredientesList(newIngredientes);
     };
 
+    const showPopup = (title, message) => {
+        setPopupConfig({ isOpen: true, title, message, singleButton: true, confirmText: 'OK', onConfirm: closePopup, onCancel: closePopup });
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!nome) {
-            alert('Por favor, dê um nome à receita.');
-            return;
-        }
-
-        if (!utilizadorId) {
-            alert('Não foi possível encontrar um utilizador (criador) na base de dados para associar a receita.');
-            return;
-        }
+        if (!nome.trim()) { showPopup('Campo Obrigatório', 'Por favor, dê um nome à receita.'); return; }
+        if (!foto) { showPopup('Foto Obrigatória', 'Por favor, adiciona uma foto à receita.'); return; }
+        if (!utilizadorId) { showPopup('Erro', 'Não foi possível identificar o utilizador. Faz login novamente.'); return; }
 
         const passosFormatados = passos
             .filter(p => p.trim() !== '')
             .map((p, index) => {
                 const prefix = `Passo ${index + 1}: `;
                 if (p.startsWith(prefix)) return p;
-                if (p.match(/^Passo \d+:/)) {
-                    return prefix + p.replace(/^Passo \d+:\s*/, '');
-                }
+                if (p.match(/^Passo \d+:/)) return prefix + p.replace(/^Passo \d+:\s*/, '');
                 return prefix + p;
             });
 
-        if (passosFormatados.length === 0) {
-            alert('Por favor, adicione pelo menos um passo.');
-            return;
-        }
+        if (passosFormatados.length === 0) { showPopup('Campo Obrigatório', 'Por favor, adicione pelo menos um passo.'); return; }
 
         const idsIngredientes = [];
         for (let ing of ingredientesList) {
@@ -98,37 +109,41 @@ const CriarReceita = () => {
             if (found) {
                 idsIngredientes.push(found.id);
             } else {
-                alert(`O ingrediente "${ing}" não foi encontrado na base de dados. Por favor, escolha um ingrediente existente.`);
+                showPopup('Ingrediente Não Encontrado', `O ingrediente "${ing}" não existe na base de dados. Escolhe um ingrediente da lista.`);
                 return;
             }
         }
 
-        if (idsIngredientes.length === 0) {
-            alert('Por favor, adicione pelo menos um ingrediente.');
-            return;
-        }
+        if (idsIngredientes.length === 0) { showPopup('Campo Obrigatório', 'Por favor, adicione pelo menos um ingrediente.'); return; }
 
-        const payload = {
-            nome: nome,
-            instrucao: passosFormatados,
-            criador: utilizadorId,
-            ingredientes: idsIngredientes,
-            guardadores: [],
-            classificacao: 0.0
-        };
+        // Usar FormData para enviar a imagem
+        const formData = new FormData();
+        formData.append('nome', nome);
+        formData.append('criador', utilizadorId);
+        formData.append('classificacao', '0.0');
+        formData.append('foto', foto);
+        // JSON fields como strings
+        formData.append('instrucao', JSON.stringify(passosFormatados));
+        idsIngredientes.forEach(id => formData.append('ingredientes', id));
 
-        axios.post(RECEITAS_URL, payload)
+        axios.post(RECEITAS_URL, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        })
             .then(() => {
-                alert('Receita criada com sucesso!');
-                navigate(-1);
+                setPopupConfig({
+                    isOpen: true,
+                    title: 'Receita Criada!',
+                    message: 'A tua receita foi criada com sucesso!',
+                    singleButton: true,
+                    confirmText: 'OK',
+                    onConfirm: () => navigate(-1),
+                    onCancel: () => navigate(-1)
+                });
             })
             .catch(err => {
                 console.error(err);
-                if (err.response && err.response.data) {
-                    alert('Erro ao criar receita: ' + JSON.stringify(err.response.data));
-                } else {
-                    alert('Erro de conexão ao criar receita.');
-                }
+                const detail = err.response?.data ? JSON.stringify(err.response.data) : 'Erro de conexão.';
+                showPopup('Erro ao Criar Receita', detail);
             });
     };
 
@@ -140,6 +155,8 @@ const CriarReceita = () => {
                 <main className="content-profile">
                     <h1 className="page-title-underline">Criar Receita</h1>
                     <div className="create-recipe-container">
+
+                        {/* COLUNA ESQUERDA: Formulário */}
                         <div className="recipe-form-section">
                             <div className="form-group">
                                 <label>Nome*:</label>
@@ -199,9 +216,46 @@ const CriarReceita = () => {
                             </div>
                         </div>
 
+                        {/* COLUNA DIREITA: Foto + Ações */}
                         <div className="recipe-image-section">
+                            {/* Upload de Foto */}
+                            <div
+                                className="image-upload-placeholder"
+                                onClick={() => fileInputRef.current.click()}
+                                title="Clica para adicionar uma foto"
+                            >
+                                {fotoPreview ? (
+                                    <img
+                                        src={fotoPreview}
+                                        alt="Pré-visualização"
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '18px' }}
+                                    />
+                                ) : (
+                                    <div style={{ textAlign: 'center', color: '#D1CDBC' }}>
+                                        <div style={{ fontSize: '48px', marginBottom: '10px' }}>📷</div>
+                                        <p style={{ fontSize: '0.9rem' }}>Clica para adicionar foto*</p>
+                                    </div>
+                                )}
+                            </div>
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept="image/*"
+                                style={{ display: 'none' }}
+                                onChange={handleFotoChange}
+                            />
+                            {fotoPreview && (
+                                <button
+                                    className="btn-cancel btn-cancel-small"
+                                    style={{ marginTop: '8px', alignSelf: 'center' }}
+                                    onClick={() => { setFoto(null); setFotoPreview(null); fileInputRef.current.value = ''; }}
+                                >
+                                    Remover foto
+                                </button>
+                            )}
+
                             <div className="create-actions-group">
-                                <button className="btn-cancel" onClick={() => navigate(-1)} >Cancelar</button>
+                                <button className="btn-cancel" onClick={() => navigate(-1)}>Cancelar</button>
                                 <button className="btn-create-submit" onClick={handleSubmit}>Criar</button>
                             </div>
                         </div>
@@ -209,6 +263,17 @@ const CriarReceita = () => {
                     </div>
                 </main>
             </div>
+
+            <PopupModal
+                isOpen={popupConfig.isOpen}
+                title={popupConfig.title}
+                message={popupConfig.message}
+                singleButton={popupConfig.singleButton}
+                confirmText={popupConfig.confirmText || 'OK'}
+                cancelText={popupConfig.cancelText || 'Cancelar'}
+                onConfirm={popupConfig.onConfirm}
+                onCancel={popupConfig.onCancel}
+            />
         </div>
     );
 };
