@@ -1,6 +1,7 @@
 import os
 import django
 import random
+from django.utils import timezone
 
 # Configurar o ambiente do Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ifridge.settings')
@@ -10,144 +11,102 @@ from django.contrib.auth.models import User
 from idjango.models import Ingrediente, Frigorifico, Utilizador, Evento, Receita, Comentario
 
 
-def povoar_real():
-    print("🚀 A iniciar povoamento com dados REALISTAS (100 instâncias)...")
+def povoar_50():
+    print("🚀 A iniciar povoamento (50 instâncias por modelo)...")
 
-    # --- 1. CRIAR 100 INGREDIENTES REAIS ---
-    nomes_ingredientes = [
+    # --- 1. INGREDIENTES (50) ---
+    lista_nomes = [
         "Alho", "Cebola", "Tomate", "Azeite", "Manteiga", "Farinha", "Açúcar", "Sal", "Pimenta", "Ovos",
-        "Leite", "Natas", "Frango", "Bife de Vaca", "Lombo de Porco", "Pescada", "Bacalhau", "Salmão", "Atum",
-        "Camarão",
-        "Polvo", "Lulas", "Batata", "Batata-doce", "Cenoura", "Brócolos", "Couve-flor", "Alface", "Pepino", "Pimento",
-        "Cogumelos", "Queijo Mozzarella", "Queijo Cheddar", "Queijo da Serra", "Fiambre", "Presunto", "Chouriço",
-        "Bacon", "Arroz Agulha", "Arroz Basmati",
-        "Esparguete", "Macarrão", "Massa Penne", "Feijão Preto", "Feijão Frade", "Grão-de-bico", "Lentilhas",
-        "Ervilhas", "Milho", "Maçã",
-        "Pera", "Banana", "Laranja", "Limão", "Morango", "Mirtilos", "Framboesas", "Uvas", "Pêssego", "Ananás",
-        "Manga", "Abacate", "Kiwi", "Melancia", "Melão", "Amêndoas", "Nozes", "Amendoim", "Caju", "Mel",
-        "Chocolate Negro", "Cacau em Pó", "Canela", "Baunilha", "Noz-moscada", "Cravinho", "Cominhos", "Caril",
-        "Pimentão-doce", "Açafrão",
-        "Oregãos", "Manjericão", "Salsa", "Coentros", "Louro", "Hortelã", "Alecrim", "Tomilho", "Vinho Branco",
-        "Vinho Tinto",
-        "Cerveja", "Vinagre Balsâmico", "Mostarda", "Maionese", "Ketchup", "Molho de Soja", "Água das Pedras", "Café",
-        "Chá Verde", "Iogurte Natural"
+        "Leite", "Natas", "Frango", "Bacalhau", "Batata", "Cenoura", "Brócolos", "Alface", "Pimento", "Queijo",
+        "Arroz", "Massa Penne", "Feijão", "Maçã", "Banana", "Limão", "Morango", "Chocolate", "Canela", "Salsa",
+        "Coentros", "Vinho Branco", "Mostarda", "Mel", "Cogumelos", "Bacon", "Fiambre", "Camarão", "Atum", "Salmão",
+        "Grão-de-bico", "Ervilhas", "Pêssego", "Nozes", "Caril", "Oregãos", "Manjericão", "Café", "Iogurte", "Cerveja"
     ]
 
     ingredientes_db = []
-    for nome in nomes_ingredientes:
+    for nome in lista_nomes:
         ing, _ = Ingrediente.objects.get_or_create(nome=nome)
         ingredientes_db.append(ing)
-    print(f"✅ {len(ingredientes_db)} Ingredientes reais criados.")
+    print(f"✅ {len(ingredientes_db)} Ingredientes criados.")
 
-    # --- 2. CRIAR 100 UTILIZADORES REAIS ---
-    primeiros_nomes = ["Ana", "João", "Catarina", "Pedro", "Marta", "Tiago", "Sofia", "Diogo", "Inês", "Bruno",
-                       "Beatriz", "Luís", "Joana", "Rui", "Rita"]
-    apelidos = ["Silva", "Santos", "Ferreira", "Pereira", "Oliveira", "Costa", "Rodrigues", "Martins", "Sousa",
-                "Fernandes", "Gomes", "Almeida", "Ribeiro", "Pinto", "Carvalho"]
+    # --- 2. UTILIZADORES + FRIGORÍFICOS (50) ---
+    primeiros_nomes = ["Ana", "João", "Catarina", "Pedro", "Marta", "Tiago", "Sofia", "Diogo", "Inês", "Bruno"]
+    apelidos = ["Silva", "Santos", "Ferreira", "Pereira", "Oliveira", "Costa", "Rodrigues", "Martins"]
 
     utilizadores_db = []
-    # Usar um set para garantir usernames únicos
-    usernames_gerados = set()
+    for i in range(50):
+        username = f"user_{i}_{random.randint(100, 999)}"
+        user_auth = User.objects.create_user(
+            username=username,
+            email=f"{username}@ifridge.pt",
+            password='password123',
+            first_name=random.choice(primeiros_nomes),
+            last_name=random.choice(apelidos)
+        )
 
-    while len(utilizadores_db) < 100:
-        nome = random.choice(primeiros_nomes)
-        apelido = random.choice(apelidos)
-        username = f"{nome.lower()}_{apelido.lower()}_{random.randint(1, 999)}"
+        frigo = Frigorifico.objects.create()
+        frigo.ingredientes.set(random.sample(ingredientes_db, k=random.randint(3, 10)))
 
-        if username not in usernames_gerados:
-            usernames_gerados.add(username)
-            email = f"{username}@gmail.com"
+        utilizador = Utilizador.objects.create(
+            user=user_auth,
+            frigorifico=frigo,
+            bio=f"Apaixonado por gastronomia e utilizador nº{i} do iFridge."
+        )
+        utilizadores_db.append(utilizador)
+    print(f"✅ 50 Utilizadores e Frigoríficos criados.")
 
-            user_auth, created = User.objects.get_or_create(username=username, email=email)
-            if created:
-                user_auth.set_password('password123')
-                # Opcional: guardar o nome real no User do Django
-                user_auth.first_name = nome
-                user_auth.last_name = apelido
-                user_auth.save()
-
-                frigo = Frigorifico.objects.create()
-                frigo.ingredientes.set(random.sample(ingredientes_db, k=random.randint(4, 12)))
-
-                utilizador = Utilizador.objects.create(user=user_auth, frigorifico=frigo)
-                utilizadores_db.append(utilizador)
-
-    print(f"✅ {len(utilizadores_db)} Utilizadores (com nomes próprios) criados.")
-
-    # --- 3. CRIAR 100 RECEITAS REALISTAS ---
-    metodos = ["Arroz de", "Sopa de", "Creme de", "Salada de", "Risotto de", "Tarte de", "Bolo de", "Empadão de",
-               "Caril de", "Massa com", "Assado de", "Grelhada de", "Estufado de"]
-    estilos = ["no Forno", "à Brás", "à Gomes de Sá", "com Natas", "à Alentejana", "Especial do Chef", "Tradicional",
-               "Rápido de Fazer", "Saudável", "com Ervas Finas", "Picante"]
-
+    # --- 3. RECEITAS (50) ---
+    prefixos = ["Delícia de", "Segredo de", "Gisado de", "Salteado de", "Assado de", "Sopa de"]
     receitas_db = []
-    for _ in range(100):
-        ingrediente_principal = random.choice(ingredientes_db).nome
-        nome_receita = f"{random.choice(metodos)} {ingrediente_principal} {random.choice(estilos)}"
-
-        # INSTRUÇÕES ESTRUTURADAS (JSONField em forma de lista)
-        passos_reais = [
-            f"Passo 1: Lavar e preparar os legumes e o ingrediente principal ({ingrediente_principal.lower()}).",
-            "Passo 2: Numa panela grande, aquecer um fio de azeite e refogar cebola picada com um dente de alho.",
-            f"Passo 3: Juntar o {ingrediente_principal.lower()} e deixar alourar por alguns minutos.",
-            "Passo 4: Adicionar os restantes ingredientes, temperar com sal e pimenta a gosto.",
-            "Passo 5: Tapar e deixar cozinhar em lume brando até estar no ponto.",
-            "Passo 6: Retirar do lume, decorar com ervas frescas e servir imediatamente."
-        ]
-
+    for i in range(50):
+        ing_ref = random.choice(ingredientes_db).nome
         rec = Receita.objects.create(
             criador=random.choice(utilizadores_db),
-            nome=nome_receita,
-            instrucao=passos_reais,  # Formato de lista para o JSONField!
-            classificacao=round(random.uniform(3.0, 5.0), 1)
+            nome=f"{random.choice(prefixos)} {ing_ref}",
+            instrucao=[
+                f"Preparar o {ing_ref.lower()}.",
+                "Refogar com azeite e alho.",
+                "Cozinhar em lume brando por 20 min.",
+                "Servir quente com ervas frescas."
+            ],
+            classificacao=round(random.uniform(3.0, 5.0), 1),
+            foto="receita_default.png"
         )
-        rec.ingredientes.set(random.sample(ingredientes_db, k=random.randint(3, 8)))
-        rec.guardadores.set(random.sample(utilizadores_db, k=random.randint(0, 15)))
+        rec.ingredientes.set(random.sample(ingredientes_db, k=random.randint(3, 7)))
+        rec.guardadores.set(random.sample(utilizadores_db, k=random.randint(0, 10)))
         receitas_db.append(rec)
+    print(f"✅ 50 Receitas criadas.")
 
-    print(f"✅ 100 Receitas gastronómicas criadas.")
-
-    # --- 4. CRIAR 100 EVENTOS REALISTAS ---
-    tipos_evento = ["Workshop", "Jantar Temático", "Degustação", "Masterclass", "Aula Prática", "Festival"]
-    temas_evento = ["Cozinha Italiana", "Sobremesas Fáceis", "Pratos Vegetarianos", "Comida Asiática",
-                    "Tapas e Petiscos", "Cozinha Saudável", "Churrasco de Fim de Semana", "Cozinha Alentejana"]
-
-    for _ in range(100):
-        nome_ev = f"{random.choice(tipos_evento)}: {random.choice(temas_evento)}"
+    # --- 4. EVENTOS (50) ---
+    eventos_nomes = ["Workshop Sushi", "Noite de Tapas", "Cozinha Tradicional", "Aula de Doces", "Jantar de Amigos"]
+    for i in range(50):
         ev = Evento.objects.create(
             criador=random.choice(utilizadores_db),
-            nome=nome_ev,
-            descricao=f"Junta-te a nós neste maravilhoso {nome_ev.lower()}. Traz o teu avental, os ingredientes estão por nossa conta! Teremos opções para todos os gostos e muita diversão.",
-            capacidade_max=random.randint(10, 40)
+            nome=f"{random.choice(eventos_nomes)} {i + 1}",
+            descricao=f"Evento gastronómico focado em partilha e aprendizagem. Capacidade limitada!",
+            data_evento=timezone.now() + timezone.timedelta(days=random.randint(5, 45)),
+            fotos=["event.jpg"],  # JSONField
+            horario={"inicio": "19:00", "fim": "22:00"},  # JSONField
+            capacidade_max=random.randint(5, 25)
         )
-        ev.inscritos.set(random.sample(utilizadores_db, k=random.randint(5, 30)))
+        ev.inscritos.set(random.sample(utilizadores_db, k=random.randint(2, 5)))
+    print(f"✅ 50 Eventos criados.")
 
-    print(f"✅ 100 Eventos criados.")
-
-    # --- 5. CRIAR 100 COMENTÁRIOS REALISTAS ---
-    frases_comentario = [
-        "Fiz esta receita ontem à noite e a minha família adorou! Muito obrigado pela partilha.",
-        "Não tinha todos os ingredientes, por isso troquei o azeite por manteiga. Ficou igualmente bom.",
-        "Achei que precisava de um pouco mais de sal, mas a ideia base é excelente.",
-        "Cinco estrelas! Uma das melhores receitas que já experimentei por aqui.",
-        "A instrução no passo 3 não foi muito clara para mim, mas o resultado final compensou.",
-        "Ficou um pouco seco. Da próxima vez vou adicionar mais natas.",
-        "Perfeito para um jantar rápido durante a semana. Já está guardada nos meus favoritos!",
-        "Muito saboroso e super fácil de preparar. Recomendo a todos.",
-        "Uma verdadeira maravilha! O sabor lembra-me a comida da minha avó.",
-        "Excelente receita para aproveitar os restos que tinha no frigorífico."
+    # --- 5. COMENTÁRIOS (50) ---
+    textos = [
+        "Ficou maravilhoso!", "Fácil e rápido.", "Adorei a combinação de sabores.",
+        "Fiz no fim de semana e todos gostaram.", "Vou guardar esta receita."
     ]
-
-    for _ in range(100):
+    for _ in range(50):
         Comentario.objects.create(
             utilizador=random.choice(utilizadores_db),
             receita=random.choice(receitas_db),
-            texto=random.choice(frases_comentario)
+            texto=random.choice(textos)
         )
+    print(f"✅ 50 Comentários criados.")
 
-    print(f"✅ 100 Comentários escritos.")
-    print("\n🎉 Base de dados massivamente povoada com DADOS REAIS E EXCELENTES! Bom apetite!")
+    print("\n✨ Concluído! 250 novas instâncias adicionadas à base de dados.")
 
 
 if __name__ == '__main__':
-    povoar_real()
+    povoar_50()

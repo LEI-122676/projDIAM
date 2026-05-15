@@ -10,7 +10,7 @@ class Ingrediente(models.Model):
         return self.nome
 
 class Frigorifico(models.Model):
-    ingredientes = models.ManyToManyField(Ingrediente, null=True)
+    ingredientes = models.ManyToManyField(Ingrediente) #Por ser ManyToManyField, nao precisamos de null=true
 
 class Utilizador(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)       # "extends"
@@ -39,7 +39,7 @@ class Evento(models.Model):
 class Receita(models.Model):
     criador = models.ForeignKey(Utilizador, on_delete=models.CASCADE, related_name='criador_receita')
     ingredientes = models.ManyToManyField(Ingrediente)
-    guardadores = models.ManyToManyField(Utilizador, related_name='receitas_guardadas', null=True)      # Pessoas que guardaram esta receita
+    guardadores = models.ManyToManyField(Utilizador, related_name='receitas_guardadas')      # Pessoas que guardaram esta receita
 
     nome = models.CharField(max_length=50)
     foto = models.ImageField()
