@@ -96,6 +96,20 @@ const Login = () => {
             <form className="auth-form" onSubmit={handleRegister}>
               <input 
                 type="text" 
+                placeholder="Nome" 
+                className="auth-input" 
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+              <input 
+                type="text" 
+                placeholder="Apelido" 
+                className="auth-input" 
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+              <input 
+                type="text" 
                 placeholder="Username" 
                 className="auth-input" 
                 value={username}
