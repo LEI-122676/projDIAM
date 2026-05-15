@@ -8,6 +8,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ifridge.settings')
 django.setup()
 
 from django.contrib.auth.models import User
+# Certifique-se que o nome da app está correto
 from idjango.models import Ingrediente, Frigorifico, Utilizador, Evento, Receita, Comentario
 
 
@@ -36,24 +37,34 @@ def povoar_50():
     utilizadores_db = []
     for i in range(50):
         username = f"user_{i}_{random.randint(100, 999)}"
-        user_auth = User.objects.create_user(
-            username=username,
-            email=f"{username}@ifridge.pt",
-            password='password123',
-            first_name=random.choice(primeiros_nomes),
-            last_name=random.choice(apelidos)
-        )
 
-        frigo = Frigorifico.objects.create()
-        frigo.ingredientes.set(random.sample(ingredientes_db, k=random.randint(3, 10)))
+        if not User.objects.filter(username=username).exists():
+            # Dados aleatórios para nome e apelido
+            f_name = random.choice(primeiros_nomes)
+            l_name = random.choice(apelidos)
 
-        utilizador = Utilizador.objects.create(
-            user=user_auth,
-            frigorifico=frigo,
-            bio=f"Apaixonado por gastronomia e utilizador nº{i} do iFridge."
-        )
-        utilizadores_db.append(utilizador)
-    print(f"✅ 50 Utilizadores e Frigoríficos criados.")
+            user_auth = User.objects.create_user(
+                username=username,
+                email=f"{username}@ifridge.pt",
+                password='password123',
+                first_name=f_name,
+                last_name=l_name
+            )
+
+            frigo = Frigorifico.objects.create()
+            frigo.ingredientes.set(random.sample(ingredientes_db, k=random.randint(3, 10)))
+
+            # ATUALIZAÇÃO: Adicionados campos nome e apelido conforme o novo model
+            utilizador = Utilizador.objects.create(
+                user=user_auth,
+                nome=f_name,
+                apelido=l_name,
+                frigorifico=frigo,
+                bio=f"Apaixonado por gastronomia e utilizador nº{i} do iFridge."
+            )
+            utilizadores_db.append(utilizador)
+
+    print(f"✅ {len(utilizadores_db)} Utilizadores e Frigoríficos criados.")
 
     # --- 3. RECEITAS (50) ---
     prefixos = ["Delícia de", "Segredo de", "Gisado de", "Salteado de", "Assado de", "Sopa de"]
@@ -68,9 +79,7 @@ def povoar_50():
                 "Refogar com azeite e alho.",
                 "Cozinhar em lume brando por 20 min.",
                 "Servir quente com ervas frescas."
-            ],
-            classificacao=round(random.uniform(3.0, 5.0), 1),
-            foto="receita_default.png"
+            ]
         )
         rec.ingredientes.set(random.sample(ingredientes_db, k=random.randint(3, 7)))
         rec.guardadores.set(random.sample(utilizadores_db, k=random.randint(0, 10)))
@@ -85,8 +94,7 @@ def povoar_50():
             nome=f"{random.choice(eventos_nomes)} {i + 1}",
             descricao=f"Evento gastronómico focado em partilha e aprendizagem. Capacidade limitada!",
             data_evento=timezone.now() + timezone.timedelta(days=random.randint(5, 45)),
-            fotos=["event.jpg"],  # JSONField
-            horario={"inicio": "19:00", "fim": "22:00"},  # JSONField
+            horario={"inicio": "19:00", "fim": "22:00"},
             capacidade_max=random.randint(5, 25)
         )
         ev.inscritos.set(random.sample(utilizadores_db, k=random.randint(2, 5)))
@@ -105,7 +113,7 @@ def povoar_50():
         )
     print(f"✅ 50 Comentários criados.")
 
-    print("\n✨ Concluído! 250 novas instâncias adicionadas à base de dados.")
+    print("\n✨ Concluído! O povoamento foi realizado com sucesso.")
 
 
 if __name__ == '__main__':
