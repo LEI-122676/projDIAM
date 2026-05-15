@@ -16,7 +16,7 @@ const CriarEvento = () => {
     const [nome, setNome] = useState('');
     const [descricao, setDescricao] = useState('');
 
-    const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
+    const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
     const handleSubmit = (e) => {
@@ -47,7 +47,7 @@ const CriarEvento = () => {
             });
             return;
         }
-        
+
         const utilizadorId = localStorage.getItem('utilizadorId');
 
         const payload = {
@@ -57,7 +57,7 @@ const CriarEvento = () => {
         };
 
 
-        axios.post(URL_CRIAR_EVENTO, payload).then(res => {
+        axios.post(URL_CRIAR_EVENTO, payload, { withCredentials: true }).then(res => {
             setPopupConfig({
                 isOpen: true,
                 title: 'Sucesso',
@@ -66,9 +66,11 @@ const CriarEvento = () => {
                 confirmText: 'Ok',
                 onConfirm: closePopup,
                 onCancel: closePopup
-            });navigate(-1);})
-            
-            .catch(err => {console.error(err);
+            }); navigate(-1);
+        })
+
+            .catch(err => {
+                console.error(err);
                 if (err.response && err.response.data) {
                     alert('Erro ao criar evento: ' + JSON.stringify(err.response.data));
                 } else {
@@ -105,15 +107,15 @@ const CriarEvento = () => {
                                     placeholder="Detalhes sobre o local, data e o que levar"
                                     value={descricao}
                                     onChange={(e) => setDescricao(e.target.value)}
-                                    style={{ 
-                                        color: 'black', 
-                                        height: '350px', 
-                                        padding: '20px', 
+                                    style={{
+                                        color: 'black',
+                                        height: '350px',
+                                        padding: '20px',
                                         resize: 'none'
                                     }}
                                 />
                             </div>
-                        </div> 
+                        </div>
                         <div className="recipe-image-section">
                             <div className="create-actions-group">
                                 <button className="btn-cancel" onClick={() => navigate(-1)} >Cancelar</button>
@@ -124,7 +126,7 @@ const CriarEvento = () => {
                     </div>
                 </main>
             </div>
-            <PopupModal 
+            <PopupModal
                 isOpen={popupConfig.isOpen}
                 title={popupConfig.title}
                 message={popupConfig.message}
@@ -133,7 +135,7 @@ const CriarEvento = () => {
                 cancelText={popupConfig.cancelText || ''}
                 onConfirm={popupConfig.onConfirm}
                 onCancel={popupConfig.onCancel}
-                />
+            />
         </div>
     );
 };

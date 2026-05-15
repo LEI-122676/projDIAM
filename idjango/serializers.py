@@ -24,7 +24,9 @@ class ComentarioSerializer(serializers.ModelSerializer):
 
 class ReceitaSerializer(serializers.ModelSerializer):
     foto_url = serializers.SerializerMethodField(read_only=True)
+    ingredientes = serializers.PrimaryKeyRelatedField(many=True, queryset=Ingrediente.objects.all(), required=False)
     guardadores = serializers.PrimaryKeyRelatedField(many=True, queryset=Utilizador.objects.all(), required=False)
+    foto = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:
         model = Receita
@@ -36,6 +38,8 @@ class ReceitaSerializer(serializers.ModelSerializer):
         return None
 
 class FrigorificoSerializer(serializers.ModelSerializer):
+    ingredientes = serializers.PrimaryKeyRelatedField(many=True, queryset=Ingrediente.objects.all(), required=False)
+
     class Meta:
         model = Frigorifico
         fields = '__all__'

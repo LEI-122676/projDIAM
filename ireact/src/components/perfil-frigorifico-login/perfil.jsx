@@ -8,7 +8,7 @@ import PopupModal from '../maincomponents/PopupModal.jsx';
 const Perfil = () => {
   const navigate = useNavigate();
   const userId = localStorage.getItem('utilizadorId');
-  const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
+  const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
 
   useEffect(() => {
     if (!userId) {
@@ -84,7 +84,7 @@ const Perfil = () => {
           </div>
         </main>
       </div>
-      <PopupModal 
+      <PopupModal
         isOpen={popupConfig.isOpen}
         title={popupConfig.title}
         message={popupConfig.message}
