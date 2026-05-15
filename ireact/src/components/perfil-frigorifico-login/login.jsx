@@ -9,6 +9,8 @@ const Login = () => {
   
   const navigate = useNavigate();
 
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -38,7 +40,7 @@ const Login = () => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    if (!username || !email || !password || !confirmPassword) {
+    if (!firstName || !lastName || !username || !email || !password || !confirmPassword) {
       alert('Por favor, preencha todos os campos de registo');
       return;
     }
@@ -46,8 +48,15 @@ const Login = () => {
       alert('As passwords não coincidem');
       return;
     }
+
+    const formData = new FormData();
+    formData.append('firstName', firstName);
+    formData.append('lastName', lastName);
+    formData.append('username', username);
+    formData.append('password', password);
+    formData.append('email', email);
       
-    axios.post(SIGN_UP_URL, { username, password, email}, { withCredentials: true }).then( response => {
+    axios.post(SIGN_UP_URL, formData, { withCredentials: true }).then( response => {
         console.log('Signup successful!', response.data.msg);
         localStorage.setItem('utilizadorId', response.data.utilizadorId);
         navigate(-1);
@@ -92,6 +101,20 @@ const Login = () => {
           <section className="auth-section">
             <h1 className="auth-title">Registar</h1>
             <form className="auth-form" onSubmit={handleRegister}>
+              <input 
+                type="text" 
+                placeholder="Nome" 
+                className="auth-input" 
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+              <input 
+                type="text" 
+                placeholder="Apelido" 
+                className="auth-input" 
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
               <input 
                 type="text" 
                 placeholder="Username" 
