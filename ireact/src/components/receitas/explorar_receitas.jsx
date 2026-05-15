@@ -187,12 +187,17 @@ const ExplorarReceitas = () => {
                         </div>
 
                         <div className="recipes-grid">
-                            {filteredReceitas.map((receita, index) => (
+                            {[...filteredReceitas].reverse().map((receita, index) => (
                                 <div 
                                     key={receita.id || index} 
-                                    className="recipe-card cursor-pointer" 
+                                    className="recipe-card-premium cursor-pointer" 
                                     onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
+                                    style={{ position: 'relative' }}
                                 >
+                                    <div className="card-rating-badge">
+                                        ⭐ {receita.classificacao || '0.0'}
+                                    </div>
+
                                     <div className="recipe-image-placeholder">
                                         {receita.foto_url ? (
                                             <img
@@ -210,11 +215,12 @@ const ExplorarReceitas = () => {
                                 </div>
                             ))}
                             {filteredReceitas.length === 0 && (
-                                <p className="text-empty-state-center">
-                                    Nenhuma receita encontrada com estes critérios.
-                                </p>
+                                <div className="text-empty-state-center">
+                                    <p>Nenhuma receita encontrada com estes critérios.</p>
+                                </div>
                             )}
                         </div>
+
                     </div>
                 </main>
             </div>

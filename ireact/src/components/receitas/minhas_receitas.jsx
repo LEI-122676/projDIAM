@@ -107,7 +107,7 @@ const AsMinhasReceitas = () => {
                     if (typeof id === 'object' && id !== null) return Number(id.id);
                     return Number(id);
                 });
-                
+
                 matchesFridge = (receita.ingredientes || []).some(ingId => {
                     const idToMatch = typeof ingId === 'object' && ingId !== null ? Number(ingId.id) : Number(ingId);
                     return fridgeIds.includes(idToMatch);
@@ -117,10 +117,9 @@ const AsMinhasReceitas = () => {
         return matchesSearch && matchesFridge;
     });
 
-    // Dividir em Criadas vs Guardadas
-    const criadasPorMim = filteredReceitas.filter(r => r.criador === parseInt(userId));
-    const receitasGuardadas = filteredReceitas.filter(r => r.guardadores.includes(parseInt(userId)) && r.criador !== parseInt(userId));
 
+    const criadasPorMim = filteredReceitas.filter(r => Number(r.criador) === Number(userId));
+    const receitasGuardadas = filteredReceitas.filter(r => (r.guardadores || []).map(Number).includes(Number(userId)) && Number(r.criador) !== Number(userId));
     return (
         <div className="body-wrapper">
             <Header />
@@ -161,12 +160,16 @@ const AsMinhasReceitas = () => {
                         <div className="mt-30">
                             <h2 className="my-recipes-section-title">Criadas por Mim</h2>
                             <div className="recipes-grid mt-20">
-                                {criadasPorMim.map((receita) => (
+                                {[...criadasPorMim].reverse().map((receita) => (
                                     <div
                                         key={`criada-${receita.id}`}
-                                        className="recipe-card recipe-card-created"
+                                        className="recipe-card-premium"
                                         onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
+                                        style={{ position: 'relative' }}
                                     >
+                                        <div className="card-rating-badge">
+                                            ⭐ {receita.classificacao || '0.0'}
+                                        </div>
                                         <div className="recipe-image-placeholder">
                                             {receita.foto_url ? (
                                                 <img
@@ -195,12 +198,16 @@ const AsMinhasReceitas = () => {
                         <div className="mt-50">
                             <h2 className="my-recipes-section-title">Receitas Guardadas</h2>
                             <div className="recipes-grid mt-20">
-                                {receitasGuardadas.map((receita) => (
+                                {[...receitasGuardadas].reverse().map((receita) => (
                                     <div
                                         key={`guardada-${receita.id}`}
-                                        className="recipe-card recipe-card-saved"
+                                        className="recipe-card-premium"
                                         onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
+                                        style={{ position: 'relative' }}
                                     >
+                                        <div className="card-rating-badge">
+                                            ⭐ {receita.classificacao || '0.0'}
+                                        </div>
                                         <div className="recipe-image-placeholder">
                                             {receita.foto_url ? (
                                                 <img
@@ -224,6 +231,7 @@ const AsMinhasReceitas = () => {
                                 )}
                             </div>
                         </div>
+
 
                     </div>
                 </main>

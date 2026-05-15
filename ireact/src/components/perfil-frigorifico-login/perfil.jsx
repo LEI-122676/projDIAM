@@ -14,7 +14,7 @@ const Perfil = () => {
 
   const userId = localStorage.getItem('utilizadorId');
   const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
-  const [userName, setUsername] = useState(null);
+  const [userData, setUserData] = useState({ username: '', nome: '', apelido: '' });
 
   useEffect(() => {
     if (!userId) {
@@ -27,11 +27,20 @@ const Perfil = () => {
         onConfirm: () => navigate('/login'),
         onCancel: () => navigate('/')
       });
+      return;
     }
 
-    axios.get(URL_USER, {withCredentials: true}).then( response => setUsername(response.data.username)).catch( () => console.log("user not logged in"));
-    
+    // Buscar info detalhada do utilizador
+    axios.get(`${URL_USER_INFO}${userId}`, { withCredentials: true })
+      .then(res => {
+        setUserData(res.data);
+      })
+      .catch(err => {
+        console.error("Erro ao carregar perfil:", err);
+      });
+
   }, [userId, navigate]);
+
 
   return (
     <div className="body-wrapper">
@@ -53,7 +62,8 @@ const Perfil = () => {
                   <span style={{ fontSize: '50px', color: '#D1CDBC' }}>👤</span>
                 </div>
                 <div className="user-names">
-                  <p >{userName}</p>
+                  <h2 style={{ color: '#2E4A35', margin: 0 }}>{userData.nome} {userData.apelido}</h2>
+                  <p style={{ color: '#716259', fontSize: '0.9rem' }}>@{userData.username}</p>
                 </div>
               </div>
 
@@ -72,7 +82,19 @@ const Perfil = () => {
 
               <div className="profile-actions">
                 <button className="btn-edit-profile">Editar perfil</button>
-                <button className="btn-logout-link" onClick={() => navigate('/')}>Log Out</button>
+                <button className="btn-logout-link" onClick={() => {
+                  axios.get('http://localhost:8000/idjango/api/logout/', { withCredentials: true })
+                    .then(() => {
+                      localStorage.removeItem('utilizadorId');
+                      navigate('/login');
+                      window.location.reload();
+                    })
+                    .catch(() => {
+                      localStorage.removeItem('utilizadorId');
+                      navigate('/login');
+                      window.location.reload();
+                    });
+                }}>Log Out</button>
               </div>
             </div>
 

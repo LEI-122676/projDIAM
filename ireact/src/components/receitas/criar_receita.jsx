@@ -84,11 +84,10 @@ const CriarReceita = () => {
         setPopupConfig({ isOpen: true, title, message, singleButton: true, confirmText: 'OK', onConfirm: closePopup, onCancel: closePopup });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!nome.trim()) { showPopup('Campo Obrigatório', 'Por favor, dê um nome à receita.'); return; }
-        if (!foto) { showPopup('Foto Obrigatória', 'Por favor, adiciona uma foto à receita.'); return; }
         if (!utilizadorId) { showPopup('Erro', 'Não foi possível identificar o utilizador. Faz login novamente.'); return; }
 
         const passosFormatados = passos
@@ -96,7 +95,6 @@ const CriarReceita = () => {
             .map((p, index) => {
                 const prefix = `Passo ${index + 1}: `;
                 if (p.startsWith(prefix)) return p;
-                if (p.match(/^Passo \d+:/)) return prefix + p.replace(/^Passo \d+:\s*/, '');
                 return prefix + p;
             });
 
@@ -109,7 +107,7 @@ const CriarReceita = () => {
             if (found) {
                 idsIngredientes.push(found.id);
             } else {
-                showPopup('Ingrediente Não Encontrado', `O ingrediente "${ing}" não existe na base de dados. Escolhe um ingrediente da lista.`);
+                showPopup('Ingrediente Não Encontrado', `O ingrediente "${ing}" não existe na base de dados.`);
                 return;
             }
         }
@@ -120,14 +118,20 @@ const CriarReceita = () => {
         const formData = new FormData();
         formData.append('nome', nome);
         formData.append('criador', utilizadorId);
-        formData.append('classificacao', '0.0');
-        formData.append('foto', foto);
-        // JSON fields como strings
+        
+        // CORREÇÃO: Só anexar se for um ficheiro válido
+        if (foto instanceof File) {
+            formData.append('foto', foto);
+        }
+
         formData.append('instrucao', JSON.stringify(passosFormatados));
-        idsIngredientes.forEach(id => formData.append('ingredientes', id));
+        
+        const uniqueIds = [...new Set(idsIngredientes)];
+        uniqueIds.forEach(id => formData.append('ingredientes', id));
 
         axios.post(RECEITAS_URL, formData, {
-            headers: { 'Content-Type': 'multipart/form-data' }
+            headers: { 'Content-Type': 'multipart/form-data' },
+            withCredentials: true
         })
             .then(() => {
                 setPopupConfig({
@@ -136,8 +140,8 @@ const CriarReceita = () => {
                     message: 'A tua receita foi criada com sucesso!',
                     singleButton: true,
                     confirmText: 'OK',
-                    onConfirm: () => navigate(-1),
-                    onCancel: () => navigate(-1)
+                    onConfirm: () => navigate('/receitas'),
+                    onCancel: () => navigate('/receitas')
                 });
             })
             .catch(err => {
@@ -146,6 +150,7 @@ const CriarReceita = () => {
                 showPopup('Erro ao Criar Receita', detail);
             });
     };
+
 
     return (
         <div className="body-wrapper">

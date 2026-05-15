@@ -9,6 +9,7 @@ urlpatterns = [
 
     path('api/receitas/', views.receitas),
     path('api/receitas/<int:receita_id>', views.receita_detail),
+    path('api/avaliar/', views.avaliar_receita),
 
     path('api/eventos/', views.eventos),
     path('api/eventos/<int:evento_id>', views.evento_detail),

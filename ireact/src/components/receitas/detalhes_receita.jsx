@@ -116,10 +116,8 @@ const VerReceita = () => {
         } else {
             newGuardadores.push(parseInt(userId));
         }
-
-        const updatedReceita = { ...receita, guardadores: newGuardadores };
-
-        axios.put(RECEITA_URL + recipeId, updatedReceita)
+        // Usar PATCH para enviar apenas os campos necessários e evitar erros de validação com campos de leitura
+        axios.patch(RECEITA_URL + recipeId, { guardadores: newGuardadores }, { withCredentials: true })
             .then(res => {
                 setReceita(res.data);
                 setGuardado(!isAlreadySaved);
@@ -147,6 +145,44 @@ const VerReceita = () => {
             });
     };
 
+    const handleDelete = () => {
+        setPopupConfig({
+            isOpen: true,
+            title: 'Confirmar Eliminação',
+            message: 'Tens a certeza que pretendes apagar esta receita? Esta ação é irreversível.',
+            singleButton: false,
+            confirmText: 'Apagar',
+            cancelText: 'Cancelar',
+            onConfirm: () => {
+                axios.delete(RECEITA_URL + recipeId)
+                    .then(() => {
+                        setPopupConfig({
+                            isOpen: true,
+                            title: 'Receita Apagada',
+                            message: 'A tua receita foi removida com sucesso.',
+                            singleButton: true,
+                            confirmText: 'OK',
+                            onConfirm: () => navigate('/receitas'),
+                            onCancel: () => navigate('/receitas')
+                        });
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        setPopupConfig({
+                            isOpen: true,
+                            title: 'Erro ao Apagar',
+                            message: 'Não foi possível apagar a receita. Tenta novamente.',
+                            singleButton: true,
+                            confirmText: 'OK',
+                            onConfirm: closePopup,
+                            onCancel: closePopup
+                        });
+                    });
+            },
+            onCancel: closePopup
+        });
+    };
+
     // Avaliações
     const handleAvaliar = () => {
         if (!userId) {
@@ -154,41 +190,29 @@ const VerReceita = () => {
             return;
         }
 
-        let novaMedia;
-        if (receita.classificacao === 0) {
-            novaMedia = novaClassificacao;
-        } else {
-            novaMedia = (receita.classificacao + novaClassificacao) / 2;
-        }
+        axios.post('http://localhost:8000/idjango/api/avaliar/', {
+            utilizador: parseInt(userId),
+            receita: parseInt(recipeId),
+            nota: novaClassificacao
+        })
+        .then(res => {
+            setReceita(res.data);
 
-        const updatedReceita = { ...receita, classificacao: parseFloat(novaMedia.toFixed(1)) };
-
-        axios.put(RECEITA_URL + recipeId, updatedReceita)
-            .then(res => {
-                setReceita(res.data);
-                setPopupConfig({
-                    isOpen: true,
-                    title: 'Avaliação Enviada',
-                    message: 'Obrigado pela tua avaliação! A classificação foi atualizada.',
-                    singleButton: true,
-                    confirmText: 'OK',
-                    onConfirm: closePopup,
-                    onCancel: closePopup
-                });
-            })
-            .catch(err => {
-                console.error(err);
-                setPopupConfig({
-                    isOpen: true,
-                    title: 'Erro',
-                    message: 'Ocorreu um erro ao enviar a avaliação. Tenta novamente.',
-                    singleButton: true,
-                    confirmText: 'OK',
-                    onConfirm: closePopup,
-                    onCancel: closePopup
-                });
+            setPopupConfig({
+                isOpen: true,
+                title: 'Avaliação Registada!',
+                message: 'Obrigado pela tua classificação.',
+                singleButton: true,
+                confirmText: 'OK',
+                onConfirm: closePopup,
+                onCancel: closePopup
             });
+        })
+        .catch(err => {
+            console.error("Erro ao avaliar:", err);
+        });
     };
+
 
     // Comentar
     const handleAddComentario = () => {
@@ -232,7 +256,7 @@ const VerReceita = () => {
                     <div className="recipe-header-container">
                         <h1 className="page-title-underline">{receita.nome}</h1>
                         <div className="recipe-rating-text">
-                            ⭐ {receita.classificacao.toFixed(1)} / 5
+                            ⭐ {receita.classificacao ? Number(receita.classificacao).toFixed(1) : "5.0"} / 5
                         </div>
                     </div>
 
@@ -271,13 +295,24 @@ const VerReceita = () => {
 
                                 <div className="view-actions-group mt-auto">
                                     <button className="btn-cancel" onClick={() => navigate(-1)}>Voltar</button>
-                                    <button
-                                        className="btn-create-submit"
-                                        onClick={handleGuardar}
-                                        style={guardado ? { backgroundColor: '#8a9b8e' } : {}}
-                                    >
-                                        {guardado ? 'Guardado' : 'Guardar'}
-                                    </button>
+
+                                    {Number(receita.criador) === Number(userId) ? (
+                                        <button
+                                            className="btn-cancel"
+                                            onClick={handleDelete}
+                                            style={{ backgroundColor: '#8b4b4b', color: 'white' }}
+                                        >
+                                            Remover Receita
+                                        </button>
+                                    ) : (
+                                        <button
+                                            className="btn-create-submit"
+                                            onClick={handleGuardar}
+                                            style={guardado ? { backgroundColor: '#8a9b8e' } : {}}
+                                        >
+                                            {guardado ? 'Guardado' : 'Guardar'}
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </div>

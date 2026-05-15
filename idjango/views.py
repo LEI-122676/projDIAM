@@ -1,6 +1,6 @@
 import django
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes
 from rest_framework import status
 from .serializers import *
 from .models import *
@@ -10,10 +10,12 @@ import os
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.views.decorators.csrf import csrf_exempt
 
-QUERY_LIMIT = int(os.environ.get('QUERY_LIMIT', 50))
+QUERY_LIMIT = int(os.environ.get('QUERY_LIMIT', 150))
 
+@csrf_exempt
 @api_view(['GET', 'POST'])
 def utilizadores(request):
 
@@ -30,6 +32,7 @@ def utilizadores(request):
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
+@csrf_exempt
 @api_view(['GET', 'PUT', 'DELETE'])
 def utilizador_detail(request, utilizador_id):
     try:
@@ -53,24 +56,28 @@ def utilizador_detail(request, utilizador_id):
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
+@csrf_exempt
 @api_view(['GET'])
 def utilizador_frigorifico(request, utilizador_id):
     try:
         utilizador = Utilizador.objects.get(pk=utilizador_id)
         frigorifico = utilizador.frigorifico
         if not frigorifico:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-    except Utilizador.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-        
-    if request.method == 'GET':
+            # CRIAR AUTOMATICAMENTE SE NÃO EXISTIR
+            frigorifico = Frigorifico.objects.create()
+            utilizador.frigorifico = frigorifico
+            utilizador.save()
+            
         serializer = FrigorificoSerializer(frigorifico)
         return Response(serializer.data)
-    
-    return Response(status=status.HTTP_400_BAD_REQUEST)
+    except Utilizador.DoesNotExist:
+        return Response({'msg': 'Utilizador não encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
 
+@csrf_exempt
 @api_view(['GET', 'POST'])
+@permission_classes([AllowAny])
+@authentication_classes([])
 def receitas(request):
     if request.method == 'GET':
         receita_list = Receita.objects.all()[:QUERY_LIMIT]
@@ -122,7 +129,10 @@ def receitas(request):
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@csrf_exempt
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+@permission_classes([AllowAny])
+@authentication_classes([])
 def receita_detail(request, receita_id):
     try:
         receita = Receita.objects.get(pk=receita_id)
@@ -132,16 +142,44 @@ def receita_detail(request, receita_id):
     if request.method == 'GET':
         serializer = ReceitaSerializer(receita)
         return Response(serializer.data)
-    elif request.method == 'PUT':
-        serializer = ReceitaSerializer(receita, data=request.data)
+        
+    elif request.method in ['PUT', 'PATCH']:
+        partial = (request.method == 'PATCH')
+        serializer = ReceitaSerializer(receita, data=request.data, partial=partial)
         if serializer.is_valid():
             serializer.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(serializer.data) # Retornar o objeto atualizado
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
     elif request.method == 'DELETE':
         receita.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
+
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes([AllowAny])
+@authentication_classes([])
+def avaliar_receita(request):
+    utilizador_id = request.data.get('utilizador')
+    receita_id = request.data.get('receita')
+    nota = request.data.get('nota')
+
+    if not all([utilizador_id, receita_id, nota]):
+        return Response({'error': 'Dados incompletos'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        utilizador = Utilizador.objects.get(pk=utilizador_id)
+        receita = Receita.objects.get(pk=receita_id)
+
+        Avaliacao.objects.update_or_create(utilizador=utilizador,receita=receita,defaults={'nota': int(nota)})
+        serializer = ReceitaSerializer(receita)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    except (Utilizador.DoesNotExist, Receita.DoesNotExist):
+        return Response({'error': 'Utilizador ou Receita não encontrados'}, status=status.HTTP_404_NOT_FOUND)
+@csrf_exempt
 @api_view(['GET', 'POST'])
 def eventos(request):
     if request.method == 'GET':
@@ -160,6 +198,7 @@ def eventos(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
+@csrf_exempt
 @api_view(['GET', 'PUT', 'DELETE'])
 def evento_detail(request, evento_id):
     try:
@@ -179,6 +218,7 @@ def evento_detail(request, evento_id):
         return Response(status=status.HTTP_204_NO_CONTENT)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
+@csrf_exempt
 @api_view(['GET', 'POST'])
 def ingredientes(request):
     if request.method == 'GET':
@@ -192,6 +232,7 @@ def ingredientes(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
+@csrf_exempt
 @api_view(['GET', 'PUT', 'DELETE'])
 def ingrediente_detail(request, ingrediente_id):
     try:
@@ -212,6 +253,7 @@ def ingrediente_detail(request, ingrediente_id):
         return Response(status=status.HTTP_204_NO_CONTENT)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
+@csrf_exempt
 @api_view(['GET', 'POST'])
 def frigorificos(request):
     if request.method == 'GET':
@@ -225,7 +267,10 @@ def frigorificos(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@csrf_exempt
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+@permission_classes([AllowAny])
+@authentication_classes([])
 def frigorifico_detail(request, frigorifico_id):
     try:
         frigorifico = Frigorifico.objects.get(pk=frigorifico_id)
@@ -235,16 +280,19 @@ def frigorifico_detail(request, frigorifico_id):
     if request.method == 'GET':
         serializer = FrigorificoSerializer(frigorifico)
         return Response(serializer.data)
-    elif request.method == 'PUT':
-        serializer = FrigorificoSerializer(frigorifico, data=request.data)
+    elif request.method in ['PUT', 'PATCH']:
+        partial = (request.method == 'PATCH')
+        serializer = FrigorificoSerializer(frigorifico, data=request.data, partial=partial)
         if serializer.is_valid():
             serializer.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         frigorifico.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
+@csrf_exempt
 @api_view(['GET', 'POST'])
 def comentarios(request):
     if request.method == 'GET':
@@ -258,7 +306,8 @@ def comentarios(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@csrf_exempt
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 def comentario_detail(request, comentario_id):
     try:
         comentario = Comentario.objects.get(pk=comentario_id)
@@ -281,6 +330,7 @@ def comentario_detail(request, comentario_id):
 
 ##Authenticação e autorização
 
+@csrf_exempt
 @api_view(['POST'])
 def signup(request):
     firstName = request.data.get('firstName')
@@ -288,21 +338,38 @@ def signup(request):
     username = request.data.get('username')
     password = request.data.get('password')
     email = request.data.get('email')
-    if not firstName or not lastName or not username or not password or not email:
-        return Response({'msg': 'invalid username/password/email'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    if not all([firstName, lastName, username, password, email]):
+        return Response({'msg': 'invalid input'}, status=status.HTTP_400_BAD_REQUEST)
 
     if User.objects.filter(username=username).exists():
         return Response({'msg': 'username already exists'}, status=status.HTTP_400_BAD_REQUEST)
     
-    user = User.objects.create_user(nome=firstName, apelido=lastName, username=username, password=password, email=email)
+    # User do Django
+    user = User.objects.create_user(
+        username=username, 
+        password=password, 
+        email=email,
+        first_name=firstName,
+        last_name=lastName
+    )
 
     novo_frigorifico = Frigorifico.objects.create()
 
-    Utilizador.objects.create(user=user, frigorifico=novo_frigorifico)
+    # Utilizador do nosso modelo
+    Utilizador.objects.create(
+        user=user, 
+        frigorifico=novo_frigorifico,
+        nome=firstName,
+        apelido=lastName
+    )
     
     return Response({'msg': 'user ' + user.username + ' created'}, status=status.HTTP_201_CREATED)
 
+
+@csrf_exempt
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def login_view(request):
     username = request.data.get('username')
     password = request.data.get('password')

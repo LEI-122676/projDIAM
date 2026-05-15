@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
 import '../../css/styles.css'
@@ -57,24 +57,37 @@ const CriarEvento = () => {
         };
 
 
-        axios.post(URL_CRIAR_EVENTO, payload).then(res => {
+        axios.post(URL_CRIAR_EVENTO, payload).then(() => {
             setPopupConfig({
                 isOpen: true,
                 title: 'Sucesso',
                 message: 'Evento criado com sucesso.',
                 singleButton: true,
                 confirmText: 'Ok',
+                onConfirm: () => {
+                    closePopup();
+                    navigate(-1);
+                },
+                onCancel: closePopup
+            });
+        })
+        .catch(err => {
+            console.error(err);
+            const msg = (err.response && err.response.data) 
+                ? 'Erro ao criar evento: ' + JSON.stringify(err.response.data)
+                : 'Erro de conexão ao criar evento.';
+                
+            setPopupConfig({
+                isOpen: true,
+                title: 'Erro',
+                message: msg,
+                singleButton: true,
+                confirmText: 'Ok',
                 onConfirm: closePopup,
                 onCancel: closePopup
-            });navigate(-1);})
-            
-            .catch(err => {console.error(err);
-                if (err.response && err.response.data) {
-                    alert('Erro ao criar evento: ' + JSON.stringify(err.response.data));
-                } else {
-                    alert('Erro de conexão ao criar evento.');
-                }
             });
+        });
+
     };
 
     return (

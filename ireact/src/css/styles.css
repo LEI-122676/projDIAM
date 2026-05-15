@@ -888,11 +888,14 @@ html, body, #root {
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }
 
+.recipe-icon-large { font-size: 64px; color: #D1CDBC; opacity: 0.6; }
 .recipe-image-placeholder {
-    flex: 1;
+    min-height: 180px;
+    background-color: #f9f9f9;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.3s ease;
 }
 
 .recipe-card-footer {
@@ -1398,5 +1401,151 @@ html, body, #root {
 .fridge-empty-text { font-style: italic; color: #888; }
 .ingredient-tag-custom { display: flex; align-items: center; background-color: #e2ddcc; padding: 10px 20px; border-radius: 25px; color: #4A3A31; font-weight: 600; width: auto; height: auto; }
 .remove-btn-custom { background: transparent; border: none; color: #8b4b4b; cursor: pointer; font-weight: bold; font-size: 18px; margin-right: 10px; display: flex; align-items: center; position: static; }
+
+.fridge-empty-clean-text {
+    grid-column: 1 / -1;
+    color: #888888; /* Tom cinzento do teu padrão */
+    font-size: 1rem;
+    font-style: normal;
+    padding: 20px 0;
+    text-align: center; /* Alinha com o título e conteúdo do teu design */
+    width: 100%;
+}
+
+/* --- PREMIUM DESIGN TOKENS --- */
+.premium-card {
+    background: #ffffff;
+    border: 1px solid rgba(46, 74, 53, 0.1);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.ingredient-chip-premium {
+    display: flex;
+    align-items: center;
+    background: #FDFBEE;
+    border: 1.5px solid #EAE6D6;
+    padding: 8px 18px;
+    border-radius: 50px;
+    color: #4A3A31;
+    font-weight: 600;
+    font-size: 0.95rem;
+    gap: 12px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+.ingredient-chip-premium:hover {
+    border-color: #2E4A35;
+    background: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(46, 74, 53, 0.1);
+}
+
+.chip-remove-btn {
+    background: rgba(139, 75, 75, 0.1);
+    border: none;
+    color: #8b4b4b;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.chip-remove-btn:hover {
+    background: #8b4b4b;
+    color: white;
+}
+
+.btn-add-fridge-premium {
+    background: #2E4A35;
+    color: white;
+    border: none;
+    height: 50px;
+    padding: 0 35px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(46, 74, 53, 0.2);
+}
+
+.btn-add-fridge-premium:hover {
+    background: #233a2a;
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(46, 74, 53, 0.3);
+}
+
+.badge-count {
+    background: #2E4A35;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-left: 10px;
+}
+
+.fridge-empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    background: #F9F9F9;
+    border-radius: 20px;
+    border: 2px dashed #EAEAEA;
+}
+
+.empty-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+.ingredients-grid-modern {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.recipe-card-premium {
+    background: #ffffff;
+    border-radius: 22px;
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.recipe-card-premium:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(46, 74, 53, 0.12);
+}
+
+.card-rating-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(5px);
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #2E4A35;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
 
 
