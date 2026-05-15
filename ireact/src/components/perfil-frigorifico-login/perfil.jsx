@@ -1,9 +1,12 @@
-import 'react';
-import Header from '../maincomponents/header.jsx'; // Ajusta o caminho se necessário
-import Sidebar from '../maincomponents/sidebar.jsx'; // Ajusta o caminho se necessário
+import React from 'react';
+import Header from '../maincomponents/header.jsx';
+import Sidebar from '../maincomponents/sidebar.jsx';
 import '../../css/styles.css';
+import { useNavigate } from 'react-router-dom';
 
 const Perfil = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="body-wrapper">
       <Header />
@@ -12,29 +15,24 @@ const Perfil = () => {
         <Sidebar />
 
         <main className="content-profile">
-          <div className="profile-grid">
-            <div className="profile-header-section">
-              <h1 className="page-title-underline">O meu perfil</h1>
-              <div className="profile-shortcuts">
-                <div className="shortcut-card">O meu Frigorífico</div>
-                <div className="shortcut-card">As minhas Receitas</div>
-                <div className="shortcut-card">As minhas Comunidades</div>
-                <div className="shortcut-card">Os meus Eventos</div>
-              </div>
-            </div>
+          <h1 className="page-title-underline">O Meu Perfil</h1>
 
+          <div className="profile-layout-container">
+
+            {/* COLUNA ESQUERDA: Cartão de Info */}
             <div className="profile-details-card">
               <div className="user-main-info">
                 <div className="user-avatar-large">
-                  <svg viewBox="0 0 24 24">
-                    <path fill="#D1CDBC" />
-                  </svg>
+                  {/* Ícone de utilizador simples */}
+                  <span style={{ fontSize: '50px', color: '#D1CDBC' }}>👤</span>
                 </div>
                 <div className="user-names">
-                  <h2>John Doe</h2>
-                  <p>@JohnDoe</p>
+                  <h2>Nome do Utilizador</h2>
+                  <p>@Nome</p>
                 </div>
               </div>
+
+              <hr className="profile-divider" />
 
               <div className="user-extra-info">
                 <h3>Info:</h3>
@@ -48,10 +46,24 @@ const Perfil = () => {
               </div>
 
               <div className="profile-actions">
-                <button className="btn-profile-pill">Editar perfil</button>
-                <button className="btn-profile-pill secondary">Log Out</button>
+                <button className="btn-edit-profile">Editar perfil</button>
+                <button className="btn-logout-link" onClick={() => navigate('/')}>Log Out</button>
               </div>
             </div>
+
+            {/* COLUNA DIREITA: Atalhos */}
+            <div className="profile-shortcuts-grid">
+              <div className="shortcut-card" onClick={() => navigate('/frigorifico')}>
+                O meu Frigorífico
+              </div>
+              <div className="shortcut-card" onClick={() => navigate('/perfil/minhas-receitas')}>
+                As minhas Receitas
+              </div>
+              <div className="shortcut-card" onClick={() => navigate('/eventos')}>
+                Os meus Eventos
+              </div>
+            </div>
+
           </div>
         </main>
       </div>
