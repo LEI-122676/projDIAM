@@ -9,6 +9,8 @@ const Login = () => {
   
   const navigate = useNavigate();
 
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -38,7 +40,7 @@ const Login = () => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    if (!username || !email || !password || !confirmPassword) {
+    if (!firstName || !lastName || !username || !email || !password || !confirmPassword) {
       alert('Por favor, preencha todos os campos de registo');
       return;
     }
@@ -47,7 +49,7 @@ const Login = () => {
       return;
     }
       
-    axios.post(SIGN_UP_URL, { username, password, email}, { withCredentials: true }).then( response => {
+    axios.post(SIGN_UP_URL, { firstName, lastName, username, password, email}, { withCredentials: true }).then( response => {
         console.log('Signup successful!', response.data.msg);
         localStorage.setItem('utilizadorId', response.data.utilizadorId);
         navigate(-1);
