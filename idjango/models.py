@@ -10,14 +10,15 @@ class Ingrediente(models.Model):
         return self.nome
 
 class Frigorifico(models.Model):
-    ingredientes = models.ManyToManyField(Ingrediente)
+    ingredientes = models.ManyToManyField(Ingrediente, null=True)
 
 class Utilizador(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)       # "extends"
     frigorifico = models.OneToOneField(Frigorifico, on_delete=models.DO_NOTHING, null=True)
     imagem = models.ImageField(upload_to='profile_pics', default='default.png')
-
-    def __str__ (self):
+    autobiografia = models.TextField()
+    
+    def __str__(self):
         return self.user.email
 
 class Evento(models.Model):
@@ -25,7 +26,10 @@ class Evento(models.Model):
     inscritos = models.ManyToManyField(Utilizador, related_name='eventos_inscritos')
 
     nome = models.CharField(max_length=50)
-    data = models.DateTimeField(auto_now_add=True)
+    # TOOD
+    # fotos = models.JSONField()
+    data_inicio_evento = models.DateTimeField()
+    data_criacao = models.DateTimeField(auto_now_add=True)
     descricao = models.TextField()
     capacidade_max = models.IntegerField(default=int(os.environ.get('EVENTO_CAPACIDADE_MAX_DEFAULT', 30)))
 
@@ -35,13 +39,13 @@ class Evento(models.Model):
 class Receita(models.Model):
     criador = models.ForeignKey(Utilizador, on_delete=models.CASCADE, related_name='criador_receita')
     ingredientes = models.ManyToManyField(Ingrediente)
-    guardadores = models.ManyToManyField(Utilizador, related_name='receitas_guardadas')
+    guardadores = models.ManyToManyField(Utilizador, related_name='receitas_guardadas', null=True)      # Pessoas que guardaram esta receita
 
     nome = models.CharField(max_length=50)
     instrucao = models.JSONField(default=list)
     classificacao = models.FloatField(default=float(os.environ.get('RECEITA_CLASSIFICACAO_DEFAULT', 0.0)))
 
-    def __str__ (self):
+    def __str__(self):
         return self.nome
 
 class Comentario(models.Model):
