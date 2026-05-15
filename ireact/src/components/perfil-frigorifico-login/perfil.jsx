@@ -1,0 +1,74 @@
+import React from 'react';
+import Header from '../maincomponents/header.jsx';
+import Sidebar from '../maincomponents/sidebar.jsx';
+import '../../css/styles.css';
+import { useNavigate } from 'react-router-dom';
+
+const Perfil = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="body-wrapper">
+      <Header />
+
+      <div className="main-wrapper">
+        <Sidebar />
+
+        <main className="content-profile">
+          <h1 className="page-title-underline">O Meu Perfil</h1>
+
+          <div className="profile-layout-container">
+
+            {/* COLUNA ESQUERDA: Cartão de Info */}
+            <div className="profile-details-card">
+              <div className="user-main-info">
+                <div className="user-avatar-large">
+                  {/* Ícone de utilizador simples */}
+                  <span style={{ fontSize: '50px', color: '#D1CDBC' }}>👤</span>
+                </div>
+                <div className="user-names">
+                  <h2>Nome do Utilizador</h2>
+                  <p>@Nome</p>
+                </div>
+              </div>
+
+              <hr className="profile-divider" />
+
+              <div className="user-extra-info">
+                <h3>Info:</h3>
+                <ul>
+                  <li>- Info A</li>
+                  <li>- Info B</li>
+                  <li>- Info C</li>
+                  <li>- Info D</li>
+                  <li>- Info E</li>
+                </ul>
+              </div>
+
+              <div className="profile-actions">
+                <button className="btn-edit-profile">Editar perfil</button>
+                <button className="btn-logout-link" onClick={() => navigate('/')}>Log Out</button>
+              </div>
+            </div>
+
+            {/* COLUNA DIREITA: Atalhos */}
+            <div className="profile-shortcuts-grid">
+              <div className="shortcut-card" onClick={() => navigate('/frigorifico')}>
+                O meu Frigorífico
+              </div>
+              <div className="shortcut-card" onClick={() => navigate('/perfil/minhas-receitas')}>
+                As minhas Receitas
+              </div>
+              <div className="shortcut-card" onClick={() => navigate('/eventos')}>
+                Os meus Eventos
+              </div>
+            </div>
+
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default Perfil;

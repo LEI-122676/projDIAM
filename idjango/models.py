@@ -23,8 +23,8 @@ class Utilizador(models.Model):
 
 class Evento(models.Model):
     criador = models.ForeignKey(Utilizador, on_delete=models.CASCADE, related_name='eventos_criados')
-    inscritos = models.ManyToManyField(Utilizador, related_name='eventos_inscritos')
-    
+    inscritos = models.ManyToManyField(Utilizador, related_name='eventos_inscritos', blank = True)
+
     nome = models.CharField(max_length=50)
     fotos = models.JSONField()
     horario = models.JSONField()
