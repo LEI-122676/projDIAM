@@ -16,7 +16,7 @@ class Utilizador(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)       # "extends"
     frigorifico = models.OneToOneField(Frigorifico, on_delete=models.DO_NOTHING, null=True)
     imagem = models.ImageField(upload_to='profile_pics', default='default.png')
-    autobiografia = models.TextField()
+    bio = models.TextField(null=True)
     
     def __str__(self):
         return self.user.email
