@@ -14,8 +14,10 @@ class Frigorifico(models.Model):
 
 class Utilizador(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)       # "extends"
+    nome = models.CharField(max_length=50)
+    apelido = models.CharField(max_length=50)
     frigorifico = models.OneToOneField(Frigorifico, on_delete=models.DO_NOTHING, null=True)
-    imagem = models.ImageField(upload_to='profile_pics', default='default.png')
+    imagem = models.ImageField(upload_to='profile_pics', default='defaultProfile.png')
     bio = models.TextField(null=True)
     
     def __str__(self):
@@ -26,7 +28,7 @@ class Evento(models.Model):
     inscritos = models.ManyToManyField(Utilizador, related_name='eventos_inscritos', blank = True)
 
     nome = models.CharField(max_length=50)
-    fotos = models.JSONField()
+    foto = models.ImageField(upload_to='Event_pics', default='defaultEvent.png')
     horario = models.JSONField()
     data_evento = models.DateTimeField()
     data_criacao = models.DateTimeField(auto_now_add=True)
@@ -42,7 +44,7 @@ class Receita(models.Model):
     guardadores = models.ManyToManyField(Utilizador, related_name='receitas_guardadas')      # Pessoas que guardaram esta receita
 
     nome = models.CharField(max_length=50)
-    foto = models.ImageField()
+    foto = models.ImageField(upload_to='recipe_pics', default='defaultRecipe.png')
     instrucao = models.JSONField(default=list)
     classificacao = models.FloatField(default=float(os.environ.get('RECEITA_CLASSIFICACAO_DEFAULT', 0.0)))
 
