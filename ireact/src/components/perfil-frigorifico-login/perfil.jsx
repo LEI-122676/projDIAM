@@ -4,11 +4,17 @@ import Sidebar from '../maincomponents/sidebar.jsx';
 import '../../css/styles.css';
 import { useNavigate } from 'react-router-dom';
 import PopupModal from '../maincomponents/PopupModal.jsx';
+import axios from 'axios';
 
 const Perfil = () => {
+
+  const URL_USER = 'http://localhost:8000/idjango/api/user/';
+  const URL_USER_INFO = 'http://localhost:8000/idjango/api/utilizadores/';
   const navigate = useNavigate();
+
   const userId = localStorage.getItem('utilizadorId');
   const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
+  const [userName, setUsername] = useState(null);
 
   useEffect(() => {
     if (!userId) {
@@ -22,6 +28,9 @@ const Perfil = () => {
         onCancel: () => navigate('/')
       });
     }
+
+    axios.get(URL_USER, {withCredentials: true}).then( response => setUsername(response.data.username)).catch( () => console.log("user not logged in"));
+    
   }, [userId, navigate]);
 
   return (
@@ -44,8 +53,7 @@ const Perfil = () => {
                   <span style={{ fontSize: '50px', color: '#D1CDBC' }}>👤</span>
                 </div>
                 <div className="user-names">
-                  <h2>Nome do Utilizador</h2>
-                  <p>@Nome</p>
+                  <p >{userName}</p>
                 </div>
               </div>
 
