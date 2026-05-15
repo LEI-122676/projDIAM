@@ -16,18 +16,7 @@ const Frigorifico = () => {
     const [dbIngredientes, setDbIngredientes] = useState([]);
     const [ingredienteSelecionado, setIngredienteSelecionado] = useState('');
 
-    const [popupConfig, setPopupConfig] = useState({ 
-        isOpen: false, 
-        title: '', 
-        message: '', 
-        singleButton: true, 
-        confirmText: 'OK',
-        onConfirm: () => setPopupConfig(prev => ({ ...prev, isOpen: false })),
-        onCancel: () => setPopupConfig(prev => ({ ...prev, isOpen: false }))
-    });
-
-    const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
-
+    const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
     const INGREDIENTES_URL = 'http://localhost:8000/idjango/api/ingredientes/';
     const UTILIZADORES_URL = 'http://localhost:8000/idjango/api/utilizadores/';
     const FRIGORIFICOS_URL = 'http://localhost:8000/idjango/api/frigorificos/';
@@ -78,13 +67,7 @@ const Frigorifico = () => {
     // Função para atualizar na BD
     const atualizarFrigorifico = (novaListaIds) => {
         if (!fridgeId) {
-            setPopupConfig({
-                isOpen: true,
-                title: 'Erro de Configuração',
-                message: 'Ainda não tens um frigorífico configurado no servidor.',
-                singleButton: true,
-                onConfirm: closePopup
-            });
+            alert("Ainda não tens um frigorífico configurado no servidor.");
             return;
         }
 
@@ -96,13 +79,7 @@ const Frigorifico = () => {
             })
             .catch(err => {
                 console.error("Erro ao atualizar frigorífico:", err);
-                setPopupConfig({
-                    isOpen: true,
-                    title: 'Erro de Sincronização',
-                    message: 'Falha ao sincronizar o teu frigorífico. Tenta novamente.',
-                    singleButton: true,
-                    onConfirm: closePopup
-                });
+                alert("Falha ao sincronizar o teu frigorífico. Tenta novamente.");
             });
     };
 
@@ -112,13 +89,7 @@ const Frigorifico = () => {
 
         const id = parseInt(ingredienteSelecionado);
         if (ingredientesFrigorificoIds.includes(id)) {
-            setPopupConfig({
-                isOpen: true,
-                title: 'Ingrediente Repetido',
-                message: 'Este ingrediente já está no teu frigorífico!',
-                singleButton: true,
-                onConfirm: closePopup
-            });
+            alert("Este ingrediente já está no teu frigorífico!");
             return;
         }
 
@@ -220,12 +191,13 @@ const Frigorifico = () => {
                 </main>
             </div>
 
-            <PopupModal 
+            <PopupModal
                 isOpen={popupConfig.isOpen}
                 title={popupConfig.title}
                 message={popupConfig.message}
                 singleButton={popupConfig.singleButton}
-                confirmText={popupConfig.confirmText}
+                confirmText={popupConfig.confirmText || 'OK'}
+                cancelText={popupConfig.cancelText || 'Cancelar'}
                 onConfirm={popupConfig.onConfirm}
                 onCancel={popupConfig.onCancel}
             />

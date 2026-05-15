@@ -17,33 +17,15 @@ const Header = () => {
 
 
   const handleLogout = () => {
-    axios.get(URL_LOGOUT, { withCredentials: true })
-      .then(() => {
-        setUsername(null);
-        localStorage.removeItem('utilizadorId');
-        navigate('/');
-      })
-      .catch(() => {
-        console.log('logout failed');
-        localStorage.removeItem('utilizadorId');
-        navigate('/');
-      });
+    axios.get(URL_LOGOUT, {withCredentials: true})
+    .then( () => setUsername(null), navigate('/'))
+    .catch( () => console.log('logout failed'));
   }
-
-  useEffect(() => {
-    axios.get(URL_USER, { withCredentials: true })
-      .then(response => {
-        setUsername(response.data.username);
-        if (!response.data.username) {
-          localStorage.removeItem('utilizadorId');
-        }
-      })
-      .catch(() => {
-        console.log("user not logged in");
-        localStorage.removeItem('utilizadorId');
-      });
+  
+  useEffect(() => {axios.get(URL_USER, {withCredentials: true})
+    .then( response => setUsername(response.data.username))
+    .catch( () => console.log("user not logged in"));
   }, []);
-
 
   const navigate = useNavigate(); 
 

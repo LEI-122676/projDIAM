@@ -147,44 +147,6 @@ const VerReceita = () => {
             });
     };
 
-    const handleDelete = () => {
-        setPopupConfig({
-            isOpen: true,
-            title: 'Confirmar Eliminação',
-            message: 'Tens a certeza que pretendes apagar esta receita? Esta ação é irreversível.',
-            singleButton: false,
-            confirmText: 'Apagar',
-            cancelText: 'Cancelar',
-            onConfirm: () => {
-                axios.delete(RECEITA_URL + recipeId)
-                    .then(() => {
-                        setPopupConfig({
-                            isOpen: true,
-                            title: 'Receita Apagada',
-                            message: 'A tua receita foi removida com sucesso.',
-                            singleButton: true,
-                            confirmText: 'OK',
-                            onConfirm: () => navigate('/receitas'),
-                            onCancel: () => navigate('/receitas')
-                        });
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        setPopupConfig({
-                            isOpen: true,
-                            title: 'Erro ao Apagar',
-                            message: 'Não foi possível apagar a receita. Tenta novamente.',
-                            singleButton: true,
-                            confirmText: 'OK',
-                            onConfirm: closePopup,
-                            onCancel: closePopup
-                        });
-                    });
-            },
-            onCancel: closePopup
-        });
-    };
-
     // Avaliações
     const handleAvaliar = () => {
         if (!userId) {
@@ -309,24 +271,13 @@ const VerReceita = () => {
 
                                 <div className="view-actions-group mt-auto">
                                     <button className="btn-cancel" onClick={() => navigate(-1)}>Voltar</button>
-                                    
-                                    {Number(receita.criador) === Number(userId) ? (
-                                        <button 
-                                            className="btn-cancel" 
-                                            onClick={handleDelete}
-                                            style={{ backgroundColor: '#8b4b4b', color: 'white' }}
-                                        >
-                                            Remover Receita
-                                        </button>
-                                    ) : (
-                                        <button
-                                            className="btn-create-submit"
-                                            onClick={handleGuardar}
-                                            style={guardado ? { backgroundColor: '#8a9b8e' } : {}}
-                                        >
-                                            {guardado ? 'Guardado' : 'Guardar'}
-                                        </button>
-                                    )}
+                                    <button
+                                        className="btn-create-submit"
+                                        onClick={handleGuardar}
+                                        style={guardado ? { backgroundColor: '#8a9b8e' } : {}}
+                                    >
+                                        {guardado ? 'Guardado' : 'Guardar'}
+                                    </button>
                                 </div>
                             </div>
                         </div>

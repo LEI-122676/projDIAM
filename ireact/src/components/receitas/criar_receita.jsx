@@ -84,27 +84,11 @@ const CriarReceita = () => {
         setPopupConfig({ isOpen: true, title, message, singleButton: true, confirmText: 'OK', onConfirm: closePopup, onCancel: closePopup });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("--- DEBUG SUBMISSÃO ---");
-        console.log("ID Local (localStorage):", utilizadorId);
-
-        // Verificar quem o servidor acha que somos (Sessão)
-        try {
-            const userRes = await axios.get('http://localhost:8000/idjango/api/user/');
-            console.log("Utilizador na Sessão (Backend):", userRes.data.username);
-
-            if (!userRes.data.username) {
-                showPopup('Sessão Expirada', 'O servidor não reconhece a tua sessão. Por favor, faz login novamente.');
-                return;
-            }
-        } catch (err) {
-            console.error("Erro ao verificar sessão:", err);
-        }
-
-        console.log("A iniciar submissão da receita...", { nome, foto, utilizadorId });
 
         if (!nome.trim()) { showPopup('Campo Obrigatório', 'Por favor, dê um nome à receita.'); return; }
+        if (!foto) { showPopup('Foto Obrigatória', 'Por favor, adiciona uma foto à receita.'); return; }
         if (!utilizadorId) { showPopup('Erro', 'Não foi possível identificar o utilizador. Faz login novamente.'); return; }
 
         const passosFormatados = passos
@@ -132,29 +116,18 @@ const CriarReceita = () => {
 
         if (idsIngredientes.length === 0) { showPopup('Campo Obrigatório', 'Por favor, adicione pelo menos um ingrediente.'); return; }
 
-        // Remover duplicados (caso o utilizador tenha selecionado o mesmo ingrediente várias vezes)
-        const uniqueIdsIngredientes = [...new Set(idsIngredientes)];
-
         // Usar FormData para enviar a imagem
         const formData = new FormData();
         formData.append('nome', nome);
         formData.append('criador', utilizadorId);
         formData.append('classificacao', '0.0');
-
-        if (foto) {
-            formData.append('foto', foto);
-        }
-
+        formData.append('foto', foto);
         // JSON fields como strings
         formData.append('instrucao', JSON.stringify(passosFormatados));
-        uniqueIdsIngredientes.forEach(id => formData.append('ingredientes', id));
-
-        console.log("A enviar POST para:", RECEITAS_URL);
-
+        idsIngredientes.forEach(id => formData.append('ingredientes', id));
 
         axios.post(RECEITAS_URL, formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-            withCredentials: true
+            headers: { 'Content-Type': 'multipart/form-data' }
         })
             .then(() => {
                 setPopupConfig({

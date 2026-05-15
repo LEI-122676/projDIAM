@@ -70,32 +70,37 @@ def utilizador_frigorifico(request, utilizador_id):
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-from django.views.decorators.csrf import csrf_exempt
-
 @api_view(['GET', 'POST'])
 def receitas(request):
     if request.method == 'GET':
-        receita_list = Receita.objects.all().order_by('-id')[:QUERY_LIMIT]
+        receita_list = Receita.objects.all()[:QUERY_LIMIT]
         serializer = ReceitaSerializer(receita_list, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
-        if not request.user.is_authenticated:
-            return Response({'msg': 'Authentication required'}, status=status.HTTP_401_UNAUTHORIZED)
         import re, json
-        print("--- NOVO PEDIDO DE CRIAÇÃO DE RECEITA ---")
-        print("Utilizador autenticado:", request.user)
-        print("Data recebida:", request.data)
-        
-        # Criamos um dicionário mutável a partir dos dados do pedido
-        data = request.data.copy() if hasattr(request.data, 'copy') else request.data
 
-        # Tratar a instrução (especialmente se vier como string JSON de um FormData)
+        # Para lidar com multipart/form-data (FormData) e listas (ingredientes)
+        if hasattr(request.data, 'getlist'):
+            data = request.data.dict() # Cria uma cópia básica
+            # Recupera as listas reais para campos ManyToMany
+            if 'ingredientes' in request.data:
+                data['ingredientes'] = request.data.getlist('ingredientes')
+            if 'guardadores' in request.data:
+                data['guardadores'] = request.data.getlist('guardadores')
+        else:
+            data = request.data.copy() if hasattr(request.data, 'copy') else request.data
+
+        # Tratar a instrução (pode vir como string JSON do FormData)
         instrucao_raw = data.get('instrucao', [])
         if isinstance(instrucao_raw, str):
             try:
                 instrucao_raw = json.loads(instrucao_raw)
             except (json.JSONDecodeError, ValueError):
-                instrucao_raw = [instrucao_raw] if instrucao_raw.strip() else []
+                # Se não for JSON válido, tenta tratar como string única numa lista
+                if instrucao_raw.strip():
+                    instrucao_raw = [instrucao_raw]
+                else:
+                    instrucao_raw = []
 
         if isinstance(instrucao_raw, list):
             formatted_passos = []
@@ -107,42 +112,13 @@ def receitas(request):
                         formatted_passos.append(f"{prefix}{passo_limpo}")
                     else:
                         formatted_passos.append(passo)
-            
-            # Se for um QueryDict, temos de usar setlist ou atualizar o valor
-            if hasattr(data, 'setlist') and isinstance(formatted_passos, list):
-                # JSONField em QueryDict pode ser chato, vamos garantir que vai como objeto
-                # Mas QueryDict só guarda strings. Por isso, para FormData, 
-                # o serializer vai ter de lidar com a string ou nós passamos um dict normal.
-                pass 
-            
-        # Para evitar problemas com QueryDict e listas/objetos, convertemos para dict normal
-        if hasattr(data, 'dict'):
-            plain_data = data.dict()
-            # Restaurar as listas que o .dict() "esmaga"
-            if 'ingredientes' in data:
-                plain_data['ingredientes'] = data.getlist('ingredientes')
-            if 'guardadores' in data:
-                plain_data['guardadores'] = data.getlist('guardadores')
-            # Garantir que instrução vai como lista (objeto Python), não string
-            plain_data['instrucao'] = formatted_passos if isinstance(instrucao_raw, list) else instrucao_raw
-            # Se a foto for uma string vazia ou "null", removemos para o serializer usar null
-            if plain_data.get('foto') in ['', 'null', 'undefined']:
-                plain_data.pop('foto', None)
-            data = plain_data
+            data['instrucao'] = formatted_passos
 
         serializer = ReceitaSerializer(data=data)
-        print("A validar serializer...")
-        is_valid = serializer.is_valid()
-        print("É válido?", is_valid)
-        
-        if is_valid:
+        if serializer.is_valid():
             serializer.save()
-            print("Receita guardada com sucesso!")
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
-        print("ERROS DE VALIDAÇÃO:", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -157,42 +133,16 @@ def receita_detail(request, receita_id):
         serializer = ReceitaSerializer(receita)
         return Response(serializer.data)
     elif request.method == 'PUT':
-        import re, json
-        data = request.data.copy() if hasattr(request.data, 'copy') else dict(request.data)
-
-        # Tratar a instrução se presente
-        if 'instrucao' in data:
-            instrucao_raw = data['instrucao']
-            if isinstance(instrucao_raw, str):
-                try:
-                    instrucao_raw = json.loads(instrucao_raw)
-                except (json.JSONDecodeError, ValueError):
-                    instrucao_raw = [instrucao_raw] if instrucao_raw.strip() else []
-
-            if isinstance(instrucao_raw, list):
-                formatted_passos = []
-                for i, passo in enumerate(instrucao_raw):
-                    if isinstance(passo, str):
-                        prefix = f"Passo {i+1}: "
-                        if not passo.startswith(prefix):
-                            passo_limpo = re.sub(r'^Passo \d+:\s*', '', passo)
-                            formatted_passos.append(f"{prefix}{passo_limpo}")
-                        else:
-                            formatted_passos.append(passo)
-                data['instrucao'] = formatted_passos
-
-        serializer = ReceitaSerializer(receita, data=data, partial=True)
+        serializer = ReceitaSerializer(receita, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data) # Retorna os dados para o frontend não ficar com undefined
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_204_NO_CONTENT)
     elif request.method == 'DELETE':
         receita.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
 def eventos(request):
     if request.method == 'GET':
         evento_list = Evento.objects.all()
@@ -359,12 +309,9 @@ def login_view(request):
     user = authenticate(request, username=username, password=password)
     if user is not None:
         login(request, user) # Criação da sessão
-        print(f"Sessão iniciada para: {user.username}")
-        print(f"Session Key: {request.session.session_key}")
         utilizador = Utilizador.objects.get(user=user)
         return Response({'msg': 'user logged in', 'utilizadorId': utilizador.id})
     else:
-        print(f"Falha de login para: {username}")
         return Response({'msg': 'invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
     
 @api_view(['GET'])

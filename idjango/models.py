@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 import os
 
 # Create your models here.
@@ -10,12 +13,14 @@ class Ingrediente(models.Model):
         return self.nome
 
 class Frigorifico(models.Model):
-    ingredientes = models.ManyToManyField(Ingrediente, blank=True) #Por ser ManyToManyField, nao precisamos de null=true
+    ingredientes = models.ManyToManyField(Ingrediente) #Por ser ManyToManyField, nao precisamos de null=true
 
 class Utilizador(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)       # "extends"
+    nome = models.CharField(max_length=50)
+    apelido = models.CharField(max_length=50)
     frigorifico = models.OneToOneField(Frigorifico, on_delete=models.DO_NOTHING, null=True)
-    imagem = models.ImageField(upload_to='profile_pics', default='default.png')
+    imagem = models.ImageField(upload_to='profile_pics', default='defaultProfile.png')
     bio = models.TextField(null=True)
     
     def __str__(self):
@@ -26,12 +31,17 @@ class Evento(models.Model):
     inscritos = models.ManyToManyField(Utilizador, related_name='eventos_inscritos', blank = True)
 
     nome = models.CharField(max_length=50)
-    fotos = models.JSONField()
+    foto = models.ImageField(upload_to='Event_pics', default='defaultEvent.png')
     horario = models.JSONField()
-    data_evento = models.DateTimeField()
     data_criacao = models.DateTimeField(auto_now_add=True)
+    data_evento = models.DateTimeField()
     descricao = models.TextField()
-    capacidade_max = models.IntegerField(default=int(os.environ.get('EVENTO_CAPACIDADE_MAX_DEFAULT', 30)))
+    capacidade_max = models.IntegerField(default=int(os.environ.get('EVENTO_CAPACIDADE_MAX_DEFAULT', 30)), validators=[MinValueValidator(5)])
+
+    def clean(self):
+        super().clean()
+        if self.data_evento and self.data_evento <= timezone.now():
+            raise ValidationError({'data_evento': 'A data do evento deve ser no futuro.'})
 
     def __str__(self):
         return self.nome
@@ -42,9 +52,9 @@ class Receita(models.Model):
     guardadores = models.ManyToManyField(Utilizador, related_name='receitas_guardadas', blank=True)      # Pessoas que guardaram esta receita
 
     nome = models.CharField(max_length=50)
-    foto = models.ImageField(null=True, blank=True)
+    foto = models.ImageField(upload_to='recipe_pics', default='defaultRecipe.png')
     instrucao = models.JSONField(default=list)
-    classificacao = models.FloatField(default=float(os.environ.get('RECEITA_CLASSIFICACAO_DEFAULT', 0.0)))
+    classificacao = models.FloatField(default=float(os.environ.get('RECEITA_CLASSIFICACAO_DEFAULT', 0.0)), validators=[MinValueValidator(0.0), MaxValueValidator(5.0)])
 
     def __str__(self):
         return self.nome
@@ -59,14 +69,3 @@ class Comentario(models.Model):
 
     def __str__(self):
         return f"Utilizador: {self.utilizador}\nTexto:{self.texto}"
-
-class Avaliacao(models.Model):
-    utilizador = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
-    receita = models.ForeignKey(Receita, on_delete=models.CASCADE, related_name='avaliacoes')
-    valor = models.IntegerField() # 1 a 5
-
-    class Meta:
-        unique_together = ('utilizador', 'receita')
-
-    def __str__(self):
-        return f"{self.utilizador} -> {self.receita}: {self.valor}"
