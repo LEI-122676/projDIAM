@@ -1,11 +1,28 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
 import '../../css/styles.css';
 import { useNavigate } from 'react-router-dom';
+import PopupModal from '../maincomponents/PopupModal.jsx';
 
 const Perfil = () => {
   const navigate = useNavigate();
+  const userId = localStorage.getItem('utilizadorId');
+  const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
+
+  useEffect(() => {
+    if (!userId) {
+      setPopupConfig({
+        isOpen: true,
+        title: 'Sessão Expirada',
+        message: 'Precisas de estar autenticado para ver o teu perfil.',
+        singleButton: false,
+        confirmText: 'Login',
+        onConfirm: () => navigate('/login'),
+        onCancel: () => navigate('/')
+      });
+    }
+  }, [userId, navigate]);
 
   return (
     <div className="body-wrapper">
@@ -67,6 +84,15 @@ const Perfil = () => {
           </div>
         </main>
       </div>
+      <PopupModal 
+        isOpen={popupConfig.isOpen}
+        title={popupConfig.title}
+        message={popupConfig.message}
+        singleButton={popupConfig.singleButton}
+        confirmText={popupConfig.confirmText}
+        onConfirm={popupConfig.onConfirm}
+        onCancel={popupConfig.onCancel}
+      />
     </div>
   );
 };

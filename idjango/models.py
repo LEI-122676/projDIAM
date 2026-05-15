@@ -39,7 +39,7 @@ class Evento(models.Model):
 class Receita(models.Model):
     criador = models.ForeignKey(Utilizador, on_delete=models.CASCADE, related_name='criador_receita')
     ingredientes = models.ManyToManyField(Ingrediente)
-    guardadores = models.ManyToManyField(Utilizador, related_name='receitas_guardadas')      # Pessoas que guardaram esta receita
+    guardadores = models.ManyToManyField(Utilizador, related_name='receitas_guardadas', blank=True)      # Pessoas que guardaram esta receita
 
     nome = models.CharField(max_length=50)
     foto = models.ImageField()

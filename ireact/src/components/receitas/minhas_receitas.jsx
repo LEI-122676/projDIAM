@@ -22,24 +22,37 @@ const AsMinhasReceitas = () => {
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-    const userId = localStorage.getItem('userId');
+    const userId = localStorage.getItem('utilizadorId');
 
-    useEffect(() => {
-        if (!userId) {
-            navigate('/login');
-            return;
-        }
-
-        // Carrega todas as receitas
+    const getReceitas = () => {
         axios.get(RECEITAS_URL)
             .then(res => setReceitas(res.data))
             .catch(err => console.error("Erro ao carregar receitas:", err));
+    };
+
+    useEffect(() => {
+        if (!userId) {
+            setPopupConfig({
+                isOpen: true,
+                title: 'Acesso Restrito',
+                message: 'Precisas de iniciar sessão para ver as tuas receitas.',
+                singleButton: false,
+                confirmText: 'Iniciar Sessão',
+                onConfirm: () => navigate('/login'),
+                onCancel: () => navigate('/')
+            });
+            return;
+        }
+
+        getReceitas();
     }, [userId, navigate]);
 
-    const handleFridgeFilterToggle = () => {
+    const handleFridgeFilterToggle = (forceValue) => {
         if (!userId) return;
 
-        if (isFridgeFilterActive) {
+        const shouldBeActive = typeof forceValue === 'boolean' ? forceValue : !isFridgeFilterActive;
+
+        if (!shouldBeActive) {
             setIsFridgeFilterActive(false);
             setFridgeIngredients([]);
             return;
@@ -82,12 +95,23 @@ const AsMinhasReceitas = () => {
         const nomeReceita = receita.nome || "";
         const matchesSearch = nomeReceita.toLowerCase().includes(searchQuery.toLowerCase());
 
+        // Filtro do frigorífico (mostrar receitas que usam pelo menos um ingrediente do frigorífico)
         let matchesFridge = true;
-        if (isFridgeFilterActive && fridgeIngredients.length > 0) {
-            if (!receita.ingredientes || receita.ingredientes.length === 0) {
+        if (isFridgeFilterActive) {
+            if (fridgeIngredients.length === 0) {
+                matchesFridge = false;
+            } else if (!receita.ingredientes || receita.ingredientes.length === 0) {
                 matchesFridge = false;
             } else {
-                matchesFridge = receita.ingredientes.every(ingId => fridgeIngredients.includes(ingId));
+                const fridgeIds = (fridgeIngredients || []).map(id => {
+                    if (typeof id === 'object' && id !== null) return Number(id.id);
+                    return Number(id);
+                });
+                
+                matchesFridge = (receita.ingredientes || []).some(ingId => {
+                    const idToMatch = typeof ingId === 'object' && ingId !== null ? Number(ingId.id) : Number(ingId);
+                    return fridgeIds.includes(idToMatch);
+                });
             }
         }
         return matchesSearch && matchesFridge;
@@ -144,7 +168,15 @@ const AsMinhasReceitas = () => {
                                         onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
                                     >
                                         <div className="recipe-image-placeholder">
-                                            <span className="recipe-icon-large">✕</span>
+                                            {receita.foto_url ? (
+                                                <img
+                                                    src={`http://localhost:8000${receita.foto_url}`}
+                                                    alt={receita.nome}
+                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                />
+                                            ) : (
+                                                <span className="recipe-icon-large">🍲</span>
+                                            )}
                                         </div>
                                         <div className="recipe-card-footer">
                                             <span className="ingredient-name">{receita.nome}</span>
@@ -170,7 +202,15 @@ const AsMinhasReceitas = () => {
                                         onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
                                     >
                                         <div className="recipe-image-placeholder">
-                                            <span className="recipe-icon-large">✕</span>
+                                            {receita.foto_url ? (
+                                                <img
+                                                    src={`http://localhost:8000${receita.foto_url}`}
+                                                    alt={receita.nome}
+                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                />
+                                            ) : (
+                                                <span className="recipe-icon-large">🍲</span>
+                                            )}
                                         </div>
                                         <div className="recipe-card-footer">
                                             <span className="ingredient-name">{receita.nome}</span>
