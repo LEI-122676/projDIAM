@@ -49,15 +49,22 @@ class Evento(models.Model):
 class Receita(models.Model):
     criador = models.ForeignKey(Utilizador, on_delete=models.CASCADE, related_name='criador_receita')
     ingredientes = models.ManyToManyField(Ingrediente)
-    guardadores = models.ManyToManyField(Utilizador, related_name='receitas_guardadas')      # Pessoas que guardaram esta receita
-
+    guardadores = models.ManyToManyField(Utilizador, related_name='receitas_guardadas', blank=True)
     nome = models.CharField(max_length=50)
     foto = models.ImageField(upload_to='recipe_pics', default='defaultRecipe.png')
     instrucao = models.JSONField(default=list)
-    classificacao = models.FloatField(default=float(os.environ.get('RECEITA_CLASSIFICACAO_DEFAULT', 0.0)), validators=[MinValueValidator(0.0), MaxValueValidator(5.0)])
 
     def __str__(self):
         return self.nome
+
+class Avaliacao(models.Model):
+    utilizador = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
+    receita = models.ForeignKey(Receita, on_delete=models.CASCADE, related_name='avaliacoes')
+    nota = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    data = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.utilizador.nome} deu {self.nota}⭐ a {self.receita.nome}"
 
 class Comentario(models.Model):
     utilizador = models.ForeignKey(Utilizador, on_delete=models.CASCADE)

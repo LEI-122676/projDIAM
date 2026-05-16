@@ -4,11 +4,14 @@ import Sidebar from '../maincomponents/sidebar.jsx';
 import '../../css/styles.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import PopupModal from '../maincomponents/PopupModal.jsx';
 
 const Login = () => {
   
   const navigate = useNavigate();
 
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -17,13 +20,22 @@ const Login = () => {
   const [usernameLogin, setUsernameLogin] = useState('');
   const [passwordLogin, setPasswordLogin] = useState('');
 
+  const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
+  const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
+
   const SIGN_UP_URL = 'http://localhost:8000/idjango/api/signup/';
   const SIGN_IN_URL = 'http://localhost:8000/idjango/api/login/';
 
   const handleLogin = (e) => {
     e.preventDefault();
     if (!usernameLogin || !passwordLogin) {
-      alert('Por favor, preencha todos os campos de login');
+      setPopupConfig({
+        isOpen: true,
+        title: 'Campos em Falta',
+        message: 'Por favor, preenche todos os campos de login.',
+        singleButton: true,
+        onConfirm: closePopup
+      });
       return;
     }
    
@@ -33,25 +45,60 @@ const Login = () => {
         console.log('logged in');
         navigate(-1);
       })
-    .catch( () => console.log('login failed'))
+    .catch( () => {
+        setPopupConfig({
+            isOpen: true,
+            title: 'Erro de Login',
+            message: 'Credenciais inválidas. Tenta novamente.',
+            singleButton: true,
+            onConfirm: closePopup
+        });
+    })
   };
 
   const handleRegister = (e) => {
     e.preventDefault();
-    if (!username || !email || !password || !confirmPassword) {
-      alert('Por favor, preencha todos os campos de registo');
+    if (!firstName || !lastName || !username || !email || !password || !confirmPassword) {
+      setPopupConfig({
+        isOpen: true,
+        title: 'Campos em Falta',
+        message: 'Por favor, preenche todos os campos de registo.',
+        singleButton: true,
+        onConfirm: closePopup
+      });
       return;
     }
     if (password !== confirmPassword) {
-      alert('As passwords não coincidem');
+      setPopupConfig({
+        isOpen: true,
+        title: 'Erro na Password',
+        message: 'As passwords não coincidem.',
+        singleButton: true,
+        onConfirm: closePopup
+      });
       return;
     }
+
+    const formData = new FormData();
+    formData.append('firstName', firstName);
+    formData.append('lastName', lastName);
+    formData.append('username', username);
+    formData.append('password', password);
+    formData.append('email', email);
       
-    axios.post(SIGN_UP_URL, { username, password, email}, { withCredentials: true }).then( response => {
+    axios.post(SIGN_UP_URL, formData, { withCredentials: true }).then( response => {
         console.log('Signup successful!', response.data.msg);
         localStorage.setItem('utilizadorId', response.data.utilizadorId);
         navigate(-1);
-    }).catch( err => console.log('Signup failed...', err.response.data.msg));
+    }).catch( err => {
+        setPopupConfig({
+            isOpen: true,
+            title: 'Erro no Registo',
+            message: 'Não foi possível completar o registo. O username ou email podem já estar em uso.',
+            singleButton: true,
+            onConfirm: closePopup
+        });
+    });
   };
 
   return (
@@ -94,6 +141,20 @@ const Login = () => {
             <form className="auth-form" onSubmit={handleRegister}>
               <input 
                 type="text" 
+                placeholder="Nome" 
+                className="auth-input" 
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+              <input 
+                type="text" 
+                placeholder="Apelido" 
+                className="auth-input" 
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+              <input 
+                type="text" 
                 placeholder="Username" 
                 className="auth-input" 
                 value={username}
@@ -125,8 +186,18 @@ const Login = () => {
           </section>
         </main>
       </div>
+
+      <PopupModal
+        isOpen={popupConfig.isOpen}
+        title={popupConfig.title}
+        message={popupConfig.message}
+        singleButton={popupConfig.singleButton}
+        confirmText="OK"
+        onConfirm={popupConfig.onConfirm}
+        onCancel={popupConfig.onCancel}
+      />
     </div>
   );
 };
 
-export default Login;
+export default Login;
