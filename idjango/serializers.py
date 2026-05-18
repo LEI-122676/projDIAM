@@ -1,6 +1,6 @@
 from django.db.models import Avg
 from rest_framework import serializers
-from .models import Ingrediente, Evento, Receita, Frigorifico, Utilizador, Comentario
+from .models import Ingrediente, Evento, Receita, Frigorifico, Utilizador, Comentario, User
 
 class IngredienteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,6 +19,7 @@ class EventoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Evento
         fields = '__all__'
+        read_only_fields = ['data', 'data_criacao']
         
     def validate_data_evento(self, value):
         if value and value <= timezone.now():
@@ -63,3 +64,9 @@ class UtilizadorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Utilizador
         fields = '__all__'
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        # Todas exceto a password, 
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'date_joined']

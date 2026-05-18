@@ -8,13 +8,17 @@ import axios from 'axios';
 
 const Perfil = () => {
 
-  const URL_USER = 'http://localhost:8000/idjango/api/user/';
+  const URL_USER = 'http://localhost:8000/idjango/api/user_info/';
   const URL_USER_INFO = 'http://localhost:8000/idjango/api/utilizadores/';
   const navigate = useNavigate();
 
   const userId = localStorage.getItem('utilizadorId');
   const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
-  const [userData, setUserData] = useState({ username: '', nome: '', apelido: '' });
+  
+  // CORREÇÃO: bio e imagem pertencem a userData (Utilizador)
+  const [userData, setUserData] = useState({ nome: '', apelido: '', imagem: '', bio: '' });
+  // CORREÇÃO: username e email pertencem a userInfo (User base)
+  const [userInfo, setUserInfo] = useState({ username: '', email: '' });
 
   useEffect(() => {
     if (!userId) {
@@ -30,17 +34,26 @@ const Perfil = () => {
       return;
     }
 
-    // Buscar info detalhada do utilizador
+    // Buscar info detalhada do utilizador (Tabela Utilizador: nome, apelido, imagem, bio)
     axios.get(`${URL_USER_INFO}${userId}`, { withCredentials: true })
       .then(res => {
         setUserData(res.data);
+        console.log("Dados do Utilizador:", res.data);
       })
       .catch(err => {
-        console.error("Erro ao carregar perfil:", err);
+        console.error("Erro ao carregar perfil (utilizador):", err);
       });
 
+    // Buscar info da tabela User base (username, email)
+    axios.get(`${URL_USER}${userId}`, { withCredentials: true })
+      .then(res => {
+        setUserInfo(res.data);
+        console.log("Dados do User base:", res.data);
+      })
+      .catch(err => {
+        console.error("Erro ao carregar perfil (user base):", err);
+      });
   }, [userId, navigate]);
-
 
   return (
     <div className="body-wrapper">
@@ -57,31 +70,40 @@ const Perfil = () => {
             {/* COLUNA ESQUERDA: Cartão de Info */}
             <div className="profile-details-card">
               <div className="user-main-info">
-                <div className="user-avatar-large">
-                  {/* Ícone de utilizador simples */}
-                  <span style={{ fontSize: '50px', color: '#D1CDBC' }}>👤</span>
+                <div className="user-avatar-large" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                  {/* CORREÇÃO: Se houver imagem em userData, mostra a tag img. Se não, mostra o boneco */}
+                    {userData.imagem ? (
+                      <img 
+                        src={userData.imagem.startsWith('http') ? userData.imagem : `http://localhost:8000${userData.imagem.startsWith('/') ? '' : '/'}${userData.imagem}`} 
+                        alt="Imagem do utilizador" 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '18px' }} 
+                      />
+                    ) : (
+                      <img 
+                        src={userData.imagem.startsWith('http') ? userData.imagem : `http://localhost:8000/idjango/media/perfil.png`} 
+                        alt="Imagem do utilizador" 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '18px' }} 
+                      />
+                    )}
                 </div>
                 <div className="user-names">
                   <h2 style={{ color: '#2E4A35', margin: 0 }}>{userData.nome} {userData.apelido}</h2>
-                  <p style={{ color: '#716259', fontSize: '0.9rem' }}>@{userData.username}</p>
+                  {/* CORREÇÃO: username vem de userInfo */}
+                  <p style={{ color: '#716259', fontSize: '0.9rem' }}>Username: {userInfo.username}</p>
                 </div>
               </div>
 
               <hr className="profile-divider" />
 
               <div className="user-extra-info">
-                <h3>Info:</h3>
-                <ul>
-                  <li>- Info A</li>
-                  <li>- Info B</li>
-                  <li>- Info C</li>
-                  <li>- Info D</li>
-                  <li>- Info E</li>
-                </ul>
+                <span><strong>Email:</strong> {userInfo.email} </span>
+                <br />
+                {/* CORREÇÃO: bio vem de userData */}
+                <span><strong>Biografia:</strong> {userData.bio || "Sem biografia definida."}</span>
               </div>
 
               <div className="profile-actions">
-                <button className="btn-edit-profile">Editar perfil</button>
+                <button className="btn-edit-profile" onClick={() => navigate('/perfil/editar-perfil')}>Editar perfil</button>
                 <button className="btn-logout-link" onClick={() => {
                   axios.get('http://localhost:8000/idjango/api/logout/', { withCredentials: true })
                     .then(() => {
@@ -106,7 +128,7 @@ const Perfil = () => {
               <div className="shortcut-card" onClick={() => navigate('/perfil/minhas-receitas')}>
                 As minhas Receitas
               </div>
-              <div className="shortcut-card" onClick={() => navigate('/eventos')}>
+              <div className="shortcut-card" onClick={() => navigate('/perfil/meus-eventos')}>
                 Os meus Eventos
               </div>
             </div>

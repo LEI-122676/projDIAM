@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
@@ -10,12 +11,13 @@ const VerEvento = () => {
     const navigate = useNavigate();
     const location = useLocation();
     
-    // Get the ID passed through navigate state
+    // Obtém o ID passado através do state do router
     const eventoId = location.state?.id;
 
     const [evento, setEvento] = useState(null);
     const utilizadorId = localStorage.getItem('utilizadorId');
     const [inscrito, setInscrito] = useState(false);
+    const [isLoadError, setIsLoadError] = useState(false);
 
     const [popupConfig, setPopupConfig] = useState({ 
         isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} 
@@ -24,59 +26,113 @@ const VerEvento = () => {
 
     const EVENTO_URL = 'http://localhost:8000/idjango/api/eventos/';
 
+    const showLoginPopup = (actionMessage) => {
+        setPopupConfig({
+            isOpen: true,
+            title: 'Acesso Restrito',
+            message: `Precisas de iniciar sessão para ${actionMessage}. Cria uma conta ou faz login!`,
+            singleButton: false,
+            confirmText: 'Iniciar Sessão',
+            onConfirm: () => navigate('/login'),
+            onCancel: closePopup
+        });
+    };
+
     useEffect(() => {
         if (!eventoId) {
-            navigate(-1);
+            navigate('/eventos');
             return;
         }
 
-        // Fetch Event details
         axios.get(`${EVENTO_URL}${eventoId}`)
             .then(res => {
                 setEvento(res.data);
-                // Check if current user is in the participants list
                 if (utilizadorId && res.data.inscritos?.includes(parseInt(utilizadorId, 10))) {
                     setInscrito(true);
                 }
             })
-            .catch(err => console.error("Erro ao carregar evento:", err));
+            .catch(err => {
+                console.error("Erro ao carregar evento:", err);
+                setIsLoadError(true);
+            });
     }, [eventoId, utilizadorId, navigate]);
 
-    const handleJoin = () => {
-        if (!utilizadorId) {
-            setPopupConfig({
-                isOpen: true,
-                title: 'Acesso Restrito',
-                message: 'Precisas de iniciar sessão para te inscreveres neste evento.',
-                singleButton: false,
-                confirmText: 'Iniciar Sessão',
-                onConfirm: () => navigate('/login'),
-                onCancel: closePopup
-            });
-            return;
-        }
+const handleJoin = () => {
+    if (!utilizadorId) {
+        showLoginPopup('te inscreveres neste evento');
+        return;
+    }
 
-        const isAlreadyInscribed = inscrito;
-        let newInscritos = [...(evento.inscritos || [])];
+    const isAlreadyInscribed = inscrito;
+    let newInscritos = [...(evento.inscritos || [])];
 
-        if (isAlreadyInscribed) {
-            newInscritos = newInscritos.filter(id => id !== parseInt(utilizadorId, 10));
-        } else {
-            newInscritos.push(parseInt(utilizadorId, 10));
-        }
+    if (isAlreadyInscribed) {
+        newInscritos = newInscritos.filter(id => id !== parseInt(utilizadorId, 10));
+    } else {
+        newInscritos.push(parseInt(utilizadorId, 10));
+    }
 
-        const updatedPayload = { ...evento, inscritos: newInscritos };
 
-        axios.put(`${EVENTO_URL}${eventoId}`, updatedPayload)
-            .then(res => {
-                setEvento(res.data);
-                setInscrito(!isAlreadyInscribed);
-                // Optional: show a success message via popup
-            })
-            .catch(err => console.error("Erro ao atualizar inscrição:", err));
+    const dataLimpa = evento.data_evento ? evento.data_evento.substring(0, 10) : null;
+
+
+    const horarioLimpo = evento.horario ? evento.horario.replace(/"/g, '').substring(0, 5) : null;
+
+    const updatedPayload = {
+        id: evento.id,
+        nome: evento.nome,
+        descricao: evento.descricao,
+        data_evento: dataLimpa,
+        horario: horarioLimpo,
+        capacidade_max: evento.capacidade_max,
+        criador: evento.criador && typeof evento.criador === 'object' ? evento.criador.id : evento.criador,
+        inscritos: newInscritos
     };
 
+    axios.put(`${EVENTO_URL}${eventoId}`, updatedPayload)
+        .then(res => {
+            setEvento(prev => ({
+                ...prev,
+                ...res.data,
+                inscritos: newInscritos
+            }));
+            setInscrito(!isAlreadyInscribed);
+            
+            setPopupConfig({
+                isOpen: true,
+                title: isAlreadyInscribed ? 'Inscrição Cancelada' : 'Inscrição Confirmada!',
+                message: isAlreadyInscribed ? 'Cancelaste a tua inscrição no evento.' : 'Estás oficialmente inscrito no evento!',
+                singleButton: true,
+                confirmText: 'OK',
+                onConfirm: closePopup,
+                onCancel: closePopup
+            });
+        })
+        .catch(err => {
+            console.error("Erro ao atualizar inscrição com PUT:", err);
+            // Fallback para a interface não congelar em caso de erro de rede
+            setEvento(prev => ({ ...prev, inscritos: newInscritos }));
+            setInscrito(!isAlreadyInscribed);
+        });
+};
+
+    const formatarDataExibicao = (dataStr) => {
+        if (!dataStr) return "Data não definida";
+        const [ano, mes, dia] = dataStr.split('-');
+        return `${dia}/${mes}/${ano}`;
+    };
+
+    if (isLoadError) return (
+        <div className="loading-container">
+            <p style={{ color: '#8b4b4b', marginBottom: '20px' }}>❌ Não foi possível carregar o evento.</p>
+            <button className="btn-cancel" onClick={() => navigate('/eventos')}>Voltar aos Eventos</button>
+        </div>
+    );
+
     if (!evento) return <div className="loading-container">A carregar evento...</div>;
+
+    const totalInscritos = evento.inscritos?.length || 0;
+    const imagemCaminho = evento.foto_url || evento.foto;
 
     return (
         <div className="body-wrapper">
@@ -84,25 +140,78 @@ const VerEvento = () => {
             <div className="main-wrapper">
                 <Sidebar />
                 <main className="content-profile">
-                    <h1 className="page-title-underline">{evento.nome}</h1>
-                    <div className="create-recipe-container">
-                        <div className="recipe-form-section">
-                            <div className="form-group">
-                                <label>Descrição:</label>
-                                <label>{evento.descricao}</label>
+
+                    {/* CABEÇALHO DO EVENTO */}
+                    <div className="recipe-header-container">
+                        <h1 className="page-title-underline">{evento.nome}</h1>
+                        <div className="recipe-rating-text">
+                            👥 {totalInscritos} / {evento.capacidade_max || 5} Inscritos
+                        </div>
+                    </div>
+
+                    <div className="recipe-view-container">
+
+                        {/* PARTE SUPERIOR */}
+                        <div className="recipe-top-row">
+                            <div className="recipe-main-image flex-center">
+                                {imagemCaminho ? (
+                                    <img
+                                        src={`http://localhost:8000${imagemCaminho.startsWith('/') ? '' : '/'}${imagemCaminho}`}
+                                        alt={evento.nome}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '14px' }}
+                                    />
+                                ) : (
+                                    <img
+                                        src="http://localhost:8000/idjango/media/defaultEvent.png"
+                                        alt={evento.nome}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '14px' }}
+                                    />
+                                )}
                             </div>
-                        </div> 
-                        <div className="recipe-image-section">
-                            <div className="create-actions-group">
-                                <button className="btn-cancel" onClick={() => navigate(-1)} >Voltar</button>
-                                <button className="btn-create-submit">Criar</button>
+
+                            {/* Menu lateral de informações rápidas */}
+                            <div className="recipe-steps-nav">
+                                <div className="step-nav-item" style={{ cursor: 'default', fontWeight: '600' }}>
+                                    📅 {evento.data_evento ? formatarDataExibicao(evento.data_evento.substring(0, 10)) : "Sem data definida"}
+                                </div>
+                                <div className="step-nav-item" style={{ cursor: 'default', fontWeight: '600' }}>
+                                    🕒 {evento.horario ? evento.horario.replace(/"/g, '') : "Sem horário definido"}
+                                </div>
+                                <div className="step-nav-item" style={{ cursor: 'default', fontWeight: '600' }}>
+                                    📍 Lotação Máxima: {evento.capacidade_max || 5} pessoas
+                                </div>
+
+                                <div className="view-actions-group mt-auto">
+                                    <button className="btn-cancel" onClick={() => navigate(-1)}>Voltar</button>
+
+                                    <button
+                                        className="btn-create-submit"
+                                        onClick={handleJoin}
+                                        style={inscrito ? { backgroundColor: '#8a9b8e' } : {}}
+                                    >
+                                        {inscrito ? 'Inscrito' : 'Inscrever-me'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* PARTE INFERIOR */}
+                        <div className="recipe-bottom-row recipe-bottom-row-flex">
+                            <div className="recipe-descriptions-column recipe-col-2">
+                                <div className="step-detail mb-15">
+                                    <label className="section-subtitle">Sobre o Evento</label>
+                                    <div className="content-box-light text-black" style={{ minHeight: '150px', whiteSpace: 'pre-wrap', lineHeight: '1.6' }}>
+                                        {evento.descricao || "Este evento não possui uma descrição detalhada."}
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                     </div>
                 </main>
-              </div>
-            <PopupModal 
+            </div>
+
+            <PopupModal
                 isOpen={popupConfig.isOpen}
                 title={popupConfig.title}
                 message={popupConfig.message}

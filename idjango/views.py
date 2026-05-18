@@ -398,3 +398,27 @@ def user_view(request):
 def user_view_Id(request):
     return Response({'user_id': request.user.id})
 
+@csrf_exempt
+@api_view(['GET', 'PUT'])  # <--- Adicionado o PUT aqui
+@permission_classes([IsAuthenticated])
+def user_info(request, id):
+    try:
+        user = User.objects.get(id=id)
+    except User.DoesNotExist:
+        return Response({'error': 'Utilizador não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Buscar informações do User
+    if request.method == 'GET':
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
+    # Guardar alterações do User
+    elif request.method == 'PUT':
+        # Passamos partial=True caso não envies todos os dados obrigatórios do modelo User
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        # Se houver erros de validação (ex: username em duplicado), devolve ao frontend
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -34,6 +34,7 @@ class Evento(models.Model):
     foto = models.ImageField(upload_to='Event_pics', default='defaultEvent.png')
     horario = models.JSONField()
     data_criacao = models.DateTimeField(auto_now_add=True)
+    data = models.DateTimeField(auto_now_add=True)
     data_evento = models.DateTimeField()
     descricao = models.TextField()
     capacidade_max = models.IntegerField(default=int(os.environ.get('EVENTO_CAPACIDADE_MAX_DEFAULT', 30)), validators=[MinValueValidator(5)])
