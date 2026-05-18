@@ -28,10 +28,10 @@ const VerReceita = () => {
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-    const INGREDIENTES_URL = 'http://localhost:8000/idjango/api/ingredientes/';
-    const RECEITA_URL = 'http://localhost:8000/idjango/api/receitas/';
-    const COMENTARIOS_URL = 'http://localhost:8000/idjango/api/comentarios/';
-    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api/utilizadores/';
+    const INGREDIENTES_URL = import.meta.env.VITE_API_BASE_URL + '/ingredientes/';
+    const RECEITA_URL = import.meta.env.VITE_API_BASE_URL + '/receitas/';
+    const COMENTARIOS_URL = import.meta.env.VITE_API_BASE_URL + '/comentarios/';
+    const UTILIZADORES_URL = import.meta.env.VITE_API_BASE_URL + '/utilizadores/';
 
     const showLoginPopup = (actionMessage) => {
         setPopupConfig({
@@ -41,6 +41,18 @@ const VerReceita = () => {
             singleButton: false,
             confirmText: 'Iniciar Sessão',
             onConfirm: () => navigate('/login'),
+            onCancel: closePopup
+        });
+    };
+
+    const showPopup = (title, message) => {
+        setPopupConfig({
+            isOpen: true,
+            title,
+            message,
+            singleButton: true,
+            confirmText: 'OK',
+            onConfirm: closePopup,
             onCancel: closePopup
         });
     };
@@ -190,7 +202,7 @@ const VerReceita = () => {
             return;
         }
 
-        axios.post('http://localhost:8000/idjango/api/avaliar/', {
+        axios.post(import.meta.env.VITE_API_BASE_URL + '/avaliar/', {
             utilizador: parseInt(userId),
             receita: parseInt(recipeId),
             nota: novaClassificacao
@@ -233,7 +245,26 @@ const VerReceita = () => {
                 setComentarios([...comentarios, res.data]);
                 setNovoComentario('');
             })
-            .catch(err => console.error(err));
+            .catch(err => {
+                console.error(err);
+                let message = 'Por favor, tenha atenção à sua linguagem. Não são permitidos palavrões, links ou anúncios no comentário.';
+                if (err.response && err.response.data) {
+                    const data = err.response.data;
+                    if (typeof data === 'object') {
+                        const firstFieldErrors = Object.values(data)[0];
+                        if (Array.isArray(firstFieldErrors) && firstFieldErrors.length > 0) {
+                            message = firstFieldErrors[0];
+                        } else if (typeof data.msg === 'string') {
+                            message = data.msg;
+                        } else {
+                            message = JSON.stringify(data);
+                        }
+                    } else if (typeof data === 'string') {
+                        message = data;
+                    }
+                }
+                showPopup('Atenção à Linguagem', message);
+            });
     };
 
 
@@ -256,7 +287,7 @@ const VerReceita = () => {
                     <div className="recipe-header-container">
                         <h1 className="page-title-underline">{receita.nome}</h1>
                         <div className="recipe-rating-text">
-                            ⭐ {receita.classificacao ? Number(receita.classificacao).toFixed(1) : "5.0"} / 5
+                            ⭐ {(receita.classificacao !== undefined && receita.classificacao !== null && Number(receita.classificacao) > 0) ? Number(receita.classificacao).toFixed(1) : "0.0"} / 5
                         </div>
                     </div>
 
@@ -267,7 +298,7 @@ const VerReceita = () => {
                             <div className="recipe-main-image flex-center">
                                 {receita.foto_url ? (
                                     <img
-                                        src={`http://localhost:8000${receita.foto_url}`}
+                                        src={`${import.meta.env.VITE_MEDIA_BASE_URL}${receita.foto_url}`}
                                         alt={receita.nome}
                                         style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '14px' }}
                                     />

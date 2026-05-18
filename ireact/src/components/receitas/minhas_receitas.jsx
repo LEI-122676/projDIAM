@@ -11,8 +11,8 @@ import PopupModal from '../maincomponents/PopupModal.jsx';
 const AsMinhasReceitas = () => {
     const navigate = useNavigate();
 
-    const RECEITAS_URL = 'http://localhost:8000/idjango/api/receitas/';
-    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api/utilizadores/';
+    const RECEITAS_URL = import.meta.env.VITE_API_BASE_URL + '/receitas/';
+    const UTILIZADORES_URL = import.meta.env.VITE_API_BASE_URL + '/utilizadores/';
 
     const [receitas, setReceitas] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -173,7 +173,7 @@ const AsMinhasReceitas = () => {
                                         <div className="recipe-image-placeholder">
                                             {receita.foto_url ? (
                                                 <img
-                                                    src={`http://localhost:8000${receita.foto_url}`}
+                                                    src={`${import.meta.env.VITE_MEDIA_BASE_URL}${receita.foto_url}`}
                                                     alt={receita.nome}
                                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 />
@@ -211,7 +211,7 @@ const AsMinhasReceitas = () => {
                                         <div className="recipe-image-placeholder">
                                             {receita.foto_url ? (
                                                 <img
-                                                    src={`http://localhost:8000${receita.foto_url}`}
+                                                    src={`${import.meta.env.VITE_MEDIA_BASE_URL}${receita.foto_url}`}
                                                     alt={receita.nome}
                                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 />

@@ -8,8 +8,8 @@ import axios from 'axios';
 
 const Perfil = () => {
 
-  const URL_USER = 'http://localhost:8000/idjango/api/user_info/';
-  const URL_USER_INFO = 'http://localhost:8000/idjango/api/utilizadores/';
+  const URL_USER = import.meta.env.VITE_API_BASE_URL + '/user_info/';
+  const URL_USER_INFO = import.meta.env.VITE_API_BASE_URL + '/utilizadores/';
   const navigate = useNavigate();
 
   const userId = localStorage.getItem('utilizadorId');
@@ -63,40 +63,32 @@ const Perfil = () => {
         <Sidebar />
 
         <main className="content-profile">
-          <h1 className="page-title-underline">O Meu Perfil</h1>
+          <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+            <h1 className="page-title-underline">O Meu Perfil</h1>
 
-          <div className="profile-layout-container">
+            <div className="profile-layout-container">
 
             {/* COLUNA ESQUERDA: Cartão de Info */}
             <div className="profile-details-card">
               <div className="user-main-info">
                 <div className="user-avatar-large" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                   {/* CORREÇÃO: Se houver imagem em userData, mostra a tag img. Se não, mostra o boneco */}
-                    {userData.imagem ? (
-                      <img 
-                        src={userData.imagem.startsWith('http') ? userData.imagem : `http://localhost:8000${userData.imagem.startsWith('/') ? '' : '/'}${userData.imagem}`} 
-                        alt="Imagem do utilizador" 
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '18px' }} 
-                      />
-                    ) : (
-                      <img 
-                        src={userData.imagem.startsWith('http') ? userData.imagem : `http://localhost:8000/idjango/media/perfil.png`} 
-                        alt="Imagem do utilizador" 
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '18px' }} 
-                      />
-                    )}
+                    <img 
+                      src={userData.imagem ? (userData.imagem.startsWith('http') ? userData.imagem : `${import.meta.env.VITE_MEDIA_BASE_URL}${userData.imagem.startsWith('/') ? '' : '/'}${userData.imagem}`) : `${import.meta.env.VITE_MEDIA_BASE_URL}/idjango/media/defaultProfile.png`} 
+                      alt="Imagem do utilizador" 
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '18px' }} 
+                    />
                 </div>
                 <div className="user-names">
                   <h2 style={{ color: '#2E4A35', margin: 0 }}>{userData.nome} {userData.apelido}</h2>
-                  {/* CORREÇÃO: username vem de userInfo */}
-                  <p style={{ color: '#716259', fontSize: '0.9rem' }}>Username: {userInfo.username}</p>
+                  <p style={{ color: '#716259', fontSize: '0.9rem' }}>Username: {userData.username}</p>
                 </div>
               </div>
 
               <hr className="profile-divider" />
 
               <div className="user-extra-info">
-                <span><strong>Email:</strong> {userInfo.email} </span>
+                <span><strong>Email:</strong> {userData.email} </span>
                 <br />
                 {/* CORREÇÃO: bio vem de userData */}
                 <span><strong>Biografia:</strong> {userData.bio || "Sem biografia definida."}</span>
@@ -105,7 +97,7 @@ const Perfil = () => {
               <div className="profile-actions">
                 <button className="btn-edit-profile" onClick={() => navigate('/perfil/editar-perfil')}>Editar perfil</button>
                 <button className="btn-logout-link" onClick={() => {
-                  axios.get('http://localhost:8000/idjango/api/logout/', { withCredentials: true })
+                  axios.get(import.meta.env.VITE_API_BASE_URL + '/logout/', { withCredentials: true })
                     .then(() => {
                       localStorage.removeItem('utilizadorId');
                       navigate('/login');
@@ -131,6 +123,8 @@ const Perfil = () => {
               <div className="shortcut-card" onClick={() => navigate('/perfil/meus-eventos')}>
                 Os meus Eventos
               </div>
+            </div>
+
             </div>
 
           </div>

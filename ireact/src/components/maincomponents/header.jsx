@@ -10,10 +10,24 @@ import { useState } from 'react';
 
 const Header = () => {
 
-  const URL_LOGOUT = 'http://localhost:8000/idjango/api/logout/';
-  const URL_USER = 'http://localhost:8000/idjango/api/user/';
+  const URL_LOGOUT = import.meta.env.VITE_API_BASE_URL + '/logout/';
+  const URL_USER = import.meta.env.VITE_API_BASE_URL + '/user/';
 
   const [username, setUsername] = useState(null);
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
 
 
   const handleLogout = () => {
@@ -54,6 +68,9 @@ const Header = () => {
       </button>
       <span className="breadcrumb">Páginas / Perfil</span>
       <div className="auth-group">
+        <button onClick={toggleTheme} className="theme-toggle-btn">
+          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
+        </button>
         <>
         {username ?
         <>

@@ -797,6 +797,659 @@ html, body, #root {
 }
 
 
+
+
+/* --- THEME TOGGLE BUTTON --- */
+.theme-toggle-btn {
+    background-color: transparent;
+    border: 1px solid #D1CDBC;
+    color: #4A3A31;
+    padding: 8px 16px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.theme-toggle-btn:hover {
+    background-color: #F0EEE3;
+}
+
+/* --- DARK MODE RULES --- */
+body.dark-mode {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .header,
+body.dark-mode .content-profile,
+body.dark-mode .content-home,
+body.dark-mode .content-frigorifico,
+body.dark-mode .auth-container,
+body.dark-mode .profile-details-card,
+body.dark-mode .recipes-container,
+body.dark-mode .recipe-details-container,
+body.dark-mode .event-details-container {
+    background-color: #1e1e1e !important;
+    border-color: #333 !important;
+}
+
+body.dark-mode .sidebar {
+    background-color: #1a1a1a !important;
+    border-color: #333 !important;
+}
+
+body.dark-mode .sidebar-header-only,
+body.dark-mode .sidebar-header-section {
+    background-color: #1e1e1e !important;
+}
+
+body.dark-mode .nav-item:hover,
+body.dark-mode .shortcut-card:hover,
+body.dark-mode .quick-card:hover {
+    background-color: #2a2a2a !important;
+}
+
+body.dark-mode .shortcut-card,
+body.dark-mode .quick-card,
+body.dark-mode .fridge-input-card,
+body.dark-mode .ingredient-tag,
+body.dark-mode .recipe-card,
+body.dark-mode .event-card,
+body.dark-mode .modal-content {
+    background-color: #242424 !important;
+    border-color: #444 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .brand-name,
+body.dark-mode .home-welcome-title,
+body.dark-mode .page-title-underline,
+body.dark-mode .nav-text,
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode .user-extra-info h3,
+body.dark-mode .ingredient-name,
+body.dark-mode .input-group label,
+body.dark-mode .auth-title,
+body.dark-mode .recipe-title,
+body.dark-mode .event-title,
+body.dark-mode .modal-title {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .home-subtitle,
+body.dark-mode .breadcrumb,
+body.dark-mode .explore-text,
+body.dark-mode .user-extra-info li,
+body.dark-mode .theme-toggle-btn,
+body.dark-mode p,
+body.dark-mode .modal-text {
+    color: #a0a0a0 !important;
+}
+
+body.dark-mode .auth-input,
+body.dark-mode .recipe-search-box,
+body.dark-mode .event-search-box,
+body.dark-mode .input-group input,
+body.dark-mode textarea,
+body.dark-mode select {
+    background-color: #2c2c2c !important;
+    color: #e0e0e0 !important;
+    border-color: #444 !important;
+}
+
+body.dark-mode .hamburger-btn .line {
+    background-color: #e0e0e0 !important;
+}
+
+body.dark-mode .page-title-underline {
+    border-bottom-color: #81c784 !important;
+}
+
+body.dark-mode .btn-search-home,
+body.dark-mode .btn-mostrar-receitas,
+body.dark-mode .btn-guardar,
+body.dark-mode .btn-auth,
+body.dark-mode .btn-profile-pill:not(.secondary),
+body.dark-mode .btn-search-bar,
+body.dark-mode .btn-primary {
+    background-color: #81c784 !important;
+    color: #121212 !important;
+}
+
+body.dark-mode .btn-search-home:hover,
+body.dark-mode .btn-mostrar-receitas:hover,
+body.dark-mode .btn-guardar:hover,
+body.dark-mode .btn-auth:hover,
+body.dark-mode .btn-profile-pill:not(.secondary):hover,
+body.dark-mode .btn-search-bar:hover,
+body.dark-mode .btn-primary:hover {
+    background-color: #a5d6a7 !important;
+}
+
+body.dark-mode .btn-profile-pill.secondary,
+body.dark-mode .btn-secondary {
+    background-color: #1e1e1e !important;
+    border-color: #555 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .theme-toggle-btn {
+    border-color: #555 !important;
+}
+
+body.dark-mode .theme-toggle-btn:hover {
+    background-color: #333 !important;
+}
+
+body.dark-mode .logo img {
+    filter: brightness(0) invert(1) !important;
+}
+
+body.dark-mode .nav-icon-img,
+body.dark-mode .recipe-icon-svg {
+    filter: brightness(0) invert(0.8) !important;
+}
+
+body.dark-mode .recipe-card:hover,
+body.dark-mode .event-card:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
+}
+
+/* Fixes for dark mode specific contrast issues */
+body.dark-mode .recipe-category {
+    background-color: #333 !important;
+    color: #ccc !important;
+}
+
+/* Modal tweaks */
+body.dark-mode .modal-overlay {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+
+body.dark-mode #root { background-color: #121212 !important; color: #e0e0e0 !important; }
+
+
+/* Fixes for dark mode missing components */
+body.dark-mode .premium-card,
+body.dark-mode .content-box-light,
+body.dark-mode .comment-card,
+body.dark-mode .btn-filter-fridge,
+body.dark-mode .recipe-view-container,
+body.dark-mode .rating-section,
+body.dark-mode .comments-section,
+body.dark-mode .recipe-bottom-row,
+body.dark-mode .step-detail {
+    background-color: #1e1e1e !important;
+    border-color: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .ingredient-chip-premium {
+    background-color: #242424 !important;
+    border-color: #444 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .content-box-light.text-black {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .fridge-status-bar,
+body.dark-mode .recipe-header-container,
+body.dark-mode .recipe-top-row {
+    background-color: transparent !important;
+}
+
+body.dark-mode .btn-filter-fridge {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .chip-remove-btn {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .chip-remove-btn:hover {
+    color: #ff5555 !important;
+}
+
+body.dark-mode .fridge-content-title,
+body.dark-mode .badge-count,
+body.dark-mode .fridge-label,
+body.dark-mode .section-subtitle,
+body.dark-mode .rating-title,
+body.dark-mode .comments-title,
+body.dark-mode .comment-author,
+body.dark-mode .step-nav-item,
+body.dark-mode .recipe-rating-text {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .comment-date,
+body.dark-mode .comment-text,
+body.dark-mode .fridge-empty-clean-text {
+    color: #a0a0a0 !important;
+}
+
+body.dark-mode .step-nav-item:hover {
+    background-color: #2a2a2a !important;
+}
+
+
+body.dark-mode .text-black { color: #e0e0e0 !important; }
+
+
+/* Refinement of Dark Mode Colors */
+body.dark-mode .recipe-card-premium,
+body.dark-mode .content-box-light,
+body.dark-mode .ingredient-chip-premium,
+body.dark-mode .premium-card,
+body.dark-mode .comment-card,
+body.dark-mode .btn-filter-fridge,
+body.dark-mode .recipe-view-container,
+body.dark-mode .rating-section,
+body.dark-mode .comments-section,
+body.dark-mode .recipe-bottom-row,
+body.dark-mode .step-detail {
+    background-color: #111111 !important;
+    border-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .recipe-card-premium:hover,
+body.dark-mode .ingredient-chip-premium:hover {
+    background-color: #1a1a1a !important;
+}
+
+body.dark-mode .card-rating-badge {
+    background-color: #222 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .recipe-card-premium .recipe-card-footer {
+    background-color: #111111 !important;
+}
+
+
+
+body.dark-mode .recipe-card,
+body.dark-mode .event-card {
+    background-color: #111111 !important;
+    border-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .recipe-card:hover,
+body.dark-mode .event-card:hover {
+    background-color: #1a1a1a !important;
+}
+
+body.dark-mode .recipe-card .recipe-card-footer,
+body.dark-mode .event-card .recipe-card-footer {
+    background-color: #111111 !important;
+}
+
+
+
+/* Fixes for individual recipe components in dark mode */
+body.dark-mode .recipe-view-container {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+body.dark-mode .recipe-main-image,
+body.dark-mode .step-nav-item,
+body.dark-mode .content-box-light,
+body.dark-mode .rating-section,
+body.dark-mode .comments-section,
+body.dark-mode .comment-card {
+    background-color: #111111 !important;
+    border: 1px solid #2a2a2a !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .step-nav-item {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .step-nav-item:hover {
+    background-color: #222222 !important;
+}
+
+/* Active state for fridge filter button in dark mode */
+body.dark-mode .btn-filter-fridge.active {
+    background-color: #628169 !important;
+    color: white !important;
+}
+body.dark-mode .btn-filter-fridge.active .recipe-icon-svg {
+    filter: brightness(0) invert(1) !important;
+}
+
+
+
+/* Perfil and Recipe bottom row adjustments in dark mode */
+body.dark-mode .recipe-bottom-row {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+body.dark-mode .btn-edit-profile {
+    background-color: #111111 !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #2a2a2a !important;
+}
+
+body.dark-mode .btn-edit-profile:hover {
+    background-color: #1a1a1a !important;
+}
+
+body.dark-mode .btn-logout-link {
+    background-color: #c0392b !important;
+    color: white !important;
+    border: none !important;
+    padding: 12px !important;
+    border-radius: 30px !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    display: inline-block !important;
+}
+
+body.dark-mode .btn-logout-link:hover {
+    background-color: #e74c3c !important;
+}
+
+body.dark-mode .user-avatar-large {
+    background-color: #111111 !important;
+    border-color: #2a2a2a !important;
+}
+
+body.dark-mode .user-names h2 {
+    color: #81c784 !important;
+}
+
+
+
+/* Make the outer step-detail wrapper transparent so only content-box-light is black */
+body.dark-mode .step-detail {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+
+
+/* Homepage and Popup adjustments in dark mode */
+body.dark-mode .content-home,
+body.dark-mode .content-profile,
+body.dark-mode .content-frigorifico {
+    background-color: #111111 !important;
+}
+
+body.dark-mode .search-container,
+body.dark-mode .calendar-filter-wrapper {
+    background-color: #262626 !important;
+    border-color: #383838 !important;
+}
+
+body.dark-mode .calendar-display-text {
+    color: #ffffff !important;
+}
+
+body.dark-mode .main-search-input {
+    background-color: transparent !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+body.dark-mode .main-search-input::placeholder {
+    color: #8c8a8a !important;
+}
+
+body.dark-mode .home-welcome-title {
+    color: #ffffff !important;
+}
+
+body.dark-mode .home-subtitle {
+    color: #b0b0b0 !important;
+}
+
+/* Popup Modal styling in dark mode */
+body.dark-mode .popup-overlay {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+body.dark-mode .popup-content {
+    background-color: #111111 !important;
+    border: 1px solid #2a2a2a !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7) !important;
+}
+
+body.dark-mode .popup-title {
+    color: #81c784 !important;
+    border-bottom-color: #2a2a2a !important;
+}
+
+body.dark-mode .popup-message {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .btn-popup-cancel {
+    border-color: #81c784 !important;
+    color: #81c784 !important;
+    background-color: transparent !important;
+}
+
+body.dark-mode .btn-popup-cancel:hover {
+    background-color: rgba(129, 199, 132, 0.1) !important;
+}
+
+body.dark-mode .btn-popup-confirm {
+    background-color: #81c784 !important;
+    color: #121212 !important;
+}
+
+body.dark-mode .btn-popup-confirm:hover {
+    background-color: #a5d6a7 !important;
+}
+
+
+
+/* Auth divider and auth container adjustments for Login Dark Mode */
+body.dark-mode .auth-container {
+    background-color: #111111 !important;
+}
+
+body.dark-mode .auth-divider {
+    background-color: #333333 !important;
+}
+
+body.dark-mode .auth-divider span {
+    background-color: #111111 !important;
+    color: #888888 !important;
+}
+
+
+
+/* ==========================================================================
+   REFINE DARK MODE DEPTH AND CONTRAST (TIERED ELEVATION SYSTEM)
+   ========================================================================== */
+
+/* Level 0: Main background / Page base */
+body.dark-mode,
+body.dark-mode #root,
+body.dark-mode .content-home,
+body.dark-mode .content-profile,
+body.dark-mode .content-frigorifico,
+body.dark-mode .auth-container {
+    background-color: #121212 !important;
+}
+
+/* Level 1: Core structural shells (Header, Sidebar) */
+body.dark-mode .header {
+    background-color: #181818 !important;
+    border-bottom: 1px solid #282828 !important;
+}
+body.dark-mode .sidebar {
+    background-color: #181818 !important;
+    border-right: 1px solid #282828 !important;
+}
+body.dark-mode .sidebar-header-only,
+body.dark-mode .sidebar-header-section {
+    background-color: #181818 !important;
+}
+
+/* Level 2: Cards, containers, standard content blocks */
+body.dark-mode .recipe-card,
+body.dark-mode .recipe-card-premium,
+body.dark-mode .event-card,
+body.dark-mode .premium-card,
+body.dark-mode .content-box-light,
+body.dark-mode .rating-section,
+body.dark-mode .comments-section,
+body.dark-mode .popup-content,
+body.dark-mode .step-nav-item,
+body.dark-mode .recipe-main-image,
+body.dark-mode .fridge-input-card-custom,
+body.dark-mode .profile-details-card,
+body.dark-mode .user-avatar-large {
+    background-color: #1e1e1e !important;
+    border: 1px solid #2c2c2c !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+body.dark-mode .recipe-card-premium .recipe-card-footer,
+body.dark-mode .recipe-card .recipe-card-footer,
+body.dark-mode .event-card .recipe-card-footer {
+    background-color: #1e1e1e !important;
+    border-top: 1px solid #2c2c2c !important;
+}
+
+/* Level 3: Nested items, lists, chips, sub-cards and inputs */
+body.dark-mode .comment-card,
+body.dark-mode .ingredient-chip-premium,
+body.dark-mode .shortcut-card,
+body.dark-mode .quick-card,
+body.dark-mode .btn-filter-fridge:not(.active),
+body.dark-mode .auth-input,
+body.dark-mode .recipe-search-box,
+body.dark-mode .event-search-box,
+body.dark-mode .input-group input,
+body.dark-mode textarea,
+body.dark-mode select,
+body.dark-mode .input-beige {
+    background-color: #262626 !important;
+    border: 1px solid #383838 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .auth-divider span {
+    background-color: #121212 !important;
+    color: #888888 !important;
+}
+
+/* Active buttons and interactive highlights */
+body.dark-mode .step-nav-item:hover,
+body.dark-mode .btn-filter-fridge:not(.active):hover,
+body.dark-mode .shortcut-card:hover,
+body.dark-mode .quick-card:hover,
+body.dark-mode .ingredient-chip-premium:hover {
+    background-color: #2d2d2d !important;
+    border-color: #444444 !important;
+}
+
+body.dark-mode .recipe-card:hover,
+body.dark-mode .recipe-card-premium:hover,
+body.dark-mode .event-card:hover {
+    background-color: #242424 !important;
+    border-color: #383838 !important;
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Scrollbars customized for high-quality dark mode */
+body.dark-mode ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+body.dark-mode ::-webkit-scrollbar-track {
+    background: #121212;
+}
+body.dark-mode ::-webkit-scrollbar-thumb {
+    background: #2c2c2c;
+    border-radius: 5px;
+}
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: #383838;
+}
+
+
+
+/* Estilos para Paginação com Números */
+.btn-page-number {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-weight: bold !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+    min-width: 38px !important;
+}
+
+
+
+/* Styled pagination page select dropdown */
+select.page-select-dropdown,
+.page-select-dropdown {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    border-bottom: 2px dashed #628169 !important;
+    color: #628169 !important;
+    font-weight: 800;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0 4px;
+    outline: none;
+    text-align: center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+select.page-select-dropdown option,
+.page-select-dropdown option {
+    background-color: #ffffff !important;
+    color: #4a3a31 !important;
+    font-weight: 600;
+}
+
+body.dark-mode select.page-select-dropdown,
+body.dark-mode .page-select-dropdown {
+    background: transparent !important;
+    background-color: transparent !important;
+    border-bottom: 2px dashed #81c784 !important;
+    color: #81c784 !important;
+}
+
+body.dark-mode select.page-select-dropdown option,
+body.dark-mode .page-select-dropdown option {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+}
+
 /* 5. Ícones SVG Padronizados */
 .recipe-icon-svg {
     width: 20px !important;
@@ -865,16 +1518,34 @@ html, body, #root {
 /* 7. Grid de Receitas */
 .recipes-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 25px;
     padding-bottom: 50px;
     width: 100%;
 }
 
+@media (max-width: 1200px) {
+    .recipes-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .recipes-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .recipes-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Card Individual */
 .recipe-card {
     width: 100%;
-    height: 240px;
+    height: 280px; /* Aumentado proporcionalmente */
     display: flex;
     flex-direction: column;
     background-color: #FDFBEE;
@@ -891,7 +1562,7 @@ html, body, #root {
 
 .recipe-icon-large { font-size: 64px; color: #D1CDBC; opacity: 0.6; }
 .recipe-image-placeholder {
-    min-height: 180px;
+    height: 220px; /* Aumentado de 180px para maior visibilidade */
     background-color: #f9f9f9;
     display: flex;
     align-items: center;

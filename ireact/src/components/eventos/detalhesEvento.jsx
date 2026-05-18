@@ -10,7 +10,7 @@ import PopupModal from '../maincomponents/PopupModal.jsx';
 const VerEvento = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    
+
     // Obtém o ID passado através do state do router
     const eventoId = location.state?.id;
 
@@ -19,12 +19,12 @@ const VerEvento = () => {
     const [inscrito, setInscrito] = useState(false);
     const [isLoadError, setIsLoadError] = useState(false);
 
-    const [popupConfig, setPopupConfig] = useState({ 
-        isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} 
+    const [popupConfig, setPopupConfig] = useState({
+        isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { }
     });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-    const EVENTO_URL = 'http://localhost:8000/idjango/api/eventos/';
+    const EVENTO_URL = import.meta.env.VITE_API_BASE_URL + '/eventos/';
 
     const showLoginPopup = (actionMessage) => {
         setPopupConfig({
@@ -57,64 +57,65 @@ const VerEvento = () => {
             });
     }, [eventoId, utilizadorId, navigate]);
 
-const handleJoin = () => {
-    if (!utilizadorId) {
-        showLoginPopup('te inscreveres neste evento');
-        return;
-    }
-
-    const isAlreadyInscribed = inscrito;
-    let newInscritos = [...(evento.inscritos || [])];
-
-    if (isAlreadyInscribed) {
-        newInscritos = newInscritos.filter(id => id !== parseInt(utilizadorId, 10));
-    } else {
-        newInscritos.push(parseInt(utilizadorId, 10));
-    }
-
-
-    const dataLimpa = evento.data_evento ? evento.data_evento.substring(0, 10) : null;
-
-
-    const horarioLimpo = evento.horario ? evento.horario.replace(/"/g, '').substring(0, 5) : null;
-
-    const updatedPayload = {
-        id: evento.id,
-        nome: evento.nome,
-        descricao: evento.descricao,
-        data_evento: dataLimpa,
-        horario: horarioLimpo,
-        capacidade_max: evento.capacidade_max,
-        criador: evento.criador && typeof evento.criador === 'object' ? evento.criador.id : evento.criador,
-        inscritos: newInscritos
+    const getImageUrl = (caminho) => {
+        if (!caminho) return "http://localhost:8000/idjango/media/defaultEvent.png";
+        if (caminho.startsWith('http')) return caminho;
+        return `${import.meta.env.VITE_MEDIA_BASE_URL}${caminho.startsWith('/') ? '' : '/'}${caminho}`;
     };
 
-    axios.put(`${EVENTO_URL}${eventoId}`, updatedPayload)
-        .then(res => {
-            setEvento(prev => ({
-                ...prev,
-                ...res.data,
-                inscritos: newInscritos
-            }));
-            setInscrito(!isAlreadyInscribed);
-            
-            setPopupConfig({
-                isOpen: true,
-                title: isAlreadyInscribed ? 'Inscrição Cancelada' : 'Inscrição Confirmada!',
-                message: isAlreadyInscribed ? 'Cancelaste a tua inscrição no evento.' : 'Estás oficialmente inscrito no evento!',
-                singleButton: true,
-                confirmText: 'OK',
-                onConfirm: closePopup,
-                onCancel: closePopup
+    const formatarHorario = (h) => {
+        if (!h) return null;
+        if (typeof h === 'string') return h.replace(/"/g, '');
+        if (typeof h === 'object' && Object.keys(h).length === 0) return null;
+        return JSON.stringify(h).replace(/"/g, '');
+    };
+
+    const handleJoin = () => {
+        if (!utilizadorId) {
+            showLoginPopup('te inscreveres neste evento');
+            return;
+        }
+
+        const isAlreadyInscribed = inscrito;
+        let newInscritos = [...(evento.inscritos || [])];
+
+        if (isAlreadyInscribed) {
+            newInscritos = newInscritos.filter(id => id !== parseInt(utilizadorId, 10));
+        } else {
+            newInscritos.push(parseInt(utilizadorId, 10));
+        }
+
+
+        const updatedPayload = {
+            inscritos: newInscritos
+        };
+
+        axios.patch(`${EVENTO_URL}${eventoId}`, updatedPayload)
+            .then(res => {
+                setEvento(prev => ({
+                    ...prev,
+                    ...res.data,
+                    inscritos: newInscritos
+                }));
+                setInscrito(!isAlreadyInscribed);
+
+                setPopupConfig({
+                    isOpen: true,
+                    title: isAlreadyInscribed ? 'Inscrição Cancelada' : 'Inscrição Confirmada!',
+                    message: isAlreadyInscribed ? 'Cancelaste a tua inscrição no evento.' : 'Estás oficialmente inscrito no evento!',
+                    singleButton: true,
+                    confirmText: 'OK',
+                    onConfirm: closePopup,
+                    onCancel: closePopup
+                });
+            })
+            .catch(err => {
+                console.error("Erro ao atualizar inscrição com PUT:", err);
+                // Fallback para a interface não congelar em caso de erro de rede
+                setEvento(prev => ({ ...prev, inscritos: newInscritos }));
+                setInscrito(!isAlreadyInscribed);
             });
-        })
-        .catch(err => {
-            console.error("Erro ao atualizar inscrição com PUT:", err);
-            // Fallback para a interface não congelar em caso de erro de rede
-            setEvento(prev => ({ ...prev, inscritos: newInscritos }));
-            setInscrito(!isAlreadyInscribed);
-        });
-};
+    };
 
     const formatarDataExibicao = (dataStr) => {
         if (!dataStr) return "Data não definida";
@@ -154,19 +155,11 @@ const handleJoin = () => {
                         {/* PARTE SUPERIOR */}
                         <div className="recipe-top-row">
                             <div className="recipe-main-image flex-center">
-                                {imagemCaminho ? (
-                                    <img
-                                        src={`http://localhost:8000${imagemCaminho.startsWith('/') ? '' : '/'}${imagemCaminho}`}
-                                        alt={evento.nome}
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '14px' }}
-                                    />
-                                ) : (
-                                    <img
-                                        src="http://localhost:8000/idjango/media/defaultEvent.png"
-                                        alt={evento.nome}
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '14px' }}
-                                    />
-                                )}
+                                <img
+                                    src={getImageUrl(imagemCaminho)}
+                                    alt={evento.nome}
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '14px' }}
+                                />
                             </div>
 
                             {/* Menu lateral de informações rápidas */}
@@ -175,7 +168,7 @@ const handleJoin = () => {
                                     📅 {evento.data_evento ? formatarDataExibicao(evento.data_evento.substring(0, 10)) : "Sem data definida"}
                                 </div>
                                 <div className="step-nav-item" style={{ cursor: 'default', fontWeight: '600' }}>
-                                    🕒 {evento.horario ? evento.horario.replace(/"/g, '') : "Sem horário definido"}
+                                    🕒 {formatarHorario(evento.horario) || "Sem horário definido"}
                                 </div>
                                 <div className="step-nav-item" style={{ cursor: 'default', fontWeight: '600' }}>
                                     📍 Lotação Máxima: {evento.capacidade_max || 5} pessoas

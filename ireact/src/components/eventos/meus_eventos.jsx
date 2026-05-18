@@ -11,8 +11,8 @@ import PopupModal from '../maincomponents/PopupModal.jsx';
 const OsMeusEventos = () => {
     const navigate = useNavigate();
 
-    const RECEITAS_URL = 'http://localhost:8000/idjango/api/eventos/';
-    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api/utilizadores/';
+    const RECEITAS_URL = import.meta.env.VITE_API_BASE_URL + '/eventos/';
+    const UTILIZADORES_URL = import.meta.env.VITE_API_BASE_URL + '/utilizadores/';
 
     const [eventos, setEventos] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -98,13 +98,13 @@ const OsMeusEventos = () => {
                                         <div className="recipe-image-placeholder">
                                             {(evento.foto_url || evento.foto) ? (
                                                 <img
-                                                    src={`http://localhost:8000${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
+                                                    src={`${import.meta.env.VITE_MEDIA_BASE_URL}${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
                                                     alt={evento.nome}
                                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 />
                                             ) : (
                                                 <img
-                                                    src={`http://localhost:8000/idjango/media/defaultEvent.png`}
+                                                    src={`${import.meta.env.VITE_MEDIA_BASE_URL}/idjango/media/defaultEvent.png`}
                                                     alt={evento.nome}
                                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 />
@@ -137,13 +137,13 @@ const OsMeusEventos = () => {
                                         <div className="recipe-image-placeholder">
                                             {(evento.foto_url || evento.foto) ? (
                                                 <img
-                                                    src={`http://localhost:8000${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
+                                                    src={`${import.meta.env.VITE_MEDIA_BASE_URL}${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
                                                     alt={evento.nome}
                                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 />
                                             ) : (
                                                 <img
-                                                    src={`http://localhost:8000/idjango/media/defaultEvent.png`}
+                                                    src={`${import.meta.env.VITE_MEDIA_BASE_URL}/idjango/media/defaultEvent.png`}
                                                     alt={evento.nome}
                                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 />

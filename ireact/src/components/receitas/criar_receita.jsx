@@ -22,8 +22,8 @@ const CriarReceita = () => {
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-    const INGREDIENTES_URL = 'http://localhost:8000/idjango/api/ingredientes/';
-    const RECEITAS_URL = 'http://localhost:8000/idjango/api/receitas/';
+    const INGREDIENTES_URL = import.meta.env.VITE_API_BASE_URL + '/ingredientes/';
+    const RECEITAS_URL = import.meta.env.VITE_API_BASE_URL + '/receitas/';
 
     const getIngredientes = () => {
         axios.get(INGREDIENTES_URL)
@@ -147,8 +147,23 @@ const CriarReceita = () => {
             })
             .catch(err => {
                 console.error(err);
-                const detail = err.response?.data ? JSON.stringify(err.response.data) : 'Erro de conexão.';
-                showPopup('Erro ao Criar Receita', detail);
+                let message = 'Por favor, tenha atenção à sua linguagem. Não são permitidos palavrões, links ou anúncios na sua receita.';
+                if (err.response && err.response.data) {
+                    const data = err.response.data;
+                    if (typeof data === 'object') {
+                        const firstFieldErrors = Object.values(data)[0];
+                        if (Array.isArray(firstFieldErrors) && firstFieldErrors.length > 0) {
+                            message = firstFieldErrors[0];
+                        } else if (typeof data.msg === 'string') {
+                            message = data.msg;
+                        } else {
+                            message = JSON.stringify(data);
+                        }
+                    } else if (typeof data === 'string') {
+                        message = data;
+                    }
+                }
+                showPopup('Atenção à Linguagem', message);
             });
     };
 

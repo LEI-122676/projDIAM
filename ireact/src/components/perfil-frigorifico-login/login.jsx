@@ -23,8 +23,8 @@ const Login = () => {
   const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
   const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-  const SIGN_UP_URL = 'http://localhost:8000/idjango/api/signup/';
-  const SIGN_IN_URL = 'http://localhost:8000/idjango/api/login/';
+  const SIGN_UP_URL = import.meta.env.VITE_API_BASE_URL + '/signup/';
+  const SIGN_IN_URL = import.meta.env.VITE_API_BASE_URL + '/login/';
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -90,11 +90,19 @@ const Login = () => {
         console.log('Signup successful!', response.data.msg);
         localStorage.setItem('utilizadorId', response.data.utilizadorId);
         navigate(-1);
-    }).catch( err => {
+    }).catch( (error) => {
+        let errorMsg = 'Por favor, tenha atenção à sua linguagem. Não são permitidos palavrões, links ou anúncios no registo.';
+        if (error.response && error.response.data) {
+            if (typeof error.response.data === 'object' && error.response.data.msg) {
+                errorMsg = error.response.data.msg;
+            } else if (typeof error.response.data === 'string') {
+                errorMsg = error.response.data;
+            }
+        }
         setPopupConfig({
             isOpen: true,
-            title: 'Erro no Registo',
-            message: 'Não foi possível completar o registo. O username ou email podem já estar em uso.',
+            title: 'Atenção à Linguagem',
+            message: errorMsg,
             singleButton: true,
             onConfirm: closePopup
         });
@@ -200,4 +208,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Login;

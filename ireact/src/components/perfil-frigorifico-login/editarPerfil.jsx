@@ -7,8 +7,8 @@ import PopupModal from '../maincomponents/PopupModal.jsx';
 import axios from 'axios';
 
 const EditarPerfil = () => {
-  const URL_USER = 'http://localhost:8000/idjango/api/user_info/';
-  const URL_USER_INFO = 'http://localhost:8000/idjango/api/utilizadores/';
+  const URL_USER = import.meta.env.VITE_API_BASE_URL + '/user_info/';
+  const URL_USER_INFO = import.meta.env.VITE_API_BASE_URL + '/utilizadores/';
   
   const navigate = useNavigate();
   const fileInputRef = useRef(null);

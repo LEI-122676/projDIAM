@@ -27,9 +27,9 @@ const Frigorifico = () => {
     });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-    const INGREDIENTES_URL = 'http://localhost:8000/idjango/api/ingredientes/';
-    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api/utilizadores/';
-    const FRIGORIFICOS_URL = 'http://localhost:8000/idjango/api/frigorificos/';
+    const INGREDIENTES_URL = import.meta.env.VITE_API_BASE_URL + '/ingredientes/';
+    const UTILIZADORES_URL = import.meta.env.VITE_API_BASE_URL + '/utilizadores/';
+    const FRIGORIFICOS_URL = import.meta.env.VITE_API_BASE_URL + '/frigorificos/';
 
     const getIngredientes = () => {
         axios.get(INGREDIENTES_URL)

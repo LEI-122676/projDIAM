@@ -199,7 +199,7 @@ def eventos(request):
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @csrf_exempt
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 def evento_detail(request, evento_id):
     try:
         evento = Evento.objects.get(pk=evento_id)
@@ -208,11 +208,13 @@ def evento_detail(request, evento_id):
     if request.method == 'GET':
         serializer = EventoSerializer(evento)
         return Response(serializer.data)
-    elif request.method == 'PUT':
-        serializer = EventoSerializer(evento, data=request.data)
+    elif request.method in ['PUT', 'PATCH']:
+        partial = (request.method == 'PATCH')
+        serializer = EventoSerializer(evento, data=request.data, partial=partial)
         if serializer.is_valid():
             serializer.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         evento.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -342,6 +344,17 @@ def signup(request):
     if not all([firstName, lastName, username, password, email]):
         return Response({'msg': 'invalid input'}, status=status.HTTP_400_BAD_REQUEST)
 
+    from .moderator import validar_texto
+    from rest_framework.exceptions import ValidationError
+    try:
+        validar_texto(firstName, "nome")
+        validar_texto(lastName, "apelido")
+        validar_texto(username, "username")
+    except ValidationError as e:
+        # e.detail pode ser uma lista ou dicionário. Acedemos ao primeiro erro de forma genérica.
+        err_msg = e.detail[0] if isinstance(e.detail, list) else str(e.detail)
+        return Response({'msg': err_msg}, status=status.HTTP_400_BAD_REQUEST)
+
     if User.objects.filter(username=username).exists():
         return Response({'msg': 'username already exists'}, status=status.HTTP_400_BAD_REQUEST)
     
@@ -422,3 +435,4 @@ def user_info(request, id):
         
         # Se houver erros de validação (ex: username em duplicado), devolve ao frontend
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return None

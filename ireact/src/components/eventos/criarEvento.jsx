@@ -16,7 +16,7 @@ const CriarEvento = () => {
     const [nome, setNome] = useState('');
     const [descricao, setDescricao] = useState('');
     const [capacidadeMax, setCapacidadeMax] = useState(5);
-    const [horario, setHorario] = useState('20:00'); // Padrão 20h00
+    const [horario, setHorario] = useState('20:00');
     const [dataEvento, setDataEvento] = useState('');
     const [foto, setFoto] = useState(null);
     const [fotoPreview, setFotoPreview] = useState(null);
@@ -26,7 +26,7 @@ const CriarEvento = () => {
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-    const URL_CRIAR_EVENTO = 'http://localhost:8000/idjango/api/eventos/';
+    const URL_CRIAR_EVENTO = import.meta.env.VITE_API_BASE_URL + '/eventos/';
 
     useEffect(() => {
         const userId = localStorage.getItem('utilizadorId');
@@ -54,8 +54,8 @@ const CriarEvento = () => {
 
     const getCSRFToken = () => {
         return document.cookie.split('; ')
-        .find(row => row.startsWith('csrftoken='))
-        ?.split('=')[1];
+            .find(row => row.startsWith('csrftoken='))
+            ?.split('=')[1];
     };
 
     const handleDateWrapperClick = () => {
@@ -111,12 +111,12 @@ const CriarEvento = () => {
         if (foto instanceof File) {
             formData.append('foto', foto);
         }
-        
+
         const csrfToken = getCSRFToken();
 
 
         axios.post(URL_CRIAR_EVENTO, formData, {
-            headers: { 'X-CSRFToken': csrfToken,'Content-Type': 'multipart/form-data' },
+            headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'multipart/form-data' },
             withCredentials: true
         })
             .then(() => {
@@ -172,37 +172,37 @@ const CriarEvento = () => {
                                     placeholder="Detalhes sobre o local, o cardápio e o que levar..."
                                     value={descricao}
                                     onChange={(e) => setDescricao(e.target.value)}
-                                    style={{ 
-                                        height: '220px', 
-                                        padding: '20px', 
+                                    style={{
+                                        height: '220px',
+                                        padding: '20px',
                                         resize: 'none'
                                     }}
                                 />
                             </div>
 
                             {/* LINHA ÚNICA*/}
-                            <div className="event-metadata-single-line" style={{ 
-                                display: 'flex', 
-                                gap: '20px', 
-                                alignItems: 'center', 
-                                backgroundColor: '#fcfbfa', 
-                                padding: '15px 20px', 
+                            <div className="event-metadata-single-line" style={{
+                                display: 'flex',
+                                gap: '20px',
+                                alignItems: 'center',
+                                backgroundColor: '#fcfbfa',
+                                padding: '15px 20px',
                                 borderRadius: '14px',
                                 border: '1px solid #eae7dc',
                                 marginTop: '15px'
                             }}>
-                                
+
                                 <div className="form-group" style={{ flex: 1, margin: 0 }}>
                                     <label style={{ marginBottom: '6px', display: 'block' }}>Data do Evento*</label>
-                                    <div 
-                                        className="calendar-filter-wrapper" 
+                                    <div
+                                        className="calendar-filter-wrapper"
                                         onClick={handleDateWrapperClick}
                                         style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '45px', cursor: 'pointer' }}
                                     >
                                         <span className="calendar-display-text" style={{ color: 'black', fontWeight: '600' }}>
                                             {dataEvento ? formatarDataExibicao(dataEvento) : "Selecionar data..."}
                                         </span>
-                                        <input 
+                                        <input
                                             type="date"
                                             ref={dateInputRef}
                                             className="calendar-hidden-input"

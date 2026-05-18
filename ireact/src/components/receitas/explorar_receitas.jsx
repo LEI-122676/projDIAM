@@ -13,15 +13,19 @@ const ExplorarReceitas = () => {
     const location = useLocation();
     const autoFilterAttempted = useRef(false);
 
-    const RECEITAS_URL = 'http://localhost:8000/idjango/api/receitas/';
-    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api/utilizadores/';
-    
+    const RECEITAS_URL = import.meta.env.VITE_API_BASE_URL + '/receitas/';
+    const UTILIZADORES_URL = import.meta.env.VITE_API_BASE_URL + '/utilizadores/';
+
     const [receitas, setReceitas] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [isFridgeFilterActive, setIsFridgeFilterActive] = useState(false);
     const [fridgeIngredients, setFridgeIngredients] = useState([]);
-    
-    const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
+
+    // Paginação
+    const [currentPage, setCurrentPage] = useState(1);
+    const recipesPerPage = 20;
+
+    const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
     const getReceitas = () => {
@@ -34,9 +38,21 @@ const ExplorarReceitas = () => {
         getReceitas();
     }, []);
 
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery, isFridgeFilterActive]);
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const searchParam = params.get('search');
+        if (searchParam) {
+            setSearchQuery(decodeURIComponent(searchParam));
+        }
+    }, [location.search]);
+
     const handleFridgeFilterToggle = (forceValue) => {
         const userId = localStorage.getItem('utilizadorId');
-        
+
         // Se forceValue for um booleano, usamos esse valor. 
         // Se for um evento (onClick), ignoramos e alternamos o estado atual.
         const shouldBeActive = typeof forceValue === 'boolean' ? forceValue : !isFridgeFilterActive;
@@ -92,7 +108,7 @@ const ExplorarReceitas = () => {
                 });
             });
     };
-    
+
     useEffect(() => {
         if (location.state?.autoFridge && !autoFilterAttempted.current) {
             autoFilterAttempted.current = true;
@@ -121,23 +137,23 @@ const ExplorarReceitas = () => {
         // Filtro da barra de pesquisa
         const nomeReceita = receita.nome || "";
         const matchesSearch = nomeReceita.toLowerCase().includes(searchQuery.toLowerCase());
-        
+
         // Filtro do frigorífico (mostrar receitas que usam pelo menos um ingrediente do frigorífico)
         let matchesFridge = true;
         if (isFridgeFilterActive) {
             if (fridgeIngredients.length === 0) {
                 matchesFridge = false;
             } else if (!receita.ingredientes || receita.ingredientes.length === 0) {
-                matchesFridge = false; 
+                matchesFridge = false;
             } else {
                 // Obter IDs do frigorífico como números
                 const fridgeIds = (fridgeIngredients || []).map(id => {
                     if (typeof id === 'object' && id !== null) return Number(id.id);
                     return Number(id);
                 });
-                
+
                 // Filtra apenas as receitas que possuem TODOS os itens do seu frigorífico
-                    matchesFridge = fridgeIds.every(fId => {
+                matchesFridge = fridgeIds.every(fId => {
                     // Para cada item que VOCÊ tem, verificamos se ele está na RECEITA
                     return (receita.ingredientes || []).some(ing => {
                         const recipeIngId = typeof ing === 'object' && ing !== null ? Number(ing.id) : Number(ing);
@@ -173,7 +189,7 @@ const ExplorarReceitas = () => {
                             </div>
 
                             <div className="recipes-button-group">
-                                <button 
+                                <button
                                     className={`btn-filter-fridge ${isFridgeFilterActive ? 'active' : ''}`}
                                     onClick={handleFridgeFilterToggle}
                                 >
@@ -187,45 +203,97 @@ const ExplorarReceitas = () => {
                         </div>
 
                         <div className="recipes-grid">
-                            {[...filteredReceitas].reverse().map((receita, index) => (
-                                <div 
-                                    key={receita.id || index} 
-                                    className="recipe-card-premium cursor-pointer" 
-                                    onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
-                                    style={{ position: 'relative' }}
-                                >
-                                    <div className="card-rating-badge">
-                                        ⭐ {receita.classificacao || '0.0'}
-                                    </div>
+                            {(() => {
+                                const reversedFiltered = [...filteredReceitas].reverse();
+                                const indexOfLastRecipe = currentPage * recipesPerPage;
+                                const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage;
+                                const currentRecipes = reversedFiltered.slice(indexOfFirstRecipe, indexOfLastRecipe);
 
-                                    <div className="recipe-image-placeholder">
-                                        {receita.foto_url ? (
-                                            <img
-                                                src={`http://localhost:8000${receita.foto_url}`}
-                                                alt={receita.nome}
-                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                            />
-                                        ) : (
-                                            <span className="recipe-icon-large">🍲</span>
-                                        )}
+                                return currentRecipes.map((receita, index) => (
+                                    <div
+                                        key={receita.id || index}
+                                        className="recipe-card-premium cursor-pointer"
+                                        onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
+                                        style={{ position: 'relative' }}
+                                    >
+                                        <div className="card-rating-badge">
+                                            ⭐ {receita.classificacao || '0.0'}
+                                        </div>
+
+                                        <div className="recipe-image-placeholder">
+                                            {receita.foto_url ? (
+                                                <img
+                                                    src={`${import.meta.env.VITE_MEDIA_BASE_URL}${receita.foto_url}`}
+                                                    alt={receita.nome}
+                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                />
+                                            ) : (
+                                                <span className="recipe-icon-large">🍲</span>
+                                            )}
+                                        </div>
+                                        <div className="recipe-card-footer">
+                                            <span className="ingredient-name">{receita.nome}</span>
+                                        </div>
                                     </div>
-                                    <div className="recipe-card-footer">
-                                        <span className="ingredient-name">{receita.nome}</span>
-                                    </div>
-                                </div>
-                            ))}
+                                ));
+                            })()}
                             {filteredReceitas.length === 0 && (
                                 <div className="text-empty-state-center">
                                     <p>Nenhuma receita encontrada com estes critérios.</p>
                                 </div>
                             )}
                         </div>
+                        {Math.ceil(filteredReceitas.length / recipesPerPage) > 1 && (
+                            <div className="pagination-container flex-center mt-30" style={{ gap: '20px', paddingBottom: '30px' }}>
+                                <button
+                                    className="btn-popup-confirm"
+                                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                    disabled={currentPage === 1}
+                                    style={{
+                                        padding: '10px 25px',
+                                        opacity: currentPage === 1 ? 0.4 : 1,
+                                        cursor: currentPage === 1 ? 'not-allowed' : 'pointer'
+                                    }}
+                                >
+                                    Anterior
+                                </button>
+                                
+                                <span style={{ fontWeight: '600', minWidth: '160px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                                    Página
+                                    <select
+                                        value={currentPage}
+                                        onChange={(e) => setCurrentPage(Number(e.target.value))}
+                                        className="page-select-dropdown"
+                                    >
+                                        {Array.from({ length: Math.ceil(filteredReceitas.length / recipesPerPage) }, (_, i) => i + 1).map(num => (
+                                            <option key={num} value={num}>
+                                                {num}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    de {Math.ceil(filteredReceitas.length / recipesPerPage)}
+                                </span>
+                                
+                                <button
+                                    className="btn-popup-confirm"
+                                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredReceitas.length / recipesPerPage)))}
+                                    disabled={currentPage === Math.ceil(filteredReceitas.length / recipesPerPage)}
+                                    style={{
+                                        padding: '10px 25px',
+                                        opacity: currentPage === Math.ceil(filteredReceitas.length / recipesPerPage) ? 0.4 : 1,
+                                        cursor: currentPage === Math.ceil(filteredReceitas.length / recipesPerPage) ? 'not-allowed' : 'pointer'
+                                    }}
+                                >
+                                    Seguinte
+                                </button>
+                            </div>
+                        )}
 
                     </div>
                 </main>
             </div>
-            
-            <PopupModal 
+
+            <PopupModal
                 isOpen={popupConfig.isOpen}
                 title={popupConfig.title}
                 message={popupConfig.message}

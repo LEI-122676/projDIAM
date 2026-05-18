@@ -13,8 +13,8 @@ import PopupModal from '../maincomponents/PopupModal.jsx';
 
 const ExplorarEventos = () => {
 
-    const URL_EVENTOS = 'http://localhost:8000/idjango/api/eventos/';
-    const URL_USER = 'http://localhost:8000/idjango/api/user/';
+    const URL_EVENTOS = import.meta.env.VITE_API_BASE_URL + '/eventos/';
+    const URL_USER = import.meta.env.VITE_API_BASE_URL + '/user/';
 
     const navigate = useNavigate();
 
@@ -27,6 +27,10 @@ const ExplorarEventos = () => {
 
     // Referência para o input invisível de data
     const dateInputRef = useRef(null);
+
+    // Paginação
+    const [currentPage, setCurrentPage] = useState(1);
+    const eventsPerPage = 20;
 
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
@@ -65,6 +69,10 @@ const ExplorarEventos = () => {
         const [ano, mes, dia] = dataStr.split('-');
         return `${dia}/${mes}/${ano}`;
     };
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery, dataFiltro]);
 
     // Lógica de filtragem combinada (Pesquisa por texto + Filtro por Data)
     const eventosFiltrados = eventos.filter(evento => {
@@ -112,7 +120,6 @@ const ExplorarEventos = () => {
                                         className="main-search-input recipe-search-box"
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
-                                        style={{ color: 'black' }}
                                     />
                                     <img src={iconeLupa} alt="Lupa" className="recipe-icon-svg search-icon-pos" />
                                 </div>
@@ -134,7 +141,7 @@ const ExplorarEventos = () => {
                                         <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg" style={{marginRight: '6px'}} />
                                         <img src={iconeCalendario} alt="Calendário" className="recipe-icon-svg" style={{marginRight: '8px'}} />
                                         
-                                        <span className="calendar-display-text" style={{ color: 'black', fontWeight: '600', marginRight: dataFiltro ? '4px' : '0' }}>
+                                        <span className="calendar-display-text" style={{ fontWeight: '600', marginRight: dataFiltro ? '4px' : '0' }}>
                                             {formatarDataExibicao(dataFiltro)}
                                         </span>
                                         
@@ -163,7 +170,13 @@ const ExplorarEventos = () => {
                         </div>
 
                         <div className="recipes-grid">
-                            {eventosFiltrados.reverse().map((evento, index) => (
+                            {(() => {
+                                const reversedFiltered = [...eventosFiltrados].reverse();
+                                const indexOfLastEvent = currentPage * eventsPerPage;
+                                const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
+                                const currentEvents = reversedFiltered.slice(indexOfFirstEvent, indexOfLastEvent);
+
+                                return currentEvents.map((evento, index) => (
                                 <div 
                                     key={evento.id || index} 
                                     className="recipe-card-premium cursor-pointer"
@@ -173,13 +186,13 @@ const ExplorarEventos = () => {
                                     <div className="recipe-image-placeholder">
                                         {(evento.foto_url || evento.foto) ? (
                                             <img
-                                                src={`http://localhost:8000${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
+                                                src={`${import.meta.env.VITE_MEDIA_BASE_URL}${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
                                                 alt={evento.nome}
                                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                             />
                                         ) : (
                                             <img
-                                                src={`http://localhost:8000/idjango/media/defaultEvent.png`}
+                                                src={`${import.meta.env.VITE_MEDIA_BASE_URL}/idjango/media/defaultEvent.png`}
                                                 alt={evento.nome}
                                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                             />
@@ -189,13 +202,60 @@ const ExplorarEventos = () => {
                                         <span className="ingredient-name">{evento.nome}</span>
                                     </div>
                                 </div>
-                            ))}
+                                ));
+                            })()}
                             {eventosFiltrados.length === 0 && (
                                 <p style={{ gridColumn: '1 / -1', textAlign: 'center', marginTop: '20px' }}>
                                     Nenhum evento encontrado com estes critérios.
                                 </p>
                             )}
                         </div>
+
+                        {Math.ceil(eventosFiltrados.length / eventsPerPage) > 1 && (
+                            <div className="pagination-container flex-center mt-30" style={{ gap: '20px', paddingBottom: '30px' }}>
+                                <button
+                                    className="btn-popup-confirm"
+                                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                    disabled={currentPage === 1}
+                                    style={{
+                                        padding: '10px 25px',
+                                        opacity: currentPage === 1 ? 0.4 : 1,
+                                        cursor: currentPage === 1 ? 'not-allowed' : 'pointer'
+                                    }}
+                                >
+                                    Anterior
+                                </button>
+                                
+                                <span style={{ fontWeight: '600', minWidth: '160px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                                    Página
+                                    <select
+                                        value={currentPage}
+                                        onChange={(e) => setCurrentPage(Number(e.target.value))}
+                                        className="page-select-dropdown"
+                                    >
+                                        {Array.from({ length: Math.ceil(eventosFiltrados.length / eventsPerPage) }, (_, i) => i + 1).map(num => (
+                                            <option key={num} value={num}>
+                                                {num}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    de {Math.ceil(eventosFiltrados.length / eventsPerPage)}
+                                </span>
+                                
+                                <button
+                                    className="btn-popup-confirm"
+                                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(eventosFiltrados.length / eventsPerPage)))}
+                                    disabled={currentPage === Math.ceil(eventosFiltrados.length / eventsPerPage)}
+                                    style={{
+                                        padding: '10px 25px',
+                                        opacity: currentPage === Math.ceil(eventosFiltrados.length / eventsPerPage) ? 0.4 : 1,
+                                        cursor: currentPage === Math.ceil(eventosFiltrados.length / eventsPerPage) ? 'not-allowed' : 'pointer'
+                                    }}
+                                >
+                                    Seguinte
+                                </button>
+                            </div>
+                        )}
                     </main>
                 </div>
                 <PopupModal 
