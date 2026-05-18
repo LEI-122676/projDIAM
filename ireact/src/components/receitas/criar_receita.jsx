@@ -84,7 +84,7 @@ const CriarReceita = () => {
         setPopupConfig({ isOpen: true, title, message, singleButton: true, confirmText: 'OK', onConfirm: closePopup, onCancel: closePopup });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
 
         if (!nome.trim()) { showPopup('Campo Obrigatório', 'Por favor, dê um nome à receita.'); return; }
@@ -95,6 +95,7 @@ const CriarReceita = () => {
             .map((p, index) => {
                 const prefix = `Passo ${index + 1}: `;
                 if (p.startsWith(prefix)) return p;
+                if (p.match(/^Passo \d+:/)) return prefix + p.replace(/^Passo \d+:\s*/, '');
                 return prefix + p;
             });
 
@@ -107,7 +108,7 @@ const CriarReceita = () => {
             if (found) {
                 idsIngredientes.push(found.id);
             } else {
-                showPopup('Ingrediente Não Encontrado', `O ingrediente "${ing}" não existe na base de dados.`);
+                showPopup('Ingrediente Não Encontrado', `O ingrediente "${ing}" não existe na base de dados. Escolhe um ingrediente da lista.`);
                 return;
             }
         }
