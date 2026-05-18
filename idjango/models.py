@@ -17,8 +17,6 @@ class Frigorifico(models.Model):
 
 class Utilizador(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)       # "extends"
-    nome = models.CharField(max_length=50)
-    apelido = models.CharField(max_length=50)
     frigorifico = models.OneToOneField(Frigorifico, on_delete=models.DO_NOTHING, null=True)
     imagem = models.ImageField(upload_to='profile_pics', default='defaultProfile.png')
     bio = models.TextField(null=True)
@@ -72,7 +70,6 @@ class Comentario(models.Model):
 
     texto = models.TextField()
     data = models.DateTimeField(auto_now_add=True)
-    # TODO - upvotes?
 
     def __str__(self):
         return f"Utilizador: {self.utilizador}\nTexto:{self.texto}"
