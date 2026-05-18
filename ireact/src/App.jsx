@@ -25,7 +25,6 @@ function App() {
         <Route path="/eventos" element={<Eventos/>} />
         <Route path="/eventos/criarEvento" element={<CriarEvento/>} />
         <Route path="/eventos/verEvento" element={<VerEvento/>} />
-        <Route path="/receitas" element={<Receitas/>} />
         <Route path="/receitas/criar-receita" element={<CriarReceita/>} />
         <Route path="/receitas/ver-receita" element={<VerReceita/>} />
       </Routes>
