@@ -1,17 +1,16 @@
-import 'react'; // Adicionado o nome React para garantir compatibilidade
+import 'react';
 import '../../css/styles.css';
 import forks from '../../assets/forks.svg';
-import { useNavigate } from 'react-router-dom'; // Importante para a navegação
+import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import 'react'; // Adicionado o nome React para garantir compatibilidade
 import axios from 'axios';
 import { useState } from 'react';
 
 
 const Header = () => {
 
-  const URL_LOGOUT = import.meta.env.VITE_API_BASE_URL + '/logout/';
-  const URL_USER = import.meta.env.VITE_API_BASE_URL + '/user/';
+  const URL_LOGOUT = 'http://localhost:8000/idjango/api' + '/logout/';
+  const URL_USER = 'http://localhost:8000/idjango/api' + '/user/';
 
   const [username, setUsername] = useState(null);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
@@ -58,7 +57,7 @@ const Header = () => {
       });
   }, []);
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   return (
     <header className="header">
@@ -66,24 +65,23 @@ const Header = () => {
         <img src={forks} alt="Forks" />
         <span className="brand-name">iFridge</span>
       </button>
-      <span className="breadcrumb">Páginas / Perfil</span>
       <div className="auth-group">
         <button onClick={toggleTheme} className="theme-toggle-btn">
           {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
         </button>
         <>
-        {username ?
-        <>
-        <button className="logout-text" onClick={() => handleLogout()}>
-          Sair, {username}
-        </button>
-        </>:
-        <>
-        <button className="login-text" onClick={() => navigate('/login')}>
-          Registar/Login
-        </button>
-        </>
-        }
+          {username ?
+            <>
+              <button className="logout-text" onClick={() => handleLogout()}>
+                Sair, {username}
+              </button>
+            </> :
+            <>
+              <button className="login-text" onClick={() => navigate('/login')}>
+                Registar/Login
+              </button>
+            </>
+          }
         </>
       </div>
     </header>

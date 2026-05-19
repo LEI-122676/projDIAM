@@ -11,8 +11,8 @@ import PopupModal from '../maincomponents/PopupModal.jsx';
 const AsMinhasReceitas = () => {
     const navigate = useNavigate();
 
-    const RECEITAS_URL = import.meta.env.VITE_API_BASE_URL + '/receitas/';
-    const UTILIZADORES_URL = import.meta.env.VITE_API_BASE_URL + '/utilizadores/';
+    const RECEITAS_URL = 'http://localhost:8000/idjango/api' + '/receitas/';
+    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api' + '/utilizadores/';
 
     const [receitas, setReceitas] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -90,12 +90,10 @@ const AsMinhasReceitas = () => {
             });
     };
 
-    // Filtrar primeiro pelas condições globais (texto e frigorífico)
     const filteredReceitas = receitas.filter(receita => {
         const nomeReceita = receita.nome || "";
         const matchesSearch = nomeReceita.toLowerCase().includes(searchQuery.toLowerCase());
 
-        // Filtro do frigorífico (mostrar receitas que usam pelo menos um ingrediente do frigorífico)
         let matchesFridge = true;
         if (isFridgeFilterActive) {
             if (fridgeIngredients.length === 0) {
@@ -156,7 +154,6 @@ const AsMinhasReceitas = () => {
                             </div>
                         </div>
 
-                        {/* SECÇÃO: CRIADAS POR MIM */}
                         <div className="mt-30">
                             <h2 className="my-recipes-section-title">Criadas por Mim</h2>
                             <div className="recipes-grid mt-20">
@@ -173,7 +170,7 @@ const AsMinhasReceitas = () => {
                                         <div className="recipe-image-placeholder">
                                             {receita.foto_url ? (
                                                 <img
-                                                    src={`${import.meta.env.VITE_MEDIA_BASE_URL}${receita.foto_url}`}
+                                                    src={`http://localhost:8000${receita.foto_url}`}
                                                     alt={receita.nome}
                                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 />
@@ -194,7 +191,6 @@ const AsMinhasReceitas = () => {
                             </div>
                         </div>
 
-                        {/* SECÇÃO: RECEITAS GUARDADAS */}
                         <div className="mt-50">
                             <h2 className="my-recipes-section-title">Receitas Guardadas</h2>
                             <div className="recipes-grid mt-20">
@@ -211,7 +207,7 @@ const AsMinhasReceitas = () => {
                                         <div className="recipe-image-placeholder">
                                             {receita.foto_url ? (
                                                 <img
-                                                    src={`${import.meta.env.VITE_MEDIA_BASE_URL}${receita.foto_url}`}
+                                                    src={`http://localhost:8000${receita.foto_url}`}
                                                     alt={receita.nome}
                                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 />

@@ -16,10 +16,9 @@ const VerReceita = () => {
     const [comentarios, setComentarios] = useState([]);
     const [utilizadores, setUtilizadores] = useState([]);
 
-    // Auth
     const userId = localStorage.getItem('utilizadorId');
+    const [isAdmin, setIsAdmin] = useState(false);
 
-    // UI state
     const [novoComentario, setNovoComentario] = useState('');
     const [novaClassificacao, setNovaClassificacao] = useState(5);
     const [guardado, setGuardado] = useState(false);
@@ -28,10 +27,10 @@ const VerReceita = () => {
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-    const INGREDIENTES_URL = import.meta.env.VITE_API_BASE_URL + '/ingredientes/';
-    const RECEITA_URL = import.meta.env.VITE_API_BASE_URL + '/receitas/';
-    const COMENTARIOS_URL = import.meta.env.VITE_API_BASE_URL + '/comentarios/';
-    const UTILIZADORES_URL = import.meta.env.VITE_API_BASE_URL + '/utilizadores/';
+    const INGREDIENTES_URL = 'http://localhost:8000/idjango/api' + '/ingredientes/';
+    const RECEITA_URL = 'http://localhost:8000/idjango/api' + '/receitas/';
+    const COMENTARIOS_URL = 'http://localhost:8000/idjango/api' + '/comentarios/';
+    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api' + '/utilizadores/';
 
     const showLoginPopup = (actionMessage) => {
         setPopupConfig({
@@ -110,10 +109,18 @@ const VerReceita = () => {
         getReceita();
         getComentarios();
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [recipeId]);
+        if (userId) {
+            axios.get(`${UTILIZADORES_URL}${userId}`, { withCredentials: true })
+                .then(res => {
+                    if (res.data.role === 'Admin') {
+                        setIsAdmin(true);
+                    }
+                })
+                .catch(err => console.error("Erro ao obter papel do utilizador:", err));
+        }
 
-    // Guardar/Remover Receita
+    }, [recipeId, userId]);
+
     const handleGuardar = () => {
         if (!userId) {
             showLoginPopup('guardar esta receita');
@@ -128,7 +135,6 @@ const VerReceita = () => {
         } else {
             newGuardadores.push(parseInt(userId));
         }
-        // Usar PATCH para enviar apenas os campos necessários e evitar erros de validação com campos de leitura
         axios.patch(RECEITA_URL + recipeId, { guardadores: newGuardadores }, { withCredentials: true })
             .then(res => {
                 setReceita(res.data);
@@ -195,14 +201,13 @@ const VerReceita = () => {
         });
     };
 
-    // Avaliações
     const handleAvaliar = () => {
         if (!userId) {
             showLoginPopup('avaliar esta receita');
             return;
         }
 
-        axios.post(import.meta.env.VITE_API_BASE_URL + '/avaliar/', {
+        axios.post('http://localhost:8000/idjango/api' + '/avaliar/', {
             utilizador: parseInt(userId),
             receita: parseInt(recipeId),
             nota: novaClassificacao
@@ -226,7 +231,6 @@ const VerReceita = () => {
     };
 
 
-    // Comentar
     const handleAddComentario = () => {
         if (!userId) {
             showLoginPopup('comentar nesta receita');
@@ -293,12 +297,11 @@ const VerReceita = () => {
 
                     <div className="recipe-view-container">
 
-                        {/* PARTE SUPERIOR */}
                         <div className="recipe-top-row">
                             <div className="recipe-main-image flex-center">
                                 {receita.foto_url ? (
                                     <img
-                                        src={`${import.meta.env.VITE_MEDIA_BASE_URL}${receita.foto_url}`}
+                                        src={`http://localhost:8000${receita.foto_url}`}
                                         alt={receita.nome}
                                         style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '14px' }}
                                     />
@@ -327,15 +330,7 @@ const VerReceita = () => {
                                 <div className="view-actions-group mt-auto">
                                     <button className="btn-cancel" onClick={() => navigate(-1)}>Voltar</button>
 
-                                    {Number(receita.criador) === Number(userId) ? (
-                                        <button
-                                            className="btn-cancel"
-                                            onClick={handleDelete}
-                                            style={{ backgroundColor: '#8b4b4b', color: 'white' }}
-                                        >
-                                            Remover Receita
-                                        </button>
-                                    ) : (
+                                    {(Number(receita.criador) !== Number(userId) || isAdmin) && (
                                         <button
                                             className="btn-create-submit"
                                             onClick={handleGuardar}
@@ -344,17 +339,31 @@ const VerReceita = () => {
                                             {guardado ? 'Guardado' : 'Guardar'}
                                         </button>
                                     )}
+
+                                    {(Number(receita.criador) === Number(userId) || isAdmin) && (
+                                        <>
+                                            <button
+                                                className="btn-create-submit btn-action-edit"
+                                                onClick={() => navigate('/receitas/criar-receita', { state: { editReceita: receita } })}
+                                            >
+                                                Editar
+                                            </button>
+                                            <button
+                                                className="btn-create-submit btn-action-delete"
+                                                onClick={handleDelete}
+                                            >
+                                                Remover
+                                            </button>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </div>
 
-                        {/* PARTE INFERIOR */}
                         <div className="recipe-bottom-row recipe-bottom-row-flex">
 
-                            {/* Coluna de Descrição dos Passos */}
                             <div className="recipe-descriptions-column recipe-col-2">
                                 {receita.instrucao.map((passo, index) => {
-                                    // Separa o título (Passo X:) do resto do texto
                                     const hasPrefix = passo.match(/^(Passo \d+:\s*)(.*)/);
                                     const subtitle = hasPrefix ? `Passo ${index + 1}` : `Passo ${index + 1}`;
                                     const description = hasPrefix ? hasPrefix[2] : passo;
@@ -370,7 +379,6 @@ const VerReceita = () => {
                                 })}
                             </div>
 
-                            {/* Coluna de Ingredientes */}
                             <div className="recipe-ingredients-column recipe-col-1">
                                 <label className="section-subtitle">Ingredientes</label>
                                 <div className="content-box-light ingredients-box">
@@ -383,7 +391,6 @@ const VerReceita = () => {
                                     </ul>
                                 </div>
 
-                                {/* Secção de Classificação */}
                                 <div className="rating-section">
                                     <label className="section-subtitle rating-title">Avaliar Receita</label>
                                     <div className="rating-stars">
@@ -407,7 +414,6 @@ const VerReceita = () => {
                             </div>
                         </div>
 
-                        {/* SECÇÃO DE COMENTÁRIOS */}
                         <div className="comments-section">
                             <h3 className="comments-title">
                                 Comentários ({comentarios.length})

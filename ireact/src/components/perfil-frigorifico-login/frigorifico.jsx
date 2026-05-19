@@ -27,9 +27,9 @@ const Frigorifico = () => {
     });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-    const INGREDIENTES_URL = import.meta.env.VITE_API_BASE_URL + '/ingredientes/';
-    const UTILIZADORES_URL = import.meta.env.VITE_API_BASE_URL + '/utilizadores/';
-    const FRIGORIFICOS_URL = import.meta.env.VITE_API_BASE_URL + '/frigorificos/';
+    const INGREDIENTES_URL = 'http://localhost:8000/idjango/api' + '/ingredientes/';
+    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api' + '/utilizadores/';
+    const FRIGORIFICOS_URL = 'http://localhost:8000/idjango/api' + '/frigorificos/';
 
     const getIngredientes = () => {
         axios.get(INGREDIENTES_URL)
@@ -69,7 +69,6 @@ const Frigorifico = () => {
             });
     }, [userId, navigate]);
 
-    // Função para atualizar na BD
     const atualizarFrigorifico = (novaListaIds) => {
         if (!fridgeId) {
             setPopupConfig({
@@ -119,7 +118,7 @@ const Frigorifico = () => {
 
         const novaLista = [...ingredientesFrigorificoIds, id];
         atualizarFrigorifico(novaLista);
-        setIngredienteSelecionado(''); // Reset
+        setIngredienteSelecionado('');
     };
 
     const removerIngrediente = (idParaRemover) => {

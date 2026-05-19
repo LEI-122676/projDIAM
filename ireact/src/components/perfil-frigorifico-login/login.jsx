@@ -23,8 +23,8 @@ const Login = () => {
   const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
   const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-  const SIGN_UP_URL = import.meta.env.VITE_API_BASE_URL + '/signup/';
-  const SIGN_IN_URL = import.meta.env.VITE_API_BASE_URL + '/login/';
+  const SIGN_UP_URL = 'http://localhost:8000/idjango/api' + '/signup/';
+  const SIGN_IN_URL = 'http://localhost:8000/idjango/api' + '/login/';
 
   const handleLogin = (e) => {
     e.preventDefault();

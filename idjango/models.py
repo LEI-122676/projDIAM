@@ -8,12 +8,14 @@ import os
 # Create your models here.
 class Ingrediente(models.Model):
     nome = models.CharField(max_length=50)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.nome
 
 class Frigorifico(models.Model):
     ingredientes = models.ManyToManyField(Ingrediente) #Por ser ManyToManyField, nao precisamos de null=true
+    is_active = models.BooleanField(default=True)
 
 class Utilizador(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)       # "extends"
@@ -22,6 +24,15 @@ class Utilizador(models.Model):
     frigorifico = models.OneToOneField(Frigorifico, on_delete=models.DO_NOTHING, null=True)
     imagem = models.ImageField(upload_to='profile_pics', default='defaultProfile.png')
     bio = models.TextField(null=True)
+    
+    ROLES = (
+        ('Admin', 'Admin'),
+        ('User', 'User'),
+        ('Guest', 'Guest'),
+        ('EventOrganizer', 'EventOrganizer'),
+    )
+    role = models.CharField(max_length=20, choices=ROLES, default='User')
+    is_active = models.BooleanField(default=True)
     
     def __str__(self):
         return self.user.email
@@ -38,6 +49,7 @@ class Evento(models.Model):
     data_evento = models.DateTimeField()
     descricao = models.TextField()
     capacidade_max = models.IntegerField(default=int(os.environ.get('EVENTO_CAPACIDADE_MAX_DEFAULT', 30)), validators=[MinValueValidator(5)])
+    is_active = models.BooleanField(default=True)
 
     def clean(self):
         super().clean()
@@ -54,6 +66,7 @@ class Receita(models.Model):
     nome = models.CharField(max_length=50)
     foto = models.ImageField(upload_to='recipe_pics', default='defaultRecipe.png')
     instrucao = models.JSONField(default=list)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.nome

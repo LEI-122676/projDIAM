@@ -11,20 +11,20 @@ const VerEvento = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Obtém o ID passado através do state do router
     const eventoId = location.state?.id;
 
     const [evento, setEvento] = useState(null);
     const utilizadorId = localStorage.getItem('utilizadorId');
     const [inscrito, setInscrito] = useState(false);
     const [isLoadError, setIsLoadError] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     const [popupConfig, setPopupConfig] = useState({
         isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { }
     });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-    const EVENTO_URL = import.meta.env.VITE_API_BASE_URL + '/eventos/';
+    const EVENTO_URL = 'http://localhost:8000/idjango/api' + '/eventos/';
 
     const showLoginPopup = (actionMessage) => {
         setPopupConfig({
@@ -55,18 +55,41 @@ const VerEvento = () => {
                 console.error("Erro ao carregar evento:", err);
                 setIsLoadError(true);
             });
+
+        if (utilizadorId) {
+            axios.get(`http://localhost:8000/idjango/api/utilizadores/${utilizadorId}`, { withCredentials: true })
+                .then(res => {
+                    if (res.data.role === 'Admin') {
+                        setIsAdmin(true);
+                    }
+                })
+                .catch(err => console.error("Erro ao obter papel do utilizador:", err));
+        }
     }, [eventoId, utilizadorId, navigate]);
 
     const getImageUrl = (caminho) => {
         if (!caminho) return "http://localhost:8000/idjango/media/defaultEvent.png";
         if (caminho.startsWith('http')) return caminho;
-        return `${import.meta.env.VITE_MEDIA_BASE_URL}${caminho.startsWith('/') ? '' : '/'}${caminho}`;
+        return `http://localhost:8000${caminho.startsWith('/') ? '' : '/'}${caminho}`;
     };
 
     const formatarHorario = (h) => {
         if (!h) return null;
-        if (typeof h === 'string') return h.replace(/"/g, '');
-        if (typeof h === 'object' && Object.keys(h).length === 0) return null;
+        if (typeof h === 'object') {
+            if (h.inicio && h.fim) {
+                return `Inicio: ${h.inicio}, Fim: ${h.fim}`;
+            }
+            if (Object.keys(h).length === 0) return null;
+        }
+        if (typeof h === 'string') {
+            try {
+                const parsed = JSON.parse(h);
+                if (parsed && typeof parsed === 'object' && parsed.inicio && parsed.fim) {
+                    return `Inicio: ${parsed.inicio}, Fim: ${parsed.fim}`;
+                }
+            } catch (e) {}
+            return h.replace(/"/g, '');
+        }
         return JSON.stringify(h).replace(/"/g, '');
     };
 
@@ -111,10 +134,47 @@ const VerEvento = () => {
             })
             .catch(err => {
                 console.error("Erro ao atualizar inscrição com PUT:", err);
-                // Fallback para a interface não congelar em caso de erro de rede
                 setEvento(prev => ({ ...prev, inscritos: newInscritos }));
                 setInscrito(!isAlreadyInscribed);
             });
+    };
+
+    const handleDelete = () => {
+        setPopupConfig({
+            isOpen: true,
+            title: 'Confirmar Eliminação',
+            message: 'Tens a certeza que pretendes apagar este evento? Esta ação é irreversível.',
+            singleButton: false,
+            confirmText: 'Apagar',
+            cancelText: 'Cancelar',
+            onConfirm: () => {
+                axios.delete(`${EVENTO_URL}${eventoId}`)
+                    .then(() => {
+                        setPopupConfig({
+                            isOpen: true,
+                            title: 'Evento Apagado',
+                            message: 'O teu evento foi removido com sucesso.',
+                            singleButton: true,
+                            confirmText: 'OK',
+                            onConfirm: () => navigate('/eventos'),
+                            onCancel: () => navigate('/eventos')
+                        });
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        setPopupConfig({
+                            isOpen: true,
+                            title: 'Erro ao Apagar',
+                            message: 'Não foi possível apagar o evento. Tenta novamente.',
+                            singleButton: true,
+                            confirmText: 'OK',
+                            onConfirm: closePopup,
+                            onCancel: closePopup
+                        });
+                    });
+            },
+            onCancel: closePopup
+        });
     };
 
     const formatarDataExibicao = (dataStr) => {
@@ -142,7 +202,6 @@ const VerEvento = () => {
                 <Sidebar />
                 <main className="content-profile">
 
-                    {/* CABEÇALHO DO EVENTO */}
                     <div className="recipe-header-container">
                         <h1 className="page-title-underline">{evento.nome}</h1>
                         <div className="recipe-rating-text">
@@ -152,7 +211,6 @@ const VerEvento = () => {
 
                     <div className="recipe-view-container">
 
-                        {/* PARTE SUPERIOR */}
                         <div className="recipe-top-row">
                             <div className="recipe-main-image flex-center">
                                 <img
@@ -162,7 +220,6 @@ const VerEvento = () => {
                                 />
                             </div>
 
-                            {/* Menu lateral de informações rápidas */}
                             <div className="recipe-steps-nav">
                                 <div className="step-nav-item" style={{ cursor: 'default', fontWeight: '600' }}>
                                     📅 {evento.data_evento ? formatarDataExibicao(evento.data_evento.substring(0, 10)) : "Sem data definida"}
@@ -171,24 +228,42 @@ const VerEvento = () => {
                                     🕒 {formatarHorario(evento.horario) || "Sem horário definido"}
                                 </div>
                                 <div className="step-nav-item" style={{ cursor: 'default', fontWeight: '600' }}>
-                                    📍 Lotação Máxima: {evento.capacidade_max || 5} pessoas
+                                    📍 Capacidade Máxima: {evento.capacidade_max || 5} pessoas
                                 </div>
 
-                                <div className="view-actions-group mt-auto">
+                                 <div className="view-actions-group mt-auto">
                                     <button className="btn-cancel" onClick={() => navigate(-1)}>Voltar</button>
 
-                                    <button
-                                        className="btn-create-submit"
-                                        onClick={handleJoin}
-                                        style={inscrito ? { backgroundColor: '#8a9b8e' } : {}}
-                                    >
-                                        {inscrito ? 'Inscrito' : 'Inscrever-me'}
-                                    </button>
+                                    {(Number(evento.criador) !== Number(utilizadorId) || isAdmin) && (
+                                        <button
+                                            className="btn-create-submit"
+                                            onClick={handleJoin}
+                                            style={inscrito ? { backgroundColor: '#8a9b8e' } : {}}
+                                        >
+                                            {inscrito ? 'Inscrito' : 'Inscrever-me'}
+                                        </button>
+                                    )}
+
+                                    {(Number(evento.criador) === Number(utilizadorId) || isAdmin) && (
+                                        <>
+                                            <button
+                                                className="btn-create-submit btn-action-edit"
+                                                onClick={() => navigate('/eventos/criarEvento', { state: { editEvento: evento } })}
+                                            >
+                                                Editar
+                                            </button>
+                                            <button
+                                                className="btn-create-submit btn-action-delete"
+                                                onClick={handleDelete}
+                                            >
+                                                Remover
+                                            </button>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </div>
 
-                        {/* PARTE INFERIOR */}
                         <div className="recipe-bottom-row recipe-bottom-row-flex">
                             <div className="recipe-descriptions-column recipe-col-2">
                                 <div className="step-detail mb-15">

@@ -8,16 +8,14 @@ import axios from 'axios';
 
 const Perfil = () => {
 
-  const URL_USER = import.meta.env.VITE_API_BASE_URL + '/user_info/';
-  const URL_USER_INFO = import.meta.env.VITE_API_BASE_URL + '/utilizadores/';
+  const URL_USER = 'http://localhost:8000/idjango/api' + '/user_info/';
+  const URL_USER_INFO = 'http://localhost:8000/idjango/api' + '/utilizadores/';
   const navigate = useNavigate();
 
   const userId = localStorage.getItem('utilizadorId');
   const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
   
-  // CORREÇÃO: bio e imagem pertencem a userData (Utilizador)
   const [userData, setUserData] = useState({ nome: '', apelido: '', imagem: '', bio: '' });
-  // CORREÇÃO: username e email pertencem a userInfo (User base)
   const [userInfo, setUserInfo] = useState({ username: '', email: '' });
 
   useEffect(() => {
@@ -34,7 +32,6 @@ const Perfil = () => {
       return;
     }
 
-    // Buscar info detalhada do utilizador (Tabela Utilizador: nome, apelido, imagem, bio)
     axios.get(`${URL_USER_INFO}${userId}`, { withCredentials: true })
       .then(res => {
         setUserData(res.data);
@@ -44,7 +41,6 @@ const Perfil = () => {
         console.error("Erro ao carregar perfil (utilizador):", err);
       });
 
-    // Buscar info da tabela User base (username, email)
     axios.get(`${URL_USER}${userId}`, { withCredentials: true })
       .then(res => {
         setUserInfo(res.data);
@@ -68,13 +64,11 @@ const Perfil = () => {
 
             <div className="profile-layout-container">
 
-            {/* COLUNA ESQUERDA: Cartão de Info */}
             <div className="profile-details-card">
               <div className="user-main-info">
                 <div className="user-avatar-large" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-                  {/* CORREÇÃO: Se houver imagem em userData, mostra a tag img. Se não, mostra o boneco */}
                     <img 
-                      src={userData.imagem ? (userData.imagem.startsWith('http') ? userData.imagem : `${import.meta.env.VITE_MEDIA_BASE_URL}${userData.imagem.startsWith('/') ? '' : '/'}${userData.imagem}`) : `${import.meta.env.VITE_MEDIA_BASE_URL}/idjango/media/defaultProfile.png`} 
+                      src={userData.imagem ? (userData.imagem.startsWith('http') ? userData.imagem : `http://localhost:8000${userData.imagem.startsWith('/') ? '' : '/'}${userData.imagem}`) : `http://localhost:8000/idjango/media/defaultProfile.png`} 
                       alt="Imagem do utilizador" 
                       style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '18px' }} 
                     />
@@ -90,14 +84,13 @@ const Perfil = () => {
               <div className="user-extra-info">
                 <span><strong>Email:</strong> {userData.email} </span>
                 <br />
-                {/* CORREÇÃO: bio vem de userData */}
                 <span><strong>Biografia:</strong> {userData.bio || "Sem biografia definida."}</span>
               </div>
 
               <div className="profile-actions">
                 <button className="btn-edit-profile" onClick={() => navigate('/perfil/editar-perfil')}>Editar perfil</button>
                 <button className="btn-logout-link" onClick={() => {
-                  axios.get(import.meta.env.VITE_API_BASE_URL + '/logout/', { withCredentials: true })
+                  axios.get('http://localhost:8000/idjango/api' + '/logout/', { withCredentials: true })
                     .then(() => {
                       localStorage.removeItem('utilizadorId');
                       navigate('/login');
@@ -112,7 +105,6 @@ const Perfil = () => {
               </div>
             </div>
 
-            {/* COLUNA DIREITA: Atalhos */}
             <div className="profile-shortcuts-grid">
               <div className="shortcut-card" onClick={() => navigate('/frigorifico')}>
                 O meu Frigorífico
@@ -123,6 +115,11 @@ const Perfil = () => {
               <div className="shortcut-card" onClick={() => navigate('/perfil/meus-eventos')}>
                 Os meus Eventos
               </div>
+              {userData.role === 'Admin' && (
+                <div className="shortcut-card" onClick={() => navigate('/admin/gerir-utilizadores')}>
+                  Gerir Utilizadores
+                </div>
+              )}
             </div>
 
             </div>

@@ -13,8 +13,8 @@ import PopupModal from '../maincomponents/PopupModal.jsx';
 
 const ExplorarEventos = () => {
 
-    const URL_EVENTOS = import.meta.env.VITE_API_BASE_URL + '/eventos/';
-    const URL_USER = import.meta.env.VITE_API_BASE_URL + '/user/';
+    const URL_EVENTOS = 'http://localhost:8000/idjango/api' + '/eventos/';
+    const URL_USER = 'http://localhost:8000/idjango/api' + '/user/';
 
     const navigate = useNavigate();
 
@@ -22,13 +22,10 @@ const ExplorarEventos = () => {
     const [eventos, setEventos] = React.useState([]);
     const [userName, setUsername] = React.useState(null);
 
-    // Estado para guardar a data selecionada no formato "YYYY-MM-DD"
     const [dataFiltro, setDataFiltro] = useState('');
 
-    // Referência para o input invisível de data
     const dateInputRef = useRef(null);
 
-    // Paginação
     const [currentPage, setCurrentPage] = useState(1);
     const eventsPerPage = 20;
 
@@ -52,7 +49,6 @@ const ExplorarEventos = () => {
         }
     };
 
-    // Abre o seletor nativo de data ao clicar na div pai
     const handleWrapperClick = (e) => {
         if (dateInputRef.current) {
             if (typeof dateInputRef.current.showPicker === 'function') {
@@ -63,7 +59,6 @@ const ExplorarEventos = () => {
         }
     };
 
-    // Formata a data de "YYYY-MM-DD" para "DD/MM/YYYY" para exibição limpa
     const formatarDataExibicao = (dataStr) => {
         if (!dataStr) return "Filtrar por data";
         const [ano, mes, dia] = dataStr.split('-');
@@ -74,7 +69,6 @@ const ExplorarEventos = () => {
         setCurrentPage(1);
     }, [searchQuery, dataFiltro]);
 
-    // Lógica de filtragem combinada (Pesquisa por texto + Filtro por Data)
     const eventosFiltrados = eventos.filter(evento => {
         const nomeEvento = evento.nome || "";
         const matchesSearch = nomeEvento.toLowerCase().includes(searchQuery.toLowerCase());
@@ -125,10 +119,8 @@ const ExplorarEventos = () => {
                                 </div>
                                 
                                 <div className="recipes-button-group">
-                                    {/* Botão de Calendário com evento de clique em toda a área */}
                                     <div className="calendar-filter-wrapper" onClick={handleWrapperClick}>
                                         
-                                        {/* 1. O input fica no topo do DOM interno do wrapper */}
                                         <input 
                                             type="date" 
                                             ref={dateInputRef}
@@ -137,7 +129,6 @@ const ExplorarEventos = () => {
                                             onChange={(e) => setDataFiltro(e.target.value)}
                                         />
 
-                                        {/* 2. Elementos visuais (ficam organizados lado a lado) */}
                                         <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg" style={{marginRight: '6px'}} />
                                         <img src={iconeCalendario} alt="Calendário" className="recipe-icon-svg" style={{marginRight: '8px'}} />
                                         
@@ -145,18 +136,17 @@ const ExplorarEventos = () => {
                                             {formatarDataExibicao(dataFiltro)}
                                         </span>
                                         
-                                        {/* 3. O botão de limpar ganha um zIndex alto para ficar acima da máscara do input invisível */}
                                         {dataFiltro && (
                                             <button 
                                                 className="clear-date-btn" 
                                                 onClick={(e) => {
-                                                    e.stopPropagation(); // Trava a propagação para o wrapper
+                                                    e.stopPropagation();
                                                     setDataFiltro('');
                                                     if (dateInputRef.current) {
                                                         dateInputRef.current.value = ''; 
                                                     }
                                                 }}
-                                                style={{ position: 'relative', zIndex: 10 }} // Adicionado zIndex para garantir o clique
+                                                style={{ position: 'relative', zIndex: 10 }}
                                                 title="Limpar filtro de data"
                                             >
                                                 ×
@@ -186,13 +176,13 @@ const ExplorarEventos = () => {
                                     <div className="recipe-image-placeholder">
                                         {(evento.foto_url || evento.foto) ? (
                                             <img
-                                                src={`${import.meta.env.VITE_MEDIA_BASE_URL}${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
+                                                src={`http://localhost:8000${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
                                                 alt={evento.nome}
                                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                             />
                                         ) : (
                                             <img
-                                                src={`${import.meta.env.VITE_MEDIA_BASE_URL}/idjango/media/defaultEvent.png`}
+                                                src="http://localhost:8000/idjango/media/defaultEvent.png"
                                                 alt={evento.nome}
                                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                             />

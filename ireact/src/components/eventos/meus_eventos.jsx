@@ -11,8 +11,8 @@ import PopupModal from '../maincomponents/PopupModal.jsx';
 const OsMeusEventos = () => {
     const navigate = useNavigate();
 
-    const RECEITAS_URL = import.meta.env.VITE_API_BASE_URL + '/eventos/';
-    const UTILIZADORES_URL = import.meta.env.VITE_API_BASE_URL + '/utilizadores/';
+    const RECEITAS_URL = 'http://localhost:8000/idjango/api' + '/eventos/';
+    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api' + '/utilizadores/';
 
     const [eventos, setEventos] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -46,7 +46,6 @@ const OsMeusEventos = () => {
     }, [userId, navigate]);
 
 
-    // Filtrar primeiro pelas condições globais (texto e frigorífico)
     const filteredEventos = eventos.filter(evento => {
         const nomeEvento = evento.nome || "";
         const matchesSearch = nomeEvento.toLowerCase().includes(searchQuery.toLowerCase());
@@ -84,7 +83,6 @@ const OsMeusEventos = () => {
                             </div>
                         </div>
 
-                        {/* SECÇÃO: CRIADAS POR MIM */}
                         <div className="mt-30">
                             <h2 className="my-recipes-section-title">Criados por Mim</h2>
                             <div className="recipes-grid mt-20">
@@ -98,13 +96,13 @@ const OsMeusEventos = () => {
                                         <div className="recipe-image-placeholder">
                                             {(evento.foto_url || evento.foto) ? (
                                                 <img
-                                                    src={`${import.meta.env.VITE_MEDIA_BASE_URL}${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
+                                                    src={`http://localhost:8000${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
                                                     alt={evento.nome}
                                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 />
                                             ) : (
                                                 <img
-                                                    src={`${import.meta.env.VITE_MEDIA_BASE_URL}/idjango/media/defaultEvent.png`}
+                                                    src="http://localhost:8000/idjango/media/defaultEvent.png"
                                                     alt={evento.nome}
                                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 />
@@ -137,13 +135,13 @@ const OsMeusEventos = () => {
                                         <div className="recipe-image-placeholder">
                                             {(evento.foto_url || evento.foto) ? (
                                                 <img
-                                                    src={`${import.meta.env.VITE_MEDIA_BASE_URL}${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
+                                                    src={`http://localhost:8000${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
                                                     alt={evento.nome}
                                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 />
                                             ) : (
                                                 <img
-                                                    src={`${import.meta.env.VITE_MEDIA_BASE_URL}/idjango/media/defaultEvent.png`}
+                                                    src="http://localhost:8000/idjango/media/defaultEvent.png"
                                                     alt={evento.nome}
                                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 />

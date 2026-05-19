@@ -3,34 +3,56 @@ import { useState, useEffect, useRef } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
 import '../../css/styles.css'
-import { useNavigate as useReactNavigate } from 'react-router-dom';
+import { useNavigate as useReactNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import PopupModal from '../maincomponents/PopupModal.jsx';
 
 const CriarEvento = () => {
 
     const navigate = useReactNavigate();
+    const location = useLocation();
+    const editEvento = location.state?.editEvento;
     const fileInputRef = useRef(null);
     const dateInputRef = useRef(null);
 
-    const [nome, setNome] = useState('');
-    const [descricao, setDescricao] = useState('');
-    const [capacidadeMax, setCapacidadeMax] = useState(5);
-    const [horario, setHorario] = useState('20:00');
-    const [dataEvento, setDataEvento] = useState('');
+    const [nome, setNome] = useState(editEvento ? editEvento.nome || '' : '');
+    const [descricao, setDescricao] = useState(editEvento ? editEvento.descricao || '' : '');
+    const [capacidadeMax, setCapacidadeMax] = useState(editEvento ? editEvento.capacidade_max || 5 : 5);
+    const [horario, setHorario] = useState(() => {
+        if (editEvento && editEvento.horario) {
+            if (typeof editEvento.horario === 'string') {
+                return editEvento.horario.replace(/"/g, '');
+            }
+        }
+        return '20:00';
+    });
+    const [dataEvento, setDataEvento] = useState(() => {
+        if (editEvento && editEvento.data_evento) {
+            return editEvento.data_evento.substring(0, 10);
+        }
+        return '';
+    });
     const [foto, setFoto] = useState(null);
-    const [fotoPreview, setFotoPreview] = useState(null);
+    const [fotoPreview, setFotoPreview] = useState(() => {
+        if (editEvento) {
+            if (editEvento.foto_url) {
+                return `http://localhost:8000${editEvento.foto_url}`;
+            } else if (editEvento.foto) {
+                return editEvento.foto;
+            }
+        }
+        return null;
+    });
 
-    const [utilizadorId, setUtilizadorId] = useState(null);
+    const [utilizadorId, setUtilizadorId] = useState(() => localStorage.getItem('utilizadorId'));
 
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-    const URL_CRIAR_EVENTO = import.meta.env.VITE_API_BASE_URL + '/eventos/';
+    const URL_CRIAR_EVENTO = 'http://localhost:8000/idjango/api' + '/eventos/';
 
     useEffect(() => {
-        const userId = localStorage.getItem('utilizadorId');
-        if (!userId) {
+        if (!utilizadorId) {
             setPopupConfig({
                 isOpen: true,
                 title: 'Acesso Restrito',
@@ -42,8 +64,26 @@ const CriarEvento = () => {
             });
             return;
         }
-        setUtilizadorId(userId);
-    }, [navigate]);
+
+        axios.get(`http://localhost:8000/idjango/api/utilizadores/${utilizadorId}`, { withCredentials: true })
+            .then(res => {
+                const userRole = res.data.role;
+                if (userRole !== 'Admin' && userRole !== 'EventOrganizer') {
+                    setPopupConfig({
+                        isOpen: true,
+                        title: 'Acesso Restrito',
+                        message: 'Precisas de ter permissão de Organizador de Eventos (EventOrganizer) para criares um evento.',
+                        singleButton: true,
+                        confirmText: 'Voltar',
+                        onConfirm: () => navigate('/eventos'),
+                        onCancel: () => navigate('/eventos')
+                    });
+                }
+            })
+            .catch(err => {
+                console.error("Erro ao verificar permissão do utilizador:", err);
+            });
+    }, [navigate, utilizadorId]);
 
     const handleFotoChange = (e) => {
         const file = e.target.files[0];
@@ -115,15 +155,22 @@ const CriarEvento = () => {
         const csrfToken = getCSRFToken();
 
 
-        axios.post(URL_CRIAR_EVENTO, formData, {
-            headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'multipart/form-data' },
-            withCredentials: true
-        })
+        const requestPromise = editEvento
+            ? axios.patch(`${URL_CRIAR_EVENTO}${editEvento.id}/`, formData, {
+                headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'multipart/form-data' },
+                withCredentials: true
+            })
+            : axios.post(URL_CRIAR_EVENTO, formData, {
+                headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'multipart/form-data' },
+                withCredentials: true
+            });
+
+        requestPromise
             .then(() => {
                 setPopupConfig({
                     isOpen: true,
-                    title: 'Evento Criado!',
-                    message: 'O teu evento foi criado com sucesso!',
+                    title: editEvento ? 'Evento Atualizado!' : 'Evento Criado!',
+                    message: editEvento ? 'O teu evento foi atualizado com sucesso!' : 'O teu evento foi criado com sucesso!',
                     singleButton: true,
                     confirmText: 'OK',
                     onConfirm: () => navigate('/eventos'),
@@ -133,7 +180,7 @@ const CriarEvento = () => {
             .catch(err => {
                 console.error(err);
                 const detail = err.response?.data ? JSON.stringify(err.response.data) : 'Erro de conexão.';
-                showPopup('Erro ao Criar Evento', detail);
+                showPopup(editEvento ? 'Erro ao Atualizar Evento' : 'Erro ao Criar Evento', detail);
             });
     };
 
@@ -149,10 +196,9 @@ const CriarEvento = () => {
             <div className="main-wrapper">
                 <Sidebar />
                 <main className="content-profile">
-                    <h1 className="page-title-underline">Criar Evento</h1>
+                    <h1 className="page-title-underline">{editEvento ? 'Editar Evento' : 'Criar Evento'}</h1>
                     <div className="create-recipe-container">
 
-                        {/* COLUNA ESQUERDA */}
                         <div className="recipe-form-section">
                             <div className="form-group">
                                 <label>Nome*:</label>
@@ -168,38 +214,22 @@ const CriarEvento = () => {
                             <div className="form-group">
                                 <label>Descrição*:</label>
                                 <textarea
-                                    className="input-beige text-black"
+                                    className="input-beige text-black event-description-textarea"
                                     placeholder="Detalhes sobre o local, o cardápio e o que levar..."
                                     value={descricao}
                                     onChange={(e) => setDescricao(e.target.value)}
-                                    style={{
-                                        height: '220px',
-                                        padding: '20px',
-                                        resize: 'none'
-                                    }}
                                 />
                             </div>
 
-                            {/* LINHA ÚNICA*/}
-                            <div className="event-metadata-single-line" style={{
-                                display: 'flex',
-                                gap: '20px',
-                                alignItems: 'center',
-                                backgroundColor: '#fcfbfa',
-                                padding: '15px 20px',
-                                borderRadius: '14px',
-                                border: '1px solid #eae7dc',
-                                marginTop: '15px'
-                            }}>
+                            <div className="event-metadata-single-line">
 
-                                <div className="form-group" style={{ flex: 1, margin: 0 }}>
-                                    <label style={{ marginBottom: '6px', display: 'block' }}>Data do Evento*</label>
+                                <div className="form-group event-metadata-form-group">
+                                    <label className="event-metadata-label">Data do Evento*</label>
                                     <div
                                         className="calendar-filter-wrapper"
                                         onClick={handleDateWrapperClick}
-                                        style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '45px', cursor: 'pointer' }}
                                     >
-                                        <span className="calendar-display-text" style={{ color: 'black', fontWeight: '600' }}>
+                                        <span className="calendar-display-text">
                                             {dataEvento ? formatarDataExibicao(dataEvento) : "Selecionar data..."}
                                         </span>
                                         <input
@@ -208,19 +238,16 @@ const CriarEvento = () => {
                                             className="calendar-hidden-input"
                                             value={dataEvento}
                                             onChange={(e) => setDataEvento(e.target.value)}
-                                            style={{ display: 'none' }}
                                         />
                                     </div>
                                 </div>
 
-                                {/* Horário - Dropdown Nativo Igual ao da Capacidade */}
-                                <div className="form-group" style={{ flex: 1, margin: 0 }}>
-                                    <label style={{ marginBottom: '6px', display: 'block' }}>Horário*</label>
+                                <div className="form-group event-metadata-form-group">
+                                    <label className="event-metadata-label">Horário*</label>
                                     <select
-                                        className="input-beige text-black"
+                                        className="input-beige text-black event-metadata-select"
                                         value={horario}
                                         onChange={(e) => setHorario(e.target.value)}
-                                        style={{ width: '100%', cursor: 'pointer', fontWeight: '600', height: '45px', textAlign: 'center' }}
                                     >
                                         {opcoesHoras.map(hora => (
                                             <option key={hora} value={hora}>
@@ -230,14 +257,12 @@ const CriarEvento = () => {
                                     </select>
                                 </div>
 
-                                {/* Dropdown de Capacidade Máxima */}
-                                <div className="form-group" style={{ flex: 1, margin: 0 }}>
-                                    <label style={{ marginBottom: '6px', display: 'block' }}>Capacidade*</label>
+                                <div className="form-group event-metadata-form-group">
+                                    <label className="event-metadata-label">Capacidade*</label>
                                     <select
-                                        className="input-beige text-black"
+                                        className="input-beige text-black event-metadata-select"
                                         value={capacidadeMax}
                                         onChange={(e) => setCapacidadeMax(parseInt(e.target.value, 10))}
-                                        style={{ width: '100%', cursor: 'pointer', fontWeight: '600', height: '45px', textAlign: 'center' }}
                                     >
                                         {opcoesCapacidade.map(num => (
                                             <option key={num} value={num}>
@@ -249,7 +274,6 @@ const CriarEvento = () => {
                             </div>
                         </div>
 
-                        {/* COLUNA DIREITA: Foto + Ações */}
                         <div className="recipe-image-section">
                             <div
                                 className="image-upload-placeholder"
@@ -260,12 +284,12 @@ const CriarEvento = () => {
                                     <img
                                         src={fotoPreview}
                                         alt="Pré-visualização"
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '18px' }}
+                                        className="image-preview-fit"
                                     />
                                 ) : (
-                                    <div style={{ textAlign: 'center', color: '#D1CDBC' }}>
-                                        <div style={{ fontSize: '48px', marginBottom: '10px' }}>📷</div>
-                                        <p style={{ fontSize: '0.9rem' }}>Clica para adicionar foto*</p>
+                                    <div className="image-upload-info">
+                                        <div className="image-upload-icon">📷</div>
+                                        <p className="image-upload-text">Clica para adicionar foto*</p>
                                     </div>
                                 )}
                             </div>
@@ -278,8 +302,7 @@ const CriarEvento = () => {
                             />
                             {fotoPreview && (
                                 <button
-                                    className="btn-cancel btn-cancel-small"
-                                    style={{ marginTop: '8px', alignSelf: 'center' }}
+                                    className="btn-cancel btn-cancel-small btn-remove-photo"
                                     onClick={() => { setFoto(null); setFotoPreview(null); fileInputRef.current.value = ''; }}
                                 >
                                     Remover foto
@@ -288,7 +311,7 @@ const CriarEvento = () => {
 
                             <div className="create-actions-group">
                                 <button className="btn-cancel" onClick={() => navigate(-1)}>Cancelar</button>
-                                <button className="btn-create-submit" onClick={handleSubmit}>Criar</button>
+                                <button className="btn-create-submit" onClick={handleSubmit}>{editEvento ? 'Guardar' : 'Criar'}</button>
                             </div>
                         </div>
 

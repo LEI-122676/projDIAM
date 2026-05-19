@@ -1676,6 +1676,7 @@ body.dark-mode .page-select-dropdown option {
 
 /* Upload de Imagem */
 .image-upload-placeholder {
+    position: relative;
     width: 100%;
     aspect-ratio: 1 / 1;
     border: 2px dashed #D1CDBC;
@@ -1685,9 +1686,10 @@ body.dark-mode .page-select-dropdown option {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    overflow: hidden;
 }
 
-.image-upload-placeholder img {
+.image-upload-placeholder img:not(.image-preview-fit) {
     width: 80px;
     opacity: 0.5;
 }
@@ -1805,7 +1807,8 @@ body.dark-mode .page-select-dropdown option {
 /* Grupo de Botões posicionado abaixo do índice de passos */
 .view-actions-group {
     display: flex;
-    gap: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
     margin-top: 20px;
     justify-content: center;
 }
@@ -2308,4 +2311,358 @@ body.dark-mode .page-select-dropdown option {
 
 .calendar-filter-wrapper:hover .recipe-icon-svg {
     filter: invert(21%) sepia(15%) saturate(2500%) hue-rotate(92deg) brightness(90%) contrast(90%);
+}
+
+.create-recipe-container {
+    display: flex;
+    gap: 60px;
+    width: 100%;
+    align-items: flex-start;
+    padding-bottom: 120px; /* Garante espaço abaixo do formulário para os dropdowns abrirem para baixo */
+}
+
+.event-metadata-single-line {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    background-color: #fcfbfa;
+    padding: 15px 20px;
+    border-radius: 14px;
+    border: 1px solid #eae7dc;
+    margin-top: 15px;
+}
+
+body.dark-mode .event-metadata-single-line {
+    background-color: #1e1e1e !important;
+    border-color: #2c2c2c !important;
+}
+
+body.dark-mode .form-group label,
+body.dark-mode .item-number {
+    color: #ffffff !important;
+}
+
+body.dark-mode .image-upload-placeholder {
+    background-color: #262626 !important;
+    border-color: #383838 !important;
+}
+
+body.dark-mode .btn-cancel {
+    background-color: #262626 !important;
+    border-color: #383838 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .btn-cancel:hover {
+    background-color: #2d2d2d !important;
+}
+
+body.dark-mode .btn-add-dashed:hover {
+    border-color: #81c784 !important;
+    color: #81c784 !important;
+    background-color: #262626 !important;
+}
+
+body.dark-mode select option {
+    background-color: #262626 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Novos Estilos Sem Inline para Criar Evento / Receita */
+.event-description-textarea {
+    height: 220px;
+    padding: 20px;
+    resize: none;
+}
+
+.event-metadata-form-group {
+    flex: 1;
+    margin: 0;
+}
+
+.event-metadata-label {
+    margin-bottom: 6px;
+    display: block;
+}
+
+.event-metadata-select {
+    width: 100%;
+    cursor: pointer;
+    font-weight: 600;
+    height: 45px;
+    text-align: center;
+    text-align-last: center;
+}
+
+.calendar-display-text {
+    font-weight: 600;
+}
+
+.image-preview-fit {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 18px;
+}
+
+.image-upload-info {
+    text-align: center;
+    color: #D1CDBC;
+}
+
+.image-upload-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.image-upload-text {
+    font-size: 0.9rem;
+}
+
+.btn-remove-photo {
+    margin-top: 10px;
+    align-self: center;
+    background-color: #8b4b4b !important; /* Vermelho do site */
+    color: #ffffff !important;
+    border: none !important;
+    padding: 8px 20px !important;
+    border-radius: 20px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.btn-remove-photo:hover {
+    background-color: #723c3c !important;
+}
+
+body.dark-mode .btn-remove-photo {
+    background-color: #ef5350 !important;
+    color: #ffffff !important;
+}
+body.dark-mode .btn-remove-photo:hover {
+    background-color: #e53935 !important;
+}
+
+.admin-shortcut {
+    border: 2px dashed #2E4A35 !important;
+    color: #2E4A35 !important;
+    font-weight: bold !important;
+}
+
+body.dark-mode .admin-shortcut {
+    border-color: #81c784 !important;
+    color: #81c784 !important;
+}
+
+/* User Management styles */
+.admin-table-container {
+    width: 100%;
+    margin-top: 30px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    background: #ffffff;
+    border: 1px solid #eae7dc;
+}
+
+body.dark-mode .admin-table-container {
+    background: #1e1e1e;
+    border-color: #2c2c2c;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.admin-table th, .admin-table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eae7dc;
+}
+
+body.dark-mode .admin-table th, body.dark-mode .admin-table td {
+    border-bottom-color: #2c2c2c;
+}
+
+.admin-table th {
+    background-color: #f6f4e9;
+    color: #4A3A31 !important;
+    font-weight: 700;
+}
+
+body.dark-mode .admin-table th {
+    background-color: #121212;
+    color: #ffffff !important;
+}
+
+.admin-table td {
+    color: #000000 !important;
+}
+
+body.dark-mode .admin-table td {
+    color: #e0e0e0 !important;
+}
+
+.admin-table tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-actions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.admin-role-select {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1.5px solid #4A3A31;
+    background-color: #ffffff;
+    color: #000000 !important;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+body.dark-mode .admin-role-select {
+    border-color: #383838;
+    background-color: #262626;
+    color: #e0e0e0 !important;
+}
+
+.admin-btn-save {
+    background-color: #2E4A35;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-right: 8px;
+    transition: background-color 0.2s;
+}
+
+.admin-btn-save:hover {
+    background-color: #243a29;
+}
+
+.admin-btn-save:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+body.dark-mode .admin-btn-save {
+    background-color: #81c784;
+    color: #121212;
+}
+
+body.dark-mode .admin-btn-save:hover {
+    background-color: #66bb6a;
+}
+
+body.dark-mode .admin-btn-save:disabled {
+    opacity: 0.4;
+}
+
+.admin-btn-delete {
+    background-color: #8b4b4b;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.admin-btn-delete:hover {
+    background-color: #723c3c;
+}
+
+.admin-table-empty {
+    text-align: center;
+}
+
+.admin-create-image-group {
+    width: 100%;
+}
+
+.admin-create-image-label {
+    text-align: center;
+    display: block;
+}
+
+.admin-create-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+.admin-create-upload-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-create-upload-icon {
+    font-size: 40px;
+}
+
+.admin-create-actions {
+    width: 100%;
+    display: flex;
+    gap: 15px;
+}
+
+.admin-create-btn-flex {
+    flex: 1;
+}
+
+/* Botões de Ação na visualização de Receita e Evento */
+.btn-action-edit {
+    background-color: #f1c40f !important; /* Amarelo dourado do site */
+    color: #4A3A31 !important; /* Letras em castanho escuro para legibilidade */
+    border: none !important;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color 0.2s;
+}
+.btn-action-edit:hover {
+    background-color: #e2b40d !important;
+}
+
+body.dark-mode .btn-action-edit {
+    background-color: #f39c12 !important; /* Laranja dourado no dark mode */
+    color: #ffffff !important;
+}
+body.dark-mode .btn-action-edit:hover {
+    background-color: #d68910 !important;
+}
+
+.btn-action-delete {
+    background-color: #d32f2f !important; /* Vermelho mais brilhante em light mode */
+    color: #ffffff !important;
+    border: none !important;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color 0.2s;
+}
+.btn-action-delete:hover {
+    background-color: #b71c1c !important;
+}
+
+body.dark-mode .btn-action-delete {
+    background-color: #ef5350 !important; /* Vermelho vibrante mas elegante em dark mode */
+    color: #ffffff !important;
+}
+body.dark-mode .btn-action-delete:hover {
+    background-color: #e53935 !important;
 }

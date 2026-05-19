@@ -12,11 +12,13 @@ from django.contrib.auth import authenticate, login, logout
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.views.decorators.csrf import csrf_exempt
+from .permissions import EventoACL, UtilizadorACL, ReceitaACL, FrigorificoACL, IngredienteACL
 
 QUERY_LIMIT = int(os.environ.get('QUERY_LIMIT', 150))
 
 @csrf_exempt
 @api_view(['GET', 'POST'])
+@permission_classes([UtilizadorACL])
 def utilizadores(request):
 
     if request.method == 'GET': 
@@ -33,31 +35,42 @@ def utilizadores(request):
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @csrf_exempt
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+@permission_classes([UtilizadorACL])
 def utilizador_detail(request, utilizador_id):
     try:
         utilizador = Utilizador.objects.get(pk=utilizador_id)
     except Utilizador.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    permission = UtilizadorACL()
+    if not permission.has_object_permission(request, utilizador_detail, utilizador):
+        return Response({'detail': 'Sem permissão.'}, status=status.HTTP_403_FORBIDDEN)
+
     if request.method == 'GET':
         serializer = UtilizadorSerializer(utilizador)
         return Response(serializer.data)
 
-    if request.method == 'PUT':
-        serializer = UtilizadorSerializer(utilizador, data=request.data)
+    elif request.method in ['PUT', 'PATCH']:
+        partial = (request.method == 'PATCH')
+        serializer = UtilizadorSerializer(utilizador, data=request.data, partial=partial)
         if serializer.is_valid():
             serializer.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        utilizador.delete()
+        utilizador.user.is_active = False
+        utilizador.user.save()
+        utilizador.is_active = False
+        utilizador.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @csrf_exempt
 @api_view(['GET'])
+@permission_classes([FrigorificoACL])
 def utilizador_frigorifico(request, utilizador_id):
     try:
         utilizador = Utilizador.objects.get(pk=utilizador_id)
@@ -68,6 +81,10 @@ def utilizador_frigorifico(request, utilizador_id):
             utilizador.frigorifico = frigorifico
             utilizador.save()
             
+        permission = FrigorificoACL()
+        if not permission.has_object_permission(request, utilizador_frigorifico, frigorifico):
+            return Response({'detail': 'Sem permissão.'}, status=status.HTTP_403_FORBIDDEN)
+            
         serializer = FrigorificoSerializer(frigorifico)
         return Response(serializer.data)
     except Utilizador.DoesNotExist:
@@ -76,8 +93,7 @@ def utilizador_frigorifico(request, utilizador_id):
 
 @csrf_exempt
 @api_view(['GET', 'POST'])
-@permission_classes([AllowAny])
-@authentication_classes([])
+@permission_classes([ReceitaACL])
 def receitas(request):
     if request.method == 'GET':
         receita_list = Receita.objects.all()[:QUERY_LIMIT]
@@ -131,13 +147,16 @@ def receitas(request):
 
 @csrf_exempt
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
-@permission_classes([AllowAny])
-@authentication_classes([])
+@permission_classes([ReceitaACL])
 def receita_detail(request, receita_id):
     try:
         receita = Receita.objects.get(pk=receita_id)
     except Receita.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    permission = ReceitaACL()
+    if not permission.has_object_permission(request, receita_detail, receita):
+        return Response({'detail': 'Você não tem permissão para esta receita.'}, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
         serializer = ReceitaSerializer(receita)
@@ -152,7 +171,8 @@ def receita_detail(request, receita_id):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
     elif request.method == 'DELETE':
-        receita.delete()
+        receita.is_active = False
+        receita.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -181,6 +201,7 @@ def avaliar_receita(request):
         return Response({'error': 'Utilizador ou Receita não encontrados'}, status=status.HTTP_404_NOT_FOUND)
 @csrf_exempt
 @api_view(['GET', 'POST'])
+@permission_classes([EventoACL])
 def eventos(request):
     if request.method == 'GET':
         evento_list = Evento.objects.all()
@@ -200,11 +221,16 @@ def eventos(request):
 
 @csrf_exempt
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+@permission_classes([EventoACL])
 def evento_detail(request, evento_id):
     try:
         evento = Evento.objects.get(pk=evento_id)
     except Evento.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    permission = EventoACL()
+    if not permission.has_object_permission(request, evento_detail, evento):
+        return Response({'detail': 'Você não tem permissão para este evento.'}, status=status.HTTP_403_FORBIDDEN)
     if request.method == 'GET':
         serializer = EventoSerializer(evento)
         return Response(serializer.data)
@@ -216,12 +242,14 @@ def evento_detail(request, evento_id):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
-        evento.delete()
+        evento.is_active = False
+        evento.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @csrf_exempt
 @api_view(['GET', 'POST'])
+@permission_classes([IngredienteACL])
 def ingredientes(request):
     if request.method == 'GET':
         ingrediente_list = Ingrediente.objects.all()
@@ -236,11 +264,16 @@ def ingredientes(request):
 
 @csrf_exempt
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IngredienteACL])
 def ingrediente_detail(request, ingrediente_id):
     try:
         ingrediente = Ingrediente.objects.get(pk=ingrediente_id)
     except Ingrediente.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    permission = IngredienteACL()
+    if not permission.has_object_permission(request, ingrediente_detail, ingrediente):
+        return Response({'detail': 'Sem permissão.'}, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
         serializer = IngredienteSerializer(ingrediente)
@@ -251,12 +284,14 @@ def ingrediente_detail(request, ingrediente_id):
             serializer.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
     elif request.method == 'DELETE':
-        ingrediente.delete()
+        ingrediente.is_active = False
+        ingrediente.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @csrf_exempt
 @api_view(['GET', 'POST'])
+@permission_classes([FrigorificoACL])
 def frigorificos(request):
     if request.method == 'GET':
         frigorifico_list = Frigorifico.objects.all()
@@ -271,13 +306,16 @@ def frigorificos(request):
 
 @csrf_exempt
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
-@permission_classes([AllowAny])
-@authentication_classes([])
+@permission_classes([FrigorificoACL])
 def frigorifico_detail(request, frigorifico_id):
     try:
         frigorifico = Frigorifico.objects.get(pk=frigorifico_id)
     except Frigorifico.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    permission = FrigorificoACL()
+    if not permission.has_object_permission(request, frigorifico_detail, frigorifico):
+        return Response({'detail': 'Sem permissão.'}, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
         serializer = FrigorificoSerializer(frigorifico)
@@ -290,7 +328,8 @@ def frigorifico_detail(request, frigorifico_id):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
-        frigorifico.delete()
+        frigorifico.is_active = False
+        frigorifico.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -370,14 +409,72 @@ def signup(request):
     novo_frigorifico = Frigorifico.objects.create()
 
     # Utilizador do nosso modelo
-    Utilizador.objects.create(
+    utilizador = Utilizador.objects.create(
         user=user, 
         frigorifico=novo_frigorifico,
         nome=firstName,
-        apelido=lastName
+        apelido=lastName,
+        role='User'
     )
     
-    return Response({'msg': 'user ' + user.username + ' created'}, status=status.HTTP_201_CREATED)
+    return Response({
+        'msg': 'user ' + user.username + ' created',
+        'utilizadorId': utilizador.id
+    }, status=status.HTTP_201_CREATED)
+
+
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes([UtilizadorACL])
+def admin_create_user(request):
+    firstName = request.data.get('firstName')
+    lastName = request.data.get('lastName')
+    username = request.data.get('username')
+    password = request.data.get('password')
+    email = request.data.get('email')
+    role = request.data.get('role', 'User')
+    
+    if not all([firstName, lastName, username, password, email]):
+        return Response({'msg': 'invalid input'}, status=status.HTTP_400_BAD_REQUEST)
+
+    from .moderator import validar_texto
+    from rest_framework.exceptions import ValidationError
+    try:
+        validar_texto(firstName, "nome")
+        validar_texto(lastName, "apelido")
+        validar_texto(username, "username")
+    except ValidationError as e:
+        err_msg = e.detail[0] if isinstance(e.detail, list) else str(e.detail)
+        return Response({'msg': err_msg}, status=status.HTTP_400_BAD_REQUEST)
+
+    if User.objects.filter(username=username).exists():
+        return Response({'msg': 'username already exists'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    imagem = request.FILES.get('imagem')
+
+    user = User.objects.create_user(
+        username=username, 
+        password=password, 
+        email=email,
+        first_name=firstName,
+        last_name=lastName
+    )
+
+    novo_frigorifico = Frigorifico.objects.create()
+
+    utilizador_params = {
+        'user': user,
+        'frigorifico': novo_frigorifico,
+        'nome': firstName,
+        'apelido': lastName,
+        'role': role
+    }
+    if imagem:
+        utilizador_params['imagem'] = imagem
+
+    Utilizador.objects.create(**utilizador_params)
+    
+    return Response({'msg': f'User {user.username} created with role {role}'}, status=status.HTTP_201_CREATED)
 
 
 @csrf_exempt
@@ -412,7 +509,7 @@ def user_view_Id(request):
     return Response({'user_id': request.user.id})
 
 @csrf_exempt
-@api_view(['GET', 'PUT'])  # <--- Adicionado o PUT aqui
+@api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
 def user_info(request, id):
     try:

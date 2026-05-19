@@ -7,25 +7,22 @@ import PopupModal from '../maincomponents/PopupModal.jsx';
 import axios from 'axios';
 
 const EditarPerfil = () => {
-  const URL_USER = import.meta.env.VITE_API_BASE_URL + '/user_info/';
-  const URL_USER_INFO = import.meta.env.VITE_API_BASE_URL + '/utilizadores/';
+  const URL_USER = 'http://localhost:8000/idjango/api' + '/user_info/';
+  const URL_USER_INFO = 'http://localhost:8000/idjango/api' + '/utilizadores/';
   
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const userId = localStorage.getItem('utilizadorId');
 
-  // Estados dos Modais e Dados Originais
   const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
   const [userData, setUserData] = useState({ username: '', nome: '', apelido: '', imagem: '', user: null, frigorifico: null });
   const [userInfo, setUserInfo] = useState({ email: '', username: '' });
 
-  // Estados dos Inputs do Formulário
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [bio, setBio] = useState('');
 
-  // Estados para Gestão da Imagem de Perfil
   const [foto, setFoto] = useState(null);
   const [fotoPreview, setFotoPreview] = useState(null);
 
@@ -49,20 +46,18 @@ const EditarPerfil = () => {
       return;
     }
 
-    // Buscar info detalhada do utilizador (Tabela Utilizadores)
     axios.get(`${URL_USER_INFO}${userId}`, { withCredentials: true })
       .then(res => {
         setUserData(res.data);
         setFirstName(res.data.nome || '');
         setLastName(res.data.apelido || '');
-        setBio(res.data.bio || ''); // CORREÇÃO: bio pertence à tabela Utilizador
+        setBio(res.data.bio || '');
         if (res.data.imagem) {
           setFotoPreview(res.data.imagem);
         }
       })
       .catch(err => console.error("Erro ao carregar perfil (utilizador):", err));
 
-    // Buscar info da tabela User base do Django
     axios.get(`${URL_USER}${userId}`, { withCredentials: true })
       .then(res => {
         setUserInfo(res.data);
@@ -84,7 +79,6 @@ const EditarPerfil = () => {
       ?.split('=')[1];
   };
 
-  // Submissão do Formulário (Guardar Alterações)
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -93,7 +87,6 @@ const EditarPerfil = () => {
       return;
     }
 
-    // 1. Validação do Formato do E-mail
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.trim()) {
       showPopup('Campo Obrigatório', 'Por favor, insira um e-mail.');
@@ -104,13 +97,11 @@ const EditarPerfil = () => {
       return;
     }
 
-    // 2. CORREÇÃO: Construção dos dados para a tabela Utilizadores
     const formDataUtilizador = new FormData();
     formDataUtilizador.append('nome', firstName);
     formDataUtilizador.append('apelido', lastName);
-    formDataUtilizador.append('bio', bio); // Mudado para aqui!
+    formDataUtilizador.append('bio', bio);
     
-    // O Django exige a chave estrangeira do User e do Frigorifico no PUT
     if (userData.user) formDataUtilizador.append('user', userData.user);
     if (userData.frigorifico) formDataUtilizador.append('frigorifico', userData.frigorifico);
     
@@ -118,9 +109,8 @@ const EditarPerfil = () => {
       formDataUtilizador.append('imagem', foto);
     }
 
-    // 3. CORREÇÃO: Construção dos dados para a tabela User base (Django)
     const dataUser = {
-      username: userInfo.username, // Obrigatório pelo UserSerializer no PUT
+      username: userInfo.username,
       email: email,
       first_name: firstName,
       last_name: lastName
@@ -129,14 +119,14 @@ const EditarPerfil = () => {
     const csrfToken = getCSRFToken();
 
     try {
-      // Pedido 1: Atualiza Tabela Utilizadores
       await axios.put(`${URL_USER_INFO}${userId}`, formDataUtilizador, {
-        headers: { 'X-CSRFToken': csrfToken,'Content-Type': 'multipart/form-data' 
+        headers: { 
+          'X-CSRFToken': csrfToken,
+          'Content-Type': 'multipart/form-data' 
         },
         withCredentials: true
       });
 
-      // Pedido 2: Atualiza Tabela User
       await axios.put(`${URL_USER}${userId}`, dataUser, {
         headers: { 
           'X-CSRFToken': csrfToken,
@@ -171,7 +161,6 @@ const EditarPerfil = () => {
           <h1 className="page-title-underline">Editar Perfil</h1>
           <div className="create-recipe-container">
             
-            {/* COLUNA ESQUERDA: Formulário */}
             <div className="recipe-form-section">
               <div className="form-group">
                 <label>Nome:</label>
@@ -207,7 +196,7 @@ const EditarPerfil = () => {
                 <label>Biografia:</label>
                 <textarea
                   className="input-beige"
-                  placeholder={userData.bio || "Conta um pouco sobre ti..."} // Ajustado placeholder
+                  placeholder={userData.bio || "Conta um pouco sobre ti..."}
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
                   style={{ 
@@ -220,7 +209,6 @@ const EditarPerfil = () => {
               </div> 
             </div>
 
-            {/* COLUNA DIREITA: Upload da Foto de Perfil + Ações */}
             <div className="recipe-image-section">
               <div
                 className="image-upload-placeholder"

@@ -13,15 +13,14 @@ const ExplorarReceitas = () => {
     const location = useLocation();
     const autoFilterAttempted = useRef(false);
 
-    const RECEITAS_URL = import.meta.env.VITE_API_BASE_URL + '/receitas/';
-    const UTILIZADORES_URL = import.meta.env.VITE_API_BASE_URL + '/utilizadores/';
+    const RECEITAS_URL = 'http://localhost:8000/idjango/api' + '/receitas/';
+    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api' + '/utilizadores/';
 
     const [receitas, setReceitas] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [isFridgeFilterActive, setIsFridgeFilterActive] = useState(false);
     const [fridgeIngredients, setFridgeIngredients] = useState([]);
 
-    // Paginação
     const [currentPage, setCurrentPage] = useState(1);
     const recipesPerPage = 20;
 
@@ -53,8 +52,6 @@ const ExplorarReceitas = () => {
     const handleFridgeFilterToggle = (forceValue) => {
         const userId = localStorage.getItem('utilizadorId');
 
-        // Se forceValue for um booleano, usamos esse valor. 
-        // Se for um evento (onClick), ignoramos e alternamos o estado atual.
         const shouldBeActive = typeof forceValue === 'boolean' ? forceValue : !isFridgeFilterActive;
 
         if (!userId) {
@@ -76,7 +73,6 @@ const ExplorarReceitas = () => {
             return;
         }
 
-        // Tenta ir buscar o frigorífico do utilizador
         axios.get(`${UTILIZADORES_URL}${userId}/frigorifico`)
             .then(res => {
                 const ingredientes = res.data.ingredientes;
@@ -134,11 +130,9 @@ const ExplorarReceitas = () => {
     };
 
     const filteredReceitas = receitas.filter(receita => {
-        // Filtro da barra de pesquisa
         const nomeReceita = receita.nome || "";
         const matchesSearch = nomeReceita.toLowerCase().includes(searchQuery.toLowerCase());
 
-        // Filtro do frigorífico (mostrar receitas que usam pelo menos um ingrediente do frigorífico)
         let matchesFridge = true;
         if (isFridgeFilterActive) {
             if (fridgeIngredients.length === 0) {
@@ -146,15 +140,12 @@ const ExplorarReceitas = () => {
             } else if (!receita.ingredientes || receita.ingredientes.length === 0) {
                 matchesFridge = false;
             } else {
-                // Obter IDs do frigorífico como números
                 const fridgeIds = (fridgeIngredients || []).map(id => {
                     if (typeof id === 'object' && id !== null) return Number(id.id);
                     return Number(id);
                 });
 
-                // Filtra apenas as receitas que possuem TODOS os itens do seu frigorífico
                 matchesFridge = fridgeIds.every(fId => {
-                    // Para cada item que VOCÊ tem, verificamos se ele está na RECEITA
                     return (receita.ingredientes || []).some(ing => {
                         const recipeIngId = typeof ing === 'object' && ing !== null ? Number(ing.id) : Number(ing);
                         return recipeIngId === Number(fId);
@@ -223,7 +214,7 @@ const ExplorarReceitas = () => {
                                         <div className="recipe-image-placeholder">
                                             {receita.foto_url ? (
                                                 <img
-                                                    src={`${import.meta.env.VITE_MEDIA_BASE_URL}${receita.foto_url}`}
+                                                    src={`http://localhost:8000${receita.foto_url}`}
                                                     alt={receita.nome}
                                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 />

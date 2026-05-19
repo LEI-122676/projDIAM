@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Perfil from "./components/perfil-frigorifico-login/perfil.jsx";
 import EditarPerfil from "./components/perfil-frigorifico-login/editarPerfil.jsx";
 import Homepage from "./components/homepage.jsx";
@@ -12,6 +12,8 @@ import CriarReceita from "./components/receitas/criar_receita.jsx";
 import VerReceita from "./components/receitas/detalhes_receita.jsx";
 import AsMinhasReceitas from "./components/receitas/minhas_receitas.jsx";
 import Login from "./components/perfil-frigorifico-login/login.jsx";
+import AdminCriarUtilizador from "./components/admin/criarUtilizador.jsx";
+import GerirUtilizadores from "./components/admin/gerirUtilizadores.jsx";
 
 function App() {
     return (
@@ -31,6 +33,8 @@ function App() {
         <Route path="/eventos/verEvento" element={<VerEvento/>} />
         <Route path="/receitas/criar-receita" element={<CriarReceita/>} />
         <Route path="/receitas/ver-receita" element={<VerReceita/>} />
+        <Route path="/admin/criar-utilizador" element={<AdminCriarUtilizador/>} />
+        <Route path="/admin/gerir-utilizadores" element={<GerirUtilizadores/>} />
       </Routes>
     </BrowserRouter>
   )
