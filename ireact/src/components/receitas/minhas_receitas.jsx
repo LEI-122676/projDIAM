@@ -6,7 +6,7 @@ import iconeFiltro from "../../assets/filtro.svg";
 import iconeFrig from "../../assets/frigorifico.svg";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import PopupModal from '../maincomponents/PopupModal.jsx';
+import PopupModal from '../maincomponents/popupModal.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
 
 const AsMinhasReceitas = () => {
