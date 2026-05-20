@@ -6,6 +6,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import '../../css/styles.css';
 import PopupModal from '../maincomponents/popupModal.jsx';
+import { getCSRFToken } from '../../utils/csrf.js';
 
 const VerEvento = () => {
     const navigate = useNavigate();
@@ -65,7 +66,7 @@ const VerEvento = () => {
                 })
                 .catch(err => console.error("Erro ao obter papel do utilizador:", err));
         }
-    }, [eventoId, utilizadorId, navigate]);
+    }, [eventoId, utilizadorId, navigate, EVENTO_URL]);
 
     const getImageUrl = (caminho) => {
         if (!caminho) return "http://localhost:8000/idjango/media/defaultEvent.png";
@@ -87,7 +88,7 @@ const VerEvento = () => {
                 if (parsed && typeof parsed === 'object' && parsed.inicio && parsed.fim) {
                     return `Inicio: ${parsed.inicio}, Fim: ${parsed.fim}`;
                 }
-            } catch (e) {}
+            } catch (e) { /* empty */ }
             return h.replace(/"/g, '');
         }
         return JSON.stringify(h).replace(/"/g, '');
@@ -113,7 +114,10 @@ const VerEvento = () => {
             inscritos: newInscritos
         };
 
-        axios.patch(`${EVENTO_URL}${eventoId}`, updatedPayload)
+        axios.patch(`${EVENTO_URL}${eventoId}`, updatedPayload, { 
+            headers: { 'X-CSRFToken': getCSRFToken() },
+            withCredentials: true 
+        })
             .then(res => {
                 setEvento(prev => ({
                     ...prev,
@@ -148,7 +152,10 @@ const VerEvento = () => {
             confirmText: 'Apagar',
             cancelText: 'Cancelar',
             onConfirm: () => {
-                axios.delete(`${EVENTO_URL}${eventoId}`)
+                axios.delete(`${EVENTO_URL}${eventoId}`, {
+                    headers: { 'X-CSRFToken': getCSRFToken() },
+                    withCredentials: true
+                })
                     .then(() => {
                         setPopupConfig({
                             isOpen: true,

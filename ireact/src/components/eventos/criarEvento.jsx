@@ -1,4 +1,4 @@
-import React from 'react';
+import 'react';
 import { useState, useEffect, useRef } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
@@ -6,6 +6,7 @@ import '../../css/styles.css'
 import { useNavigate as useReactNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import PopupModal from '../maincomponents/popupModal.jsx';
+import { getCSRFToken } from '../../utils/csrf.js';
 
 const CriarEvento = () => {
 
@@ -92,12 +93,6 @@ const CriarEvento = () => {
         setFotoPreview(URL.createObjectURL(file));
     };
 
-    const getCSRFToken = () => {
-        return document.cookie.split('; ')
-            .find(row => row.startsWith('csrftoken='))
-            ?.split('=')[1];
-    };
-
     const handleDateWrapperClick = () => {
         if (dateInputRef.current) {
             try {
@@ -134,10 +129,11 @@ const CriarEvento = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!nome.trim()) { showPopup('Campo Obrigatório', 'Por favor, dê um nome ao evento.'); return; }
-        if (descricao.length < 10) { showPopup('Campo Obrigatório', 'Por favor, dê uma descrição ao evento (tamanho mínimo de dez caracteres).'); return; }
-        if (!dataEvento) { showPopup('Campo Obrigatório', 'Por favor, selecione a data do evento.'); return; }
-        if (!horario) { showPopup('Campo Obrigatório', 'Por favor, defina um horário para o evento.'); return; }
+        if (!nome.trim()) { showPopup('Campos em Branco', 'Por favor, não deixe o nome do evento em branco.'); return; }
+        if (!descricao.trim()) { showPopup('Campos em Branco', 'Por favor, não deixe a descrição em branco.'); return; }
+        if (descricao.trim().length < 10) { showPopup('Descrição Curta', 'A descrição do evento tem de ter no mínimo 10 caracteres.'); return; }
+        if (!dataEvento) { showPopup('Campos em Branco', 'Por favor, não deixe a data do evento em branco.'); return; }
+        if (!horario) { showPopup('Campos em Branco', 'Por favor, não deixe o horário do evento em branco.'); return; }
         if (!utilizadorId) { showPopup('Erro', 'Não foi possível identificar o utilizador. Faz login novamente.'); return; }
 
         const formData = new FormData();
@@ -156,7 +152,7 @@ const CriarEvento = () => {
 
 
         const requestPromise = editEvento
-            ? axios.patch(`${URL_CRIAR_EVENTO}${editEvento.id}/`, formData, {
+            ? axios.patch(`${URL_CRIAR_EVENTO}${editEvento.id}`, formData, {
                 headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'multipart/form-data' },
                 withCredentials: true
             })

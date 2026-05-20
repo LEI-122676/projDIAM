@@ -15,16 +15,15 @@ class Ingrediente(models.Model):
         return self.nome
 
 class Frigorifico(models.Model):
-    ingredientes = models.ManyToManyField(Ingrediente) #Por ser ManyToManyField, nao precisamos de null=true
+    ingredientes = models.ManyToManyField(Ingrediente)
     is_active = models.BooleanField(default=True)
 
 class Utilizador(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)       # "extends"
-    frigorifico = models.OneToOneField(Frigorifico, on_delete=models.DO_NOTHING, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    frigorifico = models.OneToOneField(Frigorifico, on_delete=models.DO_NOTHING)
     imagem = models.ImageField(upload_to='profile_pics', default='defaultProfile.png')
     bio = models.TextField(null=True)
-    
-    # Load roles dynamically from the file specified in .env
+
     _roles_file = os.environ.get('UTILIZADOR_ROLES_FILE', 'user_roles.json')
     _roles_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), _roles_file)
     try:
@@ -89,7 +88,6 @@ class Comentario(models.Model):
 
     texto = models.TextField()
     data = models.DateTimeField(auto_now_add=True)
-    # TODO - upvotes?
 
     def __str__(self):
         return f"Utilizador: {self.utilizador}\nTexto:{self.texto}"

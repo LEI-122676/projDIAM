@@ -11,12 +11,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from django.views.decorators.csrf import csrf_exempt
+
 from .permissions import EventoACL, UtilizadorACL, ReceitaACL, FrigorificoACL, IngredienteACL
 
 QUERY_LIMIT = int(os.environ.get('QUERY_LIMIT', 150))
 
-@csrf_exempt
 @api_view(['GET', 'POST'])
 @permission_classes([UtilizadorACL])
 def utilizadores(request):
@@ -34,7 +33,6 @@ def utilizadores(request):
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 @permission_classes([UtilizadorACL])
 def utilizador_detail(request, utilizador_id):
@@ -68,7 +66,6 @@ def utilizador_detail(request, utilizador_id):
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt
 @api_view(['GET'])
 @permission_classes([FrigorificoACL])
 def utilizador_frigorifico(request, utilizador_id):
@@ -90,7 +87,6 @@ def utilizador_frigorifico(request, utilizador_id):
         return Response({'msg': 'Utilizador não encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
 
-@csrf_exempt
 @api_view(['GET', 'POST'])
 @permission_classes([ReceitaACL])
 def receitas(request):
@@ -144,7 +140,6 @@ def receitas(request):
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 @permission_classes([ReceitaACL])
 def receita_detail(request, receita_id):
@@ -176,7 +171,6 @@ def receita_detail(request, receita_id):
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-@csrf_exempt
 @api_view(['POST'])
 @permission_classes([AllowAny])
 @authentication_classes([])
@@ -198,7 +192,6 @@ def avaliar_receita(request):
 
     except (Utilizador.DoesNotExist, Receita.DoesNotExist):
         return Response({'error': 'Utilizador ou Receita não encontrados'}, status=status.HTTP_404_NOT_FOUND)
-@csrf_exempt
 @api_view(['GET', 'POST'])
 @permission_classes([EventoACL])
 def eventos(request):
@@ -218,7 +211,6 @@ def eventos(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 @permission_classes([EventoACL])
 def evento_detail(request, evento_id):
@@ -246,7 +238,6 @@ def evento_detail(request, evento_id):
         return Response(status=status.HTTP_204_NO_CONTENT)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt
 @api_view(['GET', 'POST'])
 @permission_classes([IngredienteACL])
 def ingredientes(request):
@@ -261,7 +252,6 @@ def ingredientes(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IngredienteACL])
 def ingrediente_detail(request, ingrediente_id):
@@ -288,7 +278,6 @@ def ingrediente_detail(request, ingrediente_id):
         return Response(status=status.HTTP_204_NO_CONTENT)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt
 @api_view(['GET', 'POST'])
 @permission_classes([FrigorificoACL])
 def frigorificos(request):
@@ -303,7 +292,6 @@ def frigorificos(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 @permission_classes([FrigorificoACL])
 def frigorifico_detail(request, frigorifico_id):
@@ -332,7 +320,6 @@ def frigorifico_detail(request, frigorifico_id):
         return Response(status=status.HTTP_204_NO_CONTENT)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt
 @api_view(['GET', 'POST'])
 def comentarios(request):
     if request.method == 'GET':
@@ -346,7 +333,6 @@ def comentarios(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 def comentario_detail(request, comentario_id):
     try:
@@ -370,7 +356,6 @@ def comentario_detail(request, comentario_id):
 
 ##Authenticação e autorização
 
-@csrf_exempt
 @api_view(['POST'])
 def signup(request):
     firstName = request.data.get('firstName')
@@ -420,7 +405,6 @@ def signup(request):
     }, status=status.HTTP_201_CREATED)
 
 
-@csrf_exempt
 @api_view(['POST'])
 @permission_classes([UtilizadorACL])
 def admin_create_user(request):
@@ -474,7 +458,6 @@ def admin_create_user(request):
     return Response({'msg': f'User {user.username} created with role {role}'}, status=status.HTTP_201_CREATED)
 
 
-@csrf_exempt
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
@@ -504,29 +487,3 @@ def user_view(request):
 @permission_classes([IsAuthenticated])
 def user_view_Id(request):
     return Response({'user_id': request.user.id})
-
-@csrf_exempt
-@api_view(['GET', 'PUT'])
-@permission_classes([IsAuthenticated])
-def user_info(request, id):
-    try:
-        user = User.objects.get(id=id)
-    except User.DoesNotExist:
-        return Response({'error': 'Utilizador não encontrado'}, status=status.HTTP_404_NOT_FOUND)
-
-    # Buscar informações do User
-    if request.method == 'GET':
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
-
-    # Guardar alterações do User
-    elif request.method == 'PUT':
-        # Passamos partial=True caso não envies todos os dados obrigatórios do modelo User
-        serializer = UserSerializer(user, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        
-        # Se houver erros de validação (ex: username em duplicado), devolve ao frontend
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    return None

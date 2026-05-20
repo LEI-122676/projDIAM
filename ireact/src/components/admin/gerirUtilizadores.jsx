@@ -5,6 +5,7 @@ import Sidebar from '../maincomponents/sidebar.jsx';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import axios from 'axios';
 import '../../css/styles.css';
+import { getCSRFToken } from '../../utils/csrf.js';
 
 const GerirUtilizadores = () => {
     const navigate = useNavigate();
@@ -67,7 +68,10 @@ const GerirUtilizadores = () => {
     };
 
     const handleSaveRole = (user) => {
-        axios.patch(`http://localhost:8000/idjango/api/utilizadores/${user.id}`, { role: user.role }, { withCredentials: true })
+        axios.patch(`http://localhost:8000/idjango/api/utilizadores/${user.id}`, { role: user.role }, { 
+            headers: { 'X-CSRFToken': getCSRFToken() },
+            withCredentials: true 
+        })
             .then(() => {
                 setPopupConfig({
                     isOpen: true,
@@ -103,7 +107,10 @@ const GerirUtilizadores = () => {
             confirmText: 'Eliminar',
             cancelText: 'Cancelar',
             onConfirm: () => {
-                axios.delete(`http://localhost:8000/idjango/api/utilizadores/${user.id}`, { withCredentials: true })
+                axios.delete(`http://localhost:8000/idjango/api/utilizadores/${user.id}`, { 
+                    headers: { 'X-CSRFToken': getCSRFToken() },
+                    withCredentials: true 
+                })
                     .then(() => {
                         setPopupConfig({
                             isOpen: true,

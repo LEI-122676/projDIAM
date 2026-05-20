@@ -6,6 +6,7 @@ import axios from 'axios';
 import '../../css/styles.css';
 import PopupModal from '../maincomponents/PopupModal.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
+import { getCSRFToken } from '../../utils/csrf.js';
 
 const VerReceita = () => {
     const navigate = useNavigate();
@@ -127,7 +128,10 @@ const VerReceita = () => {
         } else {
             newGuardadores.push(parseInt(userId));
         }
-        axios.patch(RECEITA_URL + recipeId, { guardadores: newGuardadores }, { withCredentials: true })
+        axios.patch(RECEITA_URL + recipeId, { guardadores: newGuardadores }, { 
+            headers: { 'X-CSRFToken': getCSRFToken() },
+            withCredentials: true 
+        })
             .then(res => {
                 setReceita(res.data);
                 setGuardado(!isAlreadySaved);
@@ -164,7 +168,10 @@ const VerReceita = () => {
             confirmText: 'Apagar',
             cancelText: 'Cancelar',
             onConfirm: () => {
-                axios.delete(RECEITA_URL + recipeId)
+                axios.delete(RECEITA_URL + recipeId, {
+                    headers: { 'X-CSRFToken': getCSRFToken() },
+                    withCredentials: true
+                })
                     .then(() => {
                         setPopupConfig({
                             isOpen: true,
@@ -203,6 +210,9 @@ const VerReceita = () => {
             utilizador: parseInt(userId),
             receita: parseInt(recipeId),
             nota: novaClassificacao
+        }, {
+            headers: { 'X-CSRFToken': getCSRFToken() },
+            withCredentials: true
         })
         .then(res => {
             setReceita(res.data);
@@ -236,7 +246,10 @@ const VerReceita = () => {
             texto: novoComentario
         };
 
-        axios.post(COMENTARIOS_URL, payload)
+        axios.post(COMENTARIOS_URL, payload, {
+            headers: { 'X-CSRFToken': getCSRFToken() },
+            withCredentials: true
+        })
             .then(res => {
                 setComentarios([...comentarios, res.data]);
                 setNovoComentario('');

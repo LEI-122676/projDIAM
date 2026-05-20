@@ -5,6 +5,7 @@ import Sidebar from '../maincomponents/sidebar.jsx';
 import axios from 'axios';
 import '../../css/styles.css';
 import PopupModal from '../maincomponents/popupModal.jsx';
+import { getCSRFToken } from '../../utils/csrf.js';
 
 const Frigorifico = () => {
     const navigate = useNavigate();
@@ -83,7 +84,10 @@ const Frigorifico = () => {
 
         axios.patch(`${FRIGORIFICOS_URL}${fridgeId}`, {
             ingredientes: novaListaIds
-        }, { withCredentials: true })
+        }, { 
+            headers: { 'X-CSRFToken': getCSRFToken() },
+            withCredentials: true 
+        })
             .then(() => {
                 setIngredientesFrigorificoIds(novaListaIds);
             })

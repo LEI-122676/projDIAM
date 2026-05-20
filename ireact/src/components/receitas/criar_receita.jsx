@@ -5,6 +5,7 @@ import '../../css/styles.css'
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 import PopupModal from '../maincomponents/popupModal.jsx';
+import { getCSRFToken } from '../../utils/csrf.js';
 
 const CriarReceita = () => {
     const navigate = useNavigate();
@@ -104,20 +105,27 @@ const CriarReceita = () => {
         if (!nome.trim()) { showPopup('Campo Obrigatório', 'Por favor, dê um nome à receita.'); return; }
         if (!utilizadorId) { showPopup('Erro', 'Não foi possível identificar o utilizador. Faz login novamente.'); return; }
 
-        const passosFormatados = passos
-            .filter(p => p.trim() !== '')
-            .map((p, index) => {
-                const prefix = `Passo ${index + 1}: `;
-                if (p.startsWith(prefix)) return p;
-                if (p.match(/^Passo \d+:/)) return prefix + p.replace(/^Passo \d+:\s*/, '');
-                return prefix + p;
-            });
+        if (passos.some(p => p.trim() === '')) {
+            showPopup('Campos em Branco', 'Por favor, não deixe passos em branco. Preenche ou remove o campo vazio.');
+            return;
+        }
+
+        if (ingredientesList.some(ing => ing.trim() === '')) {
+            showPopup('Campos em Branco', 'Por favor, não deixe ingredientes em branco. Preenche ou remove o campo vazio.');
+            return;
+        }
+
+        const passosFormatados = passos.map((p, index) => {
+            const prefix = `Passo ${index + 1}: `;
+            if (p.startsWith(prefix)) return p;
+            if (p.match(/^Passo \d+:/)) return prefix + p.replace(/^Passo \d+:\s*/, '');
+            return prefix + p;
+        });
 
         if (passosFormatados.length === 0) { showPopup('Campo Obrigatório', 'Por favor, adicione pelo menos um passo.'); return; }
 
         const idsIngredientes = [];
         for (let ing of ingredientesList) {
-            if (ing.trim() === '') continue;
             const found = dbIngredientes.find(dbI => dbI.nome.toLowerCase() === ing.trim().toLowerCase());
             if (found) {
                 idsIngredientes.push(found.id);
@@ -143,12 +151,12 @@ const CriarReceita = () => {
         uniqueIds.forEach(id => formData.append('ingredientes', id));
 
         const requestPromise = editReceita
-            ? axios.patch(`${RECEITAS_URL}${editReceita.id}/`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
+            ? axios.patch(`${RECEITAS_URL}${editReceita.id}`, formData, {
+                headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'multipart/form-data' },
                 withCredentials: true
             })
             : axios.post(RECEITAS_URL, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
+                headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'multipart/form-data' },
                 withCredentials: true
             });
 
