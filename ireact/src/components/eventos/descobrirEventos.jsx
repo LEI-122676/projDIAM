@@ -9,7 +9,7 @@ import '../../css/styles.css';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useState, useRef } from 'react';
-import PopupModal from '../maincomponents/PopupModal.jsx';
+import PopupModal from '../maincomponents/popupModal.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
 
 const ExplorarEventos = () => {

@@ -4,7 +4,7 @@ import Sidebar from '../maincomponents/sidebar.jsx';
 import iconeLupa from "../../assets/lupa.svg";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import PopupModal from '../maincomponents/PopupModal.jsx';
+import PopupModal from '../maincomponents/popupModal.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
 
 const OsMeusEventos = () => {
