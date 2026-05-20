@@ -412,8 +412,6 @@ def signup(request):
     utilizador = Utilizador.objects.create(
         user=user, 
         frigorifico=novo_frigorifico,
-        nome=firstName,
-        apelido=lastName,
         role='User'
     )
     
