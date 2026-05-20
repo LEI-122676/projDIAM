@@ -425,7 +425,7 @@ html, body, #root {
     flex-direction: column;
     align-items: flex-start; /* Alinhado à esquerda como na imagem */
     padding: 0 10%;
-    max-width: 500px;
+    max-width: 50%;
 }
 
 .auth-title {
@@ -442,11 +442,11 @@ html, body, #root {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 90%;
+    width: 100%;
 }
 
 .auth-input {
-    width: 150%;
+    width: 100%;
     padding: 15px 25px;
     border: 1.5px solid #EAE6D6; /* Cor da borda suave */
     border-radius: 30px; /* Inputs ovais */
