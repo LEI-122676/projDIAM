@@ -10,6 +10,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useState, useRef } from 'react';
 import PopupModal from '../maincomponents/PopupModal.jsx';
+import Pagination from '../maincomponents/pagination.jsx';
 
 const ExplorarEventos = () => {
 
@@ -27,7 +28,7 @@ const ExplorarEventos = () => {
     const dateInputRef = useRef(null);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const eventsPerPage = 20;
+    const eventsPerPage = parseInt(import.meta.env.VITE_EVENTS_PER_PAGE || '20', 10);
 
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
@@ -41,15 +42,7 @@ const ExplorarEventos = () => {
             .catch( () => console.log("user not logged in"));
     
     },[]);
-
-    const handleSearch = (e) => {
-        e.preventDefault();
-        if (searchQuery.trim()) {
-            navigate(`/eventos?search=${encodeURIComponent(searchQuery.trim())}`);
-        }
-    };
-
-    const handleWrapperClick = (e) => {
+    const handleWrapperClick = () => {
         if (dateInputRef.current) {
             if (typeof dateInputRef.current.showPicker === 'function') {
                 dateInputRef.current.showPicker();
@@ -199,41 +192,12 @@ const ExplorarEventos = () => {
                             )}
                         </div>
 
-                        {Math.ceil(eventosFiltrados.length / eventsPerPage) > 1 && (
-                            <div className="pagination-container flex-center mt-30 gap-20-pb30">
-                                <button
-                                    className="btn-popup-confirm pagination-btn"
-                                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                    disabled={currentPage === 1}
-                                >
-                                    Anterior
-                                </button>
-                                
-                                <span className="pagination-page-display">
-                                    Página
-                                    <select
-                                        value={currentPage}
-                                        onChange={(e) => setCurrentPage(Number(e.target.value))}
-                                        className="page-select-dropdown"
-                                    >
-                                        {Array.from({ length: Math.ceil(eventosFiltrados.length / eventsPerPage) }, (_, i) => i + 1).map(num => (
-                                            <option key={num} value={num}>
-                                                {num}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    de {Math.ceil(eventosFiltrados.length / eventsPerPage)}
-                                </span>
-                                
-                                <button
-                                    className="btn-popup-confirm pagination-btn"
-                                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(eventosFiltrados.length / eventsPerPage)))}
-                                    disabled={currentPage === Math.ceil(eventosFiltrados.length / eventsPerPage)}
-                                >
-                                    Seguinte
-                                </button>
-                            </div>
-                        )}
+                        <Pagination
+                            currentPage={currentPage}
+                            totalItems={eventosFiltrados.length}
+                            itemsPerPage={eventsPerPage}
+                            onPageChange={setCurrentPage}
+                        />
                     </main>
                 </div>
                 <PopupModal 

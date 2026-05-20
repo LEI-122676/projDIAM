@@ -35,9 +35,18 @@ class EventoSerializer(serializers.ModelSerializer):
         return validar_texto(value, "descrição do evento")
 
 class ComentarioSerializer(serializers.ModelSerializer):
+    utilizador_nome = serializers.SerializerMethodField()
+
     class Meta:
         model = Comentario
         fields = '__all__'
+
+    def get_utilizador_nome(self, obj):
+        if obj.utilizador and obj.utilizador.user:
+            user_obj = obj.utilizador.user
+            nome_completo = f"{user_obj.first_name} {user_obj.last_name}".strip()
+            return nome_completo if nome_completo else user_obj.username
+        return "Utilizador Desconhecido"
 
     def validate_texto(self, value):
         return validar_texto(value, "texto do comentário")
@@ -87,17 +96,12 @@ class UserSerializer(serializers.ModelSerializer):
 class UtilizadorSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
     email = serializers.CharField(source='user.email', read_only=True)
+    first_name = serializers.CharField(source='user.first_name', read_only=True)
+    last_name = serializers.CharField(source='user.last_name', read_only=True)
 
     class Meta:
         model = Utilizador
         fields = '__all__'
 
-    def validate_nome(self, value):
-        return validar_texto(value, "nome")
-
-    def validate_apelido(self, value):
-        return validar_texto(value, "apelido")
-
     def validate_bio(self, value):
         return validar_texto(value, "biografia")
-

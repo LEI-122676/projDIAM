@@ -74,6 +74,9 @@ class ReceitaACL(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         if role in ['User', 'EventOrganizer']:
+            if request.method == 'PATCH':
+                if set(request.data.keys()) <= {'guardadores'}:
+                    return True
             if request.method in ['PUT', 'PATCH', 'DELETE']:
                 return obj.criador.user == request.user
             return True
@@ -94,9 +97,7 @@ class FrigorificoACL(permissions.BasePermission):
         if role == 'Admin':
             return True
         if role in ['User', 'EventOrganizer']:
-            if request.method in permissions.SAFE_METHODS or request.method in ['PUT', 'PATCH']:
-                # Ensure they only access their own fridge
-                return hasattr(request.user, 'utilizador') and request.user.utilizador.frigorifico == obj
+            return hasattr(request.user, 'utilizador') and request.user.utilizador.frigorifico == obj
         return False
 
 class IngredienteACL(permissions.BasePermission):

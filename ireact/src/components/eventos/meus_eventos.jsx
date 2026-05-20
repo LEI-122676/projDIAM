@@ -2,28 +2,23 @@ import { useState, useEffect } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
 import iconeLupa from "../../assets/lupa.svg";
-import iconeFiltro from "../../assets/filtro.svg";
-import iconeFrig from "../../assets/frigorifico.svg";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import PopupModal from '../maincomponents/PopupModal.jsx';
+import Pagination from '../maincomponents/pagination.jsx';
 
 const OsMeusEventos = () => {
     const navigate = useNavigate();
 
     const RECEITAS_URL = 'http://localhost:8000/idjango/api' + '/eventos/';
-    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api' + '/utilizadores/';
-
     const [eventos, setEventos] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     
     const [currentPageCriados, setCurrentPageCriados] = useState(1);
     const [currentPageInscritos, setCurrentPageInscritos] = useState(1);
-    const itemsPerPage = 8;
+    const itemsPerPage = parseInt(import.meta.env.VITE_ITEMS_PER_PAGE || '8', 10);
     
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
-    const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
-
     const userId = localStorage.getItem('utilizadorId');
 
     const getEventos = () => {
@@ -134,41 +129,12 @@ const OsMeusEventos = () => {
                                     </p>
                                 )}
                             </div>
-                            {Math.ceil(criadasPorMim.length / itemsPerPage) > 1 && (
-                                <div className="pagination-container flex-center mt-30 gap-20-pb30">
-                                    <button
-                                        className="btn-popup-confirm pagination-btn"
-                                        onClick={() => setCurrentPageCriados(prev => Math.max(prev - 1, 1))}
-                                        disabled={currentPageCriados === 1}
-                                    >
-                                        Anterior
-                                    </button>
-                                    
-                                    <span className="pagination-page-display">
-                                        Página
-                                        <select
-                                            value={currentPageCriados}
-                                            onChange={(e) => setCurrentPageCriados(Number(e.target.value))}
-                                            className="page-select-dropdown"
-                                        >
-                                            {Array.from({ length: Math.ceil(criadasPorMim.length / itemsPerPage) }, (_, i) => i + 1).map(num => (
-                                                <option key={num} value={num}>
-                                                    {num}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        de {Math.ceil(criadasPorMim.length / itemsPerPage)}
-                                    </span>
-                                    
-                                    <button
-                                        className="btn-popup-confirm pagination-btn"
-                                        onClick={() => setCurrentPageCriados(prev => Math.min(prev + 1, Math.ceil(criadasPorMim.length / itemsPerPage)))}
-                                        disabled={currentPageCriados === Math.ceil(criadasPorMim.length / itemsPerPage)}
-                                    >
-                                        Seguinte
-                                    </button>
-                                </div>
-                            )}
+                            <Pagination
+                                currentPage={currentPageCriados}
+                                totalItems={criadasPorMim.length}
+                                itemsPerPage={itemsPerPage}
+                                onPageChange={setCurrentPageCriados}
+                            />
                         </div>
 
                         <div className="mt-50">
@@ -214,41 +180,12 @@ const OsMeusEventos = () => {
                                     </p>
                                 )}
                             </div>
-                            {Math.ceil(eventosInscritos.length / itemsPerPage) > 1 && (
-                                <div className="pagination-container flex-center mt-30 gap-20-pb30">
-                                    <button
-                                        className="btn-popup-confirm pagination-btn"
-                                        onClick={() => setCurrentPageInscritos(prev => Math.max(prev - 1, 1))}
-                                        disabled={currentPageInscritos === 1}
-                                    >
-                                        Anterior
-                                    </button>
-                                    
-                                    <span className="pagination-page-display">
-                                        Página
-                                        <select
-                                            value={currentPageInscritos}
-                                            onChange={(e) => setCurrentPageInscritos(Number(e.target.value))}
-                                            className="page-select-dropdown"
-                                        >
-                                            {Array.from({ length: Math.ceil(eventosInscritos.length / itemsPerPage) }, (_, i) => i + 1).map(num => (
-                                                <option key={num} value={num}>
-                                                    {num}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        de {Math.ceil(eventosInscritos.length / itemsPerPage)}
-                                    </span>
-                                    
-                                    <button
-                                        className="btn-popup-confirm pagination-btn"
-                                        onClick={() => setCurrentPageInscritos(prev => Math.min(prev + 1, Math.ceil(eventosInscritos.length / itemsPerPage)))}
-                                        disabled={currentPageInscritos === Math.ceil(eventosInscritos.length / itemsPerPage)}
-                                    >
-                                        Seguinte
-                                    </button>
-                                </div>
-                            )}
+                            <Pagination
+                                currentPage={currentPageInscritos}
+                                totalItems={eventosInscritos.length}
+                                itemsPerPage={itemsPerPage}
+                                onPageChange={setCurrentPageInscritos}
+                            />
                         </div>
                     </div>
                 </main>

@@ -4,6 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 import os
+import json
 
 # Create your models here.
 class Ingrediente(models.Model):
@@ -23,12 +24,16 @@ class Utilizador(models.Model):
     imagem = models.ImageField(upload_to='profile_pics', default='defaultProfile.png')
     bio = models.TextField(null=True)
     
-    ROLES = (
-        ('Admin', 'Admin'),
-        ('User', 'User'),
-        ('Guest', 'Guest'),
-        ('EventOrganizer', 'EventOrganizer'),
-    )
+    # Load roles dynamically from the file specified in .env
+    _roles_file = os.environ.get('UTILIZADOR_ROLES_FILE', 'user_roles.json')
+    _roles_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), _roles_file)
+    try:
+        with open(_roles_path, 'r') as f:
+            _roles_data = json.load(f)
+        ROLES = tuple((r, r) for r in _roles_data.get('ROLES', []))
+    except (FileNotFoundError, json.JSONDecodeError):
+        ROLES = (('Admin', 'Admin'), ('User', 'User'), ('Guest', 'Guest'), ('EventOrganizer', 'EventOrganizer'))
+
     role = models.CharField(max_length=20, choices=ROLES, default='User')
     is_active = models.BooleanField(default=True)
     

@@ -7,16 +7,22 @@ import PopupModal from '../maincomponents/PopupModal.jsx';
 import axios from 'axios';
 
 const Perfil = () => {
-
-  const URL_USER = 'http://localhost:8000/idjango/api' + '/user_info/';
-  const URL_USER_INFO = 'http://localhost:8000/idjango/api' + '/utilizadores/';
+  const URL_UTILIZADOR = 'http://localhost:8000/idjango/api/utilizadores/';
   const navigate = useNavigate();
 
   const userId = localStorage.getItem('utilizadorId');
   const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
-  
-  const [userData, setUserData] = useState({ nome: '', apelido: '', imagem: '', bio: '' });
-  const [userInfo, setUserInfo] = useState({ username: '', email: '' });
+
+  // Guardamos tudo num único estado centralizado
+  const [userData, setUserData] = useState({
+    username: '',
+    email: '',
+    first_name: '',
+    last_name: '',
+    imagem: '',
+    bio: '',
+    role: ''
+  });
 
   useEffect(() => {
     if (!userId) {
@@ -32,22 +38,14 @@ const Perfil = () => {
       return;
     }
 
-    axios.get(`${URL_USER_INFO}${userId}`, { withCredentials: true })
+    // Apenas UM pedido resolve o teu perfil por completo!
+    axios.get(`${URL_UTILIZADOR}${userId}`, { withCredentials: true })
       .then(res => {
         setUserData(res.data);
-        console.log("Dados do Utilizador:", res.data);
+        console.log("Dados Completos do Perfil:", res.data);
       })
       .catch(err => {
-        console.error("Erro ao carregar perfil (utilizador):", err);
-      });
-
-    axios.get(`${URL_USER}${userId}`, { withCredentials: true })
-      .then(res => {
-        setUserInfo(res.data);
-        console.log("Dados do User base:", res.data);
-      })
-      .catch(err => {
-        console.error("Erro ao carregar perfil (user base):", err);
+        console.error("Erro ao carregar perfil:", err);
       });
   }, [userId, navigate]);
 
@@ -64,63 +62,65 @@ const Perfil = () => {
 
             <div className="profile-layout-container">
 
-            <div className="profile-details-card">
-              <div className="user-main-info">
-                <div className="user-avatar-large flex-center-overflow-hidden">
-                    <img 
-                      src={userData.imagem ? (userData.imagem.startsWith('http') ? userData.imagem : `http://localhost:8000${userData.imagem.startsWith('/') ? '' : '/'}${userData.imagem}`) : `http://localhost:8000/idjango/media/defaultProfile.png`} 
-                      alt="Imagem do utilizador" 
-                      className="cover-image-large-rounded" 
-                    />
+              <div className="profile-details-card">
+                <div className="user-main-info">
+                  <div className="user-avatar-large flex-center-overflow-hidden">
+                      <img
+                        src={userData.imagem ? (userData.imagem.startsWith('http') ? userData.imagem : `http://localhost:8000${userData.imagem.startsWith('/') ? '' : '/'}${userData.imagem}`) : `http://localhost:8000/idjango/media/defaultProfile.png`}
+                        alt="Imagem do utilizador"
+                        className="cover-image-large-rounded"
+                      />
+                  </div>
+                  <div className="user-names">
+                    {/* Usamos first_name e last_name que vêm mapeados do teu Serializer */}
+                    <h2 className="profile-name-text">{userData.first_name} {userData.last_name}</h2>
+                    <p className="profile-username-text">Username: {userData.username}</p>
+                  </div>
                 </div>
-                <div className="user-names">
-                  <h2 className="profile-name-text">{userData.nome} {userData.apelido}</h2>
-                  <p className="profile-username-text">Username: {userData.username}</p>
+
+                <hr className="profile-divider" />
+
+                <div className="user-extra-info">
+                  {/* Puxa diretamente do serializer também */}
+                  <span><strong>Email:</strong> {userData.email} </span>
+                  <br />
+                  <span><strong>Biografia:</strong> {userData.bio || "Sem biografia definida."}</span>
+                </div>
+
+                <div className="profile-actions">
+                  <button className="btn-edit-profile" onClick={() => navigate('/perfil/editar-perfil')}>Editar perfil</button>
+                  <button className="btn-logout-link" onClick={() => {
+                    axios.get('http://localhost:8000/idjango/api/logout/', { withCredentials: true })
+                      .then(() => {
+                        localStorage.removeItem('utilizadorId');
+                        navigate('/login');
+                        window.location.reload();
+                      })
+                      .catch(() => {
+                        localStorage.removeItem('utilizadorId');
+                        navigate('/login');
+                        window.location.reload();
+                      });
+                  }}>Log Out</button>
                 </div>
               </div>
 
-              <hr className="profile-divider" />
-
-              <div className="user-extra-info">
-                <span><strong>Email:</strong> {userData.email} </span>
-                <br />
-                <span><strong>Biografia:</strong> {userData.bio || "Sem biografia definida."}</span>
-              </div>
-
-              <div className="profile-actions">
-                <button className="btn-edit-profile" onClick={() => navigate('/perfil/editar-perfil')}>Editar perfil</button>
-                <button className="btn-logout-link" onClick={() => {
-                  axios.get('http://localhost:8000/idjango/api' + '/logout/', { withCredentials: true })
-                    .then(() => {
-                      localStorage.removeItem('utilizadorId');
-                      navigate('/login');
-                      window.location.reload();
-                    })
-                    .catch(() => {
-                      localStorage.removeItem('utilizadorId');
-                      navigate('/login');
-                      window.location.reload();
-                    });
-                }}>Log Out</button>
-              </div>
-            </div>
-
-            <div className="profile-shortcuts-grid">
-              <div className="shortcut-card" onClick={() => navigate('/frigorifico')}>
-                O meu Frigorífico
-              </div>
-              <div className="shortcut-card" onClick={() => navigate('/perfil/minhas-receitas')}>
-                As minhas Receitas
-              </div>
-              <div className="shortcut-card" onClick={() => navigate('/perfil/meus-eventos')}>
-                Os meus Eventos
-              </div>
-              {userData.role === 'Admin' && (
-                <div className="shortcut-card" onClick={() => navigate('/admin/gerir-utilizadores')}>
-                  Gerir Utilizadores
+              <div className="profile-shortcuts-grid">
+                <div className="shortcut-card" onClick={() => navigate('/frigorifico')}>
+                  O meu Frigorífico
                 </div>
-              )}
-            </div>
+                <div className="shortcut-card" onClick={() => navigate('/perfil/minhas-receitas')}>
+                  As minhas Receitas
+                </div>
+                <div className="shortcut-card" onClick={() => navigate('/perfil/meus-eventos')}>
+                  Os meus Eventos
+                </div>
+                {userData.role === 'Admin' && (
+                  <div className="shortcut-card" onClick={() => navigate('/admin/gerir-utilizadores')}>
+                    Gerir Utilizadores
+                  </div>
+                )}
+              </div>
 
             </div>
 

@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import '../../css/styles.css';
 import PopupModal from '../maincomponents/PopupModal.jsx';
+import Pagination from '../maincomponents/pagination.jsx';
 
 const VerReceita = () => {
     const navigate = useNavigate();
@@ -14,7 +15,6 @@ const VerReceita = () => {
     const [receita, setReceita] = useState(null);
     const [dbIngredientes, setDbIngredientes] = useState([]);
     const [comentarios, setComentarios] = useState([]);
-    const [utilizadores, setUtilizadores] = useState([]);
 
     const userId = localStorage.getItem('utilizadorId');
     const [isAdmin, setIsAdmin] = useState(false);
@@ -25,7 +25,7 @@ const VerReceita = () => {
     const [isLoadError, setIsLoadError] = useState(false);
     
     const [currentCommentPage, setCurrentCommentPage] = useState(1);
-    const commentsPerPage = 8;
+    const commentsPerPage = parseInt(import.meta.env.VITE_ITEMS_PER_PAGE || '8', 10);
 
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
@@ -65,17 +65,6 @@ const VerReceita = () => {
             .catch(err => console.error(err));
     };
 
-    const getUtilizadores = () => {
-        axios.get(UTILIZADORES_URL)
-            .then(res => setUtilizadores(res.data || []))
-            .catch(err => console.error(err));
-    };
-
-    const getUserName = (uid) => {
-        const u = utilizadores.find(u => u.id === uid);
-        return u ? u.username : `Utilizador #${uid}`;
-    };
-
     const getReceita = () => {
         if (!recipeId) return;
         axios.get(RECEITA_URL + recipeId)
@@ -108,7 +97,6 @@ const VerReceita = () => {
         }
 
         getIngredientes();
-        getUtilizadores();
         getReceita();
         getComentarios();
 
@@ -122,7 +110,8 @@ const VerReceita = () => {
                 .catch(err => console.error("Erro ao obter a role do utilizador:", err));
         }
 
-    }, [UTILIZADORES_URL, getComentarios, getIngredientes, getReceita, getUtilizadores, navigate, recipeId, userId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [navigate, recipeId, userId]);
 
     const handleGuardar = () => {
         if (!userId) {
@@ -452,7 +441,7 @@ const VerReceita = () => {
                                                 <div className="comment-header">
                                                     <strong className="comment-author">
                                                         <span className="comment-avatar">👤</span>
-                                                        {getUserName(comentario.utilizador)}
+                                                        {comentario.utilizador_nome}
                                                     </strong>
                                                     <span className="comment-date">{new Date(comentario.data).toLocaleDateString()}</span>
                                                 </div>
@@ -463,41 +452,12 @@ const VerReceita = () => {
                                 )}
                             </div>
 
-                            {Math.ceil(comentarios.length / commentsPerPage) > 1 && (
-                                <div className="pagination-container flex-center mt-30 gap-20-pb30">
-                                    <button
-                                        className="btn-popup-confirm"
-                                        onClick={() => setCurrentCommentPage(prev => Math.max(prev - 1, 1))}
-                                        disabled={currentCommentPage === 1}
-                                    >
-                                        Anterior
-                                    </button>
-                                    
-                                    <span className="pagination-page-display">
-                                        Página
-                                        <select
-                                            value={currentCommentPage}
-                                            onChange={(e) => setCurrentCommentPage(Number(e.target.value))}
-                                            className="page-select-dropdown"
-                                        >
-                                            {Array.from({ length: Math.ceil(comentarios.length / commentsPerPage) }, (_, i) => i + 1).map(num => (
-                                                <option key={num} value={num}>
-                                                    {num}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        de {Math.ceil(comentarios.length / commentsPerPage)}
-                                    </span>
-                                    
-                                    <button
-                                        className="btn-popup-confirm"
-                                        onClick={() => setCurrentCommentPage(prev => Math.min(prev + 1, Math.ceil(comentarios.length / commentsPerPage)))}
-                                        disabled={currentCommentPage === Math.ceil(comentarios.length / commentsPerPage)}
-                                    >
-                                        Seguinte
-                                    </button>
-                                </div>
-                            )}
+                            <Pagination
+                                currentPage={currentCommentPage}
+                                totalItems={comentarios.length}
+                                itemsPerPage={commentsPerPage}
+                                onPageChange={setCurrentCommentPage}
+                            />
                         </div>
 
                     </div>

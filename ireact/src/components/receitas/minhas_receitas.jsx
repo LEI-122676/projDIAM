@@ -7,6 +7,7 @@ import iconeFrig from "../../assets/frigorifico.svg";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import PopupModal from '../maincomponents/PopupModal.jsx';
+import Pagination from '../maincomponents/pagination.jsx';
 
 const AsMinhasReceitas = () => {
     const navigate = useNavigate();
@@ -21,7 +22,7 @@ const AsMinhasReceitas = () => {
     
     const [currentPageCriadas, setCurrentPageCriadas] = useState(1);
     const [currentPageGuardadas, setCurrentPageGuardadas] = useState(1);
-    const itemsPerPage = 8;
+    const itemsPerPage = parseInt(import.meta.env.VITE_ITEMS_PER_PAGE || '8', 10);
     
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
@@ -204,41 +205,12 @@ const AsMinhasReceitas = () => {
                                     </p>
                                 )}
                             </div>
-                            {Math.ceil(criadasPorMim.length / itemsPerPage) > 1 && (
-                                <div className="pagination-container flex-center mt-30 gap-20-pb30">
-                                    <button
-                                        className="btn-popup-confirm pagination-btn"
-                                        onClick={() => setCurrentPageCriadas(prev => Math.max(prev - 1, 1))}
-                                        disabled={currentPageCriadas === 1}
-                                    >
-                                        Anterior
-                                    </button>
-                                    
-                                    <span className="pagination-page-display">
-                                        Página
-                                        <select
-                                            value={currentPageCriadas}
-                                            onChange={(e) => setCurrentPageCriadas(Number(e.target.value))}
-                                            className="page-select-dropdown"
-                                        >
-                                            {Array.from({ length: Math.ceil(criadasPorMim.length / itemsPerPage) }, (_, i) => i + 1).map(num => (
-                                                <option key={num} value={num}>
-                                                    {num}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        de {Math.ceil(criadasPorMim.length / itemsPerPage)}
-                                    </span>
-                                    
-                                    <button
-                                        className="btn-popup-confirm pagination-btn"
-                                        onClick={() => setCurrentPageCriadas(prev => Math.min(prev + 1, Math.ceil(criadasPorMim.length / itemsPerPage)))}
-                                        disabled={currentPageCriadas === Math.ceil(criadasPorMim.length / itemsPerPage)}
-                                    >
-                                        Seguinte
-                                    </button>
-                                </div>
-                            )}
+                            <Pagination
+                                currentPage={currentPageCriadas}
+                                totalItems={criadasPorMim.length}
+                                itemsPerPage={itemsPerPage}
+                                onPageChange={setCurrentPageCriadas}
+                            />
                         </div>
 
                         <div className="mt-50">
@@ -282,41 +254,12 @@ const AsMinhasReceitas = () => {
                                     </p>
                                 )}
                             </div>
-                            {Math.ceil(receitasGuardadas.length / itemsPerPage) > 1 && (
-                                <div className="pagination-container flex-center mt-30 gap-20-pb30">
-                                    <button
-                                        className="btn-popup-confirm pagination-btn"
-                                        onClick={() => setCurrentPageGuardadas(prev => Math.max(prev - 1, 1))}
-                                        disabled={currentPageGuardadas === 1}
-                                    >
-                                        Anterior
-                                    </button>
-                                    
-                                    <span className="pagination-page-display">
-                                        Página
-                                        <select
-                                            value={currentPageGuardadas}
-                                            onChange={(e) => setCurrentPageGuardadas(Number(e.target.value))}
-                                            className="page-select-dropdown"
-                                        >
-                                            {Array.from({ length: Math.ceil(receitasGuardadas.length / itemsPerPage) }, (_, i) => i + 1).map(num => (
-                                                <option key={num} value={num}>
-                                                    {num}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        de {Math.ceil(receitasGuardadas.length / itemsPerPage)}
-                                    </span>
-                                    
-                                    <button
-                                        className="btn-popup-confirm pagination-btn"
-                                        onClick={() => setCurrentPageGuardadas(prev => Math.min(prev + 1, Math.ceil(receitasGuardadas.length / itemsPerPage)))}
-                                        disabled={currentPageGuardadas === Math.ceil(receitasGuardadas.length / itemsPerPage)}
-                                    >
-                                        Seguinte
-                                    </button>
-                                </div>
-                            )}
+                            <Pagination
+                                currentPage={currentPageGuardadas}
+                                totalItems={receitasGuardadas.length}
+                                itemsPerPage={itemsPerPage}
+                                onPageChange={setCurrentPageGuardadas}
+                            />
                         </div>
 
 

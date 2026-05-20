@@ -76,15 +76,14 @@ def utilizador_frigorifico(request, utilizador_id):
         utilizador = Utilizador.objects.get(pk=utilizador_id)
         frigorifico = utilizador.frigorifico
         if not frigorifico:
-            # CRIAR AUTOMATICAMENTE SE NÃO EXISTIR
             frigorifico = Frigorifico.objects.create()
             utilizador.frigorifico = frigorifico
             utilizador.save()
-            
+
         permission = FrigorificoACL()
         if not permission.has_object_permission(request, utilizador_frigorifico, frigorifico):
             return Response({'detail': 'Sem permissão.'}, status=status.HTTP_403_FORBIDDEN)
-            
+
         serializer = FrigorificoSerializer(frigorifico)
         return Response(serializer.data)
     except Utilizador.DoesNotExist:

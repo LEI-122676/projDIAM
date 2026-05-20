@@ -7,6 +7,7 @@ import iconeFrig from "../../assets/frigorifico.svg";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 import PopupModal from '../maincomponents/PopupModal.jsx';
+import Pagination from '../maincomponents/pagination.jsx';
 
 const ExplorarReceitas = () => {
     const navigate = useNavigate();
@@ -22,7 +23,7 @@ const ExplorarReceitas = () => {
     const [fridgeIngredients, setFridgeIngredients] = useState([]);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const recipesPerPage = 20;
+    const recipesPerPage = parseInt(import.meta.env.VITE_RECIPES_PER_PAGE || '20', 10);
 
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
@@ -233,41 +234,12 @@ const ExplorarReceitas = () => {
                                 </div>
                             )}
                         </div>
-                        {Math.ceil(filteredReceitas.length / recipesPerPage) > 1 && (
-                            <div className="pagination-container flex-center mt-30 gap-20-pb30">
-                                <button
-                                    className="btn-popup-confirm pagination-btn"
-                                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                    disabled={currentPage === 1}
-                                >
-                                    Anterior
-                                </button>
-                                
-                                <span className="pagination-page-display">
-                                    Página
-                                    <select
-                                        value={currentPage}
-                                        onChange={(e) => setCurrentPage(Number(e.target.value))}
-                                        className="page-select-dropdown"
-                                    >
-                                        {Array.from({ length: Math.ceil(filteredReceitas.length / recipesPerPage) }, (_, i) => i + 1).map(num => (
-                                            <option key={num} value={num}>
-                                                {num}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    de {Math.ceil(filteredReceitas.length / recipesPerPage)}
-                                </span>
-                                
-                                <button
-                                    className="btn-popup-confirm pagination-btn"
-                                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredReceitas.length / recipesPerPage)))}
-                                    disabled={currentPage === Math.ceil(filteredReceitas.length / recipesPerPage)}
-                                >
-                                    Seguinte
-                                </button>
-                            </div>
-                        )}
+                        <Pagination
+                            currentPage={currentPage}
+                            totalItems={filteredReceitas.length}
+                            itemsPerPage={recipesPerPage}
+                            onPageChange={setCurrentPage}
+                        />
 
                     </div>
                 </main>

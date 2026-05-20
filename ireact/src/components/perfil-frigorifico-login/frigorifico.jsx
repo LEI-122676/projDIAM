@@ -55,7 +55,7 @@ const Frigorifico = () => {
         }
 
         getIngredientes();
-        axios.get(`${UTILIZADORES_URL}${userId}/frigorifico`)
+        axios.get(`${UTILIZADORES_URL}${userId}/frigorifico`, { withCredentials: true })
             .then(res => {
                 setFridgeId(res.data.id);
                 const ingredientes = (res.data.ingredientes || []).map(item => {
