@@ -4,6 +4,20 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 import os
+import json
+
+# Carrega os roles a partir do ficheiro json definido no .env
+roles_filename = os.environ.get('UTILIZADOR_ROLES_FILE', 'user_roles.json')
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+roles_filepath = os.path.join(BASE_DIR, roles_filename)
+
+loaded_roles = ['Admin', 'User', 'Guest', 'EventOrganizer']     # roles de fallback caso a leitura do env falhe
+if os.path.exists(roles_filepath):
+    with open(roles_filepath, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        loaded_roles = data.get('ROLES', loaded_roles)
+
+UTILIZADOR_ROLES = tuple((r, r) for r in loaded_roles)
 
 # Create your models here.
 class Ingrediente(models.Model):
@@ -19,19 +33,14 @@ class Frigorifico(models.Model):
 
 class Utilizador(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)       # "extends"
+    frigorifico = models.OneToOneField(Frigorifico, on_delete=models.DO_NOTHING, null=True)
+
     nome = models.CharField(max_length=50)
     apelido = models.CharField(max_length=50)
-    frigorifico = models.OneToOneField(Frigorifico, on_delete=models.DO_NOTHING, null=True)
     imagem = models.ImageField(upload_to='profile_pics', default='defaultProfile.png')
     bio = models.TextField(null=True)
     
-    ROLES = (
-        ('Admin', 'Admin'),
-        ('User', 'User'),
-        ('Guest', 'Guest'),
-        ('EventOrganizer', 'EventOrganizer'),
-    )
-    role = models.CharField(max_length=20, choices=ROLES, default='User')
+    role = models.CharField(max_length=20, choices=UTILIZADOR_ROLES, default='User')
     is_active = models.BooleanField(default=True)
     
     def __str__(self):
