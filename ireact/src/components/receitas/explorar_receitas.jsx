@@ -6,22 +6,26 @@ import iconeFiltro from "../../assets/filtro.svg";
 import iconeFrig from "../../assets/frigorifico.svg";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
-import PopupModal from '../maincomponents/PopupModal.jsx';
+import PopupModal from '../maincomponents/popupModal.jsx';
+import Pagination from '../maincomponents/pagination.jsx';
 
 const ExplorarReceitas = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const autoFilterAttempted = useRef(false);
 
-    const RECEITAS_URL = 'http://localhost:8000/idjango/api/receitas/';
-    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api/utilizadores/';
-    
+    const RECEITAS_URL = 'http://localhost:8000/idjango/api' + '/receitas/';
+    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api' + '/utilizadores/';
+
     const [receitas, setReceitas] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [isFridgeFilterActive, setIsFridgeFilterActive] = useState(false);
     const [fridgeIngredients, setFridgeIngredients] = useState([]);
-    
-    const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const recipesPerPage = parseInt(import.meta.env.VITE_RECIPES_PER_PAGE || '20', 10);
+
+    const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
     const getReceitas = () => {
@@ -34,11 +38,21 @@ const ExplorarReceitas = () => {
         getReceitas();
     }, []);
 
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery, isFridgeFilterActive]);
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const searchParam = params.get('search');
+        if (searchParam) {
+            setSearchQuery(decodeURIComponent(searchParam));
+        }
+    }, [location.search]);
+
     const handleFridgeFilterToggle = (forceValue) => {
         const userId = localStorage.getItem('utilizadorId');
-        
-        // Se forceValue for um booleano, usamos esse valor. 
-        // Se for um evento (onClick), ignoramos e alternamos o estado atual.
+
         const shouldBeActive = typeof forceValue === 'boolean' ? forceValue : !isFridgeFilterActive;
 
         if (!userId) {
@@ -60,7 +74,6 @@ const ExplorarReceitas = () => {
             return;
         }
 
-        // Tenta ir buscar o frigorífico do utilizador
         axios.get(`${UTILIZADORES_URL}${userId}/frigorifico`)
             .then(res => {
                 const ingredientes = res.data.ingredientes;
@@ -92,7 +105,7 @@ const ExplorarReceitas = () => {
                 });
             });
     };
-    
+
     useEffect(() => {
         if (location.state?.autoFridge && !autoFilterAttempted.current) {
             autoFilterAttempted.current = true;
@@ -118,27 +131,22 @@ const ExplorarReceitas = () => {
     };
 
     const filteredReceitas = receitas.filter(receita => {
-        // Filtro da barra de pesquisa
         const nomeReceita = receita.nome || "";
         const matchesSearch = nomeReceita.toLowerCase().includes(searchQuery.toLowerCase());
-        
-        // Filtro do frigorífico (mostrar receitas que usam pelo menos um ingrediente do frigorífico)
+
         let matchesFridge = true;
         if (isFridgeFilterActive) {
             if (fridgeIngredients.length === 0) {
                 matchesFridge = false;
             } else if (!receita.ingredientes || receita.ingredientes.length === 0) {
-                matchesFridge = false; 
+                matchesFridge = false;
             } else {
-                // Obter IDs do frigorífico como números
                 const fridgeIds = (fridgeIngredients || []).map(id => {
                     if (typeof id === 'object' && id !== null) return Number(id.id);
                     return Number(id);
                 });
-                
-                // Filtra apenas as receitas que possuem TODOS os itens do seu frigorífico
-                    matchesFridge = fridgeIds.every(fId => {
-                    // Para cada item que VOCÊ tem, verificamos se ele está na RECEITA
+
+                matchesFridge = fridgeIds.every(fId => {
                     return (receita.ingredientes || []).some(ing => {
                         const recipeIngId = typeof ing === 'object' && ing !== null ? Number(ing.id) : Number(ing);
                         return recipeIngId === Number(fId);
@@ -173,7 +181,7 @@ const ExplorarReceitas = () => {
                             </div>
 
                             <div className="recipes-button-group">
-                                <button 
+                                <button
                                     className={`btn-filter-fridge ${isFridgeFilterActive ? 'active' : ''}`}
                                     onClick={handleFridgeFilterToggle}
                                 >
@@ -187,45 +195,57 @@ const ExplorarReceitas = () => {
                         </div>
 
                         <div className="recipes-grid">
-                            {[...filteredReceitas].reverse().map((receita, index) => (
-                                <div 
-                                    key={receita.id || index} 
-                                    className="recipe-card-premium cursor-pointer" 
-                                    onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
-                                    style={{ position: 'relative' }}
-                                >
-                                    <div className="card-rating-badge">
-                                        ⭐ {receita.classificacao || '0.0'}
-                                    </div>
+                            {(() => {
+                                const reversedFiltered = [...filteredReceitas].reverse();
+                                const indexOfLastRecipe = currentPage * recipesPerPage;
+                                const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage;
+                                const currentRecipes = reversedFiltered.slice(indexOfFirstRecipe, indexOfLastRecipe);
 
-                                    <div className="recipe-image-placeholder">
-                                        {receita.foto_url ? (
-                                            <img
-                                                src={`http://localhost:8000${receita.foto_url}`}
-                                                alt={receita.nome}
-                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                            />
-                                        ) : (
-                                            <span className="recipe-icon-large">🍲</span>
-                                        )}
+                                return currentRecipes.map((receita, index) => (
+                                    <div
+                                        key={receita.id || index}
+                                        className="recipe-card-premium cursor-pointer relative-container"
+                                        onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
+                                    >
+                                        <div className="card-rating-badge">
+                                            ⭐ {receita.classificacao || '0.0'}
+                                        </div>
+
+                                        <div className="recipe-image-placeholder">
+                                            {receita.foto_url ? (
+                                                <img
+                                                    src={`http://localhost:8000${receita.foto_url}`}
+                                                    alt={receita.nome}
+                                                    className="cover-image"
+                                                />
+                                            ) : (
+                                                <span className="recipe-icon-large">🍲</span>
+                                            )}
+                                        </div>
+                                        <div className="recipe-card-footer">
+                                            <span className="ingredient-name">{receita.nome}</span>
+                                        </div>
                                     </div>
-                                    <div className="recipe-card-footer">
-                                        <span className="ingredient-name">{receita.nome}</span>
-                                    </div>
-                                </div>
-                            ))}
+                                ));
+                            })()}
                             {filteredReceitas.length === 0 && (
                                 <div className="text-empty-state-center">
                                     <p>Nenhuma receita encontrada com estes critérios.</p>
                                 </div>
                             )}
                         </div>
+                        <Pagination
+                            currentPage={currentPage}
+                            totalItems={filteredReceitas.length}
+                            itemsPerPage={recipesPerPage}
+                            onPageChange={setCurrentPage}
+                        />
 
                     </div>
                 </main>
             </div>
-            
-            <PopupModal 
+
+            <PopupModal
                 isOpen={popupConfig.isOpen}
                 title={popupConfig.title}
                 message={popupConfig.message}

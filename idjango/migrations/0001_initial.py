@@ -28,6 +28,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("nome", models.CharField(max_length=50)),
+                ("is_active", models.BooleanField(default=True)),
             ],
         ),
         migrations.CreateModel(
@@ -42,6 +43,7 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
+                ("is_active", models.BooleanField(default=True)),
                 ("ingredientes", models.ManyToManyField(to="idjango.ingrediente")),
             ],
         ),
@@ -57,8 +59,6 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("nome", models.CharField(max_length=50)),
-                ("apelido", models.CharField(max_length=50)),
                 (
                     "imagem",
                     models.ImageField(
@@ -66,6 +66,20 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("bio", models.TextField(null=True)),
+                (
+                    "role",
+                    models.CharField(
+                        choices=[
+                            ("Admin", "Admin"),
+                            ("User", "User"),
+                            ("Guest", "Guest"),
+                            ("EventOrganizer", "EventOrganizer"),
+                        ],
+                        default="User",
+                        max_length=20,
+                    ),
+                ),
+                ("is_active", models.BooleanField(default=True)),
                 (
                     "frigorifico",
                     models.OneToOneField(
@@ -125,7 +139,9 @@ class Migration(migrations.Migration):
                 (
                     "guardadores",
                     models.ManyToManyField(
-                        related_name="receitas_guardadas", to="idjango.utilizador"
+                        blank=True,
+                        related_name="receitas_guardadas",
+                        to="idjango.utilizador",
                     ),
                 ),
             ],
@@ -197,6 +213,45 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         null=True,
                         on_delete=django.db.models.deletion.DO_NOTHING,
+                        to="idjango.receita",
+                    ),
+                ),
+                (
+                    "utilizador",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="idjango.utilizador",
+                    ),
+                ),
+            ],
+        ),
+        migrations.CreateModel(
+            name="Avaliacao",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "nota",
+                    models.IntegerField(
+                        validators=[
+                            django.core.validators.MinValueValidator(1),
+                            django.core.validators.MaxValueValidator(5),
+                        ]
+                    ),
+                ),
+                ("data", models.DateTimeField(auto_now_add=True)),
+                (
+                    "receita",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="avaliacoes",
                         to="idjango.receita",
                     ),
                 ),

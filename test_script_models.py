@@ -1,120 +1,148 @@
 import os
+import sys
 import django
 import random
 from django.utils import timezone
 
-# Configurar o ambiente do Django
+# 1. Configurar os caminhos para o Python encontrar a app 'ifridge'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+if BASE_DIR not in sys.path:
+    sys.path.append(BASE_DIR)
+
+# 2. Configurar o ambiente do Django
+# Se a tua pasta principal do projeto tiver outro nome, substitui 'projDIAM'
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ifridge.settings')
 django.setup()
 
 from django.contrib.auth.models import User
-# Certifique-se que o nome da app está correto
-from idjango.models import Ingrediente, Frigorifico, Utilizador, Evento, Receita, Comentario
+from idjango.models import Ingrediente, Frigorifico, Utilizador, Evento, Receita, Avaliacao, Comentario
 
 
-def povoar_50():
-    print("🚀 A iniciar povoamento (50 instâncias por modelo)...")
+def povoar_base_de_dados():
+    print("🚀 A iniciar povoamento adaptado aos teus models (30 instâncias)...")
 
-    # --- 1. INGREDIENTES (50) ---
+    # --- 1. INGREDIENTES (30) ---
     lista_nomes = [
         "Alho", "Cebola", "Tomate", "Azeite", "Manteiga", "Farinha", "Açúcar", "Sal", "Pimenta", "Ovos",
         "Leite", "Natas", "Frango", "Bacalhau", "Batata", "Cenoura", "Brócolos", "Alface", "Pimento", "Queijo",
-        "Arroz", "Massa Penne", "Feijão", "Maçã", "Banana", "Limão", "Morango", "Chocolate", "Canela", "Salsa",
-        "Coentros", "Vinho Branco", "Mostarda", "Mel", "Cogumelos", "Bacon", "Fiambre", "Camarão", "Atum", "Salmão",
-        "Grão-de-bico", "Ervilhas", "Pêssego", "Nozes", "Caril", "Oregãos", "Manjericão", "Café", "Iogurte", "Cerveja"
+        "Arroz", "Massa Penne", "Feijão", "Maçã", "Banana", "Limão", "Morango", "Chocolate", "Canela", "Salsa"
     ]
 
     ingredientes_db = []
     for nome in lista_nomes:
-        ing, _ = Ingrediente.objects.get_or_create(nome=nome)
+        ing, _ = Ingrediente.objects.get_or_create(nome=nome, defaults={'is_active': True})
         ingredientes_db.append(ing)
-    print(f"✅ {len(ingredientes_db)} Ingredientes criados.")
+    print(f"✅ {len(ingredientes_db)} Ingredientes processados.")
 
-    # --- 2. UTILIZADORES + FRIGORÍFICOS (50) ---
+    # --- 2. UTILIZADORES + FRIGORÍFICOS (30) ---
     primeiros_nomes = ["Ana", "João", "Catarina", "Pedro", "Marta", "Tiago", "Sofia", "Diogo", "Inês", "Bruno"]
     apelidos = ["Silva", "Santos", "Ferreira", "Pereira", "Oliveira", "Costa", "Rodrigues", "Martins"]
+    roles_pool = ['Admin', 'User', 'Guest', 'EventOrganizer']
 
     utilizadores_db = []
-    for i in range(50):
+    i = 1
+    while len(utilizadores_db) < 30:
         username = f"user_{i}_{random.randint(100, 999)}"
 
         if not User.objects.filter(username=username).exists():
-            # Dados aleatórios para nome e apelido
             f_name = random.choice(primeiros_nomes)
             l_name = random.choice(apelidos)
 
+            # Criar o User do Django (onde ficam os nomes reais)
             user_auth = User.objects.create_user(
                 username=username,
-                email=f"{username}@ifridge.pt",
+                email=f"user{i}@ifridge.pt",
                 password='password123',
                 first_name=f_name,
                 last_name=l_name
             )
 
-            frigo = Frigorifico.objects.create()
+            # Criar o Frigorífico associado
+            frigo = Frigorifico.objects.create(is_active=True)
             frigo.ingredientes.set(random.sample(ingredientes_db, k=random.randint(3, 10)))
 
-            # ATUALIZAÇÃO: Adicionados campos nome e apelido conforme o novo model
+            # Criar o Utilizador seguindo exatamente os teus campos do model
             utilizador = Utilizador.objects.create(
                 user=user_auth,
-                nome=f_name,
-                apelido=l_name,
                 frigorifico=frigo,
-                bio=f"Apaixonado por gastronomia e utilizador nº{i} do iFridge."
+                bio=f"Apaixonado por gastronomia e utilizador nº{i} da plataforma iFridge.",
+                role=roles_pool[i % len(roles_pool)],
+                is_active=True
             )
             utilizadores_db.append(utilizador)
+        i += 1
 
     print(f"✅ {len(utilizadores_db)} Utilizadores e Frigoríficos criados.")
 
-    # --- 3. RECEITAS (50) ---
+    # --- 3. RECEITAS (30) ---
     prefixos = ["Delícia de", "Segredo de", "Gisado de", "Salteado de", "Assado de", "Sopa de"]
     receitas_db = []
-    for i in range(50):
+    for i in range(30):
         ing_ref = random.choice(ingredientes_db).nome
-        rec = Receita.objects.create(
+
+        receita = Receita.objects.create(
             criador=random.choice(utilizadores_db),
-            nome=f"{random.choice(prefixos)} {ing_ref}",
+            nome=f"{random.choice(prefixos)} {ing_ref} {i + 1}",
             instrucao=[
                 f"Preparar o {ing_ref.lower()}.",
-                "Refogar com azeite e alho.",
-                "Cozinhar em lume brando por 20 min.",
-                "Servir quente com ervas frescas."
-            ]
+                "Refogar tudo com um fio de azeite e alho picado.",
+                "Cozinhar em lume brando por sensivelmente 20 minutos.",
+                "Retirar do lume e servir quente com ervas frescas."
+            ],
+            is_active=True
         )
-        rec.ingredientes.set(random.sample(ingredientes_db, k=random.randint(3, 7)))
-        rec.guardadores.set(random.sample(utilizadores_db, k=random.randint(0, 10)))
-        receitas_db.append(rec)
-    print(f"✅ 50 Receitas criadas.")
+        # Preencher os ManyToMany
+        receita.ingredientes.set(random.sample(ingredientes_db, k=random.randint(3, 7)))
+        receita.guardadores.set(random.sample(utilizadores_db, k=random.randint(0, 10)))
+        receitas_db.append(receita)
+    print(f"✅ {len(receitas_db)} Receitas criadas.")
 
-    # --- 4. EVENTOS (50) ---
+    # --- 4. EVENTOS (30) ---
     eventos_nomes = ["Workshop Sushi", "Noite de Tapas", "Cozinha Tradicional", "Aula de Doces", "Jantar de Amigos"]
-    for i in range(50):
-        ev = Evento.objects.create(
+    for i in range(30):
+        # A data_evento tem de ser obrigatoriamente no futuro para passar no teu método clean()
+        data_futura = timezone.now() + timezone.timedelta(days=random.randint(3, 40))
+
+        evento = Evento.objects.create(
             criador=random.choice(utilizadores_db),
             nome=f"{random.choice(eventos_nomes)} {i + 1}",
-            descricao=f"Evento gastronómico focado em partilha e aprendizagem. Capacidade limitada!",
-            data_evento=timezone.now() + timezone.timedelta(days=random.randint(5, 45)),
-            horario={"inicio": "19:00", "fim": "22:00"},
-            capacidade_max=random.randint(5, 25)
+            descricao="Um evento dinâmico focado na partilha de receitas e desperdício zero na cozinha.",
+            data_evento=data_futura,
+            horario={"inicio": "19:30", "fim": "22:00"},
+            capacidade_max=random.randint(6, 30),
+            is_active=True
         )
-        ev.inscritos.set(random.sample(utilizadores_db, k=random.randint(2, 5)))
-    print(f"✅ 50 Eventos criados.")
+        # Adicionar inscritos aleatórios
+        evento.inscritos.set(random.sample(utilizadores_db, k=random.randint(1, 5)))
+    print(f"✅ {i + 1} Eventos criados (com validação de data futura).")
 
-    # --- 5. COMENTÁRIOS (50) ---
-    textos = [
-        "Ficou maravilhoso!", "Fácil e rápido.", "Adorei a combinação de sabores.",
-        "Fiz no fim de semana e todos gostaram.", "Vou guardar esta receita."
+    # --- 5. AVALIAÇÕES (30) ---
+    for _ in range(30):
+        Avaliacao.objects.create(
+            utilizador=random.choice(utilizadores_db),
+            receita=random.choice(receitas_db),
+            nota=random.randint(1, 5)
+        )
+    print(f"✅ 30 Avaliações criadas.")
+
+    # --- 6. COMENTÁRIOS (30) ---
+    textos_comentarios = [
+        "Ficou absolutamente maravilhoso!",
+        "Uma receita super fácil e rápida para o dia a dia.",
+        "Adorei a combinação de sabores, resultou muito bem.",
+        "Fiz hoje ao jantar e toda a gente cá em casa aprovou.",
+        "Vou guardar esta receita nos meus favoritos de certeza!"
     ]
-    for _ in range(50):
+    for _ in range(30):
         Comentario.objects.create(
             utilizador=random.choice(utilizadores_db),
             receita=random.choice(receitas_db),
-            texto=random.choice(textos)
+            texto=random.choice(textos_comentarios)
         )
-    print(f"✅ 50 Comentários criados.")
+    print(f"✅ 30 Comentários criados.")
 
-    print("\n✨ Concluído! O povoamento foi realizado com sucesso.")
+    print("\n✨ Povoamento completo! Todas as tabelas têm agora exatamente 30 instâncias válidas.")
 
 
 if __name__ == '__main__':
-    povoar_50()
+    povoar_base_de_dados()

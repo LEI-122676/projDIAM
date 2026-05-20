@@ -2,38 +2,54 @@ import { useState, useEffect, useRef } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
 import '../../css/styles.css'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
-import PopupModal from '../maincomponents/PopupModal.jsx';
+import PopupModal from '../maincomponents/popupModal.jsx';
+import { getCSRFToken } from '../../utils/csrf.js';
 
 const CriarReceita = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const editReceita = location.state?.editReceita;
     const fileInputRef = useRef(null);
 
-    const [nome, setNome] = useState('');
-    const [passos, setPassos] = useState(['']);
+    const [nome, setNome] = useState(editReceita ? editReceita.nome || '' : '');
+    const [passos, setPassos] = useState(editReceita ? editReceita.instrucao || [''] : ['']);
     const [ingredientesList, setIngredientesList] = useState(['']);
     const [foto, setFoto] = useState(null);
-    const [fotoPreview, setFotoPreview] = useState(null);
+    const [fotoPreview, setFotoPreview] = useState(
+        editReceita && editReceita.foto_url 
+            ? (editReceita.foto_url.startsWith('http') ? editReceita.foto_url : `http://localhost:8000${editReceita.foto_url}`) 
+            : null
+    );
 
     const [dbIngredientes, setDbIngredientes] = useState([]);
-    const [utilizadorId, setUtilizadorId] = useState(null);
+    const [utilizadorId, setUtilizadorId] = useState(() => localStorage.getItem('utilizadorId'));
 
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-    const INGREDIENTES_URL = 'http://localhost:8000/idjango/api/ingredientes/';
-    const RECEITAS_URL = 'http://localhost:8000/idjango/api/receitas/';
+    const INGREDIENTES_URL = 'http://localhost:8000/idjango/api' + '/ingredientes/';
+    const RECEITAS_URL = 'http://localhost:8000/idjango/api' + '/receitas/';
 
     const getIngredientes = () => {
         axios.get(INGREDIENTES_URL)
-            .then(res => setDbIngredientes(res.data))
+            .then(res => {
+                setDbIngredientes(res.data);
+                if (editReceita) {
+                    const names = editReceita.ingredientes.map(ingId => {
+                        const targetId = typeof ingId === 'object' && ingId !== null ? Number(ingId.id) : Number(ingId);
+                        const found = res.data.find(i => Number(i.id) === targetId);
+                        return found ? found.nome : '';
+                    }).filter(name => name !== '');
+                    setIngredientesList(names.length > 0 ? names : ['']);
+                }
+            })
             .catch(err => console.error("Erro ao carregar ingredientes:", err));
     };
 
     useEffect(() => {
-        const userId = localStorage.getItem('utilizadorId');
-        if (!userId) {
+        if (!utilizadorId) {
             setPopupConfig({
                 isOpen: true,
                 title: 'Acesso Restrito',
@@ -45,9 +61,8 @@ const CriarReceita = () => {
             });
             return;
         }
-        setUtilizadorId(userId);
         getIngredientes();
-    }, [navigate]);
+    }, [navigate, utilizadorId]);
 
     const handleFotoChange = (e) => {
         const file = e.target.files[0];
@@ -90,20 +105,27 @@ const CriarReceita = () => {
         if (!nome.trim()) { showPopup('Campo Obrigatório', 'Por favor, dê um nome à receita.'); return; }
         if (!utilizadorId) { showPopup('Erro', 'Não foi possível identificar o utilizador. Faz login novamente.'); return; }
 
-        const passosFormatados = passos
-            .filter(p => p.trim() !== '')
-            .map((p, index) => {
-                const prefix = `Passo ${index + 1}: `;
-                if (p.startsWith(prefix)) return p;
-                if (p.match(/^Passo \d+:/)) return prefix + p.replace(/^Passo \d+:\s*/, '');
-                return prefix + p;
-            });
+        if (passos.some(p => p.trim() === '')) {
+            showPopup('Campos em Branco', 'Por favor, não deixe passos em branco. Preenche ou remove o campo vazio.');
+            return;
+        }
+
+        if (ingredientesList.some(ing => ing.trim() === '')) {
+            showPopup('Campos em Branco', 'Por favor, não deixe ingredientes em branco. Preenche ou remove o campo vazio.');
+            return;
+        }
+
+        const passosFormatados = passos.map((p, index) => {
+            const prefix = `Passo ${index + 1}: `;
+            if (p.startsWith(prefix)) return p;
+            if (p.match(/^Passo \d+:/)) return prefix + p.replace(/^Passo \d+:\s*/, '');
+            return prefix + p;
+        });
 
         if (passosFormatados.length === 0) { showPopup('Campo Obrigatório', 'Por favor, adicione pelo menos um passo.'); return; }
 
         const idsIngredientes = [];
         for (let ing of ingredientesList) {
-            if (ing.trim() === '') continue;
             const found = dbIngredientes.find(dbI => dbI.nome.toLowerCase() === ing.trim().toLowerCase());
             if (found) {
                 idsIngredientes.push(found.id);
@@ -115,30 +137,35 @@ const CriarReceita = () => {
 
         if (idsIngredientes.length === 0) { showPopup('Campo Obrigatório', 'Por favor, adicione pelo menos um ingrediente.'); return; }
 
-        // Usar FormData para enviar a imagem
         const formData = new FormData();
         formData.append('nome', nome);
         formData.append('criador', utilizadorId);
-        
-        // CORREÇÃO: Só anexar se for um ficheiro válido
+
         if (foto instanceof File) {
             formData.append('foto', foto);
         }
 
         formData.append('instrucao', JSON.stringify(passosFormatados));
-        
+
         const uniqueIds = [...new Set(idsIngredientes)];
         uniqueIds.forEach(id => formData.append('ingredientes', id));
 
-        axios.post(RECEITAS_URL, formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-            withCredentials: true
-        })
+        const requestPromise = editReceita
+            ? axios.patch(`${RECEITAS_URL}${editReceita.id}`, formData, {
+                headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'multipart/form-data' },
+                withCredentials: true
+            })
+            : axios.post(RECEITAS_URL, formData, {
+                headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'multipart/form-data' },
+                withCredentials: true
+            });
+
+        requestPromise
             .then(() => {
                 setPopupConfig({
                     isOpen: true,
-                    title: 'Receita Criada!',
-                    message: 'A tua receita foi criada com sucesso!',
+                    title: editReceita ? 'Receita Atualizada!' : 'Receita Criada!',
+                    message: editReceita ? 'A tua receita foi atualizada com sucesso!' : 'A tua receita foi criada com sucesso!',
                     singleButton: true,
                     confirmText: 'OK',
                     onConfirm: () => navigate('/receitas'),
@@ -147,8 +174,23 @@ const CriarReceita = () => {
             })
             .catch(err => {
                 console.error(err);
-                const detail = err.response?.data ? JSON.stringify(err.response.data) : 'Erro de conexão.';
-                showPopup('Erro ao Criar Receita', detail);
+                let message = 'Por favor, tenha atenção à sua linguagem. Não são permitidos palavrões, links ou anúncios na sua receita.';
+                if (err.response && err.response.data) {
+                    const data = err.response.data;
+                    if (typeof data === 'object') {
+                        const firstFieldErrors = Object.values(data)[0];
+                        if (Array.isArray(firstFieldErrors) && firstFieldErrors.length > 0) {
+                            message = firstFieldErrors[0];
+                        } else if (typeof data.msg === 'string') {
+                            message = data.msg;
+                        } else {
+                            message = JSON.stringify(data);
+                        }
+                    } else if (typeof data === 'string') {
+                        message = data;
+                    }
+                }
+                showPopup('Atenção à Linguagem', message);
             });
     };
 
@@ -159,10 +201,9 @@ const CriarReceita = () => {
             <div className="main-wrapper">
                 <Sidebar />
                 <main className="content-profile">
-                    <h1 className="page-title-underline">Criar Receita</h1>
+                    <h1 className="page-title-underline">{editReceita ? 'Editar Receita' : 'Criar Receita'}</h1>
                     <div className="create-recipe-container">
 
-                        {/* COLUNA ESQUERDA: Formulário */}
                         <div className="recipe-form-section">
                             <div className="form-group">
                                 <label>Nome*:</label>
@@ -222,9 +263,7 @@ const CriarReceita = () => {
                             </div>
                         </div>
 
-                        {/* COLUNA DIREITA: Foto + Ações */}
                         <div className="recipe-image-section">
-                            {/* Upload de Foto */}
                             <div
                                 className="image-upload-placeholder"
                                 onClick={() => fileInputRef.current.click()}
@@ -234,12 +273,12 @@ const CriarReceita = () => {
                                     <img
                                         src={fotoPreview}
                                         alt="Pré-visualização"
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '18px' }}
+                                        className="image-preview-fit"
                                     />
                                 ) : (
-                                    <div style={{ textAlign: 'center', color: '#D1CDBC' }}>
-                                        <div style={{ fontSize: '48px', marginBottom: '10px' }}>📷</div>
-                                        <p style={{ fontSize: '0.9rem' }}>Clica para adicionar foto*</p>
+                                    <div className="image-upload-info">
+                                        <div className="image-upload-icon">📷</div>
+                                        <p className="image-upload-text">Clica para adicionar foto*</p>
                                     </div>
                                 )}
                             </div>
@@ -247,13 +286,12 @@ const CriarReceita = () => {
                                 ref={fileInputRef}
                                 type="file"
                                 accept="image/*"
-                                style={{ display: 'none' }}
+                                className="hidden-element"
                                 onChange={handleFotoChange}
                             />
                             {fotoPreview && (
                                 <button
-                                    className="btn-cancel btn-cancel-small"
-                                    style={{ marginTop: '8px', alignSelf: 'center' }}
+                                    className="btn-cancel btn-cancel-small btn-remove-photo"
                                     onClick={() => { setFoto(null); setFotoPreview(null); fileInputRef.current.value = ''; }}
                                 >
                                     Remover foto
@@ -262,7 +300,7 @@ const CriarReceita = () => {
 
                             <div className="create-actions-group">
                                 <button className="btn-cancel" onClick={() => navigate(-1)}>Cancelar</button>
-                                <button className="btn-create-submit" onClick={handleSubmit}>Criar</button>
+                                <button className="btn-create-submit" onClick={handleSubmit}>{editReceita ? 'Guardar' : 'Criar'}</button>
                             </div>
                         </div>
 

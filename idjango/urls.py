@@ -24,10 +24,12 @@ urlpatterns = [
     path('api/comentarios/<int:comentario_id>', views.comentario_detail),
 
     path('api/signup/', views.signup),
+    path('api/admin/create-user/', views.admin_create_user),
     path('api/login/', views.login_view),
     path('api/logout/', views.logout_view),
 
     path('api/user/', views.user_view),
     path('api/user_view__Id/', views.user_view_Id),
+    path('api/user_info/<int:id>', views.user_info),
 ]
 

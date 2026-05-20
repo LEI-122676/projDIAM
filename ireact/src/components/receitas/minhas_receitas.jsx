@@ -6,18 +6,23 @@ import iconeFiltro from "../../assets/filtro.svg";
 import iconeFrig from "../../assets/frigorifico.svg";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import PopupModal from '../maincomponents/PopupModal.jsx';
+import PopupModal from '../maincomponents/popupModal.jsx';
+import Pagination from '../maincomponents/pagination.jsx';
 
 const AsMinhasReceitas = () => {
     const navigate = useNavigate();
 
-    const RECEITAS_URL = 'http://localhost:8000/idjango/api/receitas/';
-    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api/utilizadores/';
+    const RECEITAS_URL = 'http://localhost:8000/idjango/api' + '/receitas/';
+    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api' + '/utilizadores/';
 
     const [receitas, setReceitas] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [isFridgeFilterActive, setIsFridgeFilterActive] = useState(false);
     const [fridgeIngredients, setFridgeIngredients] = useState([]);
+    
+    const [currentPageCriadas, setCurrentPageCriadas] = useState(1);
+    const [currentPageGuardadas, setCurrentPageGuardadas] = useState(1);
+    const itemsPerPage = parseInt(import.meta.env.VITE_ITEMS_PER_PAGE || '8', 10);
     
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
@@ -46,6 +51,11 @@ const AsMinhasReceitas = () => {
 
         getReceitas();
     }, [userId, navigate]);
+
+    useEffect(() => {
+        setCurrentPageCriadas(1);
+        setCurrentPageGuardadas(1);
+    }, [searchQuery, isFridgeFilterActive]);
 
     const handleFridgeFilterToggle = (forceValue) => {
         if (!userId) return;
@@ -90,12 +100,10 @@ const AsMinhasReceitas = () => {
             });
     };
 
-    // Filtrar primeiro pelas condições globais (texto e frigorífico)
     const filteredReceitas = receitas.filter(receita => {
         const nomeReceita = receita.nome || "";
         const matchesSearch = nomeReceita.toLowerCase().includes(searchQuery.toLowerCase());
 
-        // Filtro do frigorífico (mostrar receitas que usam pelo menos um ingrediente do frigorífico)
         let matchesFridge = true;
         if (isFridgeFilterActive) {
             if (fridgeIngredients.length === 0) {
@@ -156,80 +164,102 @@ const AsMinhasReceitas = () => {
                             </div>
                         </div>
 
-                        {/* SECÇÃO: CRIADAS POR MIM */}
                         <div className="mt-30">
                             <h2 className="my-recipes-section-title">Criadas por Mim</h2>
                             <div className="recipes-grid mt-20">
-                                {[...criadasPorMim].reverse().map((receita) => (
-                                    <div
-                                        key={`criada-${receita.id}`}
-                                        className="recipe-card-premium"
-                                        onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
-                                        style={{ position: 'relative' }}
-                                    >
-                                        <div className="card-rating-badge">
-                                            ⭐ {receita.classificacao || '0.0'}
+                                {(() => {
+                                    const reversedCriadas = [...criadasPorMim].reverse();
+                                    const indexOfLast = currentPageCriadas * itemsPerPage;
+                                    const indexOfFirst = indexOfLast - itemsPerPage;
+                                    const currentCriadas = reversedCriadas.slice(indexOfFirst, indexOfLast);
+                                    
+                                    return currentCriadas.map((receita) => (
+                                        <div
+                                            key={`criada-${receita.id}`}
+                                            className="recipe-card-premium cursor-pointer relative-container"
+                                            onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
+                                        >
+                                            <div className="card-rating-badge">
+                                                ⭐ {receita.classificacao || '0.0'}
+                                            </div>
+                                            <div className="recipe-image-placeholder">
+                                                {receita.foto_url ? (
+                                                    <img
+                                                        src={`http://localhost:8000${receita.foto_url}`}
+                                                        alt={receita.nome}
+                                                        className="cover-image"
+                                                    />
+                                                ) : (
+                                                    <span className="recipe-icon-large">🍲</span>
+                                                )}
+                                            </div>
+                                            <div className="recipe-card-footer">
+                                                <span className="ingredient-name">{receita.nome}</span>
+                                            </div>
                                         </div>
-                                        <div className="recipe-image-placeholder">
-                                            {receita.foto_url ? (
-                                                <img
-                                                    src={`http://localhost:8000${receita.foto_url}`}
-                                                    alt={receita.nome}
-                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                                />
-                                            ) : (
-                                                <span className="recipe-icon-large">🍲</span>
-                                            )}
-                                        </div>
-                                        <div className="recipe-card-footer">
-                                            <span className="ingredient-name">{receita.nome}</span>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ));
+                                })()}
                                 {criadasPorMim.length === 0 && (
                                     <p className="text-empty-state">
                                         Ainda não tens nenhuma receita criada.
                                     </p>
                                 )}
                             </div>
+                            <Pagination
+                                currentPage={currentPageCriadas}
+                                totalItems={criadasPorMim.length}
+                                itemsPerPage={itemsPerPage}
+                                onPageChange={setCurrentPageCriadas}
+                            />
                         </div>
 
-                        {/* SECÇÃO: RECEITAS GUARDADAS */}
                         <div className="mt-50">
                             <h2 className="my-recipes-section-title">Receitas Guardadas</h2>
                             <div className="recipes-grid mt-20">
-                                {[...receitasGuardadas].reverse().map((receita) => (
-                                    <div
-                                        key={`guardada-${receita.id}`}
-                                        className="recipe-card-premium"
-                                        onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
-                                        style={{ position: 'relative' }}
-                                    >
-                                        <div className="card-rating-badge">
-                                            ⭐ {receita.classificacao || '0.0'}
+                                {(() => {
+                                    const reversedGuardadas = [...receitasGuardadas].reverse();
+                                    const indexOfLast = currentPageGuardadas * itemsPerPage;
+                                    const indexOfFirst = indexOfLast - itemsPerPage;
+                                    const currentGuardadas = reversedGuardadas.slice(indexOfFirst, indexOfLast);
+                                    
+                                    return currentGuardadas.map((receita) => (
+                                        <div
+                                            key={`guardada-${receita.id}`}
+                                            className="recipe-card-premium cursor-pointer relative-container"
+                                            onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
+                                        >
+                                            <div className="card-rating-badge">
+                                                ⭐ {receita.classificacao || '0.0'}
+                                            </div>
+                                            <div className="recipe-image-placeholder">
+                                                {receita.foto_url ? (
+                                                    <img
+                                                        src={`http://localhost:8000${receita.foto_url}`}
+                                                        alt={receita.nome}
+                                                        className="cover-image"
+                                                    />
+                                                ) : (
+                                                    <span className="recipe-icon-large">🍲</span>
+                                                )}
+                                            </div>
+                                            <div className="recipe-card-footer">
+                                                <span className="ingredient-name">{receita.nome}</span>
+                                            </div>
                                         </div>
-                                        <div className="recipe-image-placeholder">
-                                            {receita.foto_url ? (
-                                                <img
-                                                    src={`http://localhost:8000${receita.foto_url}`}
-                                                    alt={receita.nome}
-                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                                />
-                                            ) : (
-                                                <span className="recipe-icon-large">🍲</span>
-                                            )}
-                                        </div>
-                                        <div className="recipe-card-footer">
-                                            <span className="ingredient-name">{receita.nome}</span>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ));
+                                })()}
                                 {receitasGuardadas.length === 0 && (
                                     <p className="text-empty-state">
                                         Ainda não guardaste nenhuma receita.
                                     </p>
                                 )}
                             </div>
+                            <Pagination
+                                currentPage={currentPageGuardadas}
+                                totalItems={receitasGuardadas.length}
+                                itemsPerPage={itemsPerPage}
+                                onPageChange={setCurrentPageGuardadas}
+                            />
                         </div>
 
 

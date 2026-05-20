@@ -4,7 +4,8 @@ import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
 import axios from 'axios';
 import '../../css/styles.css';
-import PopupModal from '../maincomponents/PopupModal.jsx';
+import PopupModal from '../maincomponents/popupModal.jsx';
+import { getCSRFToken } from '../../utils/csrf.js';
 
 const Frigorifico = () => {
     const navigate = useNavigate();
@@ -27,9 +28,9 @@ const Frigorifico = () => {
     });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-    const INGREDIENTES_URL = 'http://localhost:8000/idjango/api/ingredientes/';
-    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api/utilizadores/';
-    const FRIGORIFICOS_URL = 'http://localhost:8000/idjango/api/frigorificos/';
+    const INGREDIENTES_URL = 'http://localhost:8000/idjango/api' + '/ingredientes/';
+    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api' + '/utilizadores/';
+    const FRIGORIFICOS_URL = 'http://localhost:8000/idjango/api' + '/frigorificos/';
 
     const getIngredientes = () => {
         axios.get(INGREDIENTES_URL)
@@ -55,7 +56,7 @@ const Frigorifico = () => {
         }
 
         getIngredientes();
-        axios.get(`${UTILIZADORES_URL}${userId}/frigorifico`)
+        axios.get(`${UTILIZADORES_URL}${userId}/frigorifico`, { withCredentials: true })
             .then(res => {
                 setFridgeId(res.data.id);
                 const ingredientes = (res.data.ingredientes || []).map(item => {
@@ -69,7 +70,6 @@ const Frigorifico = () => {
             });
     }, [userId, navigate]);
 
-    // Função para atualizar na BD
     const atualizarFrigorifico = (novaListaIds) => {
         if (!fridgeId) {
             setPopupConfig({
@@ -84,7 +84,10 @@ const Frigorifico = () => {
 
         axios.patch(`${FRIGORIFICOS_URL}${fridgeId}`, {
             ingredientes: novaListaIds
-        }, { withCredentials: true })
+        }, { 
+            headers: { 'X-CSRFToken': getCSRFToken() },
+            withCredentials: true 
+        })
             .then(() => {
                 setIngredientesFrigorificoIds(novaListaIds);
             })
@@ -119,7 +122,7 @@ const Frigorifico = () => {
 
         const novaLista = [...ingredientesFrigorificoIds, id];
         atualizarFrigorifico(novaLista);
-        setIngredienteSelecionado(''); // Reset
+        setIngredienteSelecionado('');
     };
 
     const removerIngrediente = (idParaRemover) => {

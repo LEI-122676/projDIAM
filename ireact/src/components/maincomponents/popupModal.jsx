@@ -1,4 +1,4 @@
-import React from 'react';
+import 'react';
 import '../../css/styles.css';
 
 const PopupModal = ({ isOpen, title, message, onConfirm, onCancel, confirmText = "OK", cancelText = "Cancelar", singleButton = false }) => {

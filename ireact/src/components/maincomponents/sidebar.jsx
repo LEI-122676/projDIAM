@@ -1,16 +1,23 @@
-import  { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../css/styles.css';
 
-// Importação das imagens
 import iconeReceitas from '../../assets/receitas.svg';
 import iconeEventos from '../../assets/calendario.svg';
 import iconeFrigorifico from '../../assets/frigorifico.svg';
 import iconePerfil from '../../assets/perfil.svg';
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(() => {
+    const savedState = localStorage.getItem('sidebarOpen');
+    return savedState !== null ? JSON.parse(savedState) : true;
+  });
+  
   const navigate = useNavigate();
+
+  useEffect(() => {
+    localStorage.setItem('sidebarOpen', JSON.stringify(isOpen));
+  }, [isOpen]);
 
   return (
     <nav className={`sidebar ${isOpen ? 'open' : 'closed'}`}>

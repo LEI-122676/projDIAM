@@ -4,7 +4,9 @@ import Sidebar from '../maincomponents/sidebar.jsx';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import '../../css/styles.css';
-import PopupModal from '../maincomponents/PopupModal.jsx';
+import PopupModal from '../maincomponents/popupModal.jsx';
+import Pagination from '../maincomponents/pagination.jsx';
+import { getCSRFToken } from '../../utils/csrf.js';
 
 const VerReceita = () => {
     const navigate = useNavigate();
@@ -14,24 +16,25 @@ const VerReceita = () => {
     const [receita, setReceita] = useState(null);
     const [dbIngredientes, setDbIngredientes] = useState([]);
     const [comentarios, setComentarios] = useState([]);
-    const [utilizadores, setUtilizadores] = useState([]);
 
-    // Auth
     const userId = localStorage.getItem('utilizadorId');
+    const [isAdmin, setIsAdmin] = useState(false);
 
-    // UI state
     const [novoComentario, setNovoComentario] = useState('');
     const [novaClassificacao, setNovaClassificacao] = useState(5);
     const [guardado, setGuardado] = useState(false);
     const [isLoadError, setIsLoadError] = useState(false);
+    
+    const [currentCommentPage, setCurrentCommentPage] = useState(1);
+    const commentsPerPage = parseInt(import.meta.env.VITE_ITEMS_PER_PAGE || '8', 10);
 
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-    const INGREDIENTES_URL = 'http://localhost:8000/idjango/api/ingredientes/';
-    const RECEITA_URL = 'http://localhost:8000/idjango/api/receitas/';
-    const COMENTARIOS_URL = 'http://localhost:8000/idjango/api/comentarios/';
-    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api/utilizadores/';
+    const INGREDIENTES_URL = 'http://localhost:8000/idjango/api' + '/ingredientes/';
+    const RECEITA_URL = 'http://localhost:8000/idjango/api' + '/receitas/';
+    const COMENTARIOS_URL = 'http://localhost:8000/idjango/api' + '/comentarios/';
+    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api' + '/utilizadores/';
 
     const showLoginPopup = (actionMessage) => {
         setPopupConfig({
@@ -45,21 +48,22 @@ const VerReceita = () => {
         });
     };
 
+    const showPopup = (title, message) => {
+        setPopupConfig({
+            isOpen: true,
+            title,
+            message,
+            singleButton: true,
+            confirmText: 'OK',
+            onConfirm: closePopup,
+            onCancel: closePopup
+        });
+    };
+
     const getIngredientes = () => {
         axios.get(INGREDIENTES_URL)
             .then(res => setDbIngredientes(res.data))
             .catch(err => console.error(err));
-    };
-
-    const getUtilizadores = () => {
-        axios.get(UTILIZADORES_URL)
-            .then(res => setUtilizadores(res.data || []))
-            .catch(err => console.error(err));
-    };
-
-    const getUserName = (uid) => {
-        const u = utilizadores.find(u => u.id === uid);
-        return u ? u.username : `Utilizador #${uid}`;
     };
 
     const getReceita = () => {
@@ -94,14 +98,22 @@ const VerReceita = () => {
         }
 
         getIngredientes();
-        getUtilizadores();
         getReceita();
         getComentarios();
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [recipeId]);
+        if (userId) {
+            axios.get(`${UTILIZADORES_URL}${userId}`, { withCredentials: true })
+                .then(res => {
+                    if (res.data.role === 'Admin') {
+                        setIsAdmin(true);
+                    }
+                })
+                .catch(err => console.error("Erro ao obter a role do utilizador:", err));
+        }
 
-    // Guardar/Remover Receita
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [navigate, recipeId, userId]);
+
     const handleGuardar = () => {
         if (!userId) {
             showLoginPopup('guardar esta receita');
@@ -116,20 +128,13 @@ const VerReceita = () => {
         } else {
             newGuardadores.push(parseInt(userId));
         }
-        // Usar PATCH para enviar apenas os campos necessários e evitar erros de validação com campos de leitura
-        axios.patch(RECEITA_URL + recipeId, { guardadores: newGuardadores }, { withCredentials: true })
+        axios.patch(RECEITA_URL + recipeId, { guardadores: newGuardadores }, { 
+            headers: { 'X-CSRFToken': getCSRFToken() },
+            withCredentials: true 
+        })
             .then(res => {
                 setReceita(res.data);
                 setGuardado(!isAlreadySaved);
-                setPopupConfig({
-                    isOpen: true,
-                    title: isAlreadySaved ? 'Receita Removida' : 'Receita Guardada',
-                    message: isAlreadySaved ? 'Receita removida dos teus guardados.' : 'Receita guardada com sucesso!',
-                    singleButton: true,
-                    confirmText: 'OK',
-                    onConfirm: closePopup,
-                    onCancel: closePopup
-                });
             })
             .catch(err => {
                 console.error(err);
@@ -154,7 +159,10 @@ const VerReceita = () => {
             confirmText: 'Apagar',
             cancelText: 'Cancelar',
             onConfirm: () => {
-                axios.delete(RECEITA_URL + recipeId)
+                axios.delete(RECEITA_URL + recipeId, {
+                    headers: { 'X-CSRFToken': getCSRFToken() },
+                    withCredentials: true
+                })
                     .then(() => {
                         setPopupConfig({
                             isOpen: true,
@@ -183,17 +191,19 @@ const VerReceita = () => {
         });
     };
 
-    // Avaliações
     const handleAvaliar = () => {
         if (!userId) {
             showLoginPopup('avaliar esta receita');
             return;
         }
 
-        axios.post('http://localhost:8000/idjango/api/avaliar/', {
+        axios.post('http://localhost:8000/idjango/api' + '/avaliar/', {
             utilizador: parseInt(userId),
             receita: parseInt(recipeId),
             nota: novaClassificacao
+        }, {
+            headers: { 'X-CSRFToken': getCSRFToken() },
+            withCredentials: true
         })
         .then(res => {
             setReceita(res.data);
@@ -214,7 +224,6 @@ const VerReceita = () => {
     };
 
 
-    // Comentar
     const handleAddComentario = () => {
         if (!userId) {
             showLoginPopup('comentar nesta receita');
@@ -228,18 +237,40 @@ const VerReceita = () => {
             texto: novoComentario
         };
 
-        axios.post(COMENTARIOS_URL, payload)
+        axios.post(COMENTARIOS_URL, payload, {
+            headers: { 'X-CSRFToken': getCSRFToken() },
+            withCredentials: true
+        })
             .then(res => {
                 setComentarios([...comentarios, res.data]);
                 setNovoComentario('');
             })
-            .catch(err => console.error(err));
+            .catch(err => {
+                console.error(err);
+                let message = 'Por favor, tenha atenção à sua linguagem. Não são permitidos palavrões, links ou anúncios no comentário.';
+                if (err.response && err.response.data) {
+                    const data = err.response.data;
+                    if (typeof data === 'object') {
+                        const firstFieldErrors = Object.values(data)[0];
+                        if (Array.isArray(firstFieldErrors) && firstFieldErrors.length > 0) {
+                            message = firstFieldErrors[0];
+                        } else if (typeof data.msg === 'string') {
+                            message = data.msg;
+                        } else {
+                            message = JSON.stringify(data);
+                        }
+                    } else if (typeof data === 'string') {
+                        message = data;
+                    }
+                }
+                showPopup('Atenção à Linguagem', message);
+            });
     };
 
 
     if (isLoadError) return (
         <div className="loading-container">
-            <p style={{ color: '#8b4b4b', marginBottom: '20px' }}>❌ Não foi possível carregar a receita.</p>
+            <p className="error-message">❌ Não foi possível carregar a receita.</p>
             <button className="btn-cancel" onClick={() => navigate('/receitas')}>Voltar às Receitas</button>
         </div>
     );
@@ -256,20 +287,19 @@ const VerReceita = () => {
                     <div className="recipe-header-container">
                         <h1 className="page-title-underline">{receita.nome}</h1>
                         <div className="recipe-rating-text">
-                            ⭐ {receita.classificacao ? Number(receita.classificacao).toFixed(1) : "5.0"} / 5
+                            ⭐ {(receita.classificacao !== undefined && receita.classificacao !== null && Number(receita.classificacao) > 0) ? Number(receita.classificacao).toFixed(1) : "0.0"} / 5
                         </div>
                     </div>
 
                     <div className="recipe-view-container">
 
-                        {/* PARTE SUPERIOR */}
                         <div className="recipe-top-row">
                             <div className="recipe-main-image flex-center">
                                 {receita.foto_url ? (
                                     <img
                                         src={`http://localhost:8000${receita.foto_url}`}
                                         alt={receita.nome}
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '14px' }}
+                                        className="cover-image-rounded"
                                     />
                                 ) : (
                                     <span className="recipe-main-icon">🍲</span>
@@ -296,34 +326,39 @@ const VerReceita = () => {
                                 <div className="view-actions-group mt-auto">
                                     <button className="btn-cancel" onClick={() => navigate(-1)}>Voltar</button>
 
-                                    {Number(receita.criador) === Number(userId) ? (
+                                    {(Number(receita.criador) !== Number(userId) || isAdmin) && (
                                         <button
-                                            className="btn-cancel"
-                                            onClick={handleDelete}
-                                            style={{ backgroundColor: '#8b4b4b', color: 'white' }}
-                                        >
-                                            Remover Receita
-                                        </button>
-                                    ) : (
-                                        <button
-                                            className="btn-create-submit"
+                                            className={`btn-create-submit ${guardado ? "btn-saved" : ""}`}
                                             onClick={handleGuardar}
-                                            style={guardado ? { backgroundColor: '#8a9b8e' } : {}}
                                         >
                                             {guardado ? 'Guardado' : 'Guardar'}
                                         </button>
+                                    )}
+
+                                    {(Number(receita.criador) === Number(userId) || isAdmin) && (
+                                        <>
+                                            <button
+                                                className="btn-create-submit btn-action-edit"
+                                                onClick={() => navigate('/receitas/criar-receita', { state: { editReceita: receita } })}
+                                            >
+                                                Editar
+                                            </button>
+                                            <button
+                                                className="btn-create-submit btn-action-delete"
+                                                onClick={handleDelete}
+                                            >
+                                                Remover
+                                            </button>
+                                        </>
                                     )}
                                 </div>
                             </div>
                         </div>
 
-                        {/* PARTE INFERIOR */}
                         <div className="recipe-bottom-row recipe-bottom-row-flex">
 
-                            {/* Coluna de Descrição dos Passos */}
                             <div className="recipe-descriptions-column recipe-col-2">
                                 {receita.instrucao.map((passo, index) => {
-                                    // Separa o título (Passo X:) do resto do texto
                                     const hasPrefix = passo.match(/^(Passo \d+:\s*)(.*)/);
                                     const subtitle = hasPrefix ? `Passo ${index + 1}` : `Passo ${index + 1}`;
                                     const description = hasPrefix ? hasPrefix[2] : passo;
@@ -339,7 +374,6 @@ const VerReceita = () => {
                                 })}
                             </div>
 
-                            {/* Coluna de Ingredientes */}
                             <div className="recipe-ingredients-column recipe-col-1">
                                 <label className="section-subtitle">Ingredientes</label>
                                 <div className="content-box-light ingredients-box">
@@ -352,7 +386,6 @@ const VerReceita = () => {
                                     </ul>
                                 </div>
 
-                                {/* Secção de Classificação */}
                                 <div className="rating-section">
                                     <label className="section-subtitle rating-title">Avaliar Receita</label>
                                     <div className="rating-stars">
@@ -376,7 +409,6 @@ const VerReceita = () => {
                             </div>
                         </div>
 
-                        {/* SECÇÃO DE COMENTÁRIOS */}
                         <div className="comments-section">
                             <h3 className="comments-title">
                                 Comentários ({comentarios.length})
@@ -403,20 +435,33 @@ const VerReceita = () => {
                                         Ainda não há comentários. Sê o primeiro a partilhar a tua opinião!
                                     </p>
                                 ) : (
-                                    comentarios.map(comentario => (
-                                        <div key={comentario.id} className="comment-card">
-                                            <div className="comment-header">
-                                                <strong className="comment-author">
-                                                    <span className="comment-avatar">👤</span>
-                                                    {getUserName(comentario.utilizador)}
-                                                </strong>
-                                                <span className="comment-date">{new Date(comentario.data).toLocaleDateString()}</span>
+                                    (() => {
+                                        const indexOfLastComment = currentCommentPage * commentsPerPage;
+                                        const indexOfFirstComment = indexOfLastComment - commentsPerPage;
+                                        const currentComments = comentarios.slice(indexOfFirstComment, indexOfLastComment);
+
+                                        return currentComments.map(comentario => (
+                                            <div key={comentario.id} className="comment-card">
+                                                <div className="comment-header">
+                                                    <strong className="comment-author">
+                                                        <span className="comment-avatar">👤</span>
+                                                        {comentario.utilizador_nome}
+                                                    </strong>
+                                                    <span className="comment-date">{new Date(comentario.data).toLocaleDateString()}</span>
+                                                </div>
+                                                <p className="comment-text">{comentario.texto}</p>
                                             </div>
-                                            <p className="comment-text">{comentario.texto}</p>
-                                        </div>
-                                    ))
+                                        ));
+                                    })()
                                 )}
                             </div>
+
+                            <Pagination
+                                currentPage={currentCommentPage}
+                                totalItems={comentarios.length}
+                                itemsPerPage={commentsPerPage}
+                                onPageChange={setCurrentCommentPage}
+                            />
                         </div>
 
                     </div>

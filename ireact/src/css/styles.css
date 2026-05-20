@@ -425,7 +425,7 @@ html, body, #root {
     flex-direction: column;
     align-items: flex-start; /* Alinhado à esquerda como na imagem */
     padding: 0 10%;
-    max-width: 500px;
+    max-width: 50%;
 }
 
 .auth-title {
@@ -442,11 +442,11 @@ html, body, #root {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 90%;
+    width: 100%;
 }
 
 .auth-input {
-    width: 150%;
+    width: 100%;
     padding: 15px 25px;
     border: 1.5px solid #EAE6D6; /* Cor da borda suave */
     border-radius: 30px; /* Inputs ovais */
@@ -707,6 +707,7 @@ html, body, #root {
     align-items: center;
     position: relative;
     border: 1px solid #EAEAEA;
+    overflow: hidden;
 }
 
 .ingredient-name {
@@ -796,6 +797,659 @@ html, body, #root {
 }
 
 
+
+
+/* --- THEME TOGGLE BUTTON --- */
+.theme-toggle-btn {
+    background-color: transparent;
+    border: 1px solid #D1CDBC;
+    color: #4A3A31;
+    padding: 8px 16px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.theme-toggle-btn:hover {
+    background-color: #F0EEE3;
+}
+
+/* --- DARK MODE RULES --- */
+body.dark-mode {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .header,
+body.dark-mode .content-profile,
+body.dark-mode .content-home,
+body.dark-mode .content-frigorifico,
+body.dark-mode .auth-container,
+body.dark-mode .profile-details-card,
+body.dark-mode .recipes-container,
+body.dark-mode .recipe-details-container,
+body.dark-mode .event-details-container {
+    background-color: #1e1e1e !important;
+    border-color: #333 !important;
+}
+
+body.dark-mode .sidebar {
+    background-color: #1a1a1a !important;
+    border-color: #333 !important;
+}
+
+body.dark-mode .sidebar-header-only,
+body.dark-mode .sidebar-header-section {
+    background-color: #1e1e1e !important;
+}
+
+body.dark-mode .nav-item:hover,
+body.dark-mode .shortcut-card:hover,
+body.dark-mode .quick-card:hover {
+    background-color: #2a2a2a !important;
+}
+
+body.dark-mode .shortcut-card,
+body.dark-mode .quick-card,
+body.dark-mode .fridge-input-card,
+body.dark-mode .ingredient-tag,
+body.dark-mode .recipe-card,
+body.dark-mode .event-card,
+body.dark-mode .modal-content {
+    background-color: #242424 !important;
+    border-color: #444 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .brand-name,
+body.dark-mode .home-welcome-title,
+body.dark-mode .page-title-underline,
+body.dark-mode .nav-text,
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode .user-extra-info h3,
+body.dark-mode .ingredient-name,
+body.dark-mode .input-group label,
+body.dark-mode .auth-title,
+body.dark-mode .recipe-title,
+body.dark-mode .event-title,
+body.dark-mode .modal-title {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .home-subtitle,
+body.dark-mode .breadcrumb,
+body.dark-mode .explore-text,
+body.dark-mode .user-extra-info li,
+body.dark-mode .theme-toggle-btn,
+body.dark-mode p,
+body.dark-mode .modal-text {
+    color: #a0a0a0 !important;
+}
+
+body.dark-mode .auth-input,
+body.dark-mode .recipe-search-box,
+body.dark-mode .event-search-box,
+body.dark-mode .input-group input,
+body.dark-mode textarea,
+body.dark-mode select {
+    background-color: #2c2c2c !important;
+    color: #e0e0e0 !important;
+    border-color: #444 !important;
+}
+
+body.dark-mode .hamburger-btn .line {
+    background-color: #e0e0e0 !important;
+}
+
+body.dark-mode .page-title-underline {
+    border-bottom-color: #81c784 !important;
+}
+
+body.dark-mode .btn-search-home,
+body.dark-mode .btn-mostrar-receitas,
+body.dark-mode .btn-guardar,
+body.dark-mode .btn-auth,
+body.dark-mode .btn-profile-pill:not(.secondary),
+body.dark-mode .btn-search-bar,
+body.dark-mode .btn-primary {
+    background-color: #81c784 !important;
+    color: #121212 !important;
+}
+
+body.dark-mode .btn-search-home:hover,
+body.dark-mode .btn-mostrar-receitas:hover,
+body.dark-mode .btn-guardar:hover,
+body.dark-mode .btn-auth:hover,
+body.dark-mode .btn-profile-pill:not(.secondary):hover,
+body.dark-mode .btn-search-bar:hover,
+body.dark-mode .btn-primary:hover {
+    background-color: #a5d6a7 !important;
+}
+
+body.dark-mode .btn-profile-pill.secondary,
+body.dark-mode .btn-secondary {
+    background-color: #1e1e1e !important;
+    border-color: #555 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .theme-toggle-btn {
+    border-color: #555 !important;
+}
+
+body.dark-mode .theme-toggle-btn:hover {
+    background-color: #333 !important;
+}
+
+body.dark-mode .logo img {
+    filter: brightness(0) invert(1) !important;
+}
+
+body.dark-mode .nav-icon-img,
+body.dark-mode .recipe-icon-svg {
+    filter: brightness(0) invert(0.8) !important;
+}
+
+body.dark-mode .recipe-card:hover,
+body.dark-mode .event-card:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
+}
+
+/* Fixes for dark mode specific contrast issues */
+body.dark-mode .recipe-category {
+    background-color: #333 !important;
+    color: #ccc !important;
+}
+
+/* Modal tweaks */
+body.dark-mode .modal-overlay {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+
+body.dark-mode #root { background-color: #121212 !important; color: #e0e0e0 !important; }
+
+
+/* Fixes for dark mode missing components */
+body.dark-mode .premium-card,
+body.dark-mode .content-box-light,
+body.dark-mode .comment-card,
+body.dark-mode .btn-filter-fridge,
+body.dark-mode .recipe-view-container,
+body.dark-mode .rating-section,
+body.dark-mode .comments-section,
+body.dark-mode .recipe-bottom-row,
+body.dark-mode .step-detail {
+    background-color: #1e1e1e !important;
+    border-color: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .ingredient-chip-premium {
+    background-color: #242424 !important;
+    border-color: #444 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .content-box-light.text-black {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .fridge-status-bar,
+body.dark-mode .recipe-header-container,
+body.dark-mode .recipe-top-row {
+    background-color: transparent !important;
+}
+
+body.dark-mode .btn-filter-fridge {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .chip-remove-btn {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .chip-remove-btn:hover {
+    color: #ff5555 !important;
+}
+
+body.dark-mode .fridge-content-title,
+body.dark-mode .badge-count,
+body.dark-mode .fridge-label,
+body.dark-mode .section-subtitle,
+body.dark-mode .rating-title,
+body.dark-mode .comments-title,
+body.dark-mode .comment-author,
+body.dark-mode .step-nav-item,
+body.dark-mode .recipe-rating-text {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .comment-date,
+body.dark-mode .comment-text,
+body.dark-mode .fridge-empty-clean-text {
+    color: #a0a0a0 !important;
+}
+
+body.dark-mode .step-nav-item:hover {
+    background-color: #2a2a2a !important;
+}
+
+
+body.dark-mode .text-black { color: #e0e0e0 !important; }
+
+
+/* Refinement of Dark Mode Colors */
+body.dark-mode .recipe-card-premium,
+body.dark-mode .content-box-light,
+body.dark-mode .ingredient-chip-premium,
+body.dark-mode .premium-card,
+body.dark-mode .comment-card,
+body.dark-mode .btn-filter-fridge,
+body.dark-mode .recipe-view-container,
+body.dark-mode .rating-section,
+body.dark-mode .comments-section,
+body.dark-mode .recipe-bottom-row,
+body.dark-mode .step-detail {
+    background-color: #111111 !important;
+    border-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .recipe-card-premium:hover,
+body.dark-mode .ingredient-chip-premium:hover {
+    background-color: #1a1a1a !important;
+}
+
+body.dark-mode .card-rating-badge {
+    background-color: #222 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .recipe-card-premium .recipe-card-footer {
+    background-color: #111111 !important;
+}
+
+
+
+body.dark-mode .recipe-card,
+body.dark-mode .event-card {
+    background-color: #111111 !important;
+    border-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .recipe-card:hover,
+body.dark-mode .event-card:hover {
+    background-color: #1a1a1a !important;
+}
+
+body.dark-mode .recipe-card .recipe-card-footer,
+body.dark-mode .event-card .recipe-card-footer {
+    background-color: #111111 !important;
+}
+
+
+
+/* Fixes for individual recipe components in dark mode */
+body.dark-mode .recipe-view-container {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+body.dark-mode .recipe-main-image,
+body.dark-mode .step-nav-item,
+body.dark-mode .content-box-light,
+body.dark-mode .rating-section,
+body.dark-mode .comments-section,
+body.dark-mode .comment-card {
+    background-color: #111111 !important;
+    border: 1px solid #2a2a2a !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .step-nav-item {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .step-nav-item:hover {
+    background-color: #222222 !important;
+}
+
+/* Active state for fridge filter button in dark mode */
+body.dark-mode .btn-filter-fridge.active {
+    background-color: #628169 !important;
+    color: white !important;
+}
+body.dark-mode .btn-filter-fridge.active .recipe-icon-svg {
+    filter: brightness(0) invert(1) !important;
+}
+
+
+
+/* Perfil and Recipe bottom row adjustments in dark mode */
+body.dark-mode .recipe-bottom-row {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+body.dark-mode .btn-edit-profile {
+    background-color: #111111 !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #2a2a2a !important;
+}
+
+body.dark-mode .btn-edit-profile:hover {
+    background-color: #1a1a1a !important;
+}
+
+body.dark-mode .btn-logout-link {
+    background-color: #c0392b !important;
+    color: white !important;
+    border: none !important;
+    padding: 12px !important;
+    border-radius: 30px !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    display: inline-block !important;
+}
+
+body.dark-mode .btn-logout-link:hover {
+    background-color: #e74c3c !important;
+}
+
+body.dark-mode .user-avatar-large {
+    background-color: #111111 !important;
+    border-color: #2a2a2a !important;
+}
+
+body.dark-mode .user-names h2 {
+    color: #81c784 !important;
+}
+
+
+
+/* Make the outer step-detail wrapper transparent so only content-box-light is black */
+body.dark-mode .step-detail {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+
+
+/* Homepage and Popup adjustments in dark mode */
+body.dark-mode .content-home,
+body.dark-mode .content-profile,
+body.dark-mode .content-frigorifico {
+    background-color: #111111 !important;
+}
+
+body.dark-mode .search-container,
+body.dark-mode .calendar-filter-wrapper {
+    background-color: #262626 !important;
+    border-color: #383838 !important;
+}
+
+body.dark-mode .calendar-display-text {
+    color: #ffffff !important;
+}
+
+body.dark-mode .main-search-input {
+    background-color: transparent !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+body.dark-mode .main-search-input::placeholder {
+    color: #8c8a8a !important;
+}
+
+body.dark-mode .home-welcome-title {
+    color: #ffffff !important;
+}
+
+body.dark-mode .home-subtitle {
+    color: #b0b0b0 !important;
+}
+
+/* Popup Modal styling in dark mode */
+body.dark-mode .popup-overlay {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+body.dark-mode .popup-content {
+    background-color: #111111 !important;
+    border: 1px solid #2a2a2a !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7) !important;
+}
+
+body.dark-mode .popup-title {
+    color: #81c784 !important;
+    border-bottom-color: #2a2a2a !important;
+}
+
+body.dark-mode .popup-message {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .btn-popup-cancel {
+    border-color: #81c784 !important;
+    color: #81c784 !important;
+    background-color: transparent !important;
+}
+
+body.dark-mode .btn-popup-cancel:hover {
+    background-color: rgba(129, 199, 132, 0.1) !important;
+}
+
+body.dark-mode .btn-popup-confirm {
+    background-color: #81c784 !important;
+    color: #121212 !important;
+}
+
+body.dark-mode .btn-popup-confirm:hover {
+    background-color: #a5d6a7 !important;
+}
+
+
+
+/* Auth divider and auth container adjustments for Login Dark Mode */
+body.dark-mode .auth-container {
+    background-color: #111111 !important;
+}
+
+body.dark-mode .auth-divider {
+    background-color: #333333 !important;
+}
+
+body.dark-mode .auth-divider span {
+    background-color: #111111 !important;
+    color: #888888 !important;
+}
+
+
+
+/* ==========================================================================
+   REFINE DARK MODE DEPTH AND CONTRAST (TIERED ELEVATION SYSTEM)
+   ========================================================================== */
+
+/* Level 0: Main background / Page base */
+body.dark-mode,
+body.dark-mode #root,
+body.dark-mode .content-home,
+body.dark-mode .content-profile,
+body.dark-mode .content-frigorifico,
+body.dark-mode .auth-container {
+    background-color: #121212 !important;
+}
+
+/* Level 1: Core structural shells (Header, Sidebar) */
+body.dark-mode .header {
+    background-color: #181818 !important;
+    border-bottom: 1px solid #282828 !important;
+}
+body.dark-mode .sidebar {
+    background-color: #181818 !important;
+    border-right: 1px solid #282828 !important;
+}
+body.dark-mode .sidebar-header-only,
+body.dark-mode .sidebar-header-section {
+    background-color: #181818 !important;
+}
+
+/* Level 2: Cards, containers, standard content blocks */
+body.dark-mode .recipe-card,
+body.dark-mode .recipe-card-premium,
+body.dark-mode .event-card,
+body.dark-mode .premium-card,
+body.dark-mode .content-box-light,
+body.dark-mode .rating-section,
+body.dark-mode .comments-section,
+body.dark-mode .popup-content,
+body.dark-mode .step-nav-item,
+body.dark-mode .recipe-main-image,
+body.dark-mode .fridge-input-card-custom,
+body.dark-mode .profile-details-card,
+body.dark-mode .user-avatar-large {
+    background-color: #1e1e1e !important;
+    border: 1px solid #2c2c2c !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+body.dark-mode .recipe-card-premium .recipe-card-footer,
+body.dark-mode .recipe-card .recipe-card-footer,
+body.dark-mode .event-card .recipe-card-footer {
+    background-color: #1e1e1e !important;
+    border-top: 1px solid #2c2c2c !important;
+}
+
+/* Level 3: Nested items, lists, chips, sub-cards and inputs */
+body.dark-mode .comment-card,
+body.dark-mode .ingredient-chip-premium,
+body.dark-mode .shortcut-card,
+body.dark-mode .quick-card,
+body.dark-mode .btn-filter-fridge:not(.active),
+body.dark-mode .auth-input,
+body.dark-mode .recipe-search-box,
+body.dark-mode .event-search-box,
+body.dark-mode .input-group input,
+body.dark-mode textarea,
+body.dark-mode select,
+body.dark-mode .input-beige {
+    background-color: #262626 !important;
+    border: 1px solid #383838 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .auth-divider span {
+    background-color: #121212 !important;
+    color: #888888 !important;
+}
+
+/* Active buttons and interactive highlights */
+body.dark-mode .step-nav-item:hover,
+body.dark-mode .btn-filter-fridge:not(.active):hover,
+body.dark-mode .shortcut-card:hover,
+body.dark-mode .quick-card:hover,
+body.dark-mode .ingredient-chip-premium:hover {
+    background-color: #2d2d2d !important;
+    border-color: #444444 !important;
+}
+
+body.dark-mode .recipe-card:hover,
+body.dark-mode .recipe-card-premium:hover,
+body.dark-mode .event-card:hover {
+    background-color: #242424 !important;
+    border-color: #383838 !important;
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Scrollbars customized for high-quality dark mode */
+body.dark-mode ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+body.dark-mode ::-webkit-scrollbar-track {
+    background: #121212;
+}
+body.dark-mode ::-webkit-scrollbar-thumb {
+    background: #2c2c2c;
+    border-radius: 5px;
+}
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: #383838;
+}
+
+
+
+/* Estilos para Paginação com Números */
+.btn-page-number {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-weight: bold !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+    min-width: 38px !important;
+}
+
+
+
+/* Styled pagination page select dropdown */
+select.page-select-dropdown,
+.page-select-dropdown {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    border-bottom: 2px dashed #628169 !important;
+    color: #628169 !important;
+    font-weight: 800;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0 4px;
+    outline: none;
+    text-align: center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+select.page-select-dropdown option,
+.page-select-dropdown option {
+    background-color: #ffffff !important;
+    color: #4a3a31 !important;
+    font-weight: 600;
+}
+
+body.dark-mode select.page-select-dropdown,
+body.dark-mode .page-select-dropdown {
+    background: transparent !important;
+    background-color: transparent !important;
+    border-bottom: 2px dashed #81c784 !important;
+    color: #81c784 !important;
+}
+
+body.dark-mode select.page-select-dropdown option,
+body.dark-mode .page-select-dropdown option {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+}
+
 /* 5. Ícones SVG Padronizados */
 .recipe-icon-svg {
     width: 20px !important;
@@ -864,16 +1518,34 @@ html, body, #root {
 /* 7. Grid de Receitas */
 .recipes-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 25px;
     padding-bottom: 50px;
     width: 100%;
 }
 
+@media (max-width: 1200px) {
+    .recipes-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .recipes-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .recipes-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Card Individual */
 .recipe-card {
     width: 100%;
-    height: 240px;
+    height: 280px; /* Aumentado proporcionalmente */
     display: flex;
     flex-direction: column;
     background-color: #FDFBEE;
@@ -890,7 +1562,7 @@ html, body, #root {
 
 .recipe-icon-large { font-size: 64px; color: #D1CDBC; opacity: 0.6; }
 .recipe-image-placeholder {
-    min-height: 180px;
+    height: 220px; /* Aumentado de 180px para maior visibilidade */
     background-color: #f9f9f9;
     display: flex;
     align-items: center;
@@ -903,15 +1575,17 @@ html, body, #root {
     width: 100%;
     background-color: #ffffff;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     border-top: 1px solid #EAEAEA;
+    overflow: hidden;
 }
 
 .recipe-card-footer .ingredient-name {
     font-weight: 700;
     color: #4A3A31;
     font-size: 0.95rem;
+    overflow: hidden;
 }
 
 /* --- PÁGINA: CRIAR RECEITA --- */
@@ -1002,6 +1676,7 @@ html, body, #root {
 
 /* Upload de Imagem */
 .image-upload-placeholder {
+    position: relative;
     width: 100%;
     aspect-ratio: 1 / 1;
     border: 2px dashed #D1CDBC;
@@ -1011,9 +1686,10 @@ html, body, #root {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    overflow: hidden;
 }
 
-.image-upload-placeholder img {
+.image-upload-placeholder img:not(.image-preview-fit) {
     width: 80px;
     opacity: 0.5;
 }
@@ -1131,7 +1807,8 @@ html, body, #root {
 /* Grupo de Botões posicionado abaixo do índice de passos */
 .view-actions-group {
     display: flex;
-    gap: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
     margin-top: 20px;
     justify-content: center;
 }
@@ -1330,6 +2007,7 @@ html, body, #root {
     margin: 0;
     color: #333;
     line-height: 1.5;
+    text-align: left;
 }
 
 /* --- AS MINHAS RECEITAS --- */
@@ -1547,5 +2225,464 @@ html, body, #root {
     gap: 5px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
+.calendar-filter-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Garante que o teu span de texto fica perfeitamente centrado */
+    padding: 10px 18px;
+    border-radius: 12px;
+    border: 1.5px solid #4A3A31;
+    background-color: #ffffff;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 45px;
+}
 
+.calendar-filter-wrapper:hover {
+    background-color: #F6F4E9;
+    border-color: #2E4A35;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(46, 74, 53, 0.08);
+}
 
+/* O input nativo fica invisível mas ocupa 100% do botão para o clique funcionar em todo o lado */
+.calendar-hidden-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0 !important; /* Força a opacidade a zero em qualquer estado */
+    cursor: pointer;
+}
+
+/* Esconde o ícone nativo de relógio/calendário para não colidir com o teu layout */
+.calendar-hidden-input::-webkit-calendar-picker-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0 !important;
+    cursor: pointer;
+}
+
+.clear-date-btn {
+    background: rgba(139, 75, 75, 0.1);
+    border: none;
+    color: #8b4b4b;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 8px;
+    transition: all 0.2s;
+    font-weight: bold;
+}
+
+.clear-date-btn:hover {
+    background: #8b4b4b;
+    color: white;
+}
+
+.calendar-filter-wrapper .recipe-icon-svg {
+    filter: invert(21%) sepia(15%) saturate(1200%) hue-rotate(345deg) brightness(30%) contrast(85%);
+    transition: filter 0.2s;
+}
+
+.calendar-filter-wrapper:hover .recipe-icon-svg {
+    filter: invert(21%) sepia(15%) saturate(2500%) hue-rotate(92deg) brightness(90%) contrast(90%);
+}
+
+.create-recipe-container {
+    display: flex;
+    gap: 60px;
+    width: 100%;
+    align-items: flex-start;
+    padding-bottom: 120px; /* Garante espaço abaixo do formulário para os dropdowns abrirem para baixo */
+}
+
+.event-metadata-single-line {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    background-color: #fcfbfa;
+    padding: 15px 20px;
+    border-radius: 14px;
+    border: 1px solid #eae7dc;
+    margin-top: 15px;
+}
+
+body.dark-mode .event-metadata-single-line {
+    background-color: #1e1e1e !important;
+    border-color: #2c2c2c !important;
+}
+
+body.dark-mode .form-group label,
+body.dark-mode .item-number {
+    color: #ffffff !important;
+}
+
+body.dark-mode .image-upload-placeholder {
+    background-color: #262626 !important;
+    border-color: #383838 !important;
+}
+
+body.dark-mode .btn-cancel {
+    background-color: #262626 !important;
+    border-color: #383838 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .btn-cancel:hover {
+    background-color: #2d2d2d !important;
+}
+
+body.dark-mode .btn-add-dashed:hover {
+    border-color: #81c784 !important;
+    color: #81c784 !important;
+    background-color: #262626 !important;
+}
+
+body.dark-mode select option {
+    background-color: #262626 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Novos Estilos Sem Inline para Criar Evento / Receita */
+.event-description-textarea {
+    height: 220px;
+    padding: 20px;
+    resize: none;
+}
+
+.event-metadata-form-group {
+    flex: 1;
+    margin: 0;
+}
+
+.event-metadata-label {
+    margin-bottom: 6px;
+    display: block;
+}
+
+.event-metadata-select {
+    width: 100%;
+    cursor: pointer;
+    font-weight: 600;
+    height: 45px;
+    text-align: center;
+    text-align-last: center;
+}
+
+.calendar-display-text {
+    font-weight: 600;
+}
+
+.image-preview-fit {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 18px;
+}
+
+.image-upload-info {
+    text-align: center;
+    color: #D1CDBC;
+}
+
+.image-upload-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.image-upload-text {
+    font-size: 0.9rem;
+}
+
+.btn-remove-photo {
+    margin-top: 10px;
+    align-self: center;
+    background-color: #8b4b4b !important; /* Vermelho do site */
+    color: #ffffff !important;
+    border: none !important;
+    padding: 8px 20px !important;
+    border-radius: 20px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.btn-remove-photo:hover {
+    background-color: #723c3c !important;
+}
+
+body.dark-mode .btn-remove-photo {
+    background-color: #ef5350 !important;
+    color: #ffffff !important;
+}
+body.dark-mode .btn-remove-photo:hover {
+    background-color: #e53935 !important;
+}
+
+.admin-shortcut {
+    border: 2px dashed #2E4A35 !important;
+    color: #2E4A35 !important;
+    font-weight: bold !important;
+}
+
+body.dark-mode .admin-shortcut {
+    border-color: #81c784 !important;
+    color: #81c784 !important;
+}
+
+/* User Management styles */
+.admin-table-container {
+    width: 100%;
+    margin-top: 30px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    background: #ffffff;
+    border: 1px solid #eae7dc;
+}
+
+body.dark-mode .admin-table-container {
+    background: #1e1e1e;
+    border-color: #2c2c2c;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.admin-table th, .admin-table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eae7dc;
+}
+
+body.dark-mode .admin-table th, body.dark-mode .admin-table td {
+    border-bottom-color: #2c2c2c;
+}
+
+.admin-table th {
+    background-color: #f6f4e9;
+    color: #4A3A31 !important;
+    font-weight: 700;
+}
+
+body.dark-mode .admin-table th {
+    background-color: #121212;
+    color: #ffffff !important;
+}
+
+.admin-table td {
+    color: #000000 !important;
+}
+
+body.dark-mode .admin-table td {
+    color: #e0e0e0 !important;
+}
+
+.admin-table tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-actions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.admin-role-select {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1.5px solid #4A3A31;
+    background-color: #ffffff;
+    color: #000000 !important;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+body.dark-mode .admin-role-select {
+    border-color: #383838;
+    background-color: #262626;
+    color: #e0e0e0 !important;
+}
+
+.admin-btn-save {
+    background-color: #2E4A35;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-right: 8px;
+    transition: background-color 0.2s;
+}
+
+.admin-btn-save:hover {
+    background-color: #243a29;
+}
+
+.admin-btn-save:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+body.dark-mode .admin-btn-save {
+    background-color: #81c784;
+    color: #121212;
+}
+
+body.dark-mode .admin-btn-save:hover {
+    background-color: #66bb6a;
+}
+
+body.dark-mode .admin-btn-save:disabled {
+    opacity: 0.4;
+}
+
+.admin-btn-delete {
+    background-color: #8b4b4b;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.admin-btn-delete:hover {
+    background-color: #723c3c;
+}
+
+.admin-table-empty {
+    text-align: center;
+}
+
+.admin-create-image-group {
+    width: 100%;
+}
+
+.admin-create-image-label {
+    text-align: center;
+    display: block;
+}
+
+.admin-create-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+.admin-create-upload-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-create-upload-icon {
+    font-size: 40px;
+}
+
+.admin-create-actions {
+    width: 100%;
+    display: flex;
+    gap: 15px;
+}
+
+.admin-create-btn-flex {
+    flex: 1;
+}
+
+/* Botões de Ação na visualização de Receita e Evento */
+.btn-action-edit {
+    background-color: #f1c40f !important; /* Amarelo dourado do site */
+    color: #4A3A31 !important; /* Letras em castanho escuro para legibilidade */
+    border: none !important;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color 0.2s;
+}
+.btn-action-edit:hover {
+    background-color: #e2b40d !important;
+}
+
+body.dark-mode .btn-action-edit {
+    background-color: #f39c12 !important; /* Laranja dourado no dark mode */
+    color: #ffffff !important;
+}
+body.dark-mode .btn-action-edit:hover {
+    background-color: #d68910 !important;
+}
+
+.btn-action-delete {
+    background-color: #d32f2f !important; /* Vermelho mais brilhante em light mode */
+    color: #ffffff !important;
+    border: none !important;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color 0.2s;
+}
+.btn-action-delete:hover {
+    background-color: #b71c1c !important;
+}
+
+body.dark-mode .btn-action-delete {
+    background-color: #ef5350 !important; /* Vermelho vibrante mas elegante em dark mode */
+    color: #ffffff !important;
+}
+body.dark-mode .btn-action-delete:hover {
+    background-color: #e53935 !important;
+}
+
+/* Added classes to replace inline styles */
+.hidden-element { display: none !important; }
+.event-grid-full { margin: 0; max-width: 100%; }
+.mr-6 { margin-right: 6px; }
+.mr-8 { margin-right: 8px; }
+.calendar-display-text.font-600 { font-weight: 600; }
+.mr-4 { margin-right: 4px; }
+.relative-z10 { position: relative; z-index: 10; }
+.cursor-pointer { cursor: pointer; }
+.cover-image { width: 100%; height: 100%; object-fit: cover; }
+.cover-image-rounded { width: 100%; height: 100%; object-fit: cover; border-radius: 14px; }
+.full-width-center-mt20 { grid-column: 1 / -1; text-align: center; margin-top: 20px; }
+.gap-20-pb30 { gap: 20px; padding-bottom: 30px; }
+.pagination-page-display { font-weight: 600; min-width: 160px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.error-message { color: #8b4b4b; margin-bottom: 20px; }
+.step-nav-item-default { cursor: default; font-weight: 600; }
+.btn-registered { background-color: #8a9b8e !important; }
+.event-description-box { min-height: 150px; white-space: pre-wrap; line-height: 1.6; }
+.relative-container { position: relative; }
+.cover-image-large-rounded { width: 100%; height: 100%; object-fit: cover; border-radius: 18px; }
+.avatar-placeholder-container { text-align: center; color: #D1CDBC; }
+.avatar-placeholder-icon { font-size: 48px; margin-bottom: 10px; }
+.text-small { font-size: 0.9rem; }
+.mt-8-center { margin-top: 8px; align-self: center; }
+.profile-container-inner { max-width: 1200px; margin: 0 auto; width: 100%; }
+.flex-center-overflow-hidden { display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.profile-name-text { color: #2E4A35; margin: 0; }
+.profile-username-text { color: #716259; font-size: 0.9rem; }
+.btn-saved { background-color: #8a9b8e !important; }
+.pagination-btn { padding: 10px 25px; }
+.pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.pagination-btn:not(:disabled) { opacity: 1; cursor: pointer; }
+.text-area-bio { color: black; height: 150px; padding: 20px; resize: none; }
