@@ -17,6 +17,10 @@ const OsMeusEventos = () => {
     const [eventos, setEventos] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     
+    const [currentPageCriados, setCurrentPageCriados] = useState(1);
+    const [currentPageInscritos, setCurrentPageInscritos] = useState(1);
+    const itemsPerPage = 8;
+    
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
@@ -44,6 +48,11 @@ const OsMeusEventos = () => {
 
         getEventos();
     }, [userId, navigate]);
+
+    useEffect(() => {
+        setCurrentPageCriados(1);
+        setCurrentPageInscritos(1);
+    }, [searchQuery]);
 
 
     const filteredEventos = eventos.filter(evento => {
@@ -86,81 +95,161 @@ const OsMeusEventos = () => {
                         <div className="mt-30">
                             <h2 className="my-recipes-section-title">Criados por Mim</h2>
                             <div className="recipes-grid mt-20">
-                                {[...criadasPorMim].reverse().map((evento) => (
-                                    <div
-                                        key={`criada-${evento.id}`}
-                                        className="recipe-card-premium"
-                                        onClick={() => navigate('/eventos/verEvento', { state: { id: evento.id } })}
-                                        style={{ position: 'relative' }}
-                                    >
-                                        <div className="recipe-image-placeholder">
-                                            {(evento.foto_url || evento.foto) ? (
-                                                <img
-                                                    src={`http://localhost:8000${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
-                                                    alt={evento.nome}
-                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                                />
-                                            ) : (
-                                                <img
-                                                    src="http://localhost:8000/idjango/media/defaultEvent.png"
-                                                    alt={evento.nome}
-                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                                />
-                                            )}
+                                {(() => {
+                                    const reversedCriados = [...criadasPorMim].reverse();
+                                    const indexOfLast = currentPageCriados * itemsPerPage;
+                                    const indexOfFirst = indexOfLast - itemsPerPage;
+                                    const currentCriados = reversedCriados.slice(indexOfFirst, indexOfLast);
+                                    
+                                    return currentCriados.map((evento) => (
+                                        <div
+                                            key={`criada-${evento.id}`}
+                                            className="recipe-card-premium cursor-pointer relative-container"
+                                            onClick={() => navigate('/eventos/verEvento', { state: { id: evento.id } })}
+                                        >
+                                            <div className="recipe-image-placeholder">
+                                                {(evento.foto_url || evento.foto) ? (
+                                                    <img
+                                                        src={`http://localhost:8000${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
+                                                        alt={evento.nome}
+                                                        className="cover-image"
+                                                    />
+                                                ) : (
+                                                    <img
+                                                        src="http://localhost:8000/idjango/media/defaultEvent.png"
+                                                        alt={evento.nome}
+                                                        className="cover-image"
+                                                    />
+                                                )}
+                                            </div>
+                                            <div className="recipe-card-footer">
+                                                <span className="ingredient-name">{evento.nome}</span>
+                                            </div>
                                         </div>
-                                        <div className="recipe-card-footer">
-                                            <span className="ingredient-name">{evento.nome}</span>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ));
+                                })()}
                                 {criadasPorMim.length === 0 && (
                                     <p className="text-empty-state">
                                         Ainda não tens nenhum evento criado.
                                     </p>
                                 )}
                             </div>
+                            {Math.ceil(criadasPorMim.length / itemsPerPage) > 1 && (
+                                <div className="pagination-container flex-center mt-30 gap-20-pb30">
+                                    <button
+                                        className="btn-popup-confirm pagination-btn"
+                                        onClick={() => setCurrentPageCriados(prev => Math.max(prev - 1, 1))}
+                                        disabled={currentPageCriados === 1}
+                                    >
+                                        Anterior
+                                    </button>
+                                    
+                                    <span className="pagination-page-display">
+                                        Página
+                                        <select
+                                            value={currentPageCriados}
+                                            onChange={(e) => setCurrentPageCriados(Number(e.target.value))}
+                                            className="page-select-dropdown"
+                                        >
+                                            {Array.from({ length: Math.ceil(criadasPorMim.length / itemsPerPage) }, (_, i) => i + 1).map(num => (
+                                                <option key={num} value={num}>
+                                                    {num}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        de {Math.ceil(criadasPorMim.length / itemsPerPage)}
+                                    </span>
+                                    
+                                    <button
+                                        className="btn-popup-confirm pagination-btn"
+                                        onClick={() => setCurrentPageCriados(prev => Math.min(prev + 1, Math.ceil(criadasPorMim.length / itemsPerPage)))}
+                                        disabled={currentPageCriados === Math.ceil(criadasPorMim.length / itemsPerPage)}
+                                    >
+                                        Seguinte
+                                    </button>
+                                </div>
+                            )}
                         </div>
 
                         <div className="mt-50">
                             <h2 className="my-recipes-section-title">Eventos Inscritos</h2>
                             <div className="recipes-grid mt-20">
-                                {[...eventosInscritos].reverse().map((evento) => (
-                                    <div
-                                        key={`guardada-${evento.id}`}
-                                        className="recipe-card-premium"
-                                        onClick={() => navigate('/eventos/verEvento', { state: { id: evento.id } })}
-                                        style={{ position: 'relative' }}
-                                    >
+                                {(() => {
+                                    const reversedInscritos = [...eventosInscritos].reverse();
+                                    const indexOfLast = currentPageInscritos * itemsPerPage;
+                                    const indexOfFirst = indexOfLast - itemsPerPage;
+                                    const currentInscritos = reversedInscritos.slice(indexOfFirst, indexOfLast);
+                                    
+                                    return currentInscritos.map((evento) => (
+                                        <div
+                                            key={`guardada-${evento.id}`}
+                                            className="recipe-card-premium cursor-pointer relative-container"
+                                            onClick={() => navigate('/eventos/verEvento', { state: { id: evento.id } })}
+                                        >
 
-                                        <div className="recipe-image-placeholder">
-                                            {(evento.foto_url || evento.foto) ? (
-                                                <img
-                                                    src={`http://localhost:8000${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
-                                                    alt={evento.nome}
-                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                                />
-                                            ) : (
-                                                <img
-                                                    src="http://localhost:8000/idjango/media/defaultEvent.png"
-                                                    alt={evento.nome}
-                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                                />
-                                            )}
+                                            <div className="recipe-image-placeholder">
+                                                {(evento.foto_url || evento.foto) ? (
+                                                    <img
+                                                        src={`http://localhost:8000${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
+                                                        alt={evento.nome}
+                                                        className="cover-image"
+                                                    />
+                                                ) : (
+                                                    <img
+                                                        src="http://localhost:8000/idjango/media/defaultEvent.png"
+                                                        alt={evento.nome}
+                                                        className="cover-image"
+                                                    />
+                                                )}
+                                            </div>
+                                            <div className="recipe-card-footer">
+                                                <span className="ingredient-name">{evento.nome}</span>
+                                            </div>
                                         </div>
-                                        <div className="recipe-card-footer">
-                                            <span className="ingredient-name">{evento.nome}</span>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ));
+                                })()}
                                 {eventosInscritos.length === 0 && (
                                     <p className="text-empty-state">
                                         Ainda não se inscreveu em nenhum evento.
                                     </p>
                                 )}
                             </div>
+                            {Math.ceil(eventosInscritos.length / itemsPerPage) > 1 && (
+                                <div className="pagination-container flex-center mt-30 gap-20-pb30">
+                                    <button
+                                        className="btn-popup-confirm pagination-btn"
+                                        onClick={() => setCurrentPageInscritos(prev => Math.max(prev - 1, 1))}
+                                        disabled={currentPageInscritos === 1}
+                                    >
+                                        Anterior
+                                    </button>
+                                    
+                                    <span className="pagination-page-display">
+                                        Página
+                                        <select
+                                            value={currentPageInscritos}
+                                            onChange={(e) => setCurrentPageInscritos(Number(e.target.value))}
+                                            className="page-select-dropdown"
+                                        >
+                                            {Array.from({ length: Math.ceil(eventosInscritos.length / itemsPerPage) }, (_, i) => i + 1).map(num => (
+                                                <option key={num} value={num}>
+                                                    {num}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        de {Math.ceil(eventosInscritos.length / itemsPerPage)}
+                                    </span>
+                                    
+                                    <button
+                                        className="btn-popup-confirm pagination-btn"
+                                        onClick={() => setCurrentPageInscritos(prev => Math.min(prev + 1, Math.ceil(eventosInscritos.length / itemsPerPage)))}
+                                        disabled={currentPageInscritos === Math.ceil(eventosInscritos.length / itemsPerPage)}
+                                    >
+                                        Seguinte
+                                    </button>
+                                </div>
+                            )}
                         </div>
-
-
                     </div>
                 </main>
             </div>

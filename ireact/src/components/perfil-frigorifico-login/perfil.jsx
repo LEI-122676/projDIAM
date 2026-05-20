@@ -59,23 +59,23 @@ const Perfil = () => {
         <Sidebar />
 
         <main className="content-profile">
-          <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+          <div className="profile-container-inner">
             <h1 className="page-title-underline">O Meu Perfil</h1>
 
             <div className="profile-layout-container">
 
             <div className="profile-details-card">
               <div className="user-main-info">
-                <div className="user-avatar-large" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                <div className="user-avatar-large flex-center-overflow-hidden">
                     <img 
                       src={userData.imagem ? (userData.imagem.startsWith('http') ? userData.imagem : `http://localhost:8000${userData.imagem.startsWith('/') ? '' : '/'}${userData.imagem}`) : `http://localhost:8000/idjango/media/defaultProfile.png`} 
                       alt="Imagem do utilizador" 
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '18px' }} 
+                      className="cover-image-large-rounded" 
                     />
                 </div>
                 <div className="user-names">
-                  <h2 style={{ color: '#2E4A35', margin: 0 }}>{userData.nome} {userData.apelido}</h2>
-                  <p style={{ color: '#716259', fontSize: '0.9rem' }}>Username: {userData.username}</p>
+                  <h2 className="profile-name-text">{userData.nome} {userData.apelido}</h2>
+                  <p className="profile-username-text">Username: {userData.username}</p>
                 </div>
               </div>
 

@@ -19,6 +19,10 @@ const AsMinhasReceitas = () => {
     const [isFridgeFilterActive, setIsFridgeFilterActive] = useState(false);
     const [fridgeIngredients, setFridgeIngredients] = useState([]);
     
+    const [currentPageCriadas, setCurrentPageCriadas] = useState(1);
+    const [currentPageGuardadas, setCurrentPageGuardadas] = useState(1);
+    const itemsPerPage = 8;
+    
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
@@ -46,6 +50,11 @@ const AsMinhasReceitas = () => {
 
         getReceitas();
     }, [userId, navigate]);
+
+    useEffect(() => {
+        setCurrentPageCriadas(1);
+        setCurrentPageGuardadas(1);
+    }, [searchQuery, isFridgeFilterActive]);
 
     const handleFridgeFilterToggle = (forceValue) => {
         if (!userId) return;
@@ -157,75 +166,157 @@ const AsMinhasReceitas = () => {
                         <div className="mt-30">
                             <h2 className="my-recipes-section-title">Criadas por Mim</h2>
                             <div className="recipes-grid mt-20">
-                                {[...criadasPorMim].reverse().map((receita) => (
-                                    <div
-                                        key={`criada-${receita.id}`}
-                                        className="recipe-card-premium"
-                                        onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
-                                        style={{ position: 'relative' }}
-                                    >
-                                        <div className="card-rating-badge">
-                                            ⭐ {receita.classificacao || '0.0'}
+                                {(() => {
+                                    const reversedCriadas = [...criadasPorMim].reverse();
+                                    const indexOfLast = currentPageCriadas * itemsPerPage;
+                                    const indexOfFirst = indexOfLast - itemsPerPage;
+                                    const currentCriadas = reversedCriadas.slice(indexOfFirst, indexOfLast);
+                                    
+                                    return currentCriadas.map((receita) => (
+                                        <div
+                                            key={`criada-${receita.id}`}
+                                            className="recipe-card-premium cursor-pointer relative-container"
+                                            onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
+                                        >
+                                            <div className="card-rating-badge">
+                                                ⭐ {receita.classificacao || '0.0'}
+                                            </div>
+                                            <div className="recipe-image-placeholder">
+                                                {receita.foto_url ? (
+                                                    <img
+                                                        src={`http://localhost:8000${receita.foto_url}`}
+                                                        alt={receita.nome}
+                                                        className="cover-image"
+                                                    />
+                                                ) : (
+                                                    <span className="recipe-icon-large">🍲</span>
+                                                )}
+                                            </div>
+                                            <div className="recipe-card-footer">
+                                                <span className="ingredient-name">{receita.nome}</span>
+                                            </div>
                                         </div>
-                                        <div className="recipe-image-placeholder">
-                                            {receita.foto_url ? (
-                                                <img
-                                                    src={`http://localhost:8000${receita.foto_url}`}
-                                                    alt={receita.nome}
-                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                                />
-                                            ) : (
-                                                <span className="recipe-icon-large">🍲</span>
-                                            )}
-                                        </div>
-                                        <div className="recipe-card-footer">
-                                            <span className="ingredient-name">{receita.nome}</span>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ));
+                                })()}
                                 {criadasPorMim.length === 0 && (
                                     <p className="text-empty-state">
                                         Ainda não tens nenhuma receita criada.
                                     </p>
                                 )}
                             </div>
+                            {Math.ceil(criadasPorMim.length / itemsPerPage) > 1 && (
+                                <div className="pagination-container flex-center mt-30 gap-20-pb30">
+                                    <button
+                                        className="btn-popup-confirm pagination-btn"
+                                        onClick={() => setCurrentPageCriadas(prev => Math.max(prev - 1, 1))}
+                                        disabled={currentPageCriadas === 1}
+                                    >
+                                        Anterior
+                                    </button>
+                                    
+                                    <span className="pagination-page-display">
+                                        Página
+                                        <select
+                                            value={currentPageCriadas}
+                                            onChange={(e) => setCurrentPageCriadas(Number(e.target.value))}
+                                            className="page-select-dropdown"
+                                        >
+                                            {Array.from({ length: Math.ceil(criadasPorMim.length / itemsPerPage) }, (_, i) => i + 1).map(num => (
+                                                <option key={num} value={num}>
+                                                    {num}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        de {Math.ceil(criadasPorMim.length / itemsPerPage)}
+                                    </span>
+                                    
+                                    <button
+                                        className="btn-popup-confirm pagination-btn"
+                                        onClick={() => setCurrentPageCriadas(prev => Math.min(prev + 1, Math.ceil(criadasPorMim.length / itemsPerPage)))}
+                                        disabled={currentPageCriadas === Math.ceil(criadasPorMim.length / itemsPerPage)}
+                                    >
+                                        Seguinte
+                                    </button>
+                                </div>
+                            )}
                         </div>
 
                         <div className="mt-50">
                             <h2 className="my-recipes-section-title">Receitas Guardadas</h2>
                             <div className="recipes-grid mt-20">
-                                {[...receitasGuardadas].reverse().map((receita) => (
-                                    <div
-                                        key={`guardada-${receita.id}`}
-                                        className="recipe-card-premium"
-                                        onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
-                                        style={{ position: 'relative' }}
-                                    >
-                                        <div className="card-rating-badge">
-                                            ⭐ {receita.classificacao || '0.0'}
+                                {(() => {
+                                    const reversedGuardadas = [...receitasGuardadas].reverse();
+                                    const indexOfLast = currentPageGuardadas * itemsPerPage;
+                                    const indexOfFirst = indexOfLast - itemsPerPage;
+                                    const currentGuardadas = reversedGuardadas.slice(indexOfFirst, indexOfLast);
+                                    
+                                    return currentGuardadas.map((receita) => (
+                                        <div
+                                            key={`guardada-${receita.id}`}
+                                            className="recipe-card-premium cursor-pointer relative-container"
+                                            onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
+                                        >
+                                            <div className="card-rating-badge">
+                                                ⭐ {receita.classificacao || '0.0'}
+                                            </div>
+                                            <div className="recipe-image-placeholder">
+                                                {receita.foto_url ? (
+                                                    <img
+                                                        src={`http://localhost:8000${receita.foto_url}`}
+                                                        alt={receita.nome}
+                                                        className="cover-image"
+                                                    />
+                                                ) : (
+                                                    <span className="recipe-icon-large">🍲</span>
+                                                )}
+                                            </div>
+                                            <div className="recipe-card-footer">
+                                                <span className="ingredient-name">{receita.nome}</span>
+                                            </div>
                                         </div>
-                                        <div className="recipe-image-placeholder">
-                                            {receita.foto_url ? (
-                                                <img
-                                                    src={`http://localhost:8000${receita.foto_url}`}
-                                                    alt={receita.nome}
-                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                                />
-                                            ) : (
-                                                <span className="recipe-icon-large">🍲</span>
-                                            )}
-                                        </div>
-                                        <div className="recipe-card-footer">
-                                            <span className="ingredient-name">{receita.nome}</span>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ));
+                                })()}
                                 {receitasGuardadas.length === 0 && (
                                     <p className="text-empty-state">
                                         Ainda não guardaste nenhuma receita.
                                     </p>
                                 )}
                             </div>
+                            {Math.ceil(receitasGuardadas.length / itemsPerPage) > 1 && (
+                                <div className="pagination-container flex-center mt-30 gap-20-pb30">
+                                    <button
+                                        className="btn-popup-confirm pagination-btn"
+                                        onClick={() => setCurrentPageGuardadas(prev => Math.max(prev - 1, 1))}
+                                        disabled={currentPageGuardadas === 1}
+                                    >
+                                        Anterior
+                                    </button>
+                                    
+                                    <span className="pagination-page-display">
+                                        Página
+                                        <select
+                                            value={currentPageGuardadas}
+                                            onChange={(e) => setCurrentPageGuardadas(Number(e.target.value))}
+                                            className="page-select-dropdown"
+                                        >
+                                            {Array.from({ length: Math.ceil(receitasGuardadas.length / itemsPerPage) }, (_, i) => i + 1).map(num => (
+                                                <option key={num} value={num}>
+                                                    {num}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        de {Math.ceil(receitasGuardadas.length / itemsPerPage)}
+                                    </span>
+                                    
+                                    <button
+                                        className="btn-popup-confirm pagination-btn"
+                                        onClick={() => setCurrentPageGuardadas(prev => Math.min(prev + 1, Math.ceil(receitasGuardadas.length / itemsPerPage)))}
+                                        disabled={currentPageGuardadas === Math.ceil(receitasGuardadas.length / itemsPerPage)}
+                                    >
+                                        Seguinte
+                                    </button>
+                                </div>
+                            )}
                         </div>
 
 

@@ -203,9 +203,8 @@ const ExplorarReceitas = () => {
                                 return currentRecipes.map((receita, index) => (
                                     <div
                                         key={receita.id || index}
-                                        className="recipe-card-premium cursor-pointer"
+                                        className="recipe-card-premium cursor-pointer relative-container"
                                         onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
-                                        style={{ position: 'relative' }}
                                     >
                                         <div className="card-rating-badge">
                                             ⭐ {receita.classificacao || '0.0'}
@@ -216,7 +215,7 @@ const ExplorarReceitas = () => {
                                                 <img
                                                     src={`http://localhost:8000${receita.foto_url}`}
                                                     alt={receita.nome}
-                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                    className="cover-image"
                                                 />
                                             ) : (
                                                 <span className="recipe-icon-large">🍲</span>
@@ -235,21 +234,16 @@ const ExplorarReceitas = () => {
                             )}
                         </div>
                         {Math.ceil(filteredReceitas.length / recipesPerPage) > 1 && (
-                            <div className="pagination-container flex-center mt-30" style={{ gap: '20px', paddingBottom: '30px' }}>
+                            <div className="pagination-container flex-center mt-30 gap-20-pb30">
                                 <button
-                                    className="btn-popup-confirm"
+                                    className="btn-popup-confirm pagination-btn"
                                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                     disabled={currentPage === 1}
-                                    style={{
-                                        padding: '10px 25px',
-                                        opacity: currentPage === 1 ? 0.4 : 1,
-                                        cursor: currentPage === 1 ? 'not-allowed' : 'pointer'
-                                    }}
                                 >
                                     Anterior
                                 </button>
                                 
-                                <span style={{ fontWeight: '600', minWidth: '160px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                                <span className="pagination-page-display">
                                     Página
                                     <select
                                         value={currentPage}
@@ -266,14 +260,9 @@ const ExplorarReceitas = () => {
                                 </span>
                                 
                                 <button
-                                    className="btn-popup-confirm"
+                                    className="btn-popup-confirm pagination-btn"
                                     onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredReceitas.length / recipesPerPage)))}
                                     disabled={currentPage === Math.ceil(filteredReceitas.length / recipesPerPage)}
-                                    style={{
-                                        padding: '10px 25px',
-                                        opacity: currentPage === Math.ceil(filteredReceitas.length / recipesPerPage) ? 0.4 : 1,
-                                        cursor: currentPage === Math.ceil(filteredReceitas.length / recipesPerPage) ? 'not-allowed' : 'pointer'
-                                    }}
                                 >
                                     Seguinte
                                 </button>

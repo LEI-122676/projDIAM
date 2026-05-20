@@ -2256,21 +2256,6 @@ body.dark-mode .page-select-dropdown option {
     cursor: pointer;
 }
 
-/* --- REMOVER TEXTO DUPLICADO NATIVO DO BROWSER (Chrome, Edge, Safari, Firefox) --- */
-.calendar-hidden-input::-webkit-datetime-edit,
-.calendar-hidden-input::-webkit-datetime-edit-fields-wrapper,
-.calendar-hidden-input::-webkit-datetime-edit-text,
-.calendar-hidden-input::-webkit-datetime-edit-minute,
-.calendar-hidden-input::-webkit-datetime-edit-hour,
-.calendar-hidden-input::-webkit-datetime-edit-day,
-.calendar-hidden-input::-webkit-datetime-edit-month,
-.calendar-hidden-input::-webkit-datetime-edit-year,
-.calendar-hidden-input::-webkit-datetime-edit-ampm-field {
-    display: none !important;
-    appearance: none !important;
-    -webkit-appearance: none !important;
-}
-
 /* Esconde o ícone nativo de relógio/calendário para não colidir com o teu layout */
 .calendar-hidden-input::-webkit-calendar-picker-indicator {
     position: absolute;
@@ -2666,3 +2651,37 @@ body.dark-mode .btn-action-delete {
 body.dark-mode .btn-action-delete:hover {
     background-color: #e53935 !important;
 }
+
+/* Added classes to replace inline styles */
+.hidden-element { display: none !important; }
+.event-grid-full { margin: 0; max-width: 100%; }
+.mr-6 { margin-right: 6px; }
+.mr-8 { margin-right: 8px; }
+.calendar-display-text.font-600 { font-weight: 600; }
+.mr-4 { margin-right: 4px; }
+.relative-z10 { position: relative; z-index: 10; }
+.cursor-pointer { cursor: pointer; }
+.cover-image { width: 100%; height: 100%; object-fit: cover; }
+.cover-image-rounded { width: 100%; height: 100%; object-fit: cover; border-radius: 14px; }
+.full-width-center-mt20 { grid-column: 1 / -1; text-align: center; margin-top: 20px; }
+.gap-20-pb30 { gap: 20px; padding-bottom: 30px; }
+.pagination-page-display { font-weight: 600; min-width: 160px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.error-message { color: #8b4b4b; margin-bottom: 20px; }
+.step-nav-item-default { cursor: default; font-weight: 600; }
+.btn-registered { background-color: #8a9b8e !important; }
+.event-description-box { min-height: 150px; white-space: pre-wrap; line-height: 1.6; }
+.relative-container { position: relative; }
+.cover-image-large-rounded { width: 100%; height: 100%; object-fit: cover; border-radius: 18px; }
+.avatar-placeholder-container { text-align: center; color: #D1CDBC; }
+.avatar-placeholder-icon { font-size: 48px; margin-bottom: 10px; }
+.text-small { font-size: 0.9rem; }
+.mt-8-center { margin-top: 8px; align-self: center; }
+.profile-container-inner { max-width: 1200px; margin: 0 auto; width: 100%; }
+.flex-center-overflow-hidden { display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.profile-name-text { color: #2E4A35; margin: 0; }
+.profile-username-text { color: #716259; font-size: 0.9rem; }
+.btn-saved { background-color: #8a9b8e !important; }
+.pagination-btn { padding: 10px 25px; }
+.pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.pagination-btn:not(:disabled) { opacity: 1; cursor: pointer; }
+.text-area-bio { color: black; height: 150px; padding: 20px; resize: none; }

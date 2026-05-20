@@ -195,16 +195,10 @@ const EditarPerfil = () => {
               <div className="form-group">
                 <label>Biografia:</label>
                 <textarea
-                  className="input-beige"
+                  className="input-beige text-area-bio"
                   placeholder={userData.bio || "Conta um pouco sobre ti..."}
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
-                  style={{ 
-                    color: 'black', 
-                    height: '150px', 
-                    padding: '20px', 
-                    resize: 'none'
-                  }}
                 />
               </div> 
             </div>
@@ -219,12 +213,12 @@ const EditarPerfil = () => {
                   <img
                     src={fotoPreview}
                     alt="Foto de Perfil"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '18px' }}
+                    className="cover-image-large-rounded"
                   />
                 ) : (
-                  <div style={{ textAlign: 'center', color: '#D1CDBC' }}>
-                    <div style={{ fontSize: '48px', marginBottom: '10px' }}>👤</div>
-                    <p style={{ fontSize: '0.9rem' }}>Clica para adicionar foto de perfil</p>
+                  <div className="avatar-placeholder-container">
+                    <div className="avatar-placeholder-icon">👤</div>
+                    <p className="text-small">Clica para adicionar foto de perfil</p>
                   </div>
                 )}
               </div>
@@ -232,14 +226,14 @@ const EditarPerfil = () => {
                 ref={fileInputRef}
                 type="file"
                 accept="image/*"
-                style={{ display: 'none' }}
+                className="hidden-element"
                 onChange={handleFotoChange}
               />
               
               {foto && (
                 <button
                   className="btn-cancel btn-cancel-small"
-                  style={{ marginTop: '8px', alignSelf: 'center' }}
+                  className="mt-8-center"
                   onClick={() => { 
                     setFoto(null); 
                     setFotoPreview(userData.imagem || null); 

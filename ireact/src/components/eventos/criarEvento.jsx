@@ -297,7 +297,7 @@ const CriarEvento = () => {
                                 ref={fileInputRef}
                                 type="file"
                                 accept="image/*"
-                                style={{ display: 'none' }}
+                                className="hidden-element"
                                 onChange={handleFotoChange}
                             />
                             {fotoPreview && (

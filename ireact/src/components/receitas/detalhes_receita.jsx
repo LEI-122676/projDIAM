@@ -23,6 +23,9 @@ const VerReceita = () => {
     const [novaClassificacao, setNovaClassificacao] = useState(5);
     const [guardado, setGuardado] = useState(false);
     const [isLoadError, setIsLoadError] = useState(false);
+    
+    const [currentCommentPage, setCurrentCommentPage] = useState(1);
+    const commentsPerPage = 8;
 
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
@@ -116,10 +119,10 @@ const VerReceita = () => {
                         setIsAdmin(true);
                     }
                 })
-                .catch(err => console.error("Erro ao obter papel do utilizador:", err));
+                .catch(err => console.error("Erro ao obter a role do utilizador:", err));
         }
 
-    }, [recipeId, userId]);
+    }, [UTILIZADORES_URL, getComentarios, getIngredientes, getReceita, getUtilizadores, navigate, recipeId, userId]);
 
     const handleGuardar = () => {
         if (!userId) {
@@ -274,7 +277,7 @@ const VerReceita = () => {
 
     if (isLoadError) return (
         <div className="loading-container">
-            <p style={{ color: '#8b4b4b', marginBottom: '20px' }}>❌ Não foi possível carregar a receita.</p>
+            <p className="error-message">❌ Não foi possível carregar a receita.</p>
             <button className="btn-cancel" onClick={() => navigate('/receitas')}>Voltar às Receitas</button>
         </div>
     );
@@ -303,7 +306,7 @@ const VerReceita = () => {
                                     <img
                                         src={`http://localhost:8000${receita.foto_url}`}
                                         alt={receita.nome}
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '14px' }}
+                                        className="cover-image-rounded"
                                     />
                                 ) : (
                                     <span className="recipe-main-icon">🍲</span>
@@ -332,9 +335,8 @@ const VerReceita = () => {
 
                                     {(Number(receita.criador) !== Number(userId) || isAdmin) && (
                                         <button
-                                            className="btn-create-submit"
+                                            className={`btn-create-submit ${guardado ? "btn-saved" : ""}`}
                                             onClick={handleGuardar}
-                                            style={guardado ? { backgroundColor: '#8a9b8e' } : {}}
                                         >
                                             {guardado ? 'Guardado' : 'Guardar'}
                                         </button>
@@ -440,20 +442,62 @@ const VerReceita = () => {
                                         Ainda não há comentários. Sê o primeiro a partilhar a tua opinião!
                                     </p>
                                 ) : (
-                                    comentarios.map(comentario => (
-                                        <div key={comentario.id} className="comment-card">
-                                            <div className="comment-header">
-                                                <strong className="comment-author">
-                                                    <span className="comment-avatar">👤</span>
-                                                    {getUserName(comentario.utilizador)}
-                                                </strong>
-                                                <span className="comment-date">{new Date(comentario.data).toLocaleDateString()}</span>
+                                    (() => {
+                                        const indexOfLastComment = currentCommentPage * commentsPerPage;
+                                        const indexOfFirstComment = indexOfLastComment - commentsPerPage;
+                                        const currentComments = comentarios.slice(indexOfFirstComment, indexOfLastComment);
+
+                                        return currentComments.map(comentario => (
+                                            <div key={comentario.id} className="comment-card">
+                                                <div className="comment-header">
+                                                    <strong className="comment-author">
+                                                        <span className="comment-avatar">👤</span>
+                                                        {getUserName(comentario.utilizador)}
+                                                    </strong>
+                                                    <span className="comment-date">{new Date(comentario.data).toLocaleDateString()}</span>
+                                                </div>
+                                                <p className="comment-text">{comentario.texto}</p>
                                             </div>
-                                            <p className="comment-text">{comentario.texto}</p>
-                                        </div>
-                                    ))
+                                        ));
+                                    })()
                                 )}
                             </div>
+
+                            {Math.ceil(comentarios.length / commentsPerPage) > 1 && (
+                                <div className="pagination-container flex-center mt-30 gap-20-pb30">
+                                    <button
+                                        className="btn-popup-confirm"
+                                        onClick={() => setCurrentCommentPage(prev => Math.max(prev - 1, 1))}
+                                        disabled={currentCommentPage === 1}
+                                    >
+                                        Anterior
+                                    </button>
+                                    
+                                    <span className="pagination-page-display">
+                                        Página
+                                        <select
+                                            value={currentCommentPage}
+                                            onChange={(e) => setCurrentCommentPage(Number(e.target.value))}
+                                            className="page-select-dropdown"
+                                        >
+                                            {Array.from({ length: Math.ceil(comentarios.length / commentsPerPage) }, (_, i) => i + 1).map(num => (
+                                                <option key={num} value={num}>
+                                                    {num}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        de {Math.ceil(comentarios.length / commentsPerPage)}
+                                    </span>
+                                    
+                                    <button
+                                        className="btn-popup-confirm"
+                                        onClick={() => setCurrentCommentPage(prev => Math.min(prev + 1, Math.ceil(comentarios.length / commentsPerPage)))}
+                                        disabled={currentCommentPage === Math.ceil(comentarios.length / commentsPerPage)}
+                                    >
+                                        Seguinte
+                                    </button>
+                                </div>
+                            )}
                         </div>
 
                     </div>

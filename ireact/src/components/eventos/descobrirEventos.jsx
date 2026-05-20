@@ -104,7 +104,7 @@ const ExplorarEventos = () => {
             <div className="main-wrapper">
                 <Sidebar />
                 <main className="content-profile">
-                    <div className="profile-grid" style={{ margin: '0', maxWidth: '100%' }}>
+                    <div className="profile-grid event-grid-full">
                         <h1 className="page-title-underline">Descobrir Eventos</h1>
                             <div className="recipes-action-bar">
                                 <div className="recipes-search-container">
@@ -129,16 +129,16 @@ const ExplorarEventos = () => {
                                             onChange={(e) => setDataFiltro(e.target.value)}
                                         />
 
-                                        <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg" style={{marginRight: '6px'}} />
-                                        <img src={iconeCalendario} alt="Calendário" className="recipe-icon-svg" style={{marginRight: '8px'}} />
+                                        <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg mr-6" />
+                                        <img src={iconeCalendario} alt="Calendário" className="recipe-icon-svg mr-8" />
                                         
-                                        <span className="calendar-display-text" style={{ fontWeight: '600', marginRight: dataFiltro ? '4px' : '0' }}>
+                                        <span className={`calendar-display-text font-600 ${dataFiltro ? "mr-4" : ""}`}>
                                             {formatarDataExibicao(dataFiltro)}
                                         </span>
                                         
                                         {dataFiltro && (
                                             <button 
-                                                className="clear-date-btn" 
+                                                className="clear-date-btn relative-z10" 
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     setDataFiltro('');
@@ -146,7 +146,6 @@ const ExplorarEventos = () => {
                                                         dateInputRef.current.value = ''; 
                                                     }
                                                 }}
-                                                style={{ position: 'relative', zIndex: 10 }}
                                                 title="Limpar filtro de data"
                                             >
                                                 ×
@@ -169,22 +168,21 @@ const ExplorarEventos = () => {
                                 return currentEvents.map((evento, index) => (
                                 <div 
                                     key={evento.id || index} 
-                                    className="recipe-card-premium cursor-pointer"
+                                    className="recipe-card-premium cursor-pointer relative-container"
                                     onClick={() => navigate('verEvento', { state: { id: evento.id } })}
-                                    style={{ cursor: 'pointer' }}
                                 >
                                     <div className="recipe-image-placeholder">
                                         {(evento.foto_url || evento.foto) ? (
                                             <img
                                                 src={`http://localhost:8000${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
                                                 alt={evento.nome}
-                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                className="cover-image"
                                             />
                                         ) : (
                                             <img
                                                 src="http://localhost:8000/idjango/media/defaultEvent.png"
                                                 alt={evento.nome}
-                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                className="cover-image"
                                             />
                                         )}
                                     </div>
@@ -195,28 +193,23 @@ const ExplorarEventos = () => {
                                 ));
                             })()}
                             {eventosFiltrados.length === 0 && (
-                                <p style={{ gridColumn: '1 / -1', textAlign: 'center', marginTop: '20px' }}>
+                                <p className="full-width-center-mt20">
                                     Nenhum evento encontrado com estes critérios.
                                 </p>
                             )}
                         </div>
 
                         {Math.ceil(eventosFiltrados.length / eventsPerPage) > 1 && (
-                            <div className="pagination-container flex-center mt-30" style={{ gap: '20px', paddingBottom: '30px' }}>
+                            <div className="pagination-container flex-center mt-30 gap-20-pb30">
                                 <button
-                                    className="btn-popup-confirm"
+                                    className="btn-popup-confirm pagination-btn"
                                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                     disabled={currentPage === 1}
-                                    style={{
-                                        padding: '10px 25px',
-                                        opacity: currentPage === 1 ? 0.4 : 1,
-                                        cursor: currentPage === 1 ? 'not-allowed' : 'pointer'
-                                    }}
                                 >
                                     Anterior
                                 </button>
                                 
-                                <span style={{ fontWeight: '600', minWidth: '160px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                                <span className="pagination-page-display">
                                     Página
                                     <select
                                         value={currentPage}
@@ -233,14 +226,9 @@ const ExplorarEventos = () => {
                                 </span>
                                 
                                 <button
-                                    className="btn-popup-confirm"
+                                    className="btn-popup-confirm pagination-btn"
                                     onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(eventosFiltrados.length / eventsPerPage)))}
                                     disabled={currentPage === Math.ceil(eventosFiltrados.length / eventsPerPage)}
-                                    style={{
-                                        padding: '10px 25px',
-                                        opacity: currentPage === Math.ceil(eventosFiltrados.length / eventsPerPage) ? 0.4 : 1,
-                                        cursor: currentPage === Math.ceil(eventosFiltrados.length / eventsPerPage) ? 'not-allowed' : 'pointer'
-                                    }}
                                 >
                                     Seguinte
                                 </button>

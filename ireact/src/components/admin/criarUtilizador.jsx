@@ -187,7 +187,7 @@ const AdminCriarUtilizador = () => {
                                     type="file" 
                                     id="profilePicInput" 
                                     accept="image/*" 
-                                    style={{ display: 'none' }} 
+                                    className="hidden-element" 
                                     onChange={handleImageChange} 
                                 />
                             </div>

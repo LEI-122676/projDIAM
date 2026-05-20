@@ -185,7 +185,7 @@ const VerEvento = () => {
 
     if (isLoadError) return (
         <div className="loading-container">
-            <p style={{ color: '#8b4b4b', marginBottom: '20px' }}>❌ Não foi possível carregar o evento.</p>
+            <p className="error-message">❌ Não foi possível carregar o evento.</p>
             <button className="btn-cancel" onClick={() => navigate('/eventos')}>Voltar aos Eventos</button>
         </div>
     );
@@ -216,18 +216,18 @@ const VerEvento = () => {
                                 <img
                                     src={getImageUrl(imagemCaminho)}
                                     alt={evento.nome}
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '14px' }}
+                                    className="cover-image-rounded"
                                 />
                             </div>
 
                             <div className="recipe-steps-nav">
-                                <div className="step-nav-item" style={{ cursor: 'default', fontWeight: '600' }}>
+                                <div className="step-nav-item step-nav-item-default">
                                     📅 {evento.data_evento ? formatarDataExibicao(evento.data_evento.substring(0, 10)) : "Sem data definida"}
                                 </div>
-                                <div className="step-nav-item" style={{ cursor: 'default', fontWeight: '600' }}>
+                                <div className="step-nav-item step-nav-item-default">
                                     🕒 {formatarHorario(evento.horario) || "Sem horário definido"}
                                 </div>
-                                <div className="step-nav-item" style={{ cursor: 'default', fontWeight: '600' }}>
+                                <div className="step-nav-item step-nav-item-default">
                                     📍 Capacidade Máxima: {evento.capacidade_max || 5} pessoas
                                 </div>
 
@@ -236,9 +236,8 @@ const VerEvento = () => {
 
                                     {(Number(evento.criador) !== Number(utilizadorId) || isAdmin) && (
                                         <button
-                                            className="btn-create-submit"
+                                            className={`btn-create-submit ${inscrito ? "btn-registered" : ""}`}
                                             onClick={handleJoin}
-                                            style={inscrito ? { backgroundColor: '#8a9b8e' } : {}}
                                         >
                                             {inscrito ? 'Inscrito' : 'Inscrever-me'}
                                         </button>
@@ -268,7 +267,7 @@ const VerEvento = () => {
                             <div className="recipe-descriptions-column recipe-col-2">
                                 <div className="step-detail mb-15">
                                     <label className="section-subtitle">Sobre o Evento</label>
-                                    <div className="content-box-light text-black" style={{ minHeight: '150px', whiteSpace: 'pre-wrap', lineHeight: '1.6' }}>
+                                    <div className="content-box-light text-black event-description-box">
                                         {evento.descricao || "Este evento não possui uma descrição detalhada."}
                                     </div>
                                 </div>
