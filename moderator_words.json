@@ -1,0 +1,31 @@
+{
+  "BAD_WORDS": [
+    "merda", "caralho", "puta", "foda", "foder", "cabrão", 
+    "foder-se", "paneleiro", "cú", "ass", "fuck", "bitch", "shit",
+    "dick", "pussy", "bastardo", "pqp", "filho da puta", "fdp",
+    "parvo", "otário", "estúpido", "cona", "piça", "pixa", "foda-se",
+    "fodasse", "fodas", "chupa", "chulo", "cabra", "corno", "cornudo",
+    "idiota", "imbecil", "lixo", "mongoloide", "nojento", "nojo",
+    "porco", "sacana", "anormal", "atrasado", "badameco", "bosta",
+    "boi", "burro", "escroto", "fufa", "maricas", "merdaço", "mijo",
+    "retardado", "safado", "sapatona", "tarado", "vaca", "xaroca",
+    "xoxota", "vagina", "boquete", "punheteiro", "siririca", "grelo",
+    "culhões", "caralhada", "fodido", "fudido", "fudida", "fodida",
+    "rabeta", "retardada", "escrota", "imbecis", "idiotas", "anormais",
+    "putedo", "raboto", "panilas", "pessegada", "punheta"
+  ],
+  "AD_WORDS": [
+    "anuncio", "promo", "ganhar dinheiro", "compra já", 
+    "desconto", "clica aqui", "whatsapp", "contacto", "ganhe agora",
+    "dinheiro facil", "bonus", "bónus", "casino", "apostas", "bitcoin",
+    "cripto", "rentabilidade", "marketing", "afiliados", "investir",
+    "investimentos", "curso online", "compre online", "promoção",
+    "promocional", "oferta especial", "tempo limitado", "imperdível",
+    "melhor preço", "cupão", "cupom", "sorteio", "brinde", "ganhe grátis",
+    "de borla", "grátis", "gratis", "compre hoje", "saiba mais",
+    "link na bio", "telegram", "instagram", "facebook", "segue-me",
+    "adiciona-me", "ligue já", "telefone", "telemóvel", "emprestimo",
+    "dinheiro rápido", "ganho extra", "renda extra", "vendas", "compre",
+    "venda", "compre já", "clicar", "subscreve"
+  ]
+}

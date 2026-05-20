@@ -1,53 +1,24 @@
 import re
 import os
+import json
 from rest_framework import serializers
 
-# Lista base de palavrões por defeito (caso não exista no .env)
-DEFAULT_BAD_WORDS = [
-    'merda', 'caralho', 'puta', 'foda', 'foder', 'cabrão', 
-    'foder-se', 'paneleiro', 'cú', 'ass', 'fuck', 'bitch', 'shit',
-    'dick', 'pussy', 'bastardo', 'pqp', 'filho da puta', 'fdp',
-    'parvo', 'otário', 'estúpido', 'cona', 'piça', 'pixa', 'foda-se',
-    'fodasse', 'fodas', 'chupa', 'chulo', 'cabra', 'corno', 'cornudo',
-    'idiota', 'imbecil', 'lixo', 'mongoloide', 'nojento', 'nojo',
-    'porco', 'sacana', 'anormal', 'atrasado', 'badameco', 'bosta',
-    'boi', 'burro', 'escroto', 'fufa', 'maricas', 'merdaço', 'mijo',
-    'retardado', 'safado', 'sapatona', 'tarado', 'vaca', 'xaroca',
-    'xoxota', 'vagina', 'boquete', 'punheteiro', 'siririca', 'grelo',
-    'culhões', 'caralhada', 'fodido', 'fudido', 'fudida', 'fodida',
-    'rabeta', 'retardada', 'escrota', 'imbecis', 'idiotas', 'anormais',
-    'putedo', 'raboto', 'panilas', 'pessegada', 'punheta'
-]
+# Carregar o nome do ficheiro a partir das variáveis de ambiente (.env)
+words_filename = os.environ.get('MODERATOR_WORDS_FILE', 'moderator_words.json')
 
-# Termos de publicidade por defeito
-DEFAULT_AD_WORDS = [
-    'anuncio', 'promo', 'ganhar dinheiro', 'compra já', 
-    'desconto', 'clica aqui', 'whatsapp', 'contacto', 'ganhe agora',
-    'dinheiro facil', 'bonus', 'bónus', 'casino', 'apostas', 'bitcoin',
-    'cripto', 'rentabilidade', 'marketing', 'afiliados', 'investir',
-    'investimentos', 'curso online', 'compre online', 'promoção',
-    'promocional', 'oferta especial', 'tempo limitado', 'imperdível',
-    'melhor preço', 'cupão', 'cupom', 'sorteio', 'brinde', 'ganhe grátis',
-    'de borla', 'grátis', 'gratis', 'compre hoje', 'saiba mais',
-    'link na bio', 'telegram', 'instagram', 'facebook', 'segue-me',
-    'adiciona-me', 'ligue já', 'telefone', 'telemóvel', 'emprestimo',
-    'dinheiro rápido', 'ganho extra', 'renda extra', 'vendas', 'compre',
-    'venda', 'compre já', 'clicar', 'subscreve'
-]
+# Construir caminho absoluto para o ficheiro JSON
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+words_filepath = os.path.join(BASE_DIR, words_filename)
 
-# Carrega a lista do .env, caso contrário usa a padrão
-raw_bad_words = os.environ.get('MODERATOR_BAD_WORDS')
-if raw_bad_words:
-    BAD_WORDS = [word.strip() for word in raw_bad_words.split(',') if word.strip()]
-else:
-    BAD_WORDS = DEFAULT_BAD_WORDS
+BAD_WORDS = []
+ad_words = []
 
-# Carrega os termos de publicidade do .env, caso contrário usa os padrão
-raw_ad_words = os.environ.get('MODERATOR_AD_WORDS')
-if raw_ad_words:
-    ad_words = [word.strip() for word in raw_ad_words.split(',') if word.strip()]
-else:
-    ad_words = DEFAULT_AD_WORDS
+# Carrega os dados de censura
+if os.path.exists(words_filepath):
+    with open(words_filepath, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        BAD_WORDS = data.get('BAD_WORDS', [])
+        ad_words = data.get('AD_WORDS', [])
 
 # Regex para detetar URLs (http://, https://, www., .com, .pt, etc.)
 URL_REGEX = re.compile(

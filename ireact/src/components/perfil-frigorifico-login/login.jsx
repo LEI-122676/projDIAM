@@ -85,6 +85,7 @@ const Login = () => {
     formData.append('username', username);
     formData.append('password', password);
     formData.append('email', email);
+    formData.append('role', 'User');
       
     axios.post(SIGN_UP_URL, formData, { withCredentials: true }).then( response => {
         console.log('Signup successful!', response.data.msg);
