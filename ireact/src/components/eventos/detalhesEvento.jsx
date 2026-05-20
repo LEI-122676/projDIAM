@@ -125,16 +125,6 @@ const VerEvento = () => {
                     inscritos: newInscritos
                 }));
                 setInscrito(!isAlreadyInscribed);
-
-                setPopupConfig({
-                    isOpen: true,
-                    title: isAlreadyInscribed ? 'Inscrição Cancelada' : 'Inscrição Confirmada!',
-                    message: isAlreadyInscribed ? 'Cancelaste a tua inscrição no evento.' : 'Estás oficialmente inscrito no evento!',
-                    singleButton: true,
-                    confirmText: 'OK',
-                    onConfirm: closePopup,
-                    onCancel: closePopup
-                });
             })
             .catch(err => {
                 console.error("Erro ao atualizar inscrição com PUT:", err);

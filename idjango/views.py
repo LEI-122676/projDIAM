@@ -446,8 +446,6 @@ def admin_create_user(request):
     utilizador_params = {
         'user': user,
         'frigorifico': novo_frigorifico,
-        'nome': firstName,
-        'apelido': lastName,
         'role': role
     }
     if imagem:
@@ -487,3 +485,45 @@ def user_view(request):
 @permission_classes([IsAuthenticated])
 def user_view_Id(request):
     return Response({'user_id': request.user.id})
+
+@api_view(['GET', 'PUT'])
+@permission_classes([IsAuthenticated])
+def user_info(request, id):
+    try:
+        user = User.objects.get(id=id)
+    except User.DoesNotExist:
+        return Response({'error': 'Utilizador não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Buscar informações do User
+    if request.method == 'GET':
+        return Response({
+            'username': user.username,
+            'email': user.email,
+            'first_name': user.first_name,
+            'last_name': user.last_name
+        })
+
+    # Guardar alterações do User
+    elif request.method == 'PUT':
+        username = request.data.get('username', user.username)
+        email = request.data.get('email', user.email)
+        first_name = request.data.get('first_name', user.first_name)
+        last_name = request.data.get('last_name', user.last_name)
+
+        # Validação simples de username único
+        if User.objects.filter(username=username).exclude(id=user.id).exists():
+            return Response({'username': ['Este username já está em uso.']}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.username = username
+        user.email = email
+        user.first_name = first_name
+        user.last_name = last_name
+        user.save()
+
+        return Response({
+            'username': user.username,
+            'email': user.email,
+            'first_name': user.first_name,
+            'last_name': user.last_name
+        }, status=status.HTTP_200_OK)
+    return None

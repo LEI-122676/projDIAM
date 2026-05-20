@@ -5,6 +5,7 @@ import '../../css/styles.css';
 import { useNavigate } from 'react-router-dom';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import axios from 'axios';
+import { getCSRFToken } from '../../utils/csrf.js';
 
 const EditarPerfil = () => {
   const URL_USER = 'http://localhost:8000/idjango/api' + '/user_info/';
@@ -49,11 +50,12 @@ const EditarPerfil = () => {
     axios.get(`${URL_USER_INFO}${userId}`, { withCredentials: true })
       .then(res => {
         setUserData(res.data);
-        setFirstName(res.data.nome || '');
-        setLastName(res.data.apelido || '');
+        setFirstName(res.data.first_name || '');
+        setLastName(res.data.last_name || '');
         setBio(res.data.bio || '');
         if (res.data.imagem) {
-          setFotoPreview(res.data.imagem);
+          const imagePath = res.data.imagem.startsWith('http') ? res.data.imagem : `http://localhost:8000${res.data.imagem}`;
+          setFotoPreview(imagePath);
         }
       })
       .catch(err => console.error("Erro ao carregar perfil (utilizador):", err));
@@ -71,12 +73,6 @@ const EditarPerfil = () => {
     if (!file) return;
     setFoto(file);
     setFotoPreview(URL.createObjectURL(file));
-  };
-
-  const getCSRFToken = () => {
-    return document.cookie.split('; ')
-      .find(row => row.startsWith('csrftoken='))
-      ?.split('=')[1];
   };
 
   const handleSubmit = async (e) => {
@@ -167,7 +163,7 @@ const EditarPerfil = () => {
                 <input 
                   type="text" 
                   className="input-beige text-black" 
-                  placeholder={userData.nome || "O teu nome"} 
+                  placeholder={userData.first_name || "O teu nome"} 
                   value={firstName} 
                   onChange={(e) => setFirstName(e.target.value)} 
                 />
@@ -177,7 +173,7 @@ const EditarPerfil = () => {
                 <input 
                   type="text" 
                   className="input-beige text-black" 
-                  placeholder={userData.apelido || "O teu apelido"} 
+                  placeholder={userData.last_name || "O teu apelido"} 
                   value={lastName} 
                   onChange={(e) => setLastName(e.target.value)} 
                 />

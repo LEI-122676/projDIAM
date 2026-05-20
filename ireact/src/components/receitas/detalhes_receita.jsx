@@ -135,15 +135,6 @@ const VerReceita = () => {
             .then(res => {
                 setReceita(res.data);
                 setGuardado(!isAlreadySaved);
-                setPopupConfig({
-                    isOpen: true,
-                    title: isAlreadySaved ? 'Receita Removida' : 'Receita Guardada',
-                    message: isAlreadySaved ? 'Receita removida dos teus guardados.' : 'Receita guardada com sucesso!',
-                    singleButton: true,
-                    confirmText: 'OK',
-                    onConfirm: closePopup,
-                    onCancel: closePopup
-                });
             })
             .catch(err => {
                 console.error(err);
