@@ -2007,6 +2007,7 @@ body.dark-mode .page-select-dropdown option {
     margin: 0;
     color: #333;
     line-height: 1.5;
+    text-align: left;
 }
 
 /* --- AS MINHAS RECEITAS --- */
