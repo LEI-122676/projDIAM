@@ -7,6 +7,8 @@ import { useNavigate as useReactNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import { getCSRFToken } from '../../utils/csrf.js';
+import { getFieldLimits, validateInput } from '../../utils/validation.js';
+
 
 const CriarEvento = () => {
 
@@ -45,15 +47,21 @@ const CriarEvento = () => {
         return null;
     });
 
-    const [utilizadorId, setUtilizadorId] = useState(() => localStorage.getItem('utilizadorId'));
+    const utilizadorId = localStorage.getItem('utilizadorId');
+    const [limits, setLimits] = useState({});
 
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
+
+    useEffect(() => {
+        getFieldLimits().then(data => setLimits(data));
+    }, []);
 
     const URL_CRIAR_EVENTO = 'http://localhost:8000/idjango/api' + '/eventos/';
 
     useEffect(() => {
         if (!utilizadorId) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setPopupConfig({
                 isOpen: true,
                 title: 'Acesso Restrito',
@@ -101,7 +109,7 @@ const CriarEvento = () => {
                 } else {
                     dateInputRef.current.click();
                 }
-            } catch (error) {
+            } catch {
                 dateInputRef.current.click();
             }
         }
@@ -131,6 +139,19 @@ const CriarEvento = () => {
 
         if (!nome.trim()) { showPopup('Campos em Branco', 'Por favor, não deixe o nome do evento em branco.'); return; }
         if (!descricao.trim()) { showPopup('Campos em Branco', 'Por favor, não deixe a descrição em branco.'); return; }
+
+        const nomeValidation = validateInput(nome, limits.evento_nome_max_length || 50);
+        if (!nomeValidation.isValid) {
+            showPopup('Erro de Validação', `Nome do evento: ${nomeValidation.error}`);
+            return;
+        }
+
+        const descricaoValidation = validateInput(descricao, limits.evento_descricao_max_length || 500);
+        if (!descricaoValidation.isValid) {
+            showPopup('Erro de Validação', `Descrição: ${descricaoValidation.error}`);
+            return;
+        }
+
         if (descricao.trim().length < 10) { showPopup('Descrição Curta', 'A descrição do evento tem de ter no mínimo 10 caracteres.'); return; }
         if (!dataEvento) { showPopup('Campos em Branco', 'Por favor, não deixe a data do evento em branco.'); return; }
         if (!horario) { showPopup('Campos em Branco', 'Por favor, não deixe o horário do evento em branco.'); return; }
@@ -197,23 +218,25 @@ const CriarEvento = () => {
 
                         <div className="recipe-form-section">
                             <div className="form-group">
-                                <label>Nome*:</label>
+                                <label>Nome* <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({nome.length}/{limits.evento_nome_max_length || 50})</span>:</label>
                                 <input
                                     type="text"
                                     className="input-beige text-black"
                                     placeholder="Dê um nome ao seu evento"
                                     value={nome}
                                     onChange={(e) => setNome(e.target.value)}
+                                    maxLength={limits.evento_nome_max_length || 50}
                                 />
                             </div>
 
                             <div className="form-group">
-                                <label>Descrição*:</label>
+                                <label>Descrição* <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({descricao.length}/{limits.evento_descricao_max_length || 500})</span>:</label>
                                 <textarea
                                     className="input-beige text-black event-description-textarea"
                                     placeholder="Detalhes sobre o local, o cardápio e o que levar..."
                                     value={descricao}
                                     onChange={(e) => setDescricao(e.target.value)}
+                                    maxLength={limits.evento_descricao_max_length || 500}
                                 />
                             </div>
 

@@ -1,0 +1,12 @@
+{
+  "comentario_max_length": 150,
+  "receita_nome_max_length": 50,
+  "receita_instrucao_max_length": 500,
+  "evento_nome_max_length": 50,
+  "evento_descricao_max_length": 500,
+  "utilizador_bio_max_length": 200,
+  "ingrediente_nome_max_length": 50,
+  "user_first_name_max_length": 30,
+  "user_last_name_max_length": 30,
+  "user_username_max_length": 30
+}

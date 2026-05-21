@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import axios from 'axios';
 import { getCSRFToken } from '../../utils/csrf.js';
+import { getFieldLimits, validateInput } from '../../utils/validation.js';
 
 const EditarPerfil = () => {
   const URL_USER = 'http://localhost:8000/idjango/api' + '/user_info/';
@@ -26,6 +27,7 @@ const EditarPerfil = () => {
 
   const [foto, setFoto] = useState(null);
   const [fotoPreview, setFotoPreview] = useState(null);
+  const [limits, setLimits] = useState({});
 
   const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
   
@@ -34,7 +36,12 @@ const EditarPerfil = () => {
   };
 
   useEffect(() => {
+    getFieldLimits().then(data => setLimits(data));
+  }, []);
+
+  useEffect(() => {
     if (!userId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPopupConfig({
         isOpen: true,
         title: 'Sessão Expirada',
@@ -66,6 +73,7 @@ const EditarPerfil = () => {
         setEmail(res.data.email || '');
       })
       .catch(err => console.error("Erro ao carregar perfil (user):", err));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, navigate]);
 
   const handleFotoChange = (e) => {
@@ -90,6 +98,24 @@ const EditarPerfil = () => {
     }
     if (!emailRegex.test(email)) {
       showPopup('E-mail Inválido', 'O formato do e-mail introduzido não é válido.');
+      return;
+    }
+
+    const nameValidation = validateInput(firstName, limits.user_first_name_max_length || 30);
+    if (!nameValidation.isValid) {
+      showPopup('Erro de Validação', `Nome: ${nameValidation.error}`);
+      return;
+    }
+
+    const lastNameValidation = validateInput(lastName, limits.user_last_name_max_length || 30);
+    if (!lastNameValidation.isValid) {
+      showPopup('Erro de Validação', `Apelido: ${lastNameValidation.error}`);
+      return;
+    }
+
+    const bioValidation = validateInput(bio, limits.utilizador_bio_max_length || 200);
+    if (!bioValidation.isValid) {
+      showPopup('Erro de Validação', `Biografia: ${bioValidation.error}`);
       return;
     }
 
@@ -159,23 +185,25 @@ const EditarPerfil = () => {
             
             <div className="recipe-form-section">
               <div className="form-group">
-                <label>Nome:</label>
+                <label>Nome <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({firstName.length}/{limits.user_first_name_max_length || 30})</span>:</label>
                 <input 
                   type="text" 
                   className="input-beige text-black" 
                   placeholder={userData.first_name || "O teu nome"} 
                   value={firstName} 
                   onChange={(e) => setFirstName(e.target.value)} 
+                  maxLength={limits.user_first_name_max_length || 30}
                 />
               </div>
               <div className="form-group">
-                <label>Apelido:</label>
+                <label>Apelido <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({lastName.length}/{limits.user_last_name_max_length || 30})</span>:</label>
                 <input 
                   type="text" 
                   className="input-beige text-black" 
                   placeholder={userData.last_name || "O teu apelido"} 
                   value={lastName} 
                   onChange={(e) => setLastName(e.target.value)} 
+                  maxLength={limits.user_last_name_max_length || 30}
                 />
               </div>
               <div className="form-group">
@@ -189,12 +217,13 @@ const EditarPerfil = () => {
                 />
               </div>
               <div className="form-group">
-                <label>Biografia:</label>
+                <label>Biografia <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({bio.length}/{limits.utilizador_bio_max_length || 200})</span>:</label>
                 <textarea
                   className="input-beige text-area-bio"
                   placeholder={userData.bio || "Conta um pouco sobre ti..."}
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
+                  maxLength={limits.utilizador_bio_max_length || 200}
                 />
               </div> 
             </div>

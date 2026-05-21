@@ -1,7 +1,7 @@
 from django.db.models import Avg
 from rest_framework import serializers
 from .models import Ingrediente, Evento, Receita, Frigorifico, Utilizador, Comentario
-from .moderator import validar_texto
+from .moderator import validar_texto, FIELD_LIMITS
 from .models import Ingrediente, Evento, Receita, Frigorifico, Utilizador, Comentario, User
 
 class IngredienteSerializer(serializers.ModelSerializer):
@@ -29,10 +29,10 @@ class EventoSerializer(serializers.ModelSerializer):
         return value
 
     def validate_nome(self, value):
-        return validar_texto(value, "nome do evento")
+        return validar_texto(value, "nome do evento", check_moderation=True, max_length=FIELD_LIMITS.get('evento_nome_max_length'))
 
     def validate_descricao(self, value):
-        return validar_texto(value, "descrição do evento")
+        return validar_texto(value, "descrição do evento", check_moderation=True, max_length=FIELD_LIMITS.get('evento_descricao_max_length'))
 
 class ComentarioSerializer(serializers.ModelSerializer):
     utilizador_nome = serializers.SerializerMethodField()
@@ -49,7 +49,7 @@ class ComentarioSerializer(serializers.ModelSerializer):
         return "Utilizador Desconhecido"
 
     def validate_texto(self, value):
-        return validar_texto(value, "texto do comentário")
+        return validar_texto(value, "texto do comentário", check_moderation=True, max_length=FIELD_LIMITS.get('comentario_max_length'))
 
 from rest_framework import serializers
 from .models import Receita, Avaliacao
@@ -72,13 +72,13 @@ class ReceitaSerializer(serializers.ModelSerializer):
         return round(media, 1) if media else 0.0
 
     def validate_nome(self, value):
-        return validar_texto(value, "nome da receita")
+        return validar_texto(value, "nome da receita", check_moderation=True, max_length=FIELD_LIMITS.get('receita_nome_max_length'))
 
     def validate_instrucao(self, value):
         if isinstance(value, list):
             for i, passo in enumerate(value):
                 if isinstance(passo, str):
-                    validar_texto(passo, f"instrução (passo {i+1})")
+                    validar_texto(passo, f"instrução (passo {i+1})", check_moderation=True, max_length=FIELD_LIMITS.get('receita_instrucao_max_length'))
         return value
 
 class FrigorificoSerializer(serializers.ModelSerializer):
@@ -99,4 +99,4 @@ class UtilizadorSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def validate_bio(self, value):
-        return validar_texto(value, "biografia")
+        return validar_texto(value, "biografia", check_moderation=True, max_length=FIELD_LIMITS.get('utilizador_bio_max_length'))
