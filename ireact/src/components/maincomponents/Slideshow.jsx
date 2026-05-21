@@ -1,55 +1,75 @@
 import { useState, useEffect } from 'react';
 import '../../css/styles.css';
 
-const SLIDES = [
-  {
-    image: 'http://localhost:8000/idjango/media/slideshow/breakfast.jpg',
-    title: 'Pequeno-Almoço Saudável',
-    description: 'Comece o seu dia com refeições nutritivas e fáceis de preparar.'
-  },
-  {
-    image: 'http://localhost:8000/idjango/media/slideshow/burger.jpg',
-    title: 'Hambúrgueres Caseiros',
-    description: 'Descubra o segredo de um hambúrguer gourmet suculento e saboroso.'
-  },
-  {
-    image: 'http://localhost:8000/idjango/media/slideshow/foods.jpg',
-    title: 'Receitas Criativas',
-    description: 'Crie pratos fantásticos com os ingredientes que tem no frigorífico.'
-  },
-  {
-    image: 'http://localhost:8000/idjango/media/slideshow/sushi.jpg',
-    title: 'Arte do Sushi',
-    description: 'Aprenda a fazer rolos de sushi perfeitos com peixe fresco e arroz temperado.'
-  }
-];
-
 const Slideshow = () => {
+  const [slides, setSlides] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % SLIDES.length);
-    }, 5000);
-    return () => clearInterval(timer);
+    const jsonFile = import.meta.env.VITE_SLIDESHOW_JSON_FILE;
+    if (jsonFile) {
+      fetch(`/${jsonFile}`)
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`Failed to fetch slideshow config: ${res.status}`);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          setSlides(data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error('Error loading slideshow data:', err);
+          setLoading(false);
+        });
+    } else {
+      console.warn('VITE_SLIDESHOW_JSON_FILE environment variable is not defined.');
+      setLoading(false);
+    }
   }, []);
 
+  useEffect(() => {
+    if (slides.length <= 1) return;
+    const timer = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [slides]);
+
   const handlePrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? SLIDES.length - 1 : prevIndex - 1));
+    if (slides.length === 0) return;
+    setCurrentIndex((prevIndex) => (prevIndex === 0 ? slides.length - 1 : prevIndex - 1));
   };
 
   const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % SLIDES.length);
+    if (slides.length === 0) return;
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
   };
 
   const handleDotClick = (index) => {
     setCurrentIndex(index);
   };
 
+  if (loading) {
+    return (
+      <div className="slideshow-wrapper">
+        <div className="slideshow-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <p style={{ color: '#716259', fontWeight: 'bold' }}>A carregar...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (slides.length === 0) {
+    return null;
+  }
+
   return (
     <div className="slideshow-wrapper">
       <div className="slideshow-container">
-        {SLIDES.map((slide, index) => (
+        {slides.map((slide, index) => (
           <div
             key={index}
             className={`slide-item ${index === currentIndex ? 'active' : ''}`}
@@ -74,7 +94,7 @@ const Slideshow = () => {
 
         {/* Indicadores / Pontos */}
         <div className="slideshow-dots">
-          {SLIDES.map((_, index) => (
+          {slides.map((_, index) => (
             <span
               key={index}
               className={`dot ${index === currentIndex ? 'active' : ''}`}
