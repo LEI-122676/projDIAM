@@ -16,7 +16,6 @@ const VerEvento = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
-
     const eventoId = location.state?.id;
 
     const [evento, setEvento] = useState(null);
@@ -30,7 +29,7 @@ const VerEvento = () => {
     });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-    
+    const [contagem, setContagem] = useState('');
 
     const showLoginPopup = (actionMessage) => {
         setPopupConfig({
@@ -49,7 +48,6 @@ const VerEvento = () => {
             navigate('/eventos');
             return;
         }
-
         axios.get(`${URL_EVENTOS}${eventoId}`)
             .then(res => {
                 setEvento(res.data);
@@ -71,6 +69,7 @@ const VerEvento = () => {
                 })
                 .catch(err => console.error("Erro ao obter papel do utilizador:", err));
         }
+
     }, [eventoId, utilizadorId, navigate, URL_EVENTOS]);
 
     const getImageUrl = (caminho) => {
@@ -98,6 +97,58 @@ const VerEvento = () => {
         }
         return JSON.stringify(h).replace(/"/g, '');
     };
+    useEffect(() => {
+
+        if (!evento || !evento.data_evento || !evento.horario) return;
+
+        const decreaseTimer = () => {
+            const dataEvento = evento.data_evento.substring(0, 10);
+            let horaInicio = '';
+
+
+            if (typeof evento.horario === 'string') {
+                try {
+                    const parsed = JSON.parse(evento.horario);
+                    horaInicio = parsed.inicio || '';
+                } catch (e) {
+                    horaInicio = evento.horario;
+                }
+            } else if (evento.horario && evento.horario.inicio) {
+                horaInicio = evento.horario.inicio;
+            }
+
+            if (!dataEvento || !horaInicio) {
+                setContagem("Sem data/hora");
+                return;
+            }
+
+            const dataInicioEvento = new Date(`${dataEvento}T${horaInicio}`);
+            const dataAtual = new Date();
+            const dif = Math.floor((dataInicioEvento - dataAtual) / 1000);
+            
+            if (dif <= 0) {
+                setContagem("O evento começou!");
+                return;
+            }
+
+            const dias = Math.floor(dif / (60 * 60 * 24));
+            const horas = Math.floor((dif % (60 * 60 * 24)) / (60 * 60));
+            const minutos = Math.floor((dif % (60 * 60)) / 60);
+            const segundos = dif % 60;
+            
+            setContagem(`${dias}d ${horas}h ${minutos}m ${segundos}s`);
+        };
+
+        // Run immediately on mount
+        decreaseTimer();
+
+        // Set interval to update every single second
+        const intervaloId = setInterval(decreaseTimer, 1000);
+
+        // CLEANUP: Clears interval when user leaves page to prevent memory leaks
+        return () => clearInterval(intervaloId);
+
+    }, [evento]);
 
     const handleJoin = () => {
         if (!utilizadorId) {
@@ -119,7 +170,7 @@ const VerEvento = () => {
             inscritos: newInscritos
         };
 
-        axios.patch(`${EVENTO_URL}${eventoId}`, updatedPayload, { 
+        axios.patch(`${URL_EVENTOS}${eventoId}`, updatedPayload, { 
             headers: { 'X-CSRFToken': getCSRFToken() },
             withCredentials: true 
         })
@@ -147,7 +198,7 @@ const VerEvento = () => {
             confirmText: 'Apagar',
             cancelText: 'Cancelar',
             onConfirm: () => {
-                axios.delete(`${EVENTO_URL}${eventoId}`, {
+                axios.delete(`${URL_EVENTOS}${eventoId}`, {
                     headers: { 'X-CSRFToken': getCSRFToken() },
                     withCredentials: true
                 })
@@ -196,6 +247,7 @@ const VerEvento = () => {
 
     const totalInscritos = evento.inscritos?.length || 0;
     const imagemCaminho = evento.foto_url || evento.foto;
+    
 
     return (
         <div className="body-wrapper">
@@ -225,6 +277,9 @@ const VerEvento = () => {
                             <div className="recipe-steps-nav">
                                 <div className="step-nav-item step-nav-item-default">
                                     📅 {evento.data_evento ? formatarDataExibicao(evento.data_evento.substring(0, 10)) : "Sem data definida"}
+                                </div>
+                                <div className="step-nav-item step-nav-item-default">
+                                    ⏳ Contagem Decrescente: {contagem || "A calcular..."}
                                 </div>
                                 <div className="step-nav-item step-nav-item-default">
                                     🕒 {formatarHorario(evento.horario) || "Sem horário definido"}
