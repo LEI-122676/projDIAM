@@ -1,4 +1,5 @@
-import  { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getFieldLimits, validateInput } from '../../utils/validation.js';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
 import '../../css/styles.css';
@@ -20,8 +21,13 @@ const Login = () => {
   const [usernameLogin, setUsernameLogin] = useState('');
   const [passwordLogin, setPasswordLogin] = useState('');
 
+  const [limits, setLimits] = useState({});
   const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
   const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
+
+  useEffect(() => {
+    getFieldLimits().then(data => setLimits(data));
+  }, []);
 
   const SIGN_UP_URL = 'http://localhost:8000/idjango/api' + '/signup/';
   const SIGN_IN_URL = 'http://localhost:8000/idjango/api' + '/login/';
@@ -73,6 +79,42 @@ const Login = () => {
         isOpen: true,
         title: 'Erro na Password',
         message: 'As passwords não coincidem.',
+        singleButton: true,
+        onConfirm: closePopup
+      });
+      return;
+    }
+
+    const nameValidation = validateInput(firstName, limits.user_first_name_max_length || 30);
+    if (!nameValidation.isValid) {
+      setPopupConfig({
+        isOpen: true,
+        title: 'Erro de Validação',
+        message: `Nome: ${nameValidation.error}`,
+        singleButton: true,
+        onConfirm: closePopup
+      });
+      return;
+    }
+
+    const lastNameValidation = validateInput(lastName, limits.user_last_name_max_length || 30);
+    if (!lastNameValidation.isValid) {
+      setPopupConfig({
+        isOpen: true,
+        title: 'Erro de Validação',
+        message: `Apelido: ${lastNameValidation.error}`,
+        singleButton: true,
+        onConfirm: closePopup
+      });
+      return;
+    }
+
+    const usernameValidation = validateInput(username, limits.user_username_max_length || 30);
+    if (!usernameValidation.isValid) {
+      setPopupConfig({
+        isOpen: true,
+        title: 'Erro de Validação',
+        message: `Username: ${usernameValidation.error}`,
         singleButton: true,
         onConfirm: closePopup
       });
@@ -154,6 +196,7 @@ const Login = () => {
                 className="auth-input" 
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
+                maxLength={limits.user_first_name_max_length || 30}
               />
               <input 
                 type="text" 
@@ -161,6 +204,7 @@ const Login = () => {
                 className="auth-input" 
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
+                maxLength={limits.user_last_name_max_length || 30}
               />
               <input 
                 type="text" 
@@ -168,6 +212,7 @@ const Login = () => {
                 className="auth-input" 
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                maxLength={limits.user_username_max_length || 30}
               />
               <input 
                 type="email" 

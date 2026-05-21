@@ -7,6 +7,8 @@ import '../../css/styles.css';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
 import { getCSRFToken } from '../../utils/csrf.js';
+import { getFieldLimits, validateInput } from '../../utils/validation.js';
+
 
 const VerReceita = () => {
     const navigate = useNavigate();
@@ -24,6 +26,11 @@ const VerReceita = () => {
     const [novaClassificacao, setNovaClassificacao] = useState(5);
     const [guardado, setGuardado] = useState(false);
     const [isLoadError, setIsLoadError] = useState(false);
+    const [limits, setLimits] = useState({});
+
+    useEffect(() => {
+        getFieldLimits().then(data => setLimits(data));
+    }, []);
     
     const [currentCommentPage, setCurrentCommentPage] = useState(1);
     const commentsPerPage = parseInt(import.meta.env.VITE_ITEMS_PER_PAGE || '8', 10);
@@ -231,6 +238,13 @@ const VerReceita = () => {
         }
         if (!novoComentario.trim()) return;
 
+        const maxLen = limits.comentario_max_length || 150;
+        const validation = validateInput(novoComentario, maxLen);
+        if (!validation.isValid) {
+            showPopup('Erro de Validação', validation.error);
+            return;
+        }
+
         const payload = {
             utilizador: parseInt(userId),
             receita: parseInt(recipeId),
@@ -420,7 +434,11 @@ const VerReceita = () => {
                                     placeholder="O que achaste desta receita? Partilha a tua experiência..."
                                     value={novoComentario}
                                     onChange={(e) => setNovoComentario(e.target.value)}
+                                    maxLength={limits.comentario_max_length || 150}
                                 />
+                                <div style={{ textAlign: 'right', fontSize: '0.85rem', color: '#888', marginTop: '4px', marginBottom: '8px' }}>
+                                    {novoComentario.length} / {limits.comentario_max_length || 150}
+                                </div>
                                 <button
                                     className="btn-create-submit btn-publish-comment"
                                     onClick={handleAddComentario}

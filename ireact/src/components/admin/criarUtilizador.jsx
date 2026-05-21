@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getFieldLimits, validateInput } from '../../utils/validation.js';
 import { useNavigate } from 'react-router-dom';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
@@ -21,7 +22,12 @@ const AdminCriarUtilizador = () => {
     });
     const [image, setImage] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
+    const [limits, setLimits] = useState({});
     const [modalConfig, setModalConfig] = useState({ isOpen: false, title: '', message: '', onConfirm: null });
+
+    useEffect(() => {
+        getFieldLimits().then(data => setLimits(data));
+    }, []);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -43,6 +49,39 @@ const AdminCriarUtilizador = () => {
                 isOpen: true,
                 title: 'Aviso',
                 message: 'Preencha todos os campos obrigatórios (*).',
+                onConfirm: () => setModalConfig({ ...modalConfig, isOpen: false })
+            });
+            return;
+        }
+
+        const nameValidation = validateInput(formData.firstName, limits.user_first_name_max_length || 30);
+        if (!nameValidation.isValid) {
+            setModalConfig({
+                isOpen: true,
+                title: 'Erro de Validação',
+                message: `Nome: ${nameValidation.error}`,
+                onConfirm: () => setModalConfig({ ...modalConfig, isOpen: false })
+            });
+            return;
+        }
+
+        const lastNameValidation = validateInput(formData.lastName, limits.user_last_name_max_length || 30);
+        if (!lastNameValidation.isValid) {
+            setModalConfig({
+                isOpen: true,
+                title: 'Erro de Validação',
+                message: `Apelido: ${lastNameValidation.error}`,
+                onConfirm: () => setModalConfig({ ...modalConfig, isOpen: false })
+            });
+            return;
+        }
+
+        const usernameValidation = validateInput(formData.username, limits.user_username_max_length || 30);
+        if (!usernameValidation.isValid) {
+            setModalConfig({
+                isOpen: true,
+                title: 'Erro de Validação',
+                message: `Username: ${usernameValidation.error}`,
                 onConfirm: () => setModalConfig({ ...modalConfig, isOpen: false })
             });
             return;
@@ -97,37 +136,40 @@ const AdminCriarUtilizador = () => {
                     <div className="create-recipe-container">
                         <form onSubmit={handleSubmit} className="recipe-form-section">
                             <div className="form-group">
-                                <label>Nome*</label>
+                                <label>Nome* <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({formData.firstName.length}/{limits.user_first_name_max_length || 30})</span></label>
                                 <input 
                                     type="text" 
                                     name="firstName" 
                                     className="input-beige text-black" 
                                     value={formData.firstName} 
                                     onChange={handleChange} 
+                                    maxLength={limits.user_first_name_max_length || 30}
                                     required 
                                 />
                             </div>
 
                             <div className="form-group">
-                                <label>Apelido*</label>
+                                <label>Apelido* <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({formData.lastName.length}/{limits.user_last_name_max_length || 30})</span></label>
                                 <input 
                                     type="text" 
                                     name="lastName" 
                                     className="input-beige text-black" 
                                     value={formData.lastName} 
                                     onChange={handleChange} 
+                                    maxLength={limits.user_last_name_max_length || 30}
                                     required 
                                 />
                             </div>
 
                             <div className="form-group">
-                                <label>Username*</label>
+                                <label>Username* <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({formData.username.length}/{limits.user_username_max_length || 30})</span></label>
                                 <input 
                                     type="text" 
                                     name="username" 
                                     className="input-beige text-black" 
                                     value={formData.username} 
                                     onChange={handleChange} 
+                                    maxLength={limits.user_username_max_length || 30}
                                     required 
                                 />
                             </div>

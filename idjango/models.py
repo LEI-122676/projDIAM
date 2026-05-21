@@ -5,10 +5,12 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 import os
 import json
+from .moderator import FIELD_LIMITS
+
 
 # Create your models here.
 class Ingrediente(models.Model):
-    nome = models.CharField(max_length=50)
+    nome = models.CharField(max_length=FIELD_LIMITS.get('ingrediente_nome_max_length', 50))
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
@@ -44,7 +46,7 @@ class Evento(models.Model):
     criador = models.ForeignKey(Utilizador, on_delete=models.CASCADE, related_name='eventos_criados')
     inscritos = models.ManyToManyField(Utilizador, related_name='eventos_inscritos', blank = True)
 
-    nome = models.CharField(max_length=50)
+    nome = models.CharField(max_length=FIELD_LIMITS.get('evento_nome_max_length', 50))
     foto = models.ImageField(upload_to='Event_pics', default='defaultEvent.png')
     horario = models.JSONField()
     data_criacao = models.DateTimeField(auto_now_add=True)
@@ -66,7 +68,7 @@ class Receita(models.Model):
     criador = models.ForeignKey(Utilizador, on_delete=models.CASCADE, related_name='criador_receita')
     ingredientes = models.ManyToManyField(Ingrediente)
     guardadores = models.ManyToManyField(Utilizador, related_name='receitas_guardadas', blank=True)
-    nome = models.CharField(max_length=50)
+    nome = models.CharField(max_length=FIELD_LIMITS.get('receita_nome_max_length', 50))
     foto = models.ImageField(upload_to='recipe_pics', default='defaultRecipe.png')
     instrucao = models.JSONField(default=list)
     is_active = models.BooleanField(default=True)

@@ -367,14 +367,13 @@ def signup(request):
     if not all([firstName, lastName, username, password, email]):
         return Response({'msg': 'invalid input'}, status=status.HTTP_400_BAD_REQUEST)
 
-    from .moderator import validar_texto
+    from .moderator import validar_texto, FIELD_LIMITS
     from rest_framework.exceptions import ValidationError
     try:
-        validar_texto(firstName, "nome")
-        validar_texto(lastName, "apelido")
-        validar_texto(username, "username")
+        validar_texto(firstName, "nome", check_moderation=False, max_length=FIELD_LIMITS.get('user_first_name_max_length'))
+        validar_texto(lastName, "apelido", check_moderation=False, max_length=FIELD_LIMITS.get('user_last_name_max_length'))
+        validar_texto(username, "username", check_moderation=False, max_length=FIELD_LIMITS.get('user_username_max_length'))
     except ValidationError as e:
-        # e.detail pode ser uma lista ou dicionário. Acedemos ao primeiro erro de forma genérica.
         err_msg = e.detail[0] if isinstance(e.detail, list) else str(e.detail)
         return Response({'msg': err_msg}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -418,12 +417,12 @@ def admin_create_user(request):
     if not all([firstName, lastName, username, password, email]):
         return Response({'msg': 'invalid input'}, status=status.HTTP_400_BAD_REQUEST)
 
-    from .moderator import validar_texto
+    from .moderator import validar_texto, FIELD_LIMITS
     from rest_framework.exceptions import ValidationError
     try:
-        validar_texto(firstName, "nome")
-        validar_texto(lastName, "apelido")
-        validar_texto(username, "username")
+        validar_texto(firstName, "nome", check_moderation=False, max_length=FIELD_LIMITS.get('user_first_name_max_length'))
+        validar_texto(lastName, "apelido", check_moderation=False, max_length=FIELD_LIMITS.get('user_last_name_max_length'))
+        validar_texto(username, "username", check_moderation=False, max_length=FIELD_LIMITS.get('user_username_max_length'))
     except ValidationError as e:
         err_msg = e.detail[0] if isinstance(e.detail, list) else str(e.detail)
         return Response({'msg': err_msg}, status=status.HTTP_400_BAD_REQUEST)
@@ -510,6 +509,16 @@ def user_info(request, id):
         first_name = request.data.get('first_name', user.first_name)
         last_name = request.data.get('last_name', user.last_name)
 
+        from .moderator import validar_texto, FIELD_LIMITS
+        from rest_framework.exceptions import ValidationError
+        try:
+            validar_texto(first_name, "nome", check_moderation=False, max_length=FIELD_LIMITS.get('user_first_name_max_length'))
+            validar_texto(last_name, "apelido", check_moderation=False, max_length=FIELD_LIMITS.get('user_last_name_max_length'))
+            validar_texto(username, "username", check_moderation=False, max_length=FIELD_LIMITS.get('user_username_max_length'))
+        except ValidationError as e:
+            err_msg = e.detail[0] if isinstance(e.detail, list) else str(e.detail)
+            return Response({'msg': err_msg}, status=status.HTTP_400_BAD_REQUEST)
+
         # Validação simples de username único
         if User.objects.filter(username=username).exclude(id=user.id).exists():
             return Response({'username': ['Este username já está em uso.']}, status=status.HTTP_400_BAD_REQUEST)
@@ -527,3 +536,10 @@ def user_info(request, id):
             'last_name': user.last_name
         }, status=status.HTTP_200_OK)
     return None
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+@authentication_classes([])
+def get_field_limits(request):
+    from .moderator import FIELD_LIMITS
+    return Response(FIELD_LIMITS)

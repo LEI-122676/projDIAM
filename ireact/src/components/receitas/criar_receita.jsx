@@ -6,6 +6,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import { getCSRFToken } from '../../utils/csrf.js';
+import { getFieldLimits, validateInput } from '../../utils/validation.js';
+
 
 const CriarReceita = () => {
     const navigate = useNavigate();
@@ -25,6 +27,7 @@ const CriarReceita = () => {
 
     const [dbIngredientes, setDbIngredientes] = useState([]);
     const [utilizadorId, setUtilizadorId] = useState(() => localStorage.getItem('utilizadorId'));
+    const [limits, setLimits] = useState({});
 
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
@@ -47,6 +50,10 @@ const CriarReceita = () => {
             })
             .catch(err => console.error("Erro ao carregar ingredientes:", err));
     };
+
+    useEffect(() => {
+        getFieldLimits().then(data => setLimits(data));
+    }, []);
 
     useEffect(() => {
         if (!utilizadorId) {
@@ -104,6 +111,20 @@ const CriarReceita = () => {
 
         if (!nome.trim()) { showPopup('Campo Obrigatório', 'Por favor, dê um nome à receita.'); return; }
         if (!utilizadorId) { showPopup('Erro', 'Não foi possível identificar o utilizador. Faz login novamente.'); return; }
+
+        const nomeValidation = validateInput(nome, limits.receita_nome_max_length || 50);
+        if (!nomeValidation.isValid) {
+            showPopup('Erro de Validação', `Nome da receita: ${nomeValidation.error}`);
+            return;
+        }
+
+        for (let i = 0; i < passos.length; i++) {
+            const stepValidation = validateInput(passos[i], limits.receita_instrucao_max_length || 500);
+            if (!stepValidation.isValid) {
+                showPopup('Erro de Validação', `Passo ${i + 1}: ${stepValidation.error}`);
+                return;
+            }
+        }
 
         if (passos.some(p => p.trim() === '')) {
             showPopup('Campos em Branco', 'Por favor, não deixe passos em branco. Preenche ou remove o campo vazio.');
@@ -206,30 +227,37 @@ const CriarReceita = () => {
 
                         <div className="recipe-form-section">
                             <div className="form-group">
-                                <label>Nome*:</label>
+                                <label>Nome* <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({nome.length}/{limits.receita_nome_max_length || 50})</span>:</label>
                                 <input
                                     type="text"
                                     className="input-beige text-black"
                                     placeholder="Dê um nome à sua receita"
                                     value={nome}
                                     onChange={(e) => setNome(e.target.value)}
+                                    maxLength={limits.receita_nome_max_length || 50}
                                 />
                             </div>
 
                             <div className="form-group">
                                 <label>Passos*:</label>
                                 {passos.map((passo, index) => (
-                                    <div key={index} className="dynamic-list-item dynamic-list-item-flex">
-                                        <span className="item-number">{index + 1}.</span>
-                                        <input
-                                            type="text"
-                                            className="input-beige flex-input-black"
-                                            placeholder="Descreva o passo da receita..."
-                                            value={passo}
-                                            onChange={(e) => handlePassoChange(index, e.target.value)}
-                                        />
+                                    <div key={index} className="dynamic-list-item dynamic-list-item-flex" style={{ alignItems: 'flex-start' }}>
+                                        <span className="item-number" style={{ marginTop: '8px' }}>{index + 1}.</span>
+                                        <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+                                            <input
+                                                type="text"
+                                                className="input-beige flex-input-black"
+                                                placeholder="Descreva o passo da receita..."
+                                                value={passo}
+                                                onChange={(e) => handlePassoChange(index, e.target.value)}
+                                                maxLength={limits.receita_instrucao_max_length || 500}
+                                            />
+                                            <span style={{ alignSelf: 'flex-end', fontSize: '0.75rem', color: '#888', marginTop: '2px', marginRight: '10px' }}>
+                                                {passo.length}/{limits.receita_instrucao_max_length || 500}
+                                            </span>
+                                        </div>
                                         {passos.length > 1 && (
-                                            <button className="btn-cancel btn-cancel-small" onClick={() => handleRemovePasso(index)}>X</button>
+                                            <button className="btn-cancel btn-cancel-small" style={{ marginTop: '4px' }} onClick={() => handleRemovePasso(index)}>X</button>
                                         )}
                                     </div>
                                 ))}
