@@ -23,6 +23,8 @@ const VerReceita = () => {
     const [isAdmin, setIsAdmin] = useState(false);
 
     const [novoComentario, setNovoComentario] = useState('');
+    const [editingCommentId, setEditingCommentId] = useState(null);
+    const [editingCommentText, setEditingCommentText] = useState('');
     const [novaClassificacao, setNovaClassificacao] = useState(5);
     const [guardado, setGuardado] = useState(false);
     const [isLoadError, setIsLoadError] = useState(false);
@@ -283,6 +285,56 @@ const VerReceita = () => {
             });
     };
 
+    const handleDeleteComentario = (comentarioId) => {
+        setPopupConfig({
+            isOpen: true,
+            title: 'Confirmar Eliminação',
+            message: 'Tens a certeza que pretendes apagar este comentário?',
+            singleButton: false,
+            confirmText: 'Apagar',
+            cancelText: 'Cancelar',
+            onConfirm: () => {
+                axios.delete(COMENTARIOS_URL + comentarioId, {
+                    headers: { 'X-CSRFToken': getCSRFToken() },
+                    withCredentials: true
+                })
+                .then(() => {
+                    setComentarios(comentarios.filter(c => c.id !== comentarioId));
+                    closePopup();
+                })
+                .catch(err => {
+                    console.error(err);
+                    showPopup('Erro', 'Não foi possível apagar o comentário.');
+                });
+            },
+            onCancel: closePopup
+        });
+    };
+
+    const handleSaveEditComentario = (comentarioId) => {
+        if (!editingCommentText.trim()) return;
+
+        const maxLen = limits.comentario_max_length || 150;
+        const validation = validateInput(editingCommentText, maxLen);
+        if (!validation.isValid) {
+            showPopup('Erro de Validação', validation.error);
+            return;
+        }
+
+        axios.patch(COMENTARIOS_URL + comentarioId, { texto: editingCommentText }, {
+            headers: { 'X-CSRFToken': getCSRFToken() },
+            withCredentials: true
+        })
+        .then(res => {
+            setComentarios(comentarios.map(c => c.id === comentarioId ? res.data : c));
+            setEditingCommentId(null);
+            setEditingCommentText('');
+        })
+        .catch(err => {
+            console.error(err);
+            showPopup('Atenção à Linguagem', 'Erro ao editar o comentário. Verifica a linguagem usada.');
+        });
+    };
 
     if (isLoadError) return (
         <div className="loading-container">
@@ -469,7 +521,33 @@ const VerReceita = () => {
                                                     </strong>
                                                     <span className="comment-date">{new Date(comentario.data).toLocaleDateString()}</span>
                                                 </div>
-                                                <p className="comment-text">{comentario.texto}</p>
+                                                
+                                                {editingCommentId === comentario.id ? (
+                                                    <div className="comment-edit-area" style={{ marginTop: '10px' }}>
+                                                        <textarea
+                                                            className="comment-textarea"
+                                                            value={editingCommentText}
+                                                            onChange={(e) => setEditingCommentText(e.target.value)}
+                                                            maxLength={limits.comentario_max_length || 150}
+                                                        />
+                                                        <div style={{ textAlign: 'right', fontSize: '0.85rem', color: '#888', marginBottom: '8px' }}>
+                                                            {editingCommentText.length} / {limits.comentario_max_length || 150}
+                                                        </div>
+                                                        <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+                                                            <button className="btn-cancel" onClick={() => { setEditingCommentId(null); setEditingCommentText(''); }}>Cancelar</button>
+                                                            <button className="btn-create-submit" style={{ padding: '8px 16px', fontSize: '0.9rem' }} onClick={() => handleSaveEditComentario(comentario.id)}>Guardar</button>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <p className="comment-text">{comentario.texto}</p>
+                                                )}
+
+                                                {(Number(comentario.utilizador) === Number(userId) || isAdmin) && editingCommentId !== comentario.id && (
+                                                    <div className="comment-actions" style={{ marginTop: '10px', display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+                                                        <button className="btn-profile-pill" style={{ padding: '4px 10px', fontSize: '0.8rem' }} onClick={() => { setEditingCommentId(comentario.id); setEditingCommentText(comentario.texto); }}>Editar</button>
+                                                        <button className="btn-profile-pill secondary" style={{ padding: '4px 10px', fontSize: '0.8rem', color: 'red', borderColor: 'red' }} onClick={() => handleDeleteComentario(comentario.id)}>Remover</button>
+                                                    </div>
+                                                )}
                                             </div>
                                         ));
                                     })()

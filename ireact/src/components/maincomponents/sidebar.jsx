@@ -55,6 +55,11 @@ const Sidebar = () => {
           <img src={iconePerfil} alt="Perfil" className="nav-icon-img" />
           {isOpen && <span className="nav-text">Perfil</span>}
         </li>
+
+        <li className="nav-item" onClick={() => navigate('/feedback')}>
+          <span className="nav-icon-img" style={{ fontSize: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>💬</span>
+          {isOpen && <span className="nav-text">Dar Feedback</span>}
+        </li>
       </ul>
 
       <CookieClicker sidebarOpen={isOpen} />

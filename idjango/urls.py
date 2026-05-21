@@ -32,5 +32,8 @@ urlpatterns = [
     path('api/user_view__Id/', views.user_view_Id),
     path('api/user_info/<int:id>', views.user_info),
     path('api/field-limits/', views.get_field_limits),
+    
+    path('api/feedback/', views.submit_feedback),
+    path('api/feedback/stats/', views.feedback_stats),
 ]
 
