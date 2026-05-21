@@ -45,7 +45,6 @@ const Perfil = () => {
     axios.get(`${URL_UTILIZADOR}${userId}`, { withCredentials: true })
       .then(res => {
         setUserData(res.data);
-        console.log("Dados Completos do Perfil:", res.data);
       })
       .catch(err => {
         console.error("Erro ao carregar perfil:", err);
