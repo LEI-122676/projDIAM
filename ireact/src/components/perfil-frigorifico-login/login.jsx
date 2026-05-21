@@ -6,6 +6,7 @@ import '../../css/styles.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import PopupModal from '../maincomponents/popupModal.jsx';
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 
 const Login = () => {
   
@@ -21,6 +22,7 @@ const Login = () => {
   const [usernameLogin, setUsernameLogin] = useState('');
   const [passwordLogin, setPasswordLogin] = useState('');
 
+  const { t } = useLanguage();
   const [limits, setLimits] = useState({});
   const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
   const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
@@ -38,9 +40,10 @@ const Login = () => {
     if (!usernameLogin || !passwordLogin) {
       setPopupConfig({
         isOpen: true,
-        title: 'Campos em Falta',
-        message: 'Por favor, preenche todos os campos de login.',
+        title: t('autenticacao.popups.campos_falta_titulo'),
+        message: t('autenticacao.popups.campos_falta_login_msg'),
         singleButton: true,
+        confirmText: t('comum.ok'),
         onConfirm: closePopup
       });
       return;
@@ -56,9 +59,10 @@ const Login = () => {
     .catch( () => {
         setPopupConfig({
             isOpen: true,
-            title: 'Erro de Login',
-            message: 'Credenciais inválidas. Tenta novamente.',
+            title: t('autenticacao.popups.erro_login_titulo'),
+            message: t('autenticacao.popups.erro_login_msg'),
             singleButton: true,
+            confirmText: t('comum.ok'),
             onConfirm: closePopup
         });
     })
@@ -69,9 +73,10 @@ const Login = () => {
     if (!firstName || !lastName || !username || !email || !password || !confirmPassword) {
       setPopupConfig({
         isOpen: true,
-        title: 'Campos em Falta',
-        message: 'Por favor, preenche todos os campos de registo.',
+        title: t('autenticacao.popups.campos_falta_titulo'),
+        message: t('autenticacao.popups.campos_falta_registo_msg'),
         singleButton: true,
+        confirmText: t('comum.ok'),
         onConfirm: closePopup
       });
       return;
@@ -79,9 +84,10 @@ const Login = () => {
     if (password !== confirmPassword) {
       setPopupConfig({
         isOpen: true,
-        title: 'Erro na Password',
-        message: 'As passwords não coincidem.',
+        title: t('autenticacao.popups.erro_password_titulo'),
+        message: t('autenticacao.popups.erro_password_msg'),
         singleButton: true,
+        confirmText: t('comum.ok'),
         onConfirm: closePopup
       });
       return;
@@ -91,9 +97,10 @@ const Login = () => {
     if (!nameValidation.isValid) {
       setPopupConfig({
         isOpen: true,
-        title: 'Erro de Validação',
-        message: `Nome: ${nameValidation.error}`,
+        title: t('autenticacao.popups.erro_validacao_titulo'),
+        message: `${t('autenticacao.nome')}: ${nameValidation.error}`,
         singleButton: true,
+        confirmText: t('comum.ok'),
         onConfirm: closePopup
       });
       return;
@@ -103,9 +110,10 @@ const Login = () => {
     if (!lastNameValidation.isValid) {
       setPopupConfig({
         isOpen: true,
-        title: 'Erro de Validação',
-        message: `Apelido: ${lastNameValidation.error}`,
+        title: t('autenticacao.popups.erro_validacao_titulo'),
+        message: `${t('autenticacao.apelido')}: ${lastNameValidation.error}`,
         singleButton: true,
+        confirmText: t('comum.ok'),
         onConfirm: closePopup
       });
       return;
@@ -115,9 +123,10 @@ const Login = () => {
     if (!usernameValidation.isValid) {
       setPopupConfig({
         isOpen: true,
-        title: 'Erro de Validação',
-        message: `Username: ${usernameValidation.error}`,
+        title: t('autenticacao.popups.erro_validacao_titulo'),
+        message: `${t('autenticacao.username')}: ${usernameValidation.error}`,
         singleButton: true,
+        confirmText: t('comum.ok'),
         onConfirm: closePopup
       });
       return;
@@ -137,7 +146,7 @@ const Login = () => {
         window.dispatchEvent(new Event('authChange'));
         navigate(-1);
     }).catch( (error) => {
-        let errorMsg = 'Por favor, tenha atenção à sua linguagem. Não são permitidos palavrões, links ou anúncios no registo.';
+        let errorMsg = t('autenticacao.popups.atencao_linguagem_registo');
         if (error.response && error.response.data) {
             if (typeof error.response.data === 'object' && error.response.data.msg) {
                 errorMsg = error.response.data.msg;
@@ -147,9 +156,10 @@ const Login = () => {
         }
         setPopupConfig({
             isOpen: true,
-            title: 'Atenção à Linguagem',
+            title: t('receitas.popups.atencao_linguagem_titulo'),
             message: errorMsg,
             singleButton: true,
+            confirmText: t('comum.ok'),
             onConfirm: closePopup
         });
     });
@@ -165,37 +175,37 @@ const Login = () => {
         <main className="auth-container">
 
           <section className="auth-section">
-            <h1 className="auth-title">Login</h1>
+            <h1 className="auth-title">{t('autenticacao.login')}</h1>
             <form className="auth-form" onSubmit={handleLogin}>
               <input 
                 type="text" 
-                placeholder="Username" 
+                placeholder={t('autenticacao.username')} 
                 className="auth-input" 
                 value={usernameLogin}
                 onChange={(e) => setUsernameLogin(e.target.value)}
               />
               <input 
                 type="password" 
-                placeholder="Password" 
+                placeholder={t('autenticacao.password')} 
                 className="auth-input" 
                 value={passwordLogin}
                 onChange={(e) => setPasswordLogin(e.target.value)}
               />
-              <button type="submit" className="btn-auth">Login</button>
+              <button type="submit" className="btn-auth">{t('autenticacao.login')}</button>
             </form>
           </section>
 
           <div className="auth-divider">
-            <span>OU</span>
+            <span>{t('autenticacao.ou')}</span>
           </div>
 
 
           <section className="auth-section">
-            <h1 className="auth-title">Registar</h1>
+            <h1 className="auth-title">{t('autenticacao.registar')}</h1>
             <form className="auth-form" onSubmit={handleRegister}>
               <input 
                 type="text" 
-                placeholder="Nome" 
+                placeholder={t('autenticacao.nome')} 
                 className="auth-input" 
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
@@ -203,7 +213,7 @@ const Login = () => {
               />
               <input 
                 type="text" 
-                placeholder="Apelido" 
+                placeholder={t('autenticacao.apelido')} 
                 className="auth-input" 
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
@@ -211,7 +221,7 @@ const Login = () => {
               />
               <input 
                 type="text" 
-                placeholder="Username" 
+                placeholder={t('autenticacao.username')} 
                 className="auth-input" 
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -219,26 +229,26 @@ const Login = () => {
               />
               <input 
                 type="email" 
-                placeholder="Email" 
+                placeholder={t('autenticacao.email')} 
                 className="auth-input" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
               <input 
                 type="password" 
-                placeholder="Password" 
+                placeholder={t('autenticacao.password')} 
                 className="auth-input" 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
               <input 
                 type="password" 
-                placeholder="Confirmar Password" 
+                placeholder={t('autenticacao.confirmar_password')} 
                 className="auth-input" 
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />        
-              <button type="submit" className="btn-auth">Registar</button>
+              <button type="submit" className="btn-auth">{t('autenticacao.registar')}</button>
             </form>
           </section>
         </main>
@@ -249,7 +259,8 @@ const Login = () => {
         title={popupConfig.title}
         message={popupConfig.message}
         singleButton={popupConfig.singleButton}
-        confirmText="OK"
+        confirmText={popupConfig.confirmText || t('comum.ok')}
+        cancelText={popupConfig.cancelText || t('comum.cancelar')}
         onConfirm={popupConfig.onConfirm}
         onCancel={popupConfig.onCancel}
       />

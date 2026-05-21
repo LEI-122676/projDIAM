@@ -7,8 +7,10 @@ import '../../css/styles.css';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import { getCSRFToken } from '../../utils/csrf.js';
 import { validateInput } from '../../utils/validation.js';
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 
 const FeedbackPage = () => {
+    const { t } = useLanguage();
     const navigate = useNavigate();
     const userId = localStorage.getItem('utilizadorId');
 
@@ -65,8 +67,8 @@ const FeedbackPage = () => {
     const handleSubmit = () => {
         if (!userId) {
             setPopupConfig({
-                isOpen: true, title: 'Login Necessário', message: 'Precisas de iniciar sessão para dar feedback.',
-                singleButton: false, confirmText: 'Login', cancelText: 'Cancelar',
+                isOpen: true, title: t('feedback.popups.login_necessario_titulo'), message: t('feedback.popups.login_necessario_msg'),
+                singleButton: false, confirmText: t('autenticacao.login'), cancelText: t('comum.cancelar'),
                 onConfirm: () => navigate('/login'), onCancel: closePopup
             });
             return;
@@ -74,8 +76,8 @@ const FeedbackPage = () => {
 
         if (!notaReceitas || !notaEventos || !notaFrigorifico || !notaEstetica || !funcFavorita) {
             setPopupConfig({
-                isOpen: true, title: 'Dados Incompletos', message: 'Por favor, avalia todas as categorias e escolhe a tua funcionalidade favorita.',
-                singleButton: true, confirmText: 'OK', onConfirm: closePopup
+                isOpen: true, title: t('feedback.popups.dados_incompletos_titulo'), message: t('feedback.popups.dados_incompletos_msg'),
+                singleButton: true, confirmText: t('comum.ok'), onConfirm: closePopup
             });
             return;
         }
@@ -84,8 +86,8 @@ const FeedbackPage = () => {
             const validation = validateInput(comentarioLivre, 150);
             if (!validation.isValid) {
                 setPopupConfig({
-                    isOpen: true, title: 'Comentário Inválido', message: validation.error,
-                    singleButton: true, confirmText: 'OK', onConfirm: closePopup
+                    isOpen: true, title: t('feedback.popups.comentario_invalido_titulo'), message: validation.error,
+                    singleButton: true, confirmText: t('comum.ok'), onConfirm: closePopup
                 });
                 return;
             }
@@ -106,8 +108,8 @@ const FeedbackPage = () => {
         })
         .then(() => {
             setPopupConfig({
-                isOpen: true, title: 'Sucesso', message: 'Feedback guardado com sucesso! Obrigado pela tua contribuição.',
-                singleButton: true, confirmText: 'OK', onConfirm: () => {
+                isOpen: true, title: t('feedback.popups.sucesso_titulo'), message: t('feedback.popups.feedback_guardado'),
+                singleButton: true, confirmText: t('comum.ok'), onConfirm: () => {
                     closePopup();
                     fetchStats(); // recarrega os graficos
                     fetchMyFeedback(); // recarrega o feedback do utilizador
@@ -117,8 +119,8 @@ const FeedbackPage = () => {
         .catch(err => {
             console.error(err);
             setPopupConfig({
-                isOpen: true, title: 'Erro', message: 'Ocorreu um erro ao enviar o feedback. Tenta novamente mais tarde.',
-                singleButton: true, confirmText: 'OK', onConfirm: closePopup
+                isOpen: true, title: t('receitas.popups.erro_titulo'), message: t('feedback.popups.erro_enviar_msg'),
+                singleButton: true, confirmText: t('comum.ok'), onConfirm: closePopup
             });
         });
     };
@@ -132,8 +134,8 @@ const FeedbackPage = () => {
         })
         .then(() => {
             setPopupConfig({
-                isOpen: true, title: 'Removido', message: 'O teu feedback foi removido com sucesso.',
-                singleButton: true, confirmText: 'OK', onConfirm: () => {
+                isOpen: true, title: t('feedback.popups.removido_titulo'), message: t('feedback.popups.feedback_removido'),
+                singleButton: true, confirmText: t('comum.ok'), onConfirm: () => {
                     closePopup();
                     setHasFeedback(false);
                     setNotaReceitas(0); setNotaEventos(0); setNotaFrigorifico(0); setNotaEstetica(0);
@@ -145,8 +147,8 @@ const FeedbackPage = () => {
         .catch(err => {
             console.error(err);
             setPopupConfig({
-                isOpen: true, title: 'Erro', message: 'Ocorreu um erro ao remover o feedback.',
-                singleButton: true, confirmText: 'OK', onConfirm: closePopup
+                isOpen: true, title: t('receitas.popups.erro_titulo'), message: t('feedback.popups.erro_remover'),
+                singleButton: true, confirmText: t('comum.ok'), onConfirm: closePopup
             });
         });
     };
@@ -171,34 +173,34 @@ const FeedbackPage = () => {
                 <Sidebar />
                 <main className="content-profile">
                     <div className="feedback-container" style={{ maxWidth: '900px', margin: '0 auto' }}>
-                        <h1 className="page-title-underline">Ajuda-nos a Melhorar</h1>
-                        <p style={{ color: '#716259', marginBottom: '30px', fontSize: '1.1rem' }}>A tua opinião é fundamental para melhorarmos a nossa plataforma. Por favor, partilha o teu feedback!</p>
+                        <h1 className="page-title-underline">{t('feedback.titulo')}</h1>
+                        <p style={{ color: '#716259', marginBottom: '30px', fontSize: '1.1rem' }}>{t('feedback.subtitulo')}</p>
                         
                         <div className="profile-layout-container" style={{ flexDirection: 'column', gap: '30px' }}>
                             <div className="content-box-light" style={{ width: '100%' }}>
-                                <h3 className="section-subtitle">O que achas das seguintes secções?</h3>
+                                <h3 className="section-subtitle">{t('feedback.seccao_opiniao')}</h3>
                                 
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
-                                    <div><label>As nossas Receitas</label>{renderStars(notaReceitas, setNotaReceitas)}</div>
-                                    <div><label>Os nossos Eventos</label>{renderStars(notaEventos, setNotaEventos)}</div>
-                                    <div><label>A secção do Frigorífico</label>{renderStars(notaFrigorifico, setNotaFrigorifico)}</div>
-                                    <div><label>Design e Estética Geral</label>{renderStars(notaEstetica, setNotaEstetica)}</div>
+                                    <div><label>{t('feedback.nossas_receitas')}</label>{renderStars(notaReceitas, setNotaReceitas)}</div>
+                                    <div><label>{t('feedback.nossos_eventos')}</label>{renderStars(notaEventos, setNotaEventos)}</div>
+                                    <div><label>{t('feedback.seccao_frigorifico')}</label>{renderStars(notaFrigorifico, setNotaFrigorifico)}</div>
+                                    <div><label>{t('feedback.design_estetica')}</label>{renderStars(notaEstetica, setNotaEstetica)}</div>
                                 </div>
 
-                                <h3 className="section-subtitle" style={{ marginTop: '30px' }}>Qual é a tua funcionalidade favorita?</h3>
+                                <h3 className="section-subtitle" style={{ marginTop: '30px' }}>{t('feedback.funcionalidade_favorita')}</h3>
                                 <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', marginBottom: '20px' }}>
                                     {['Receitas', 'Eventos', 'Frigorifico', 'Estetica'].map(f => (
                                         <button key={f} 
                                                 className={`btn-profile-pill ${funcFavorita === f ? '' : 'secondary'}`}
                                                 onClick={() => setFuncFavorita(f)}>
-                                            {f === 'Frigorifico' ? 'Frigorífico' : f === 'Estetica' ? 'Estética' : f}
+                                            {f === 'Frigorifico' ? t('feedback.frigorifico') : f === 'Estetica' ? t('feedback.estetica') : f === 'Receitas' ? t('feedback.receitas') : t('feedback.eventos')}
                                         </button>
                                     ))}
                                 </div>
 
-                                <h3 className="section-subtitle" style={{ marginTop: '30px' }}>Diz-nos o porquê (Opcional)</h3>
+                                <h3 className="section-subtitle" style={{ marginTop: '30px' }}>{t('feedback.diz_nos_porque')}</h3>
                                 <textarea className="auth-input" style={{ minHeight: '100px', width: '100%', resize: 'vertical' }}
-                                    placeholder="Gostei muito disto, porque..."
+                                    placeholder={t('feedback.placeholder_comentario')}
                                     value={comentarioLivre} onChange={e => setComentarioLivre(e.target.value)}
                                     maxLength="150"></textarea>
 
@@ -207,32 +209,32 @@ const FeedbackPage = () => {
                                 </div>
 
                                 <div style={{ display: 'flex', gap: '15px', marginTop: '10px' }}>
-                                    <button className="btn-create-submit" onClick={handleSubmit}>Submeter Feedback</button>
+                                    <button className="btn-create-submit" onClick={handleSubmit}>{t('feedback.submeter_feedback')}</button>
                                     {hasFeedback && (
-                                        <button className="btn-profile-pill secondary" style={{ color: 'red', borderColor: 'red' }} onClick={handleDelete}>Remover Feedback</button>
+                                        <button className="btn-profile-pill secondary" style={{ color: 'red', borderColor: 'red' }} onClick={handleDelete}>{t('feedback.remover_feedback')}</button>
                                     )}
                                 </div>
                             </div>
 
                             {stats && (
                                 <div className="content-box-light" style={{ width: '100%' }}>
-                                    <h3 className="section-subtitle">Resultados da Comunidade ({stats.total_respostas} respostas)</h3>
+                                    <h3 className="section-subtitle">{t('feedback.resultados_comunidade')} ({stats.total_respostas} {t('feedback.respostas')})</h3>
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                                         <div>
-                                            <h4>Média das Avaliações</h4>
+                                            <h4>{t('feedback.media_avaliacoes')}</h4>
                                             <ul style={{ listStyle: 'none', padding: 0, lineHeight: '2' }}>
-                                                <li>Receitas: ⭐ {stats.averages.avg_receitas?.toFixed(1)}/5</li>
-                                                <li>Eventos: ⭐ {stats.averages.avg_eventos?.toFixed(1)}/5</li>
-                                                <li>Frigorífico: ⭐ {stats.averages.avg_frigorifico?.toFixed(1)}/5</li>
-                                                <li>Estética: ⭐ {stats.averages.avg_estetica?.toFixed(1)}/5</li>
+                                                <li>{t('feedback.receitas')}: ⭐ {stats.averages.avg_receitas?.toFixed(1)}/5</li>
+                                                <li>{t('feedback.eventos')}: ⭐ {stats.averages.avg_eventos?.toFixed(1)}/5</li>
+                                                <li>{t('feedback.frigorifico')}: ⭐ {stats.averages.avg_frigorifico?.toFixed(1)}/5</li>
+                                                <li>{t('feedback.estetica')}: ⭐ {stats.averages.avg_estetica?.toFixed(1)}/5</li>
                                             </ul>
                                         </div>
                                         <div>
-                                            <h4>Funcionalidade Favorita (Poll)</h4>
+                                            <h4>{t('feedback.funcionalidade_favorita_poll')}</h4>
                                             <ul style={{ listStyle: 'none', padding: 0, lineHeight: '2' }}>
                                                 {Object.entries(stats.poll).map(([k, v]) => (
                                                     <li key={k}>
-                                                        <strong>{k === 'Frigorifico' ? 'Frigorífico' : k === 'Estetica' ? 'Estética' : k}</strong>: {v} votos
+                                                        <strong>{k === 'Frigorifico' ? t('feedback.frigorifico') : k === 'Estetica' ? t('feedback.estetica') : k === 'Receitas' ? t('feedback.receitas') : t('feedback.eventos')}</strong>: {v} {t('feedback.votos')}
                                                     </li>
                                                 ))}
                                             </ul>

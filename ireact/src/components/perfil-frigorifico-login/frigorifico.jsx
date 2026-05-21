@@ -6,8 +6,10 @@ import axios from 'axios';
 import '../../css/styles.css';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import { getCSRFToken } from '../../utils/csrf.js';
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 
 const Frigorifico = () => {
+    const { t } = useLanguage();
     const navigate = useNavigate();
     const userId = localStorage.getItem('utilizadorId');
 
@@ -44,10 +46,10 @@ const Frigorifico = () => {
             const timeoutId = setTimeout(() => {
                 setPopupConfig({
                     isOpen: true,
-                    title: 'Acesso Restrito',
-                    message: 'Precisas de iniciar sessão para aceder ao teu frigorífico.',
+                    title: t('receitas.popups.acesso_restrito_titulo'),
+                    message: t('frigorifico.popups.acesso_restrito_frigorifico'),
                     singleButton: false,
-                    confirmText: 'Iniciar Sessão',
+                    confirmText: t('autenticacao.login'),
                     onConfirm: () => navigate('/login'),
                     onCancel: () => navigate('/')
                 });
@@ -75,8 +77,8 @@ const Frigorifico = () => {
         if (!fridgeId) {
             setPopupConfig({
                 isOpen: true,
-                title: 'Erro de Configuração',
-                message: 'Ainda não tens um frigorífico configurado no servidor.',
+                title: t('receitas.popups.erro_titulo'),
+                message: t('frigorifico.popups.erro_configuracao'),
                 singleButton: true,
                 onConfirm: closePopup
             });
@@ -96,8 +98,8 @@ const Frigorifico = () => {
                 console.error("Erro ao atualizar frigorífico:", err);
                 setPopupConfig({
                     isOpen: true,
-                    title: 'Erro de Sincronização',
-                    message: 'Falha ao sincronizar o teu frigorífico. Tenta novamente.',
+                    title: t('receitas.popups.erro_titulo'),
+                    message: t('frigorifico.popups.erro_sincronizacao'),
                     singleButton: true,
                     onConfirm: closePopup
                 });
@@ -113,8 +115,8 @@ const Frigorifico = () => {
         if (ingredientesFrigorificoIds.includes(id)) {
             setPopupConfig({
                 isOpen: true,
-                title: 'Ingrediente Repetido',
-                message: 'Este ingrediente já está no teu frigorífico!',
+                title: t('receitas.popups.erro_titulo'),
+                message: t('frigorifico.popups.ingrediente_repetido'),
                 singleButton: true,
                 onConfirm: closePopup
             });
@@ -150,43 +152,43 @@ const Frigorifico = () => {
                     <div className="fridge-container">
 
                         <div className="fridge-header fridge-header-flex">
-                            <h1 className="page-title-underline m-0">O Meu Frigorífico</h1>
+                            <h1 className="page-title-underline m-0">{t('frigorifico.titulo')}</h1>
                             <button className="btn-create-submit btn-rounded-20" onClick={irParaReceitas}>
-                                Mostrar Receitas
+                                {t('frigorifico.mostrar_receitas')}
                             </button>
                         </div>
 
                         <section className="fridge-input-card premium-card">
                             <form onSubmit={adicionarIngrediente} className="fridge-form-flex">
                                 <div className="form-group flex-1">
-                                    <label className="fridge-label">O que tens hoje no frigorífico?</label>
+                                    <label className="fridge-label">{t('frigorifico.o_que_tens_hoje')}</label>
                                     <select
                                         className="input-beige select-fridge text-black"
                                         value={ingredienteSelecionado}
                                         onChange={(e) => setIngredienteSelecionado(e.target.value)}
                                     >
-                                        <option value="">-- Seleciona para adicionar --</option>
+                                        <option value="">{t('frigorifico.selecionar_adicionar')}</option>
                                         {ingredientesDisponiveis.map(ing => (
                                             <option key={ing.id} value={ing.id}>{ing.nome}</option>
                                         ))}
                                     </select>
                                 </div>
                                 <button type="submit" className="btn-add-fridge-premium">
-                                    Adicionar
+                                    {t('frigorifico.adicionar')}
                                 </button>
                             </form>
                         </section>
 
                         <div className="fridge-status-bar">
                             <h3 className="fridge-content-title">
-                                Conteúdo Atual <span className="badge-count">{ingredientesFrigorificoIds.length}</span>
+                                {t('frigorifico.conteudo_atual')} <span className="badge-count">{ingredientesFrigorificoIds.length}</span>
                             </h3>
                         </div>
 
                         <section className="ingredients-grid-modern">
                             {ingredientesFrigorificoIds.length === 0 ? (
                                 <p className="fridge-empty-clean-text">
-                                    O teu frigorífico está vazio! Adiciona ingredientes para descobrir receitas.
+                                    {t('frigorifico.frigorifico_vazio')}
                                 </p>
                             ) : (
                                 ingredientesFrigorificoIds.map((id) => {
@@ -199,7 +201,7 @@ const Frigorifico = () => {
                                             <button
                                                 className="chip-remove-btn"
                                                 onClick={() => removerIngrediente(id)}
-                                                title="Remover"
+                                                title={t('frigorifico.remover')}
                                             >
                                                 ✕
                                             </button>
@@ -219,7 +221,7 @@ const Frigorifico = () => {
                 title={popupConfig.title}
                 message={popupConfig.message}
                 singleButton={popupConfig.singleButton}
-                confirmText={popupConfig.confirmText}
+                confirmText={popupConfig.confirmText || t('comum.ok')}
                 onConfirm={popupConfig.onConfirm}
                 onCancel={popupConfig.onCancel}
             />
