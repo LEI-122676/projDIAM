@@ -2980,3 +2980,166 @@ body.dark-mode .partner-logo-img:hover {
         transform: translateX(-50%);
     }
 }
+
+/* --- COOKIE CLICKER --- */
+.cookie-clicker-container {
+    margin-top: auto;
+    margin-bottom: 25px;
+    padding: 16px;
+    margin-left: 20px;
+    margin-right: 20px;
+    background: linear-gradient(135deg, #FAF6E6 0%, #FFFEEF 100%);
+    border: 1px solid #ECE7D5;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(113, 98, 89, 0.06);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    user-select: none;
+}
+
+/* Sidebar Closed State overrides */
+.sidebar.closed .cookie-clicker-container {
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-bottom: 15px;
+    padding: 8px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.cookie-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #716259;
+    margin-bottom: 12px;
+    text-align: center;
+    letter-spacing: -0.01em;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.cookie-wrapper {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.cookie-image {
+    width: 105px;
+    height: 105px;
+    object-fit: contain;
+    transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: block;
+}
+
+.cookie-wrapper:hover .cookie-image {
+    transform: scale(1.08) rotate(3deg);
+}
+
+.cookie-wrapper:active .cookie-image {
+    transform: scale(0.9) rotate(-3deg);
+}
+
+.cookie-image.clicking {
+    animation: cookie-bounce 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes cookie-bounce {
+    0% { transform: scale(1); }
+    35% { transform: scale(0.82) rotate(-4deg); }
+    70% { transform: scale(1.15) rotate(4deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+.cookie-counter {
+    margin-top: 12px;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.counter-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #8C7B70;
+}
+
+.counter-number {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #8A5C38;
+}
+
+/* Floating number effects */
+.floating-number {
+    position: absolute;
+    font-family: 'Outfit', 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: 1.4rem;
+    color: #B37D4E;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    pointer-events: none;
+    animation: float-up-fade 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes float-up-fade {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateY(0) scale(0.8);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) translateY(-75px) scale(1.2) rotate(10deg);
+    }
+}
+
+/* Dark Mode Support */
+body.dark-mode .cookie-clicker-container {
+    background: linear-gradient(135deg, #242424 0%, #1e1e1e 100%);
+    border: 1px solid #333333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+body.dark-mode .sidebar.closed .cookie-clicker-container {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+body.dark-mode .cookie-title {
+    color: #CFC5BC;
+}
+
+body.dark-mode .counter-label {
+    color: #A39387;
+}
+
+body.dark-mode .counter-number {
+    color: #F5C79A;
+}
+
+body.dark-mode .floating-number {
+    color: #F5C79A;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.counter-number-mini {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #8A5C38;
+    margin-top: 4px;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+body.dark-mode .counter-number-mini {
+    color: #F5C79A;
+}
+
+
