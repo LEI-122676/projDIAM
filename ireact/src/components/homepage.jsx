@@ -27,7 +27,6 @@ const Home = () => {
           <div className="home-container">
             <div className="home-hero-section">
               <h1 className="home-welcome-title">Bem-vindo ao seu iFridge!</h1>
-              <br/><br/>
 
               <form onSubmit={handleSearch} className="search-container">
                 <input
