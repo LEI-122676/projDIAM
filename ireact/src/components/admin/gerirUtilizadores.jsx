@@ -8,6 +8,9 @@ import '../../css/styles.css';
 import { getCSRFToken } from '../../utils/csrf.js';
 
 const GerirUtilizadores = () => {
+    const URL_BASE = 'http://localhost:8000';
+    const URL_UTILIZADORES = `${URL_BASE}/idjango/api/utilizadores/`;
+
     const navigate = useNavigate();
     const [utilizadores, setUtilizadores] = useState([]);
     const [originalUtilizadores, setOriginalUtilizadores] = useState([]);
@@ -23,7 +26,7 @@ const GerirUtilizadores = () => {
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
     const fetchUtilizadores = () => {
-        axios.get('http://localhost:8000/idjango/api' + '/utilizadores/', { withCredentials: true })
+        axios.get(URL_UTILIZADORES, { withCredentials: true })
             .then(res => {
                 const activeUsers = res.data.filter(u => u.is_active !== false);
                 setUtilizadores(activeUsers);
@@ -50,7 +53,7 @@ const GerirUtilizadores = () => {
             return;
         }
 
-        axios.get(`http://localhost:8000/idjango/api/utilizadores/${userId}`, { withCredentials: true })
+        axios.get(`${URL_UTILIZADORES}${userId}`, { withCredentials: true })
             .then(res => {
                 if (res.data.role !== 'Admin') {
                     navigate('/perfil');
@@ -68,7 +71,7 @@ const GerirUtilizadores = () => {
     };
 
     const handleSaveRole = (user) => {
-        axios.patch(`http://localhost:8000/idjango/api/utilizadores/${user.id}`, { role: user.role }, { 
+        axios.patch(`${URL_UTILIZADORES}${user.id}`, { role: user.role }, { 
             headers: { 'X-CSRFToken': getCSRFToken() },
             withCredentials: true 
         })
@@ -107,7 +110,7 @@ const GerirUtilizadores = () => {
             confirmText: 'Eliminar',
             cancelText: 'Cancelar',
             onConfirm: () => {
-                axios.delete(`http://localhost:8000/idjango/api/utilizadores/${user.id}`, { 
+                axios.delete(`${URL_UTILIZADORES}${user.id}`, { 
                     headers: { 'X-CSRFToken': getCSRFToken() },
                     withCredentials: true 
                 })

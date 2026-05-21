@@ -8,9 +8,9 @@ import '../../css/styles.css';
 import axios from 'axios';
 import { getCSRFToken } from '../../utils/csrf.js';
 
-const CREATE_USER_URL = 'http://localhost:8000/idjango/api' + '/admin/create-user/';
-
 const AdminCriarUtilizador = () => {
+    const URL_BASE = 'http://localhost:8000';
+    const CREATE_USER_URL = `${URL_BASE}/idjango/api/admin/create-user/`;
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         firstName: '',

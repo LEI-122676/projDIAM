@@ -29,8 +29,9 @@ const Login = () => {
     getFieldLimits().then(data => setLimits(data));
   }, []);
 
-  const SIGN_UP_URL = 'http://localhost:8000/idjango/api' + '/signup/';
-  const SIGN_IN_URL = 'http://localhost:8000/idjango/api' + '/login/';
+  const URL_BASE = 'http://localhost:8000';
+  const SIGN_UP_URL = `${URL_BASE}/idjango/api/signup/`;
+  const SIGN_IN_URL = `${URL_BASE}/idjango/api/login/`;
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -48,6 +49,7 @@ const Login = () => {
     axios.post(SIGN_IN_URL, { username: usernameLogin, password: passwordLogin }, { withCredentials: true })
       .then((response) => {
         localStorage.setItem('utilizadorId', response.data.utilizadorId);
+        window.dispatchEvent(new Event('authChange'));
         console.log('logged in');
         navigate(-1);
       })
@@ -132,6 +134,7 @@ const Login = () => {
     axios.post(SIGN_UP_URL, formData, { withCredentials: true }).then( response => {
         console.log('Signup successful!', response.data.msg);
         localStorage.setItem('utilizadorId', response.data.utilizadorId);
+        window.dispatchEvent(new Event('authChange'));
         navigate(-1);
     }).catch( (error) => {
         let errorMsg = 'Por favor, tenha atenção à sua linguagem. Não são permitidos palavrões, links ou anúncios no registo.';

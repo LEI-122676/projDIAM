@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import '../../css/styles.css';
 
 const LogoSlider = () => {
+  const URL_BASE = 'http://localhost:8000';
+  const mediaBaseUrl = `${URL_BASE}/idjango/media/infinite_logo_slider/`;
   const [logos, setLogos] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -43,7 +45,7 @@ const LogoSlider = () => {
 
   // Duplicar a lista de logótipos para fazer o loop infinito sem interrupções
   const duplicatedLogos = [...logos, ...logos];
-  const mediaBaseUrl = 'http://localhost:8000/idjango/media/infinite_logo_slider/';
+  
 
   return (
     <div className="logo-slider-wrapper">

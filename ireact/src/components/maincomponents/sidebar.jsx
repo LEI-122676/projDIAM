@@ -6,6 +6,7 @@ import iconeReceitas from '../../assets/receitas.svg';
 import iconeEventos from '../../assets/calendario.svg';
 import iconeFrigorifico from '../../assets/frigorifico.svg';
 import iconePerfil from '../../assets/perfil.svg';
+import CookieClicker from './CookieClicker.jsx';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(() => {
@@ -55,6 +56,8 @@ const Sidebar = () => {
           {isOpen && <span className="nav-text">Perfil</span>}
         </li>
       </ul>
+
+      <CookieClicker sidebarOpen={isOpen} />
     </nav>
   );
 };

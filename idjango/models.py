@@ -26,6 +26,7 @@ class Utilizador(models.Model):
     
     imagem = models.ImageField(upload_to='profile_pics', default='defaultProfile.png')
     bio = models.TextField(null=True)
+    cookie_clicks = models.IntegerField(default=0)
 
     _roles_file = os.environ.get('UTILIZADOR_ROLES_FILE', 'user_roles.json')
     _roles_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), _roles_file)

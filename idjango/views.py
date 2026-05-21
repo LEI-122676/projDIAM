@@ -477,8 +477,13 @@ def logout_view(request):
 @api_view(['GET'])
 def user_view(request):
     if request.user.is_authenticated:
-        return Response({'username': request.user.username})
-    return Response({'username': None})
+        try:
+            utilizador = Utilizador.objects.get(user=request.user)
+            return Response({'username': request.user.username, 'utilizadorId': utilizador.id})
+        except Utilizador.DoesNotExist:
+            return Response({'username': request.user.username, 'utilizadorId': None})
+    return Response({'username': None, 'utilizadorId': None})
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
