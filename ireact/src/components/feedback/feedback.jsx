@@ -202,7 +202,11 @@ const FeedbackPage = () => {
                                     value={comentarioLivre} onChange={e => setComentarioLivre(e.target.value)}
                                     maxLength="150"></textarea>
 
-                                <div style={{ display: 'flex', gap: '15px', marginTop: '20px' }}>
+                                <div style={{ textAlign: 'right', fontSize: '0.85rem', color: '#888', marginTop: '4px', marginBottom: '8px' }}>
+                                    {comentarioLivre.length} / 150
+                                </div>
+
+                                <div style={{ display: 'flex', gap: '15px', marginTop: '10px' }}>
                                     <button className="btn-create-submit" onClick={handleSubmit}>Submeter Feedback</button>
                                     {hasFeedback && (
                                         <button className="btn-profile-pill secondary" style={{ color: 'red', borderColor: 'red' }} onClick={handleDelete}>Remover Feedback</button>
