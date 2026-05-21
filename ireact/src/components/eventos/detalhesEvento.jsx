@@ -282,10 +282,15 @@ const VerEvento = () => {
                                     ⏳ Contagem Decrescente: {contagem || "A calcular..."}
                                 </div>
                                 <div className="step-nav-item step-nav-item-default">
-                                    🕒 {formatarHorario(evento.horario) || "Sem horário definido"}
+                                    🕒 Horários 🕒 
+                                    {evento.horario && Object.entries(evento.horario).map(([chave, valor], index) => (
+                                        <div key={index} className="horario-row">
+                                            <strong>{chave}:</strong> {valor}
+                                        </div>
+                                    ))}
                                 </div>
                                 <div className="step-nav-item step-nav-item-default">
-                                    📍 Capacidade Máxima: {evento.capacidade_max || 5} pessoas
+                                    🔢 Capacidade Máxima: {evento.capacidade_max || 5} pessoas
                                 </div>
 
                                  <div className="view-actions-group mt-auto">
