@@ -81,10 +81,10 @@ const FeedbackPage = () => {
         }
 
         if (comentarioLivre) {
-            const validationError = validateInput(comentarioLivre, 'comentario');
-            if (validationError) {
+            const validation = validateInput(comentarioLivre, 150);
+            if (!validation.isValid) {
                 setPopupConfig({
-                    isOpen: true, title: 'Comentário Inválido', message: validationError,
+                    isOpen: true, title: 'Comentário Inválido', message: validation.error,
                     singleButton: true, confirmText: 'OK', onConfirm: closePopup
                 });
                 return;

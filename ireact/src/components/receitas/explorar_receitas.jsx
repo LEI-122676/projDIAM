@@ -75,7 +75,7 @@ const ExplorarReceitas = () => {
             return;
         }
 
-        axios.get(`${UTILIZADORES_URL}${userId}/frigorifico`)
+        axios.get(`${UTILIZADORES_URL}${userId}/frigorifico`, { withCredentials: true })
             .then(res => {
                 const ingredientes = res.data.ingredientes;
                 if (!ingredientes || ingredientes.length === 0) {
