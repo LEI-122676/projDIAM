@@ -2894,7 +2894,7 @@ body.dark-mode .logo-slider-title {
     position: relative;
     width: 100%;
     overflow: hidden;
-    padding: 20px 0;
+    padding: 30px 0;
     display: flex;
     align-items: center;
 }
@@ -2922,11 +2922,11 @@ body.dark-mode .logo-slider-title {
 }
 
 body.dark-mode .logo-slider-container::before {
-    background: linear-gradient(to right, #1e1e1e, transparent);
+    background: linear-gradient(to right, #121212, transparent);
 }
 
 body.dark-mode .logo-slider-container::after {
-    background: linear-gradient(to left, #1e1e1e, transparent);
+    background: linear-gradient(to left, #121212, transparent);
 }
 
 .logo-slider-track {
@@ -2945,11 +2945,11 @@ body.dark-mode .logo-slider-container::after {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    padding: 0 35px; /* Equal spacing around each item for perfect seamless loops */
+    padding: 0 60px; /* Equal spacing around each item for perfect seamless loops */
 }
 
 .partner-logo-img {
-    height: 45px;
+    height: 135px; /* 3x larger than 45px */
     width: auto;
     object-fit: contain;
     opacity: 0.6;
@@ -2964,11 +2964,11 @@ body.dark-mode .logo-slider-container::after {
 }
 
 body.dark-mode .partner-logo-img {
-    filter: grayscale(100%) brightness(1.6);
+    filter: invert(1) grayscale(100%);
 }
 
 body.dark-mode .partner-logo-img:hover {
-    filter: grayscale(0%) brightness(1);
+    filter: invert(1) grayscale(100%);
 }
 
 @keyframes logo-scroll {
