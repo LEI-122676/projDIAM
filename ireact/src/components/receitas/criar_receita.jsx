@@ -10,6 +10,10 @@ import { getFieldLimits, validateInput } from '../../utils/validation.js';
 
 
 const CriarReceita = () => {
+    const URL_BASE = 'http://localhost:8000';
+    const INGREDIENTES_URL = `${URL_BASE}/idjango/api/ingredientes/`;
+    const RECEITAS_URL = `${URL_BASE}/idjango/api/receitas/`;
+
     const navigate = useNavigate();
     const location = useLocation();
     const editReceita = location.state?.editReceita;
@@ -21,7 +25,7 @@ const CriarReceita = () => {
     const [foto, setFoto] = useState(null);
     const [fotoPreview, setFotoPreview] = useState(
         editReceita && editReceita.foto_url 
-            ? (editReceita.foto_url.startsWith('http') ? editReceita.foto_url : `http://localhost:8000${editReceita.foto_url}`) 
+            ? (editReceita.foto_url.startsWith('http') ? editReceita.foto_url : `${URL_BASE}${editReceita.foto_url}`) 
             : null
     );
 
@@ -31,9 +35,6 @@ const CriarReceita = () => {
 
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
-
-    const INGREDIENTES_URL = 'http://localhost:8000/idjango/api' + '/ingredientes/';
-    const RECEITAS_URL = 'http://localhost:8000/idjango/api' + '/receitas/';
 
     const getIngredientes = () => {
         axios.get(INGREDIENTES_URL)

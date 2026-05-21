@@ -3,10 +3,11 @@ import axios from 'axios';
 import cookieImg from '../../assets/cookie-clicker.gif';
 import { getCSRFToken } from '../../utils/csrf.js';
 
-const URL_UTILIZADORES = 'http://localhost:8000/idjango/api/utilizadores/';
-const URL_CLICK_SOUND = 'http://localhost:8000/idjango/media/cookie-clicker-click-sound.mp3';
-
 const CookieClicker = ({ sidebarOpen }) => {
+  const URL_BASE = 'http://localhost:8000';
+  const URL_UTILIZADORES = `${URL_BASE}/idjango/api/utilizadores/`;
+  const URL_CLICK_SOUND = `${URL_BASE}/idjango/media/cookie-clicker-click-sound.mp3`;
+
   const [count, setCount] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
@@ -21,7 +22,21 @@ const CookieClicker = ({ sidebarOpen }) => {
     countRef.current = count;
   }, [count]);
 
-  const utilizadorId = localStorage.getItem('utilizadorId');
+  const [utilizadorId, setUtilizadorId] = useState(() => localStorage.getItem('utilizadorId'));
+
+  useEffect(() => {
+    const handleAuthChange = () => {
+      setUtilizadorId(localStorage.getItem('utilizadorId'));
+    };
+
+    window.addEventListener('authChange', handleAuthChange);
+    window.addEventListener('storage', handleAuthChange);
+
+    return () => {
+      window.removeEventListener('authChange', handleAuthChange);
+      window.removeEventListener('storage', handleAuthChange);
+    };
+  }, []);
 
   // Load initial click count on mount or login change
   useEffect(() => {

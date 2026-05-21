@@ -11,6 +11,9 @@ import { getFieldLimits, validateInput } from '../../utils/validation.js';
 
 
 const CriarEvento = () => {
+    const URL_BASE = 'http://localhost:8000';
+    const URL_CRIAR_EVENTO = `${URL_BASE}/idjango/api/eventos/`;
+    const URL_UTILIZADORES = `${URL_BASE}/idjango/api/utilizadores/`;
 
     const navigate = useReactNavigate();
     const location = useLocation();
@@ -39,7 +42,7 @@ const CriarEvento = () => {
     const [fotoPreview, setFotoPreview] = useState(() => {
         if (editEvento) {
             if (editEvento.foto_url) {
-                return `http://localhost:8000${editEvento.foto_url}`;
+                return `${URL_BASE}${editEvento.foto_url}`;
             } else if (editEvento.foto) {
                 return editEvento.foto;
             }
@@ -57,7 +60,7 @@ const CriarEvento = () => {
         getFieldLimits().then(data => setLimits(data));
     }, []);
 
-    const URL_CRIAR_EVENTO = 'http://localhost:8000/idjango/api' + '/eventos/';
+    
 
     useEffect(() => {
         if (!utilizadorId) {
@@ -74,7 +77,7 @@ const CriarEvento = () => {
             return;
         }
 
-        axios.get(`http://localhost:8000/idjango/api/utilizadores/${utilizadorId}`, { withCredentials: true })
+        axios.get(`${URL_UTILIZADORES}${utilizadorId}`, { withCredentials: true })
             .then(res => {
                 const userRole = res.data.role;
                 if (userRole !== 'Admin' && userRole !== 'EventOrganizer') {

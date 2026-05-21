@@ -7,7 +7,10 @@ import PopupModal from '../maincomponents/popupModal.jsx';
 import axios from 'axios';
 
 const Perfil = () => {
-  const URL_UTILIZADOR = 'http://localhost:8000/idjango/api/utilizadores/';
+  const URL_BASE = 'http://localhost:8000';
+  const URL_UTILIZADOR = `${URL_BASE}/idjango/api/utilizadores/`;
+  const URL_DEFAULT_PROFILE = `${URL_BASE}/idjango/media/defaultProfile.png`;
+  const URL_LOGOUT = `${URL_BASE}/idjango/api/logout/`;
   const navigate = useNavigate();
 
   const userId = localStorage.getItem('utilizadorId');
@@ -66,7 +69,7 @@ const Perfil = () => {
                 <div className="user-main-info">
                   <div className="user-avatar-large flex-center-overflow-hidden">
                       <img
-                        src={userData.imagem ? (userData.imagem.startsWith('http') ? userData.imagem : `http://localhost:8000${userData.imagem.startsWith('/') ? '' : '/'}${userData.imagem}`) : `http://localhost:8000/idjango/media/defaultProfile.png`}
+                        src={userData.imagem ? (userData.imagem.startsWith('http') ? userData.imagem : `${URL_BASE}${userData.imagem.startsWith('/') ? '' : '/'}${userData.imagem}`) : URL_DEFAULT_PROFILE}
                         alt="Imagem do utilizador"
                         className="cover-image-large-rounded"
                       />
@@ -90,16 +93,16 @@ const Perfil = () => {
                 <div className="profile-actions">
                   <button className="btn-edit-profile" onClick={() => navigate('/perfil/editar-perfil')}>Editar perfil</button>
                   <button className="btn-logout-link" onClick={() => {
-                    axios.get('http://localhost:8000/idjango/api/logout/', { withCredentials: true })
+                    axios.get(URL_LOGOUT, { withCredentials: true })
                       .then(() => {
                         localStorage.removeItem('utilizadorId');
+                        window.dispatchEvent(new Event('authChange'));
                         navigate('/login');
-                        window.location.reload();
                       })
                       .catch(() => {
                         localStorage.removeItem('utilizadorId');
+                        window.dispatchEvent(new Event('authChange'));
                         navigate('/login');
-                        window.location.reload();
                       });
                   }}>Log Out</button>
                 </div>

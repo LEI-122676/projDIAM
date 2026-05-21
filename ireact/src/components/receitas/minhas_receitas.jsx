@@ -12,8 +12,9 @@ import Pagination from '../maincomponents/pagination.jsx';
 const AsMinhasReceitas = () => {
     const navigate = useNavigate();
 
-    const RECEITAS_URL = 'http://localhost:8000/idjango/api' + '/receitas/';
-    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api' + '/utilizadores/';
+    const URL_BASE = 'http://localhost:8000';
+    const RECEITAS_URL = `${URL_BASE}/idjango/api/receitas/`;
+    const UTILIZADORES_URL = `${URL_BASE}/idjango/api/utilizadores/`;
 
     const [receitas, setReceitas] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -185,7 +186,7 @@ const AsMinhasReceitas = () => {
                                             <div className="recipe-image-placeholder">
                                                 {receita.foto_url ? (
                                                     <img
-                                                        src={`http://localhost:8000${receita.foto_url}`}
+                                                        src={`${URL_BASE}${receita.foto_url}`}
                                                         alt={receita.nome}
                                                         className="cover-image"
                                                     />
@@ -234,7 +235,7 @@ const AsMinhasReceitas = () => {
                                             <div className="recipe-image-placeholder">
                                                 {receita.foto_url ? (
                                                     <img
-                                                        src={`http://localhost:8000${receita.foto_url}`}
+                                                        src={`${URL_BASE}${receita.foto_url}`}
                                                         alt={receita.nome}
                                                         className="cover-image"
                                                     />

@@ -38,10 +38,12 @@ const VerReceita = () => {
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => { }, onCancel: () => { } });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-    const INGREDIENTES_URL = 'http://localhost:8000/idjango/api' + '/ingredientes/';
-    const RECEITA_URL = 'http://localhost:8000/idjango/api' + '/receitas/';
-    const COMENTARIOS_URL = 'http://localhost:8000/idjango/api' + '/comentarios/';
-    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api' + '/utilizadores/';
+    const URL_BASE = 'http://localhost:8000';
+    const INGREDIENTES_URL = `${URL_BASE}/idjango/api/ingredientes/`;
+    const RECEITA_URL = `${URL_BASE}/idjango/api/receitas/`;
+    const COMENTARIOS_URL = `${URL_BASE}/idjango/api/comentarios/`;
+    const UTILIZADORES_URL = `${URL_BASE}/idjango/api/utilizadores/`;
+    const AVALIAR_URL = `${URL_BASE}/idjango/api/avaliar/`;
 
     const showLoginPopup = (actionMessage) => {
         setPopupConfig({
@@ -204,7 +206,7 @@ const VerReceita = () => {
             return;
         }
 
-        axios.post('http://localhost:8000/idjango/api' + '/avaliar/', {
+        axios.post(AVALIAR_URL, {
             utilizador: parseInt(userId),
             receita: parseInt(recipeId),
             nota: novaClassificacao
@@ -311,7 +313,7 @@ const VerReceita = () => {
                             <div className="recipe-main-image flex-center">
                                 {receita.foto_url ? (
                                     <img
-                                        src={`http://localhost:8000${receita.foto_url}`}
+                                        src={`${URL_BASE}${receita.foto_url}`}
                                         alt={receita.nome}
                                         className="cover-image-rounded"
                                     />

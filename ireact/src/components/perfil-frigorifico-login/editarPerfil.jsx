@@ -9,8 +9,9 @@ import { getCSRFToken } from '../../utils/csrf.js';
 import { getFieldLimits, validateInput } from '../../utils/validation.js';
 
 const EditarPerfil = () => {
-  const URL_USER = 'http://localhost:8000/idjango/api' + '/user_info/';
-  const URL_USER_INFO = 'http://localhost:8000/idjango/api' + '/utilizadores/';
+  const URL_BASE = 'http://localhost:8000';
+  const URL_USER = `${URL_BASE}/idjango/api/user_info/`;
+  const URL_USER_INFO = `${URL_BASE}/idjango/api/utilizadores/`;
   
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
@@ -61,7 +62,7 @@ const EditarPerfil = () => {
         setLastName(res.data.last_name || '');
         setBio(res.data.bio || '');
         if (res.data.imagem) {
-          const imagePath = res.data.imagem.startsWith('http') ? res.data.imagem : `http://localhost:8000${res.data.imagem}`;
+          const imagePath = res.data.imagem.startsWith('http') ? res.data.imagem : `${URL_BASE}${res.data.imagem}`;
           setFotoPreview(imagePath);
         }
       })

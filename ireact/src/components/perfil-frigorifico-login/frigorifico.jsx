@@ -28,9 +28,10 @@ const Frigorifico = () => {
     });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-    const INGREDIENTES_URL = 'http://localhost:8000/idjango/api' + '/ingredientes/';
-    const UTILIZADORES_URL = 'http://localhost:8000/idjango/api' + '/utilizadores/';
-    const FRIGORIFICOS_URL = 'http://localhost:8000/idjango/api' + '/frigorificos/';
+    const URL_BASE = 'http://localhost:8000';
+    const INGREDIENTES_URL = `${URL_BASE}/idjango/api/ingredientes/`;
+    const UTILIZADORES_URL = `${URL_BASE}/idjango/api/utilizadores/`;
+    const FRIGORIFICOS_URL = `${URL_BASE}/idjango/api/frigorificos/`;
 
     const getIngredientes = () => {
         axios.get(INGREDIENTES_URL)

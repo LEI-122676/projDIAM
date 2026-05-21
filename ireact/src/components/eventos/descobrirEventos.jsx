@@ -14,8 +14,10 @@ import Pagination from '../maincomponents/pagination.jsx';
 
 const ExplorarEventos = () => {
 
-    const URL_EVENTOS = 'http://localhost:8000/idjango/api' + '/eventos/';
-    const URL_USER = 'http://localhost:8000/idjango/api' + '/user/';
+    const URL_BASE = 'http://localhost:8000';
+    const URL_EVENTOS = `${URL_BASE}/idjango/api/eventos/`;
+    const URL_USER = `${URL_BASE}/idjango/api/user/`;
+    const URL_DEFAULT_EVENT = `${URL_BASE}/idjango/media/defaultEvent.png`;
 
     const navigate = useNavigate();
 
@@ -167,13 +169,13 @@ const ExplorarEventos = () => {
                                     <div className="recipe-image-placeholder">
                                         {(evento.foto_url || evento.foto) ? (
                                             <img
-                                                src={`http://localhost:8000${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
+                                                 src={`${URL_BASE}${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
                                                 alt={evento.nome}
                                                 className="cover-image"
                                             />
                                         ) : (
                                             <img
-                                                src="http://localhost:8000/idjango/media/defaultEvent.png"
+                                                src={URL_DEFAULT_EVENT}
                                                 alt={evento.nome}
                                                 className="cover-image"
                                             />

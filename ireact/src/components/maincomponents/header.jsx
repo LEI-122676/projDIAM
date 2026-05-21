@@ -8,9 +8,9 @@ import { useState } from 'react';
 
 
 const Header = () => {
-
-  const URL_LOGOUT = 'http://localhost:8000/idjango/api' + '/logout/';
-  const URL_USER = 'http://localhost:8000/idjango/api' + '/user/';
+  const URL_BASE = 'http://localhost:8000';
+  const URL_LOGOUT = `${URL_BASE}/idjango/api/logout/`;
+  const URL_USER = `${URL_BASE}/idjango/api/user/`;
 
   const [username, setUsername] = useState(null);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
@@ -34,11 +34,13 @@ const Header = () => {
       .then(() => {
         setUsername(null);
         localStorage.removeItem('utilizadorId');
+        window.dispatchEvent(new Event('authChange'));
         navigate('/');
       })
       .catch(() => {
         console.log('logout failed');
         localStorage.removeItem('utilizadorId');
+        window.dispatchEvent(new Event('authChange'));
         navigate('/');
       });
   }
@@ -47,13 +49,18 @@ const Header = () => {
     axios.get(URL_USER, { withCredentials: true })
       .then(response => {
         setUsername(response.data.username);
-        if (!response.data.username) {
+        if (response.data.username && response.data.utilizadorId) {
+          localStorage.setItem('utilizadorId', response.data.utilizadorId);
+          window.dispatchEvent(new Event('authChange'));
+        } else {
           localStorage.removeItem('utilizadorId');
+          window.dispatchEvent(new Event('authChange'));
         }
       })
       .catch(() => {
         console.log("user not logged in");
         localStorage.removeItem('utilizadorId');
+        window.dispatchEvent(new Event('authChange'));
       });
   }, []);
 

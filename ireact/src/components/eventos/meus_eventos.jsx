@@ -10,7 +10,10 @@ import Pagination from '../maincomponents/pagination.jsx';
 const OsMeusEventos = () => {
     const navigate = useNavigate();
 
-    const RECEITAS_URL = 'http://localhost:8000/idjango/api' + '/eventos/';
+    const URL_BASE = 'http://localhost:8000';
+    const URL_EVENTOS = `${URL_BASE}/idjango/api/eventos/`;
+    const URL_DEFAULT_EVENT = `${URL_BASE}/idjango/media/defaultEvent.png`;
+
     const [eventos, setEventos] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     
@@ -22,7 +25,7 @@ const OsMeusEventos = () => {
     const userId = localStorage.getItem('utilizadorId');
 
     const getEventos = () => {
-        axios.get(RECEITAS_URL)
+        axios.get(URL_EVENTOS)
             .then(res => setEventos(res.data))
             .catch(err => console.error("Erro ao carregar receitas:", err));
     };
@@ -105,13 +108,13 @@ const OsMeusEventos = () => {
                                             <div className="recipe-image-placeholder">
                                                 {(evento.foto_url || evento.foto) ? (
                                                     <img
-                                                        src={`http://localhost:8000${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
+                                                        src={`${URL_BASE}${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
                                                         alt={evento.nome}
                                                         className="cover-image"
                                                     />
                                                 ) : (
                                                     <img
-                                                        src="http://localhost:8000/idjango/media/defaultEvent.png"
+                                                        src={URL_DEFAULT_EVENT}
                                                         alt={evento.nome}
                                                         className="cover-image"
                                                     />
@@ -156,13 +159,13 @@ const OsMeusEventos = () => {
                                             <div className="recipe-image-placeholder">
                                                 {(evento.foto_url || evento.foto) ? (
                                                     <img
-                                                        src={`http://localhost:8000${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
+                                                        src={`${URL_BASE}${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
                                                         alt={evento.nome}
                                                         className="cover-image"
                                                     />
                                                 ) : (
                                                     <img
-                                                        src="http://localhost:8000/idjango/media/defaultEvent.png"
+                                                        src={URL_DEFAULT_EVENT}
                                                         alt={evento.nome}
                                                         className="cover-image"
                                                     />

@@ -9,6 +9,11 @@ import PopupModal from '../maincomponents/popupModal.jsx';
 import { getCSRFToken } from '../../utils/csrf.js';
 
 const VerEvento = () => {
+    const URL_BASE = 'http://localhost:8000';
+    const URL_EVENTOS = `${URL_BASE}/idjango/api/eventos/`;
+    const URL_UTILIZADORES = `${URL_BASE}/idjango/api/utilizadores/`;
+    const URL_DEFAULT_EVENT = `${URL_BASE}/idjango/media/defaultEvent.png`;
+
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -25,7 +30,7 @@ const VerEvento = () => {
     });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-    const EVENTO_URL = 'http://localhost:8000/idjango/api' + '/eventos/';
+    
 
     const showLoginPopup = (actionMessage) => {
         setPopupConfig({
@@ -45,7 +50,7 @@ const VerEvento = () => {
             return;
         }
 
-        axios.get(`${EVENTO_URL}${eventoId}`)
+        axios.get(`${URL_EVENTOS}${eventoId}`)
             .then(res => {
                 setEvento(res.data);
                 if (utilizadorId && res.data.inscritos?.includes(parseInt(utilizadorId, 10))) {
@@ -58,7 +63,7 @@ const VerEvento = () => {
             });
 
         if (utilizadorId) {
-            axios.get(`http://localhost:8000/idjango/api/utilizadores/${utilizadorId}`, { withCredentials: true })
+            axios.get(`${URL_UTILIZADORES}${utilizadorId}`, { withCredentials: true })
                 .then(res => {
                     if (res.data.role === 'Admin') {
                         setIsAdmin(true);
@@ -66,12 +71,12 @@ const VerEvento = () => {
                 })
                 .catch(err => console.error("Erro ao obter papel do utilizador:", err));
         }
-    }, [eventoId, utilizadorId, navigate, EVENTO_URL]);
+    }, [eventoId, utilizadorId, navigate, URL_EVENTOS]);
 
     const getImageUrl = (caminho) => {
-        if (!caminho) return "http://localhost:8000/idjango/media/defaultEvent.png";
+        if (!caminho) return URL_DEFAULT_EVENT;
         if (caminho.startsWith('http')) return caminho;
-        return `http://localhost:8000${caminho.startsWith('/') ? '' : '/'}${caminho}`;
+        return `${URL_BASE}${caminho.startsWith('/') ? '' : '/'}${caminho}`;
     };
 
     const formatarHorario = (h) => {
