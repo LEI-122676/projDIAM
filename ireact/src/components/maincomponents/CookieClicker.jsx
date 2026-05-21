@@ -3,30 +3,57 @@ import axios from 'axios';
 import cookieImg from '../../assets/cookie-clicker.gif';
 import { getCSRFToken } from '../../utils/csrf.js';
 
+// Module-level cache to persist click counts across component mount/unmount (e.g. during page navigation)
+// without losing unsynced clicks or causing race conditions.
+let cachedCount = null;
+let cachedUserId = undefined; // undefined = uninitialized, null = guest, number/string = user
+
+const safeParseInt = (val) => {
+  if (val === null || val === undefined || val === 'null' || val === 'undefined' || val === 'NaN') return 0;
+  const parsed = parseInt(val, 10);
+  return isNaN(parsed) ? 0 : parsed;
+};
+
+const getSafeUserId = () => {
+  const id = localStorage.getItem('utilizadorId');
+  if (id === 'null' || id === 'undefined' || !id) return null;
+  return id;
+};
+
 const CookieClicker = ({ sidebarOpen }) => {
   const URL_BASE = 'http://localhost:8000';
   const URL_UTILIZADORES = `${URL_BASE}/idjango/api/utilizadores/`;
   const URL_CLICK_SOUND = `${URL_BASE}/idjango/media/cookie-clicker-click-sound.mp3`;
 
-  const [count, setCount] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [utilizadorId, setUtilizadorId] = useState(getSafeUserId);
+
+  // Initialize count state from cache or localStorage if possible, to avoid rendering 0/stale value
+  const [count, setCount] = useState(() => {
+    if (cachedUserId === utilizadorId && cachedCount !== null) {
+      return safeParseInt(cachedCount);
+    }
+    if (utilizadorId) {
+      return safeParseInt(localStorage.getItem(`cookie_clicks_${utilizadorId}`));
+    } else {
+      return safeParseInt(localStorage.getItem('guest_cookie_clicks'));
+    }
+  });
+
+  const [isLoaded, setIsLoaded] = useState(() => {
+    // If cache is valid, we are already loaded!
+    return cachedUserId === utilizadorId && cachedCount !== null;
+  });
   const [isClicking, setIsClicking] = useState(false);
   const [floatingTexts, setFloatingTexts] = useState([]);
 
   // Use refs to track values across the periodic sync interval without resetting it
-  const countRef = useRef(0);
-  const lastSyncedCountRef = useRef(0);
-
-  // Sync state count to ref
-  useEffect(() => {
-    countRef.current = count;
-  }, [count]);
-
-  const [utilizadorId, setUtilizadorId] = useState(() => localStorage.getItem('utilizadorId'));
+  const countRef = useRef(count);
+  const lastSyncedCountRef = useRef(count);
+  const pendingBaseRef = useRef(count); // Keeps track of what count was when we started fetching from Django
 
   useEffect(() => {
     const handleAuthChange = () => {
-      setUtilizadorId(localStorage.getItem('utilizadorId'));
+      setUtilizadorId(getSafeUserId());
     };
 
     window.addEventListener('authChange', handleAuthChange);
@@ -38,16 +65,56 @@ const CookieClicker = ({ sidebarOpen }) => {
     };
   }, []);
 
+  // Sync state count to ref, cache, and localStorage
+  useEffect(() => {
+    countRef.current = count;
+    cachedCount = count;
+    cachedUserId = utilizadorId;
+
+    if (isLoaded) {
+      if (!utilizadorId) {
+        localStorage.setItem('guest_cookie_clicks', count.toString());
+      } else {
+        localStorage.setItem(`cookie_clicks_${utilizadorId}`, count.toString());
+      }
+    }
+  }, [count, utilizadorId, isLoaded]);
+
   // Load initial click count on mount or login change
   useEffect(() => {
     setIsLoaded(false);
     if (utilizadorId) {
+      // First try to load from localStorage or cache as fallback so the UI is never blank
+      let initialClicks = 0;
+      if (cachedUserId === utilizadorId && cachedCount !== null) {
+        initialClicks = safeParseInt(cachedCount);
+      } else {
+        initialClicks = safeParseInt(localStorage.getItem(`cookie_clicks_${utilizadorId}`));
+      }
+      setCount(initialClicks);
+      countRef.current = initialClicks;
+      lastSyncedCountRef.current = initialClicks;
+      pendingBaseRef.current = initialClicks;
+
       axios.get(`${URL_UTILIZADORES}${utilizadorId}`, { withCredentials: true })
         .then(res => {
-          const clicks = res.data.cookie_clicks || 0;
-          setCount(clicks);
-          countRef.current = clicks;
-          lastSyncedCountRef.current = clicks;
+          const djangoClicks = safeParseInt(res.data.cookie_clicks);
+          
+          // Number of clicks the user made WHILE the fetch request was pending
+          const pendingClicks = countRef.current - pendingBaseRef.current;
+          
+          // True clicks: whatever Django has + the clicks we just made right now
+          const trueClicks = djangoClicks + (pendingClicks > 0 ? pendingClicks : 0);
+          
+          setCount(trueClicks);
+          countRef.current = trueClicks;
+          
+          // The database currently holds 'djangoClicks'. We have 'trueClicks'. 
+          // Setting lastSyncedCountRef to djangoClicks ensures that the difference (if pendingClicks > 0) will be patched.
+          lastSyncedCountRef.current = djangoClicks;
+          cachedCount = trueClicks;
+          cachedUserId = utilizadorId;
+          localStorage.setItem(`cookie_clicks_${utilizadorId}`, trueClicks.toString());
           setIsLoaded(true);
         })
         .catch(err => {
@@ -55,11 +122,12 @@ const CookieClicker = ({ sidebarOpen }) => {
           setIsLoaded(true);
         });
     } else {
-      const guestClicks = localStorage.getItem('guest_cookie_clicks');
-      const clicks = guestClicks ? parseInt(guestClicks, 10) : 0;
+      const clicks = safeParseInt(localStorage.getItem('guest_cookie_clicks'));
       setCount(clicks);
       countRef.current = clicks;
       lastSyncedCountRef.current = clicks;
+      cachedCount = clicks;
+      cachedUserId = null;
       setIsLoaded(true);
     }
   }, [utilizadorId]);
@@ -75,8 +143,7 @@ const CookieClicker = ({ sidebarOpen }) => {
       if (currentCount === lastSynced) return;
 
       if (!utilizadorId) {
-        // Guest user: save to localStorage
-        localStorage.setItem('guest_cookie_clicks', currentCount.toString());
+        // Guest user: save to localStorage (already done in click effect, but sync lastSynced count)
         lastSyncedCountRef.current = currentCount;
       } else {
         // Authenticated user: send PATCH to backend with CSRF token
@@ -123,8 +190,16 @@ const CookieClicker = ({ sidebarOpen }) => {
   }, [utilizadorId]);
 
   const handleCookieClick = (e) => {
-    // Increment local state counter immediately
-    setCount(prev => prev + 1);
+    // Increment local state counter immediately and save directly to localStorage
+    setCount(prev => {
+      const next = (safeParseInt(prev) || 0) + 1;
+      if (!utilizadorId) {
+        localStorage.setItem('guest_cookie_clicks', next.toString());
+      } else {
+        localStorage.setItem(`cookie_clicks_${utilizadorId}`, next.toString());
+      }
+      return next;
+    });
 
     // Play click sound
     const clickAudio = new Audio(URL_CLICK_SOUND);
@@ -180,10 +255,10 @@ const CookieClicker = ({ sidebarOpen }) => {
         {sidebarOpen ? (
           <>
             <span className="counter-label">Cliques:</span>
-            <span className="counter-number">{count}</span>
+            <span className="counter-number">{safeParseInt(count)}</span>
           </>
         ) : (
-          <span className="counter-number-mini">{count}</span>
+          <span className="counter-number-mini">{safeParseInt(count)}</span>
         )}
       </div>
     </div>
