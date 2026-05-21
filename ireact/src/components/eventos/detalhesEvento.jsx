@@ -7,8 +7,10 @@ import axios from 'axios';
 import '../../css/styles.css';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import { getCSRFToken } from '../../utils/csrf.js';
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 
 const VerEvento = () => {
+    const { t } = useLanguage();
     const URL_BASE = 'http://localhost:8000';
     const URL_EVENTOS = `${URL_BASE}/idjango/api/eventos/`;
     const URL_UTILIZADORES = `${URL_BASE}/idjango/api/utilizadores/`;
@@ -35,10 +37,10 @@ const VerEvento = () => {
     const showLoginPopup = (actionMessage) => {
         setPopupConfig({
             isOpen: true,
-            title: 'Acesso Restrito',
-            message: `Precisas de iniciar sessão para ${actionMessage}. Cria uma conta ou faz login!`,
+            title: t('receitas.popups.acesso_restrito_titulo'),
+            message: t('receitas.popups.acesso_restrito_msg_base') + actionMessage + t('receitas.popups.acesso_restrito_msg_fim'),
             singleButton: false,
-            confirmText: 'Iniciar Sessão',
+            confirmText: t('comum.iniciar_sessao'),
             onConfirm: () => navigate('/login'),
             onCancel: closePopup
         });
@@ -101,7 +103,7 @@ const VerEvento = () => {
 
     const handleJoin = () => {
         if (!utilizadorId) {
-            showLoginPopup('te inscreveres neste evento');
+            showLoginPopup(t('eventos.popups.acesso_restrito_inscrever'));
             return;
         }
 
@@ -141,11 +143,11 @@ const VerEvento = () => {
     const handleDelete = () => {
         setPopupConfig({
             isOpen: true,
-            title: 'Confirmar Eliminação',
-            message: 'Tens a certeza que pretendes apagar este evento? Esta ação é irreversível.',
+            title: t('receitas.popups.confirmar_eliminacao_titulo'),
+            message: t('eventos.popups.confirmar_eliminacao'),
             singleButton: false,
-            confirmText: 'Apagar',
-            cancelText: 'Cancelar',
+            confirmText: t('receitas.popups.apagar'),
+            cancelText: t('comum.cancelar'),
             onConfirm: () => {
                 axios.delete(`${EVENTO_URL}${eventoId}`, {
                     headers: { 'X-CSRFToken': getCSRFToken() },
@@ -154,10 +156,10 @@ const VerEvento = () => {
                     .then(() => {
                         setPopupConfig({
                             isOpen: true,
-                            title: 'Evento Apagado',
-                            message: 'O teu evento foi removido com sucesso.',
+                            title: t('receitas.popups.receita_apagada_titulo'), // Reusing the same concept
+                            message: t('eventos.popups.evento_apagado'),
                             singleButton: true,
-                            confirmText: 'OK',
+                            confirmText: t('comum.ok'),
                             onConfirm: () => navigate('/eventos'),
                             onCancel: () => navigate('/eventos')
                         });
@@ -166,10 +168,10 @@ const VerEvento = () => {
                         console.error(err);
                         setPopupConfig({
                             isOpen: true,
-                            title: 'Erro ao Apagar',
-                            message: 'Não foi possível apagar o evento. Tenta novamente.',
+                            title: t('receitas.popups.erro_apagar_titulo'),
+                            message: t('eventos.popups.erro_ao_apagar'),
                             singleButton: true,
-                            confirmText: 'OK',
+                            confirmText: t('comum.ok'),
                             onConfirm: closePopup,
                             onCancel: closePopup
                         });
@@ -180,19 +182,19 @@ const VerEvento = () => {
     };
 
     const formatarDataExibicao = (dataStr) => {
-        if (!dataStr) return "Data não definida";
+        if (!dataStr) return t('eventos.sem_data');
         const [ano, mes, dia] = dataStr.split('-');
         return `${dia}/${mes}/${ano}`;
     };
 
     if (isLoadError) return (
         <div className="loading-container">
-            <p className="error-message">❌ Não foi possível carregar o evento.</p>
-            <button className="btn-cancel" onClick={() => navigate('/eventos')}>Voltar aos Eventos</button>
+            <p className="error-message">{t('eventos.nao_foi_possivel_carregar')}</p>
+            <button className="btn-cancel" onClick={() => navigate('/eventos')}>{t('eventos.voltar_aos_eventos')}</button>
         </div>
     );
 
-    if (!evento) return <div className="loading-container">A carregar evento...</div>;
+    if (!evento) return <div className="loading-container">{t('eventos.a_carregar')}</div>;
 
     const totalInscritos = evento.inscritos?.length || 0;
     const imagemCaminho = evento.foto_url || evento.foto;
@@ -207,7 +209,7 @@ const VerEvento = () => {
                     <div className="recipe-header-container">
                         <h1 className="page-title-underline">{evento.nome}</h1>
                         <div className="recipe-rating-text">
-                            👥 {totalInscritos} / {evento.capacidade_max || 5} Inscritos
+                            👥 {totalInscritos} / {evento.capacidade_max || 5} {t('eventos.inscritos')}
                         </div>
                     </div>
 
@@ -224,24 +226,24 @@ const VerEvento = () => {
 
                             <div className="recipe-steps-nav">
                                 <div className="step-nav-item step-nav-item-default">
-                                    📅 {evento.data_evento ? formatarDataExibicao(evento.data_evento.substring(0, 10)) : "Sem data definida"}
+                                    📅 {evento.data_evento ? formatarDataExibicao(evento.data_evento.substring(0, 10)) : t('eventos.sem_data')}
                                 </div>
                                 <div className="step-nav-item step-nav-item-default">
-                                    🕒 {formatarHorario(evento.horario) || "Sem horário definido"}
+                                    🕒 {formatarHorario(evento.horario) || t('eventos.sem_horario')}
                                 </div>
                                 <div className="step-nav-item step-nav-item-default">
-                                    📍 Capacidade Máxima: {evento.capacidade_max || 5} pessoas
+                                    📍 {t('eventos.capacidade_maxima')}: {evento.capacidade_max || 5} {t('eventos.pessoas')}
                                 </div>
 
                                  <div className="view-actions-group mt-auto">
-                                    <button className="btn-cancel" onClick={() => navigate(-1)}>Voltar</button>
+                                    <button className="btn-cancel" onClick={() => navigate(-1)}>{t('comum.voltar')}</button>
 
                                     {(Number(evento.criador) !== Number(utilizadorId) || isAdmin) && (
                                         <button
                                             className={`btn-create-submit ${inscrito ? "btn-registered" : ""}`}
                                             onClick={handleJoin}
                                         >
-                                            {inscrito ? 'Inscrito' : 'Inscrever-me'}
+                                            {inscrito ? t('eventos.inscrito') : t('eventos.inscrever_me')}
                                         </button>
                                     )}
 
@@ -251,13 +253,13 @@ const VerEvento = () => {
                                                 className="btn-create-submit btn-action-edit"
                                                 onClick={() => navigate('/eventos/criarEvento', { state: { editEvento: evento } })}
                                             >
-                                                Editar
+                                                {t('eventos.editar')}
                                             </button>
                                             <button
                                                 className="btn-create-submit btn-action-delete"
                                                 onClick={handleDelete}
                                             >
-                                                Remover
+                                                {t('eventos.remover')}
                                             </button>
                                         </>
                                     )}
@@ -268,9 +270,9 @@ const VerEvento = () => {
                         <div className="recipe-bottom-row recipe-bottom-row-flex">
                             <div className="recipe-descriptions-column recipe-col-2">
                                 <div className="step-detail mb-15">
-                                    <label className="section-subtitle">Sobre o Evento</label>
+                                    <label className="section-subtitle">{t('eventos.sobre_evento')}</label>
                                     <div className="content-box-light text-black event-description-box">
-                                        {evento.descricao || "Este evento não possui uma descrição detalhada."}
+                                        {evento.descricao || t('eventos.sem_descricao')}
                                     </div>
                                 </div>
                             </div>
@@ -285,8 +287,8 @@ const VerEvento = () => {
                 title={popupConfig.title}
                 message={popupConfig.message}
                 singleButton={popupConfig.singleButton}
-                confirmText={popupConfig.confirmText || 'OK'}
-                cancelText={popupConfig.cancelText || 'Cancelar'}
+                confirmText={popupConfig.confirmText || t('comum.ok')}
+                cancelText={popupConfig.cancelText || t('comum.cancelar')}
                 onConfirm={popupConfig.onConfirm}
                 onCancel={popupConfig.onCancel}
             />

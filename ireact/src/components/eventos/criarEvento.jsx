@@ -8,9 +8,10 @@ import axios from 'axios';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import { getCSRFToken } from '../../utils/csrf.js';
 import { getFieldLimits, validateInput } from '../../utils/validation.js';
-
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 
 const CriarEvento = () => {
+    const { t } = useLanguage();
     const URL_BASE = 'http://localhost:8000';
     const URL_CRIAR_EVENTO = `${URL_BASE}/idjango/api/eventos/`;
     const URL_UTILIZADORES = `${URL_BASE}/idjango/api/utilizadores/`;
@@ -67,10 +68,10 @@ const CriarEvento = () => {
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setPopupConfig({
                 isOpen: true,
-                title: 'Acesso Restrito',
-                message: 'Precisas de iniciar sessão para criares um evento.',
+                title: t('receitas.popups.acesso_restrito_titulo'),
+                message: t('eventos.popups.acesso_restrito_criar'),
                 singleButton: false,
-                confirmText: 'Iniciar Sessão',
+                confirmText: t('comum.iniciar_sessao'),
                 onConfirm: () => navigate('/login'),
                 onCancel: () => navigate('/')
             });
@@ -83,10 +84,10 @@ const CriarEvento = () => {
                 if (userRole !== 'Admin' && userRole !== 'EventOrganizer') {
                     setPopupConfig({
                         isOpen: true,
-                        title: 'Acesso Restrito',
-                        message: 'Precisas de ter permissão de Organizador de Eventos (EventOrganizer) para criares um evento.',
+                        title: t('receitas.popups.acesso_restrito_titulo'),
+                        message: t('eventos.popups.acesso_restrito_admin'),
                         singleButton: true,
-                        confirmText: 'Voltar',
+                        confirmText: t('comum.voltar'),
                         onConfirm: () => navigate('/eventos'),
                         onCancel: () => navigate('/eventos')
                     });
@@ -134,31 +135,31 @@ const CriarEvento = () => {
     }
 
     const showPopup = (title, message) => {
-        setPopupConfig({ isOpen: true, title, message, singleButton: true, confirmText: 'OK', onConfirm: closePopup, onCancel: closePopup });
+        setPopupConfig({ isOpen: true, title, message, singleButton: true, confirmText: t('comum.ok'), onConfirm: closePopup, onCancel: closePopup });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!nome.trim()) { showPopup('Campos em Branco', 'Por favor, não deixe o nome do evento em branco.'); return; }
-        if (!descricao.trim()) { showPopup('Campos em Branco', 'Por favor, não deixe a descrição em branco.'); return; }
+        if (!nome.trim()) { showPopup(t('receitas.popups.campos_em_branco_titulo'), t('eventos.popups.campos_em_branco_nome')); return; }
+        if (!descricao.trim()) { showPopup(t('receitas.popups.campos_em_branco_titulo'), t('eventos.popups.campos_em_branco_descricao')); return; }
 
         const nomeValidation = validateInput(nome, limits.evento_nome_max_length || 50);
         if (!nomeValidation.isValid) {
-            showPopup('Erro de Validação', `Nome do evento: ${nomeValidation.error}`);
+            showPopup(t('receitas.popups.erro_validacao_titulo'), `${t('eventos.nome')}: ${nomeValidation.error}`);
             return;
         }
 
         const descricaoValidation = validateInput(descricao, limits.evento_descricao_max_length || 500);
         if (!descricaoValidation.isValid) {
-            showPopup('Erro de Validação', `Descrição: ${descricaoValidation.error}`);
+            showPopup(t('receitas.popups.erro_validacao_titulo'), `${t('eventos.descricao')}: ${descricaoValidation.error}`);
             return;
         }
 
-        if (descricao.trim().length < 10) { showPopup('Descrição Curta', 'A descrição do evento tem de ter no mínimo 10 caracteres.'); return; }
-        if (!dataEvento) { showPopup('Campos em Branco', 'Por favor, não deixe a data do evento em branco.'); return; }
-        if (!horario) { showPopup('Campos em Branco', 'Por favor, não deixe o horário do evento em branco.'); return; }
-        if (!utilizadorId) { showPopup('Erro', 'Não foi possível identificar o utilizador. Faz login novamente.'); return; }
+        if (descricao.trim().length < 10) { showPopup(t('receitas.popups.erro_validacao_titulo'), t('eventos.popups.descricao_curta_msg')); return; }
+        if (!dataEvento) { showPopup(t('receitas.popups.campos_em_branco_titulo'), t('eventos.popups.campos_em_branco_data')); return; }
+        if (!horario) { showPopup(t('receitas.popups.campos_em_branco_titulo'), t('eventos.popups.campos_em_branco_horario')); return; }
+        if (!utilizadorId) { showPopup(t('receitas.popups.erro_titulo'), t('receitas.popups.erro_identificacao_msg')); return; }
 
         const formData = new FormData();
         formData.append('nome', nome);
@@ -189,10 +190,10 @@ const CriarEvento = () => {
             .then(() => {
                 setPopupConfig({
                     isOpen: true,
-                    title: editEvento ? 'Evento Atualizado!' : 'Evento Criado!',
-                    message: editEvento ? 'O teu evento foi atualizado com sucesso!' : 'O teu evento foi criado com sucesso!',
+                    title: editEvento ? t('eventos.popups.evento_atualizado') : t('eventos.popups.evento_criado'),
+                    message: editEvento ? t('eventos.popups.evento_atualizado') : t('eventos.popups.evento_criado'),
                     singleButton: true,
-                    confirmText: 'OK',
+                    confirmText: t('comum.ok'),
                     onConfirm: () => navigate('/eventos'),
                     onCancel: () => navigate('/eventos')
                 });
@@ -200,12 +201,12 @@ const CriarEvento = () => {
             .catch(err => {
                 console.error(err);
                 const detail = err.response?.data ? JSON.stringify(err.response.data) : 'Erro de conexão.';
-                showPopup(editEvento ? 'Erro ao Atualizar Evento' : 'Erro ao Criar Evento', detail);
+                showPopup(editEvento ? t('eventos.popups.erro_ao_atualizar') : t('eventos.popups.erro_ao_criar'), detail);
             });
     };
 
     const formatarDataExibicao = (dataStr) => {
-        if (!dataStr) return "Selecionar data...";
+        if (!dataStr) return t('eventos.selecionar_data');
         const [ano, mes, dia] = dataStr.split('-');
         return `${dia}/${mes}/${ano}`;
     };
@@ -216,16 +217,16 @@ const CriarEvento = () => {
             <div className="main-wrapper">
                 <Sidebar />
                 <main className="content-profile">
-                    <h1 className="page-title-underline">{editEvento ? 'Editar Evento' : 'Criar Evento'}</h1>
+                    <h1 className="page-title-underline">{editEvento ? t('eventos.editar_evento') : t('eventos.criar_evento')}</h1>
                     <div className="create-recipe-container">
 
                         <div className="recipe-form-section">
                             <div className="form-group">
-                                <label>Nome* <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({nome.length}/{limits.evento_nome_max_length || 50})</span>:</label>
+                                <label>{t('eventos.nome')} <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({nome.length}/{limits.evento_nome_max_length || 50})</span>:</label>
                                 <input
                                     type="text"
                                     className="input-beige text-black"
-                                    placeholder="Dê um nome ao seu evento"
+                                    placeholder={t('eventos.nome_placeholder')}
                                     value={nome}
                                     onChange={(e) => setNome(e.target.value)}
                                     maxLength={limits.evento_nome_max_length || 50}
@@ -233,10 +234,10 @@ const CriarEvento = () => {
                             </div>
 
                             <div className="form-group">
-                                <label>Descrição* <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({descricao.length}/{limits.evento_descricao_max_length || 500})</span>:</label>
+                                <label>{t('eventos.descricao')} <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({descricao.length}/{limits.evento_descricao_max_length || 500})</span>:</label>
                                 <textarea
                                     className="input-beige text-black event-description-textarea"
-                                    placeholder="Detalhes sobre o local, o cardápio e o que levar..."
+                                    placeholder={t('eventos.descricao_placeholder')}
                                     value={descricao}
                                     onChange={(e) => setDescricao(e.target.value)}
                                     maxLength={limits.evento_descricao_max_length || 500}
@@ -246,13 +247,13 @@ const CriarEvento = () => {
                             <div className="event-metadata-single-line">
 
                                 <div className="form-group event-metadata-form-group">
-                                    <label className="event-metadata-label">Data do Evento*</label>
+                                    <label className="event-metadata-label">{t('eventos.data_evento')}</label>
                                     <div
                                         className="calendar-filter-wrapper"
                                         onClick={handleDateWrapperClick}
                                     >
                                         <span className="calendar-display-text">
-                                            {dataEvento ? formatarDataExibicao(dataEvento) : "Selecionar data..."}
+                                            {dataEvento ? formatarDataExibicao(dataEvento) : t('eventos.selecionar_data')}
                                         </span>
                                         <input
                                             type="date"
@@ -265,7 +266,7 @@ const CriarEvento = () => {
                                 </div>
 
                                 <div className="form-group event-metadata-form-group">
-                                    <label className="event-metadata-label">Horário*</label>
+                                    <label className="event-metadata-label">{t('eventos.horario')}</label>
                                     <select
                                         className="input-beige text-black event-metadata-select"
                                         value={horario}
@@ -280,7 +281,7 @@ const CriarEvento = () => {
                                 </div>
 
                                 <div className="form-group event-metadata-form-group">
-                                    <label className="event-metadata-label">Capacidade*</label>
+                                    <label className="event-metadata-label">{t('eventos.capacidade')}</label>
                                     <select
                                         className="input-beige text-black event-metadata-select"
                                         value={capacidadeMax}
@@ -288,7 +289,7 @@ const CriarEvento = () => {
                                     >
                                         {opcoesCapacidade.map(num => (
                                             <option key={num} value={num}>
-                                                {num} pessoas Max.
+                                                {num} {t('eventos.pessoas_max')}
                                             </option>
                                         ))}
                                     </select>
@@ -300,7 +301,7 @@ const CriarEvento = () => {
                             <div
                                 className="image-upload-placeholder"
                                 onClick={() => fileInputRef.current.click()}
-                                title="Clica para adicionar uma foto"
+                                title={t('receitas.criar_receita.adicionar_foto_title')}
                             >
                                 {fotoPreview ? (
                                     <img
@@ -311,7 +312,7 @@ const CriarEvento = () => {
                                 ) : (
                                     <div className="image-upload-info">
                                         <div className="image-upload-icon">📷</div>
-                                        <p className="image-upload-text">Clica para adicionar foto*</p>
+                                        <p className="image-upload-text">{t('receitas.criar_receita.adicionar_foto')}</p>
                                     </div>
                                 )}
                             </div>
@@ -327,13 +328,13 @@ const CriarEvento = () => {
                                     className="btn-cancel btn-cancel-small btn-remove-photo"
                                     onClick={() => { setFoto(null); setFotoPreview(null); fileInputRef.current.value = ''; }}
                                 >
-                                    Remover foto
+                                    {t('receitas.criar_receita.remover_foto')}
                                 </button>
                             )}
 
                             <div className="create-actions-group">
-                                <button className="btn-cancel" onClick={() => navigate(-1)}>Cancelar</button>
-                                <button className="btn-create-submit" onClick={handleSubmit}>{editEvento ? 'Guardar' : 'Criar'}</button>
+                                <button className="btn-cancel" onClick={() => navigate(-1)}>{t('comum.cancelar')}</button>
+                                <button className="btn-create-submit" onClick={handleSubmit}>{editEvento ? t('receitas.criar_receita.guardar') : t('receitas.criar_receita.criar')}</button>
                             </div>
                         </div>
 
@@ -346,8 +347,8 @@ const CriarEvento = () => {
                 title={popupConfig.title}
                 message={popupConfig.message}
                 singleButton={popupConfig.singleButton}
-                confirmText={popupConfig.confirmText || 'OK'}
-                cancelText={popupConfig.cancelText || 'Cancelar'}
+                confirmText={popupConfig.confirmText || t('comum.ok')}
+                cancelText={popupConfig.cancelText || t('comum.cancelar')}
                 onConfirm={popupConfig.onConfirm}
                 onCancel={popupConfig.onCancel}
             />
