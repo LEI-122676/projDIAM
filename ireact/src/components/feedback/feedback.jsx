@@ -81,10 +81,10 @@ const FeedbackPage = () => {
         }
 
         if (comentarioLivre) {
-            const validationError = validateInput(comentarioLivre, 'comentario');
-            if (validationError) {
+            const validation = validateInput(comentarioLivre, 150);
+            if (!validation.isValid) {
                 setPopupConfig({
-                    isOpen: true, title: 'Comentário Inválido', message: validationError,
+                    isOpen: true, title: 'Comentário Inválido', message: validation.error,
                     singleButton: true, confirmText: 'OK', onConfirm: closePopup
                 });
                 return;
@@ -202,7 +202,11 @@ const FeedbackPage = () => {
                                     value={comentarioLivre} onChange={e => setComentarioLivre(e.target.value)}
                                     maxLength="150"></textarea>
 
-                                <div style={{ display: 'flex', gap: '15px', marginTop: '20px' }}>
+                                <div style={{ textAlign: 'right', fontSize: '0.85rem', color: '#888', marginTop: '4px', marginBottom: '8px' }}>
+                                    {comentarioLivre.length} / 150
+                                </div>
+
+                                <div style={{ display: 'flex', gap: '15px', marginTop: '10px' }}>
                                     <button className="btn-create-submit" onClick={handleSubmit}>Submeter Feedback</button>
                                     {hasFeedback && (
                                         <button className="btn-profile-pill secondary" style={{ color: 'red', borderColor: 'red' }} onClick={handleDelete}>Remover Feedback</button>
