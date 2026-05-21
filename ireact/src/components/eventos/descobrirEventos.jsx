@@ -8,9 +8,11 @@ import { useNavigate } from 'react-router-dom';
 import '../../css/styles.css';
 import axios from 'axios';
 import { useEffect } from 'react';
-import { useState, useRef } from 'react';
+import { useState, forwardRef } from 'react'; // 1. ADDED forwardRef HERE
 import PopupModal from '../maincomponents/popupModal.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 
 const ExplorarEventos = () => {
 
@@ -21,13 +23,11 @@ const ExplorarEventos = () => {
 
     const navigate = useNavigate();
 
-    const [searchQuery, setSearchQuery] = React.useState('');
-    const [eventos, setEventos] = React.useState([]);
-    const [userName, setUsername] = React.useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [eventos, setEventos] = useState([]);
+    const [userName, setUsername] = useState(null);
 
-    const [dataFiltro, setDataFiltro] = useState('');
-
-    const dateInputRef = useRef(null);
+    const [dataFiltro, setStartDate] = useState(null);
 
     const [currentPage, setCurrentPage] = useState(1);
     const eventsPerPage = parseInt(import.meta.env.VITE_EVENTS_PER_PAGE || '20', 10);
@@ -44,20 +44,14 @@ const ExplorarEventos = () => {
             .catch( () => console.log("user not logged in"));
     
     },[]);
-    const handleWrapperClick = () => {
-        if (dateInputRef.current) {
-            if (typeof dateInputRef.current.showPicker === 'function') {
-                dateInputRef.current.showPicker();
-            } else {
-                dateInputRef.current.click();
-            }
-        }
-    };
 
-    const formatarDataExibicao = (dataStr) => {
-        if (!dataStr) return "Filtrar por data";
-        const [ano, mes, dia] = dataStr.split('-');
-        return `${dia}/${mes}/${ano}`;
+    const formatarDataExibicao = (dateObj) => {
+        if (!dateObj) return "Filtrar por data";
+        
+        const formatador = new Intl.DateTimeFormat('pt-PT', { month: 'long', year: 'numeric' });
+        const dataFormatada = formatador.format(dateObj);
+        
+        return dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1);
     };
 
     useEffect(() => {
@@ -71,8 +65,14 @@ const ExplorarEventos = () => {
         if (!dataFiltro) return matchesSearch;
         if (!evento.data_evento) return false;
 
-        const dataEventoFormatada = evento.data_evento.substring(0, 10);
-        return matchesSearch && (dataEventoFormatada === dataFiltro);
+        const [anoEvento, mesEvento] = evento.data_evento.split('-'); 
+        
+        const anoFiltro = dataFiltro.getFullYear().toString();
+        const mesFiltro = (dataFiltro.getMonth() + 1).toString().padStart(2, '0');
+
+        const matchesDate = (mesEvento === mesFiltro) && (anoEvento === anoFiltro);
+
+        return matchesSearch && matchesDate;
     });
 
     const handleCriarEvento = (e) =>{
@@ -92,6 +92,34 @@ const ExplorarEventos = () => {
             });
         }
     }
+
+    // 2. CREATED THIS FORWARDED CUSTOM INPUT COMPONENT TO PASS REFS SAFELY
+    const CustomCalendarInput = forwardRef(({ onClick }, ref) => (
+        <button className="calendar-filter-wrapper" onClick={onClick} ref={ref} type="button">
+            <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg mr-6" />
+            <img src={iconeCalendario} alt="Calendário" className="recipe-icon-svg mr-8" />
+            
+            <span className={`calendar-display-text font-600 ${dataFiltro ? "mr-4" : ""}`}>
+                {formatarDataExibicao(dataFiltro)}
+            </span>
+            
+            {dataFiltro && (
+                <button 
+                    className="clear-date-btn" 
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setStartDate(null);
+                    }}
+                    title="Limpar filtro de data"
+                    type="button"
+                >
+                    ×
+                </button>
+            )}
+        </button>
+    ));
+
+    CustomCalendarInput.displayName = 'CustomCalendarInput';
 
     return (
         <div className="body-wrapper">
@@ -114,40 +142,25 @@ const ExplorarEventos = () => {
                                 </div>
                                 
                                 <div className="recipes-button-group">
-                                    <div className="calendar-filter-wrapper" onClick={handleWrapperClick}>
-                                        
-                                        <input 
-                                            type="date" 
-                                            ref={dateInputRef}
-                                            className="calendar-hidden-input"
-                                            value={dataFiltro}
-                                            onChange={(e) => setDataFiltro(e.target.value)}
-                                        />
-
-                                        <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg mr-6" />
-                                        <img src={iconeCalendario} alt="Calendário" className="recipe-icon-svg mr-8" />
-                                        
-                                        <span className={`calendar-display-text font-600 ${dataFiltro ? "mr-4" : ""}`}>
-                                            {formatarDataExibicao(dataFiltro)}
-                                        </span>
-                                        
-                                        {dataFiltro && (
-                                            <button 
-                                                className="clear-date-btn relative-z10" 
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setDataFiltro('');
-                                                    if (dateInputRef.current) {
-                                                        dateInputRef.current.value = ''; 
+                                    <div className="datepicker-anchor">
+                                            <DatePicker
+                                                selected={dataFiltro}
+                                                onChange={(date) => setStartDate(date)}
+                                                dateFormat="MM/yyyy"
+                                                showMonthYearPicker
+                                                customInput={<CustomCalendarInput />}
+                                                popperPlacement="bottom-end"
+                                                popperModifiers={[
+                                                    {
+                                                        name: "preventOverflow",
+                                                        options: { 
+                                                            boundary: "viewport",
+                                                            altAxis: true 
+                                                        }
                                                     }
-                                                }}
-                                                title="Limpar filtro de data"
-                                            >
-                                                ×
-                                            </button>
-                                        )}
+                                                ]}
+                                            />
                                     </div>
-
                                     <button onClick={handleCriarEvento} className="btn-add-recipe">+</button>
                                 </div>
                             </div>
