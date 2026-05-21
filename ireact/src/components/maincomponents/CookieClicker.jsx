@@ -251,7 +251,7 @@ const CookieClicker = ({ sidebarOpen }) => {
         ))}
       </div>
 
-      <div className="cookie-counter">
+      <div className="cliques-display">
         {sidebarOpen ? (
           <>
             <span className="counter-label">Cliques:</span>
