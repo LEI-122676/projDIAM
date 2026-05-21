@@ -31,7 +31,7 @@ const Home = () => {
               <form onSubmit={handleSearch} className="search-container">
                 <input
                   type="text"
-                  placeholder="Pesquisar receitas (ex: Lasanha, Frango...)"
+                  placeholder="Pesquisar receitas (ex: Sopa, Frango...)"
                   className="main-search-input"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
