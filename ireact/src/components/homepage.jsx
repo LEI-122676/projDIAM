@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from './maincomponents/header.jsx';
 import Sidebar from './maincomponents/sidebar.jsx';
 import Slideshow from './maincomponents/Slideshow.jsx';
+import LogoSlider from './maincomponents/LogoSlider.jsx';
 import '../css/styles.css';
 
 const Home = () => {
@@ -43,6 +44,7 @@ const Home = () => {
             </div>
 
             <Slideshow />
+            <LogoSlider />
           </div>
         </main>
       </div>
