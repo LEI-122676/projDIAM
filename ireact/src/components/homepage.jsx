@@ -2,6 +2,7 @@ import  { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './maincomponents/header.jsx';
 import Sidebar from './maincomponents/sidebar.jsx';
+import Slideshow from './maincomponents/Slideshow.jsx';
 import '../css/styles.css';
 
 const Home = () => {
@@ -24,21 +25,24 @@ const Home = () => {
 
         <main className="content-home">
           <div className="home-container">
-            <h1 className="home-welcome-title">Bem-vindo ao seu iFridge!</h1>
-              <br/><br/>
+            <div className="home-hero-section">
+              <h1 className="home-welcome-title">Bem-vindo ao seu iFridge!</h1>
 
-            <form onSubmit={handleSearch} className="search-container">
-              <input
-                type="text"
-                placeholder="Pesquisar receitas (ex: Lasanha, Frango...)"
-                className="main-search-input"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <button type="submit" className="btn-search-home">
-                Pesquisar
-              </button>
-            </form>
+              <form onSubmit={handleSearch} className="search-container">
+                <input
+                  type="text"
+                  placeholder="Pesquisar receitas (ex: Sopa, Frango...)"
+                  className="main-search-input"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <button type="submit" className="btn-search-home">
+                  Pesquisar
+                </button>
+              </form>
+            </div>
+
+            <Slideshow />
           </div>
         </main>
       </div>
