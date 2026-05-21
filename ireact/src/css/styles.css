@@ -2869,3 +2869,114 @@ body.dark-mode .btn-action-delete:hover {
 .pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .pagination-btn:not(:disabled) { opacity: 1; cursor: pointer; }
 .text-area-bio { color: black; height: 150px; padding: 20px; resize: none; }
+
+/* --- INFINITE LOGO SLIDER --- */
+.logo-slider-wrapper {
+    width: 100%;
+    margin-top: 50px;
+    margin-bottom: 60px;
+    text-align: center;
+}
+
+.logo-slider-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #716259;
+    margin-bottom: 25px;
+    letter-spacing: -0.02em;
+}
+
+body.dark-mode .logo-slider-title {
+    color: #a89a90;
+}
+
+.logo-slider-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 30px 0;
+    display: flex;
+    align-items: center;
+}
+
+/* Gradient fading masks on left/right edges for a premium blended transition */
+.logo-slider-container::before,
+.logo-slider-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 150px;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.logo-slider-container::before {
+    left: 0;
+    background: linear-gradient(to right, #ffffff, transparent);
+}
+
+.logo-slider-container::after {
+    right: 0;
+    background: linear-gradient(to left, #ffffff, transparent);
+}
+
+body.dark-mode .logo-slider-container::before {
+    background: linear-gradient(to right, #121212, transparent);
+}
+
+body.dark-mode .logo-slider-container::after {
+    background: linear-gradient(to left, #121212, transparent);
+}
+
+.logo-slider-track {
+    display: flex;
+    width: max-content;
+    animation: logo-scroll 30s linear infinite;
+}
+
+/* Pause animation on hover for interactive feel */
+.logo-slider-container:hover .logo-slider-track {
+    animation-play-state: paused;
+}
+
+.logo-slide-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 0 60px; /* Equal spacing around each item for perfect seamless loops */
+}
+
+.partner-logo-img {
+    height: 135px; /* 3x larger than 45px */
+    width: auto;
+    object-fit: contain;
+    opacity: 0.6;
+    filter: grayscale(100%);
+    transition: all 0.3s ease;
+}
+
+.partner-logo-img:hover {
+    opacity: 1;
+    filter: grayscale(0%);
+    transform: scale(1.08);
+}
+
+body.dark-mode .partner-logo-img {
+    filter: invert(1) grayscale(100%);
+}
+
+body.dark-mode .partner-logo-img:hover {
+    filter: invert(1) grayscale(100%);
+}
+
+@keyframes logo-scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        /* Perfect loop: translate exactly by half (50%) of the duplicated track width */
+        transform: translateX(-50%);
+    }
+}
