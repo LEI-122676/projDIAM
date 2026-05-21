@@ -14,6 +14,7 @@ import AsMinhasReceitas from "./components/receitas/minhas_receitas.jsx";
 import Login from "./components/perfil-frigorifico-login/login.jsx";
 import AdminCriarUtilizador from "./components/admin/criarUtilizador.jsx";
 import GerirUtilizadores from "./components/admin/gerirUtilizadores.jsx";
+import FeedbackPage from "./components/feedback/feedback.jsx";
 
 function App() {
     return (
@@ -35,6 +36,7 @@ function App() {
         <Route path="/receitas/ver-receita" element={<VerReceita/>} />
         <Route path="/admin/criar-utilizador" element={<AdminCriarUtilizador/>} />
         <Route path="/admin/gerir-utilizadores" element={<GerirUtilizadores/>} />
+        <Route path="/feedback" element={<FeedbackPage/>} />
       </Routes>
     </BrowserRouter>
   )

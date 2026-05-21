@@ -100,3 +100,24 @@ class UtilizadorSerializer(serializers.ModelSerializer):
 
     def validate_bio(self, value):
         return validar_texto(value, "biografia", check_moderation=True, max_length=FIELD_LIMITS.get('utilizador_bio_max_length'))
+
+from .models import Feedback
+
+class FeedbackSerializer(serializers.ModelSerializer):
+    utilizador_nome = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Feedback
+        fields = '__all__'
+
+    def get_utilizador_nome(self, obj):
+        if obj.utilizador and obj.utilizador.user:
+            user_obj = obj.utilizador.user
+            nome_completo = f"{user_obj.first_name} {user_obj.last_name}".strip()
+            return nome_completo if nome_completo else user_obj.username
+        return "Anónimo"
+
+    def validate_comentario_livre(self, value):
+        if value:
+            return validar_texto(value, "comentário", check_moderation=True, max_length=150)
+        return value
