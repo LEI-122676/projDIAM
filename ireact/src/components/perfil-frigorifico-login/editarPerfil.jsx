@@ -18,8 +18,7 @@ const EditarPerfil = () => {
   const userId = localStorage.getItem('utilizadorId');
 
   const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
-  const [userData, setUserData] = useState({ username: '', nome: '', apelido: '', imagem: '', user: null, frigorifico: null });
-  const [userInfo, setUserInfo] = useState({ email: '', username: '' });
+  const [userData, setUserData] = useState({ username: '', email: '', first_name: '', last_name: '', imagem: '', user: null, frigorifico: null });
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -60,20 +59,14 @@ const EditarPerfil = () => {
         setUserData(res.data);
         setFirstName(res.data.first_name || '');
         setLastName(res.data.last_name || '');
+        setEmail(res.data.email || '');
         setBio(res.data.bio || '');
         if (res.data.imagem) {
-          const imagePath = res.data.imagem.startsWith('http') ? res.data.imagem : `${URL_BASE}${res.data.imagem}`;
+          const imagePath = res.data.imagem.startsWith('http') ? res.data.imagem : `${URL_BASE}${res.data.imagem.startsWith('/') ? '' : '/'}${res.data.imagem}`;
           setFotoPreview(imagePath);
         }
       })
       .catch(err => console.error("Erro ao carregar perfil (utilizador):", err));
-
-    axios.get(`${URL_USER}${userId}`, { withCredentials: true })
-      .then(res => {
-        setUserInfo(res.data);
-        setEmail(res.data.email || '');
-      })
-      .catch(err => console.error("Erro ao carregar perfil (user):", err));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, navigate]);
 
@@ -121,8 +114,6 @@ const EditarPerfil = () => {
     }
 
     const formDataUtilizador = new FormData();
-    formDataUtilizador.append('nome', firstName);
-    formDataUtilizador.append('apelido', lastName);
     formDataUtilizador.append('bio', bio);
     
     if (userData.user) formDataUtilizador.append('user', userData.user);
@@ -133,7 +124,7 @@ const EditarPerfil = () => {
     }
 
     const dataUser = {
-      username: userInfo.username,
+      username: userData.username,
       email: email,
       first_name: firstName,
       last_name: lastName
@@ -150,7 +141,7 @@ const EditarPerfil = () => {
         withCredentials: true
       });
 
-      await axios.put(`${URL_USER}${userId}`, dataUser, {
+      await axios.put(`${URL_USER}${userData.user}`, dataUser, {
         headers: { 
           'X-CSRFToken': csrfToken,
           'Content-Type': 'application/json'
@@ -212,7 +203,7 @@ const EditarPerfil = () => {
                 <input 
                   type="email" 
                   className="input-beige text-black" 
-                  placeholder={userInfo.email || "exemplo@email.com"} 
+                  placeholder={userData.email || "exemplo@email.com"} 
                   value={email} 
                   onChange={(e) => setEmail(e.target.value)} 
                 />
@@ -262,7 +253,12 @@ const EditarPerfil = () => {
                   className="mt-8-center"
                   onClick={() => { 
                     setFoto(null); 
-                    setFotoPreview(userData.imagem || null); 
+                    if (userData.imagem) {
+                      const imagePath = userData.imagem.startsWith('http') ? userData.imagem : `${URL_BASE}${userData.imagem.startsWith('/') ? '' : '/'}${userData.imagem}`;
+                      setFotoPreview(imagePath);
+                    } else {
+                      setFotoPreview(null);
+                    }
                     fileInputRef.current.value = ''; 
                   }}
                 >
