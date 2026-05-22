@@ -23,6 +23,10 @@ const Login = () => {
   const [usernameLogin, setUsernameLogin] = useState('');
   const [passwordLogin, setPasswordLogin] = useState('');
 
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const { t } = useLanguage();
   const [limits, setLimits] = useState({});
   const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
@@ -185,13 +189,18 @@ const Login = () => {
                 value={usernameLogin}
                 onChange={(e) => setUsernameLogin(e.target.value)}
               />
-              <input 
-                type="password" 
-                placeholder={t('autenticacao.password')} 
-                className="auth-input" 
-                value={passwordLogin}
-                onChange={(e) => setPasswordLogin(e.target.value)}
-              />
+              <div className="auth-password-wrapper">
+                <input 
+                  type={showLoginPassword ? "text" : "password"} 
+                  placeholder={t('autenticacao.password')} 
+                  className="auth-input" 
+                  value={passwordLogin}
+                  onChange={(e) => setPasswordLogin(e.target.value)}
+                />
+                <button type="button" className="auth-password-eye" onClick={() => setShowLoginPassword(!showLoginPassword)} aria-label="Mostrar password">
+                  {showLoginPassword ? '🙈' : '👁️'}
+                </button>
+              </div>
               <button type="submit" className="btn-auth">{t('autenticacao.login')}</button>
             </form>
           </section>
@@ -235,20 +244,30 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <input 
-                type="password" 
-                placeholder={t('autenticacao.password')} 
-                className="auth-input" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <input 
-                type="password" 
-                placeholder={t('autenticacao.confirmar_password')} 
-                className="auth-input" 
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />        
+              <div className="auth-password-wrapper">
+                <input 
+                  type={showRegisterPassword ? "text" : "password"} 
+                  placeholder={t('autenticacao.password')} 
+                  className="auth-input" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button type="button" className="auth-password-eye" onClick={() => setShowRegisterPassword(!showRegisterPassword)} aria-label="Mostrar password">
+                  {showRegisterPassword ? '🙈' : '👁️'}
+                </button>
+              </div>
+              <div className="auth-password-wrapper">
+                <input 
+                  type={showConfirmPassword ? "text" : "password"} 
+                  placeholder={t('autenticacao.confirmar_password')} 
+                  className="auth-input" 
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />        
+                <button type="button" className="auth-password-eye" onClick={() => setShowConfirmPassword(!showConfirmPassword)} aria-label="Mostrar password">
+                  {showConfirmPassword ? '🙈' : '👁️'}
+                </button>
+              </div>
               <button type="submit" className="btn-auth">{t('autenticacao.registar')}</button>
             </form>
           </section>
