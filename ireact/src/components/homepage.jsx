@@ -4,6 +4,7 @@ import Header from './maincomponents/header.jsx';
 import Sidebar from './maincomponents/sidebar.jsx';
 import Slideshow from './maincomponents/Slideshow.jsx';
 import LogoSlider from './maincomponents/LogoSlider.jsx';
+import CookieLeaderboard from './maincomponents/CookieLeaderboard.jsx';
 import axios from 'axios';
 import '../css/styles.css';
 import { useLanguage } from '../linguagem/LanguageContext.jsx';
@@ -77,6 +78,7 @@ const Home = () => {
             )}
 
             <LogoSlider />
+            <CookieLeaderboard />
           </div>
         </main>
       </div>
