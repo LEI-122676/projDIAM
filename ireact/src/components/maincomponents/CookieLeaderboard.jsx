@@ -34,7 +34,16 @@ const CookieLeaderboard = () => {
     }, []);
 
     if (loading) return null; // Or a sleek skeleton loader
-    if (!leaderboard || leaderboard.length === 0) return null;
+    if (!leaderboard) return null;
+
+    const paddedLeaderboard = [...leaderboard];
+    while (paddedLeaderboard.length < 5) {
+        paddedLeaderboard.push({
+            isPlaceholder: true,
+            username: "---",
+            cookie_clicks: "---"
+        });
+    }
 
     return (
         <div className="leaderboard-section">
@@ -43,8 +52,8 @@ const CookieLeaderboard = () => {
                 <h2 className="leaderboard-title">Top Cookie Clickers</h2>
             </div>
             <div className="leaderboard-container">
-                {leaderboard.map((user, index) => (
-                    <div key={user.username} className={`leaderboard-row rank-${index + 1}`}>
+                {paddedLeaderboard.map((user, index) => (
+                    <div key={user.isPlaceholder ? `placeholder-${index}` : user.username} className={`leaderboard-row rank-${index + 1} ${user.isPlaceholder ? 'placeholder' : ''}`}>
                         <div className="leaderboard-rank-wrapper">
                             <span className="leaderboard-rank">
                                 {index === 0 ? '🏆' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
@@ -54,8 +63,8 @@ const CookieLeaderboard = () => {
                             <span className="leaderboard-username">{user.username}</span>
                         </div>
                         <div className="leaderboard-score">
-                            <span className="score-value">{user.cookie_clicks.toLocaleString()}</span>
-                            <span className="score-label">cookies</span>
+                            <span className="score-value">{user.cookie_clicks.toLocaleString?.() ?? user.cookie_clicks}</span>
+                            {!user.isPlaceholder && <span className="score-label">cookies</span>}
                         </div>
                     </div>
                 ))}

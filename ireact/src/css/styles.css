@@ -3269,6 +3269,35 @@ body.dark-mode .counter-number-mini {
     box-shadow: 0 12px 24px rgba(113, 98, 89, 0.12);
     border-color: #D4BFA6;
 }
+.leaderboard-row.placeholder {
+    opacity: 0.5;
+    pointer-events: none;
+    box-shadow: none;
+}
+
+.leaderboard-row.placeholder .leaderboard-username,
+.leaderboard-row.placeholder .score-value {
+    color: #C0B7B1;
+}
+
+body.dark-mode .leaderboard-row.placeholder .leaderboard-username,
+body.dark-mode .leaderboard-row.placeholder .score-value {
+    color: #666;
+}
+
+.leaderboard-row.placeholder.rank-1,
+.leaderboard-row.placeholder.rank-2,
+.leaderboard-row.placeholder.rank-3 {
+    background: #FFFFFF;
+    border-color: #F3F0E2;
+}
+
+body.dark-mode .leaderboard-row.placeholder.rank-1,
+body.dark-mode .leaderboard-row.placeholder.rank-2,
+body.dark-mode .leaderboard-row.placeholder.rank-3 {
+    background: #242424;
+    border-color: #333333;
+}
 
 .leaderboard-rank-wrapper {
     width: 50px;
