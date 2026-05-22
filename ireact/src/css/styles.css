@@ -3164,4 +3164,96 @@ body.dark-mode .counter-number-mini {
     color: #F5C79A;
 }
 
+.step-nav-item-default {
+    text-align: center;
+    width: 100%;
+}
 
+/* --- TEMA CLARO (Padrão) --- */
+.horario-row {
+    margin: 15px auto;
+    border-collapse: collapse;
+    width: 90%;
+    max-width: 400px;
+    background-color: #FDFBF7; 
+    border: 1px solid #E6DCD3;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.horario-row th {
+    background-color: #F0E6DF;
+    color: #5C3A21;
+    padding: 14px 15px;
+    font-weight: 800;
+    text-align: center;
+    border-bottom: 2px solid #D9C5B6;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.horario-row td {
+    padding: 10px 15px;
+    text-align: center;
+    color: #4A4A4A;
+}
+
+
+.horario-row th:first-child, 
+.horario-row td:first-child {
+    border-right: 1px solid #E6DCD3;
+}
+
+.horario-row td:first-child {
+    text-transform: capitalize;
+}
+
+.horario-row tbody tr {
+    border-bottom: 1px solid #F5EFEA;
+}
+
+
+
+/* --- TEMA ESCURO (body.dark-mode) --- */
+body.dark-mode .horario-row {
+    background-color: #1E1E1E;
+    border: 1px solid #333333;
+}
+
+body.dark-mode .horario-row th {
+    background-color: #2D2D2D;
+    color: #F5C79A;
+    border-bottom: 2px solid #444444;
+}
+
+body.dark-mode .horario-row td {
+    color: #E0E0E0;
+}
+
+/* Linha vertical no modo escuro */
+body.dark-mode .horario-row th:first-child, 
+body.dark-mode .horario-row td:first-child {
+    border-right: 1px solid #444444;
+}
+
+body.dark-mode .horario-row tbody tr {
+    border-bottom: 1px solid #2A2A2A;
+}
+
+body.dark-mode .horario-row tr:hover td {
+    background-color: #252525;
+}
+
+
+/* --- CONTADOR MINI (O teu código original) --- */
+.counter-number-mini {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #8A5C38;
+    margin-top: 4px;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+body.dark-mode .counter-number-mini {
+    color: #F5C79A;
+}

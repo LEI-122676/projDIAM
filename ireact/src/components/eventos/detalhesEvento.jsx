@@ -78,33 +78,12 @@ const VerEvento = () => {
         return `${URL_BASE}${caminho.startsWith('/') ? '' : '/'}${caminho}`;
     };
 
-    const formatarHorario = (h) => {
-        if (!h) return null;
-        if (typeof h === 'object') {
-            if (h.inicio && h.fim) {
-                return `Inicio: ${h.inicio}, Fim: ${h.fim}`;
-            }
-            if (Object.keys(h).length === 0) return null;
-        }
-        if (typeof h === 'string') {
-            try {
-                const parsed = JSON.parse(h);
-                if (parsed && typeof parsed === 'object' && parsed.inicio && parsed.fim) {
-                    return `Inicio: ${parsed.inicio}, Fim: ${parsed.fim}`;
-                }
-            } catch (e) { /* empty */ }
-            return h.replace(/"/g, '');
-        }
-        return JSON.stringify(h).replace(/"/g, '');
-    };
     useEffect(() => {
-
         if (!evento || !evento.data_evento || !evento.horario) return;
 
         const decreaseTimer = () => {
             const dataEvento = evento.data_evento.substring(0, 10);
             let horaInicio = '';
-
 
             if (typeof evento.horario === 'string') {
                 try {
@@ -139,15 +118,9 @@ const VerEvento = () => {
             setContagem(`${dias}d ${horas}h ${minutos}m ${segundos}s`);
         };
 
-        // Run immediately on mount
         decreaseTimer();
-
-        // Set interval to update every single second
         const intervaloId = setInterval(decreaseTimer, 1000);
-
-        // CLEANUP: Clears interval when user leaves page to prevent memory leaks
         return () => clearInterval(intervaloId);
-
     }, [evento]);
 
     const handleJoin = () => {
@@ -165,10 +138,7 @@ const VerEvento = () => {
             newInscritos.push(parseInt(utilizadorId, 10));
         }
 
-
-        const updatedPayload = {
-            inscritos: newInscritos
-        };
+        const updatedPayload = { inscritos: newInscritos };
 
         axios.patch(`${URL_EVENTOS}${eventoId}`, updatedPayload, { 
             headers: { 'X-CSRFToken': getCSRFToken() },
@@ -247,7 +217,6 @@ const VerEvento = () => {
 
     const totalInscritos = evento.inscritos?.length || 0;
     const imagemCaminho = evento.foto_url || evento.foto;
-    
 
     return (
         <div className="body-wrapper">
@@ -264,14 +233,22 @@ const VerEvento = () => {
                     </div>
 
                     <div className="recipe-view-container">
-
                         <div className="recipe-top-row">
-                            <div className="recipe-main-image flex-center">
-                                <img
-                                    src={getImageUrl(imagemCaminho)}
-                                    alt={evento.nome}
-                                    className="cover-image-rounded"
-                                />
+                            <div className="recipe-main-image-column" style={{ display: 'flex', flexDirection: 'column', gap: '20px', flex: '1' }}>
+                                <div className="recipe-main-image flex-center">
+                                    <img
+                                        src={getImageUrl(imagemCaminho)}
+                                        alt={evento.nome}
+                                        className="cover-image-rounded"
+                                    />
+                                </div>
+                                
+                                <div className="step-detail">
+                                    <label className="section-subtitle">Sobre o Evento</label>
+                                    <div className="content-box-light text-black event-description-box" style={{ marginTop: '8px' }}>
+                                        {evento.descricao || "Este evento não possui uma descrição detalhada."}
+                                    </div>
+                                </div>
                             </div>
 
                             <div className="recipe-steps-nav">
@@ -279,21 +256,31 @@ const VerEvento = () => {
                                     📅 {evento.data_evento ? formatarDataExibicao(evento.data_evento.substring(0, 10)) : "Sem data definida"}
                                 </div>
                                 <div className="step-nav-item step-nav-item-default">
-                                    ⏳ Contagem Decrescente: {contagem || "A calcular..."}
+                                    ⏳ Contagem Decrescente: <br />{contagem || "A calcular..."}
                                 </div>
                                 <div className="step-nav-item step-nav-item-default">
-                                    🕒 Horários 🕒 
-                                    {evento.horario && Object.entries(evento.horario).map(([chave, valor], index) => (
-                                        <div key={index} className="horario-row">
-                                            <strong>{chave}:</strong> {valor}
-                                        </div>
-                                    ))}
+                                    <table className="horario-row">
+                                        <thead>
+                                            <tr>
+                                                <th>🕒 Atividade</th>
+                                                <th>🕒 Horários</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {evento.horario && Object.entries(evento.horario).map(([chave, valor], index) => (
+                                                <tr key={index}>
+                                                    <td>{chave}</td>
+                                                    <td>{valor}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
                                 </div>
                                 <div className="step-nav-item step-nav-item-default">
                                     🔢 Capacidade Máxima: {evento.capacidade_max || 5} pessoas
                                 </div>
 
-                                 <div className="view-actions-group mt-auto">
+                                <div className="view-actions-group mt-auto">
                                     <button className="btn-cancel" onClick={() => navigate(-1)}>Voltar</button>
 
                                     {(Number(evento.criador) !== Number(utilizadorId) || isAdmin) && (
@@ -324,18 +311,6 @@ const VerEvento = () => {
                                 </div>
                             </div>
                         </div>
-
-                        <div className="recipe-bottom-row recipe-bottom-row-flex">
-                            <div className="recipe-descriptions-column recipe-col-2">
-                                <div className="step-detail mb-15">
-                                    <label className="section-subtitle">Sobre o Evento</label>
-                                    <div className="content-box-light text-black event-description-box">
-                                        {evento.descricao || "Este evento não possui uma descrição detalhada."}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </main>
             </div>
