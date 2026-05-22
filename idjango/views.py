@@ -637,3 +637,11 @@ def feedback_stats(request):
         'comentarios_recentes': comments_serializer.data,
         'total_respostas': feedbacks.count()
     }, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+@authentication_classes([])
+def cookie_leaderboard(request):
+    top_utilizadores = Utilizador.objects.filter(is_active=True).exclude(role='Guest').order_by('-cookie_clicks')[:10]
+    serializer = UtilizadorSerializer(top_utilizadores, many=True)
+    return Response(serializer.data)

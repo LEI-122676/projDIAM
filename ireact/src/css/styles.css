@@ -3206,3 +3206,199 @@ body.dark-mode .counter-number-mini {
     text-align: right;
     font-size: 0.9rem;
 }
+
+/* --- COOKIE LEADERBOARD --- */
+.leaderboard-section {
+    margin-top: 60px;
+    margin-bottom: 80px;
+    padding: 0 40px;
+    width: 100%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.leaderboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.leaderboard-cookie-icon {
+    width: 40px;
+    height: 40px;
+    animation: cookie-bounce 2s infinite ease-in-out;
+}
+
+.leaderboard-title {
+    font-family: 'Outfit', 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 2.5rem;
+    color: #4A3A31;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.leaderboard-container {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(234, 230, 214, 0.5);
+    border-radius: 24px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(113, 98, 89, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.leaderboard-row {
+    display: flex;
+    align-items: center;
+    padding: 16px 24px;
+    background: #FFFFFF;
+    border-radius: 16px;
+    border: 1px solid #F3F0E2;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.leaderboard-row:hover {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 12px 24px rgba(113, 98, 89, 0.12);
+    border-color: #D4BFA6;
+}
+
+.leaderboard-rank-wrapper {
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.leaderboard-rank {
+    font-weight: 900;
+    font-size: 1.5rem;
+    color: #A39387;
+    font-family: 'Outfit', sans-serif;
+}
+
+.rank-1 {
+    background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%);
+    border-color: #FFD54F;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.15);
+}
+
+.rank-1 .leaderboard-rank {
+    font-size: 2rem;
+}
+
+.rank-2 {
+    background: linear-gradient(135deg, #F5F5F5 0%, #E0E0E0 100%);
+    border-color: #BDBDBD;
+}
+
+.rank-3 {
+    background: linear-gradient(135deg, #FBE9E7 0%, #FFCCBC 100%);
+    border-color: #FFAB91;
+}
+
+.leaderboard-user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+    padding-left: 15px;
+}
+
+.leaderboard-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #EAEAEA;
+    background: #FFF;
+}
+
+.leaderboard-username {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #4A3A31;
+}
+
+.leaderboard-score {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    text-align: right;
+}
+
+.score-value {
+    font-weight: 900;
+    font-size: 1.6rem;
+    color: #8A5C38;
+    font-family: 'Outfit', sans-serif;
+}
+
+.score-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #A39387;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Dark Mode Overrides */
+body.dark-mode .leaderboard-title {
+    color: #EAE6D6;
+}
+
+body.dark-mode .leaderboard-container {
+    background: rgba(30, 30, 30, 0.6);
+    border-color: rgba(60, 60, 60, 0.5);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .leaderboard-row {
+    background: #242424;
+    border-color: #333333;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+body.dark-mode .leaderboard-row:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+    border-color: #F5C79A;
+}
+
+body.dark-mode .rank-1 {
+    background: linear-gradient(135deg, #423512 0%, #2A210A 100%);
+    border-color: #FFB300;
+}
+
+body.dark-mode .rank-2 {
+    background: linear-gradient(135deg, #2D2D2D 0%, #1A1A1A 100%);
+    border-color: #9E9E9E;
+}
+
+body.dark-mode .rank-3 {
+    background: linear-gradient(135deg, #3E241D 0%, #21130F 100%);
+    border-color: #D84315;
+}
+
+body.dark-mode .leaderboard-username {
+    color: #D4C9C1;
+}
+
+body.dark-mode .leaderboard-avatar {
+    border-color: #444;
+}
+
+body.dark-mode .score-value {
+    color: #F5C79A;
+}
+
+body.dark-mode .score-label {
+    color: #8C7B70;
+}
+
