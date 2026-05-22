@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import axios from 'axios';
 import '../../css/styles.css';
@@ -216,6 +217,7 @@ const GerirUtilizadores = () => {
                             </tbody>
                         </table>
                     </div>
+                    <Footer />
                 </main>
             </div>
 

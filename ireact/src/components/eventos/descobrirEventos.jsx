@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 import iconeLupa from "../../assets/lupa.svg";
 import iconeFiltro from "../../assets/filtro.svg";
 import iconeCalendario from "../../assets/calendario.svg"; 
@@ -98,12 +99,13 @@ const ExplorarEventos = () => {
     // 2. CREATED THIS FORWARDED CUSTOM INPUT COMPONENT TO PASS REFS SAFELY
     const CustomCalendarInput = forwardRef(({ onClick }, ref) => (
         <button className="calendar-filter-wrapper" onClick={onClick} ref={ref} type="button">
-            <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg mr-6" />
-            <img src={iconeCalendario} alt="Calendário" className="recipe-icon-svg mr-8" />
+            <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg icon-mr-8" />
             
             <span className={`calendar-display-text font-600 ${dataFiltro ? "mr-4" : ""}`}>
                 {formatarDataExibicao(dataFiltro)}
             </span>
+            
+            <img src={iconeCalendario} alt="Calendário" className="recipe-icon-svg icon-ml-8" />
             
             {dataFiltro && (
                 <button 
@@ -215,6 +217,7 @@ const ExplorarEventos = () => {
                             itemsPerPage={eventsPerPage}
                             onPageChange={setCurrentPage}
                         />
+                        <Footer />
                     </main>
                 </div>
                 <PopupModal 

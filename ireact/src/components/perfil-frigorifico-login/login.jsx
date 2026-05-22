@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { getFieldLimits, validateInput } from '../../utils/validation.js';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 import '../../css/styles.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -172,8 +173,8 @@ const Login = () => {
       <div className="main-wrapper">
         <Sidebar />
         
-        <main className="auth-container">
-
+        <main className="auth-container" style={{ flexDirection: 'column', padding: 0 }}>
+          <div style={{ display: 'flex', width: '100%', flex: 1, alignItems: 'flex-start', justifyContent: 'center', padding: '60px 20px', flexWrap: 'wrap', gap: '40px' }}>
           <section className="auth-section">
             <h1 className="auth-title">{t('autenticacao.login')}</h1>
             <form className="auth-form" onSubmit={handleLogin}>
@@ -251,6 +252,8 @@ const Login = () => {
               <button type="submit" className="btn-auth">{t('autenticacao.registar')}</button>
             </form>
           </section>
+          </div>
+            <Footer />
         </main>
       </div>
 

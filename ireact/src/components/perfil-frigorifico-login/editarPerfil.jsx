@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 import '../../css/styles.css';
 import { useNavigate } from 'react-router-dom';
 import PopupModal from '../maincomponents/popupModal.jsx';
@@ -275,6 +276,7 @@ const EditarPerfil = () => {
             </div>
 
           </div>
+            <Footer />
         </main>
       </div>
       

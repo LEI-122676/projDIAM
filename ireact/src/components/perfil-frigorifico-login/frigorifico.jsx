@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 import axios from 'axios';
 import '../../css/styles.css';
 import PopupModal from '../maincomponents/popupModal.jsx';
@@ -212,6 +213,7 @@ const Frigorifico = () => {
                         </section>
 
                     </div>
+                    <Footer />
                 </main>
             </div>
 
