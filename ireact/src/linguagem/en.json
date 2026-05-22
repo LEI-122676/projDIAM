@@ -166,6 +166,12 @@
         "horario": "Time*",
         "capacidade": "Capacity*",
         "pessoas_max": "people Max.",
+        "sem_data_hora": "No date/time",
+        "evento_comecou": "The event has started!",
+        "contagem_decrescente": "Countdown:",
+        "a_calcular": "Calculating...",
+        "atividade": "Activity",
+        "horarios": "Schedules",
         "popups": {
             "acesso_restrito_criar": "You need to log in to create a new event. Create an account or log in to create your event!",
             "acesso_restrito_inscrever": "register for this event",
@@ -302,6 +308,7 @@
     "admin": {
         "gerir_utilizadores": "Manage Users",
         "criar_utilizador": "Create User",
+        "foto_perfil": "Profile Picture",
         "tabela": {
             "username": "Username",
             "nome_completo": "Full Name",

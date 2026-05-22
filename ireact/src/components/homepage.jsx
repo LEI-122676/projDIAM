@@ -75,7 +75,10 @@ const Home = () => {
                 </div>
               </div>
             )}
-
+          </div>
+          
+          {/* Logo Slider placed outside home-container to allow full bleed */}
+          <div className="full-width-section">
             <LogoSlider />
           </div>
         </main>

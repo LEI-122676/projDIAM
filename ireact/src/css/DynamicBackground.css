@@ -6,46 +6,51 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 0; /* Changed from -1 to 0 */
+    z-index: -1; /* Ensures background stays behind content and allows interaction */
     overflow: hidden;
     pointer-events: none;
-    transition: opacity 0.5s ease;
 }
 
-/* Subtler intensity for non-home pages */
-.dynamic-bg-container.subtle {
-    opacity: 0.3;
+/* Visibility toggles for the CSS layers */
+.dynamic-bg-dark, .dynamic-bg-light {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    transition: opacity 1.5s ease-in-out;
 }
+
+.dynamic-bg-dark.hidden, .dynamic-bg-light.hidden {
+    opacity: 0;
+    z-index: 1;
+}
+
+.dynamic-bg-dark.visible, .dynamic-bg-light.visible {
+    opacity: 1;
+    z-index: 2;
+}
+
 
 /* =========================================
-   LIGHT MODE: Warm European Nature Vibe
+   LIGHT MODE: Animated Beachy Gradient
    ========================================= */
 .dynamic-bg-light {
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    background: radial-gradient(circle at 20% 30%, rgba(212, 224, 215, 0.4), transparent 60%),
-                radial-gradient(circle at 80% 70%, rgba(234, 224, 200, 0.6), transparent 60%);
-    background-color: #FAF3E0; /* Warm cream base */
-    animation: slowDrift 20s infinite alternate ease-in-out;
+    background: linear-gradient(135deg, #FFF3B0 0%, #CAE9FF 50%, #5FA8D3 100%);
+    background-size: 200% 200%;
+    animation: beachGradient 15s ease infinite alternate;
 }
 
-@keyframes slowDrift {
-    0% { transform: scale(1); }
-    100% { transform: scale(1.05); }
+@keyframes beachGradient {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
 }
+
 
 /* =========================================
-   DARK MODE: Deep Space Black
+   DARK MODE: Deep Space Black with Stars
    ========================================= */
 .dynamic-bg-dark {
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    left: 0;
     background: linear-gradient(135deg, #020202, #0a0a0a, #000000, #010101);
     background-size: 400% 400%;
     animation: nightGradient 20s ease infinite;
@@ -112,4 +117,55 @@
 @keyframes starPan {
     from { background-position: 0 0; }
     to { background-position: -1000px -1000px; }
+}
+
+/* Nebulas */
+.nebula {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.6;
+    animation: nebulaDrift 20s infinite alternate ease-in-out;
+}
+
+.nebula-1 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(138,43,226,0.4) 0%, transparent 70%);
+    top: 10%;
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.nebula-2 {
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(255,20,147,0.3) 0%, transparent 70%);
+    bottom: 10%;
+    right: 10%;
+    animation-delay: -5s;
+}
+
+.nebula-3 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(0,191,255,0.3) 0%, transparent 70%);
+    top: 40%;
+    left: 50%;
+    animation-delay: -10s;
+}
+
+.nebula-4 {
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(148,0,211,0.35) 0%, transparent 70%);
+    top: -10%;
+    right: 20%;
+    animation-delay: -15s;
+}
+
+@keyframes nebulaDrift {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(50px, -30px) scale(1.1); }
+    100% { transform: translate(-30px, 50px) scale(0.9); }
 }

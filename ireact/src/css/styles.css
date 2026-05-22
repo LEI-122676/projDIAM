@@ -3,6 +3,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
 /* 1. RESET E DEFINIÇÕES BASE */
+:root {
+    --brand-color: #2E4A35;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -13,7 +17,7 @@
 html, body, #root {
     height: 100%;
     width: 100%;
-    background-color: #FDFBEE;
+    background-color: transparent;
     color: #4A3A31;
     overflow: hidden;
 }
@@ -28,12 +32,14 @@ html, body, #root {
 
 .header {
     height: 70px;
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(20px);
     display: flex;
     align-items: center;
     justify-content: flex-start;
     padding: 0 40px;
-    border-bottom: 1px solid #EAEAEA;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
     flex-shrink: 0;
     gap: 30px;
 }
@@ -55,8 +61,10 @@ html, body, #root {
 /* --- SIDEBAR BASE --- */
 .sidebar {
     width: 280px;
-    background-color: #FDFBEE;
-    border-right: 1px solid #EAEAEA;
+    background-color: rgba(253, 251, 238, 0.6);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 4px 0 20px rgba(0,0,0,0.05);
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -86,7 +94,7 @@ html, body, #root {
     padding: 30px 28px;
     height: 70px;
 
-    background-color: #f6f4e9;
+    background-color: transparent;
 }
 
 .sidebar.closed .sidebar-header-only {
@@ -140,6 +148,16 @@ html, body, #root {
 @keyframes fadeIn {
     from { opacity: 0; transform: translateX(-10px); }
     to { opacity: 1; transform: translateX(0); }
+}
+
+.feedback-card {
+    max-width: 800px;
+    margin: 40px auto;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 20px;
+    transition: all 0.3s ease-in-out;
 }
 
 .hamburger-btn .line {
@@ -207,7 +225,7 @@ html, body, #root {
 /* 4. CONTEÚDO PRINCIPAL */
 .content-profile {
     flex: 1;
-    background-color: #ffffff;
+    background-color: transparent;
     padding: 50px;
     overflow-y: auto;
 }
@@ -230,8 +248,9 @@ html, body, #root {
 /* Coluna Esquerda (Cartão) */
 .profile-details-card {
     flex: 1;
-    background: #ffffff;
-    border: 1px solid #EAEAEA;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 25px;
     padding: 40px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.02);
@@ -251,8 +270,7 @@ html, body, #root {
 .user-avatar-large {
     width: 120px;
     height: 120px;
-    background-color: #FDFBEE;
-    border: 1px solid #EAE6D6;
+    background-color: transparent;
     border-radius: 30px; /* Formato arredondado da imagem */
     display: flex;
     align-items: center;
@@ -302,13 +320,40 @@ html, body, #root {
 }
 
 .btn-logout-link {
-    background: transparent;
-    border: none;
-    color: #716259;
-    font-weight: 600;
+    background-color: #FDFBEE !important;
+    background-image: none !important;
+    border: 1px solid var(--brand-color) !important;
+    color: var(--brand-color) !important;
+    padding: 12px 30px !important;
+    border-radius: 30px !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    display: inline-block;
     cursor: pointer;
     text-decoration: none;
-    padding: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-logout-link:hover {
+    background-color: var(--brand-color) !important;
+    color: white !important;
+}
+
+body.dark-mode .btn-logout-link {
+    background-color: #c0392b !important;
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.15) 100%) !important;
+    color: white !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1), inset 0 1px 2px rgba(255,255,255,0.5) !important;
+}
+
+body.dark-mode .btn-logout-link:hover {
+    background-color: #e74c3c !important;
+    transform: translateY(-4px) !important;
+    box-shadow: 0 8px 25px rgba(192, 57, 43, 0.4), inset 0 1px 2px rgba(255,255,255,0.7) !important;
 }
 
 /* Coluna Direita (Grelha de Atalhos) */
@@ -424,7 +469,7 @@ html, body, #root {
     align-items: flex-start;
     justify-content: center;
     padding: 60px 20px;
-    background-color: #ffffff; /* Fundo branco como na imagem */
+    background-color: transparent;
     position: relative;
 }
 
@@ -521,7 +566,7 @@ html, body, #root {
 
 .content-home {
     flex: 1;
-    background-color: #ffffff;
+    background-color: transparent;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -806,7 +851,7 @@ body.dark-mode .slideshow-container {
 
 .content-frigorifico {
     flex: 1;
-    background-color: #ffffff;
+    background-color: transparent;
     padding: 50px;
     overflow-y: auto;
 }
@@ -930,7 +975,7 @@ body.dark-mode .slideshow-container {
 /* 1. Container Principal */
 .content-profile {
     flex: 1;
-    background-color: #ffffff;
+    background-color: transparent;
     padding: 50px;
     overflow-y: auto;
     /* Removido o flex-start global para permitir que a grid use o ecrã todo */
@@ -1020,9 +1065,10 @@ body.dark-mode {
 
 body.dark-mode .header,
 body.dark-mode .sidebar {
-    background-color: rgba(20, 20, 20, 0.4) !important;
-    backdrop-filter: blur(12px) !important;
+    background-color: rgba(20, 20, 20, 0.65) !important;
+    backdrop-filter: blur(20px) !important;
     border-color: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
 }
 
 body.dark-mode .content-profile,
@@ -1036,7 +1082,9 @@ body.dark-mode .profile-details-card,
 body.dark-mode .recipes-container,
 body.dark-mode .recipe-details-container,
 body.dark-mode .event-details-container {
-    background-color: #1e1e1e !important;
+    background-color: rgba(30, 30, 30, 0.7) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
     border-color: #333 !important;
 }
 
@@ -1184,8 +1232,9 @@ body.dark-mode .rating-section,
 body.dark-mode .comments-section,
 body.dark-mode .recipe-bottom-row,
 body.dark-mode .step-detail {
-    background-color: #1e1e1e !important;
-    border-color: #333 !important;
+    background-color: rgba(30, 30, 30, 0.7) !important;
+    backdrop-filter: blur(12px) !important;
+    border-color: rgba(255, 255, 255, 0.05) !important;
     color: #e0e0e0 !important;
 }
 
@@ -1323,7 +1372,7 @@ body.dark-mode .step-nav-item:hover {
 
 /* Active state for fridge filter button in dark mode */
 body.dark-mode .btn-filter-fridge.active {
-    background-color: #628169 !important;
+    background-color: var(--brand-color) !important;
     color: white !important;
 }
 body.dark-mode .btn-filter-fridge.active .recipe-icon-svg {
@@ -1349,24 +1398,10 @@ body.dark-mode .btn-edit-profile:hover {
     background-color: #1a1a1a !important;
 }
 
-body.dark-mode .btn-logout-link {
-    background-color: #c0392b !important;
-    color: white !important;
-    border: none !important;
-    padding: 12px !important;
-    border-radius: 30px !important;
-    font-weight: 700 !important;
-    text-align: center !important;
-    display: inline-block !important;
-}
 
-body.dark-mode .btn-logout-link:hover {
-    background-color: #e74c3c !important;
-}
 
 body.dark-mode .user-avatar-large {
-    background-color: #111111 !important;
-    border-color: #2a2a2a !important;
+    background-color: transparent !important;
 }
 
 body.dark-mode .user-names h2 {
@@ -1421,18 +1456,21 @@ body.dark-mode .home-subtitle {
 
 /* Popup Modal styling in dark mode */
 body.dark-mode .popup-overlay {
-    background-color: rgba(0, 0, 0, 0.8) !important;
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    backdrop-filter: blur(10px);
 }
 
 body.dark-mode .popup-content {
-    background-color: #111111 !important;
-    border: 1px solid #2a2a2a !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7) !important;
+    background-color: rgba(30, 30, 30, 0.6) !important;
+    backdrop-filter: blur(25px) !important;
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.4) 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255,255,255,0.1) !important;
 }
 
 body.dark-mode .popup-title {
-    color: #81c784 !important;
-    border-bottom-color: #2a2a2a !important;
+    color: #ffffff !important;
+    border-bottom-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 body.dark-mode .popup-message {
@@ -1440,22 +1478,24 @@ body.dark-mode .popup-message {
 }
 
 body.dark-mode .btn-popup-cancel {
-    border-color: #81c784 !important;
-    color: #81c784 !important;
-    background-color: transparent !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #e0e0e0 !important;
 }
 
 body.dark-mode .btn-popup-cancel:hover {
-    background-color: rgba(129, 199, 132, 0.1) !important;
+    background-color: rgba(255, 255, 255, 0.2) !important;
 }
 
 body.dark-mode .btn-popup-confirm {
-    background-color: #81c784 !important;
-    color: #121212 !important;
+    background-color: var(--brand-color) !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
 body.dark-mode .btn-popup-confirm:hover {
-    background-color: #a5d6a7 !important;
+    background-color: #3b5a41 !important;
 }
 
 
@@ -1518,8 +1558,7 @@ body.dark-mode .popup-content,
 body.dark-mode .step-nav-item,
 body.dark-mode .recipe-main-image,
 body.dark-mode .fridge-input-card-custom,
-body.dark-mode .profile-details-card,
-body.dark-mode .user-avatar-large {
+body.dark-mode .profile-details-card {
     background-color: #1e1e1e !important;
     border: 1px solid #2c2c2c !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
@@ -1616,8 +1655,8 @@ select.page-select-dropdown,
     background: transparent !important;
     background-color: transparent !important;
     border: none !important;
-    border-bottom: 2px dashed #628169 !important;
-    color: #628169 !important;
+    border-bottom: 2px dashed var(--brand-color) !important;
+    color: var(--brand-color) !important;
     font-weight: 800;
     font-size: 1.1rem;
     cursor: pointer;
@@ -1748,8 +1787,9 @@ body.dark-mode .page-select-dropdown option {
     height: 280px; /* Aumentado proporcionalmente */
     display: flex;
     flex-direction: column;
-    background-color: #FDFBEE;
-    border: 1px solid #EAEAEA;
+    background-color: rgba(253, 251, 238, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 12px;
     overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s;
@@ -1994,7 +2034,9 @@ body.dark-mode .page-select-dropdown option {
 
 /* Boxes de conteúdo (Bege claro) */
 .content-box-light {
-    background-color: #F6F4E9; /* Bege muito claro da imagem */
+    background-color: rgba(246, 244, 233, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 15px;
     padding: 25px;
     min-height: 100px;
@@ -2029,7 +2071,8 @@ body.dark-mode .page-select-dropdown option {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -2037,27 +2080,32 @@ body.dark-mode .page-select-dropdown option {
 }
 
 .popup-content {
-    background-color: #F8F6F0;
-    padding: 30px;
-    border-radius: 12px;
-    border: 1px solid #D1CDBC;
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(25px);
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.1) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 30px 40px;
+    border-radius: 20px;
     width: 90%;
-    max-width: 400px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    max-width: 420px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.9);
     text-align: center;
 }
 
 .popup-title {
     margin: 0 0 15px 0;
-    color: #628169;
-    border-bottom: 2px solid #D1CDBC;
-    padding-bottom: 10px;
+    color: #333;
+    font-size: 1.5rem;
+    font-weight: 800;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    padding-bottom: 15px;
 }
 
 .popup-message {
-    color: #333;
-    margin-bottom: 25px;
-    line-height: 1.5;
+    color: #555;
+    margin-bottom: 30px;
+    font-size: 1.05rem;
+    line-height: 1.6;
 }
 
 .popup-actions {
@@ -2067,25 +2115,42 @@ body.dark-mode .page-select-dropdown option {
 }
 
 .btn-popup-cancel {
-    padding: 8px 20px;
-    border-radius: 20px;
-    border: 2px solid #628169;
-    background-color: transparent;
-    color: #628169;
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #555;
+    padding: 10px 24px;
+    border-radius: 30px;
     cursor: pointer;
-    font-weight: bold;
-    font-size: 14px;
+    font-weight: 700;
+    font-size: 15px;
+    transition: all 0.2s ease;
+}
+
+.btn-popup-cancel:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .btn-popup-confirm {
-    padding: 8px 20px;
-    border-radius: 20px;
-    border: none;
-    background-color: #628169;
+    background-color: #4A3A31;
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.1) 100%);
+    border: 1px solid rgba(255,255,255,0.1);
     color: white;
+    padding: 10px 24px;
+    border-radius: 30px;
     cursor: pointer;
-    font-weight: bold;
-    font-size: 14px;
+    font-weight: 700;
+    font-size: 15px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1), inset 0 1px 2px rgba(255,255,255,0.2);
+}
+
+.btn-popup-confirm:hover {
+    background-color: #3d2f28;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.3);
 }
 
 /* --- CLASSIFICACAO E COMENTARIOS --- */
@@ -2178,7 +2243,7 @@ body.dark-mode .page-select-dropdown option {
     padding: 20px;
     border-radius: 8px;
     border: 1px solid #E5E2D9;
-    border-left: 4px solid #628169;
+    border-left: 4px solid var(--brand-color);
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
@@ -2225,7 +2290,7 @@ body.dark-mode .page-select-dropdown option {
 
 /* --- AS MINHAS RECEITAS --- */
 .my-recipes-section-title {
-    color: #628169;
+    color: var(--brand-color);
     border-bottom: 1px solid #ccc;
     padding-bottom: 10px;
 }
@@ -2246,7 +2311,7 @@ body.dark-mode .page-select-dropdown option {
 
 /* Receitas/Popups */
 .text-black { color: black !important; }
-.btn-filter-fridge.active { background-color: #628169 !important; color: white !important; }
+.btn-filter-fridge.active { background-color: var(--brand-color) !important; color: white !important; }
 .btn-filter-fridge.active .recipe-icon-svg { filter: brightness(0) invert(1) !important; }
 .icon-mr-8 { margin-right: 8px !important; }
 .icon-ml-8 { margin-left: 8px !important; }
@@ -2261,7 +2326,7 @@ body.dark-mode .page-select-dropdown option {
 .flex-center { display: flex; justify-content: center; align-items: center; }
 .loading-container { padding: 50px; text-align: center; }
 .recipe-header-container { text-align: left; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
-.recipe-rating-text { font-size: 18px; font-weight: bold; color: #628169; }
+.recipe-rating-text { font-size: 18px; font-weight: bold; color: var(--brand-color); }
 .recipe-main-icon { font-size: 80px; color: #D1CDBC; font-weight: 100; }
 .mt-auto { margin-top: auto; }
 .recipe-bottom-row-flex { display: flex; gap: 20px; flex-wrap: wrap; }
@@ -2287,7 +2352,7 @@ body.dark-mode .page-select-dropdown option {
 .fridge-label { color: #4A3A31; margin-bottom: 10px; display: block; font-weight: bold; }
 .select-fridge { height: 50px; cursor: pointer; }
 .btn-add-fridge { width: auto; padding: 0 30px; height: 50px; font-size: 16px; }
-.fridge-content-title { color: #628169; margin-bottom: 20px; border-bottom: 2px solid #D1CDBC; padding-bottom: 10px; }
+.fridge-content-title { color: var(--brand-color); margin-bottom: 20px; border-bottom: 2px solid #D1CDBC; padding-bottom: 10px; }
 .ingredients-grid-flex { display: flex; flex-wrap: wrap; gap: 15px; }
 .fridge-empty-text { font-style: italic; color: #888; }
 .ingredient-tag-custom { display: flex; align-items: center; background-color: #e2ddcc; padding: 10px 20px; border-radius: 25px; color: #4A3A31; font-weight: 600; width: auto; height: auto; }
@@ -2305,8 +2370,9 @@ body.dark-mode .page-select-dropdown option {
 
 /* --- PREMIUM DESIGN TOKENS --- */
 .premium-card {
-    background: #ffffff;
-    border: 1px solid rgba(46, 74, 53, 0.1);
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 20px;
     padding: 30px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
@@ -2657,21 +2723,23 @@ body.dark-mode .admin-shortcut {
     color: #81c784 !important;
 }
 
-/* User Management styles */
 .admin-table-container {
     width: 100%;
     margin-top: 30px;
-    border-radius: 12px;
+    border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    background: #ffffff;
-    border: 1px solid #eae7dc;
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(15px);
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.0) 100%);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.05), inset 0 1px 2px rgba(255,255,255,0.8);
 }
 
 body.dark-mode .admin-table-container {
-    background: #1e1e1e;
-    border-color: #2c2c2c;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    background-color: rgba(30, 30, 30, 0.5);
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.2) 100%);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.15);
 }
 
 .admin-table {
@@ -2690,13 +2758,13 @@ body.dark-mode .admin-table th, body.dark-mode .admin-table td {
 }
 
 .admin-table th {
-    background-color: #f6f4e9;
+    background-color: rgba(255,255,255,0.5);
     color: #4A3A31 !important;
     font-weight: 700;
 }
 
 body.dark-mode .admin-table th {
-    background-color: #121212;
+    background-color: rgba(0,0,0,0.3);
     color: #ffffff !important;
 }
 
@@ -2720,35 +2788,39 @@ body.dark-mode .admin-table td {
 }
 
 .admin-role-select {
-    padding: 6px 12px;
-    border-radius: 8px;
-    border: 1.5px solid #4A3A31;
-    background-color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.1);
+    background-color: rgba(255,255,255,0.5);
     color: #000000 !important;
     font-weight: 600;
     cursor: pointer;
 }
 
 body.dark-mode .admin-role-select {
-    border-color: #383838;
-    background-color: #262626;
+    border-color: rgba(255,255,255,0.1);
+    background-color: rgba(0,0,0,0.3);
     color: #e0e0e0 !important;
 }
 
 .admin-btn-save {
-    background-color: var(--brand-color);
+    background-color: #4A3A31;
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.1) 100%);
     color: #ffffff;
-    border: none;
+    border: 1px solid rgba(255,255,255,0.1);
     padding: 8px 16px;
-    border-radius: 8px;
+    border-radius: 30px;
     font-weight: 600;
     cursor: pointer;
     margin-right: 8px;
-    transition: background-color 0.2s;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1), inset 0 1px 2px rgba(255,255,255,0.2);
 }
 
 .admin-btn-save:hover {
-    background-color: #243a29;
+    background-color: #3d2f28;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.3);
 }
 
 .admin-btn-save:disabled {
@@ -2757,12 +2829,15 @@ body.dark-mode .admin-role-select {
 }
 
 body.dark-mode .admin-btn-save {
-    background-color: #81c784;
-    color: #121212;
+    background-color: rgba(30, 30, 30, 0.5);
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.2) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e0e0e0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.15);
 }
 
 body.dark-mode .admin-btn-save:hover {
-    background-color: #66bb6a;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.3);
 }
 
 body.dark-mode .admin-btn-save:disabled {
@@ -2770,18 +2845,34 @@ body.dark-mode .admin-btn-save:disabled {
 }
 
 .admin-btn-delete {
-    background-color: #8b4b4b;
-    color: #ffffff;
-    border: none;
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(15px);
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.0) 100%);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    color: #4A3A31;
     padding: 8px 16px;
-    border-radius: 8px;
+    border-radius: 30px;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05), inset 0 1px 2px rgba(255,255,255,0.8);
 }
 
 .admin-btn-delete:hover {
-    background-color: #723c3c;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.9);
+}
+
+body.dark-mode .admin-btn-delete {
+    background-color: rgba(30, 30, 30, 0.5);
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.2) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e0e0e0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.15);
+}
+
+body.dark-mode .admin-btn-delete:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.3);
 }
 
 .admin-table-empty {
@@ -2918,6 +3009,12 @@ body.dark-mode .btn-action-delete:hover {
 
 body.dark-mode .logo-slider-title {
     color: #a89a90;
+}
+
+.full-width-section {
+    width: calc(100% + 100px);
+    margin-left: -50px;
+    margin-right: -50px;
 }
 
 .logo-slider-container {
@@ -3214,9 +3311,179 @@ body.dark-mode .counter-number-mini {
     overflow-wrap: break-word;
 }
 
+/* Tabela de Horário do Evento */
+.horario-row {
+    width: 100%;
+    margin: 15px auto;
+    border-collapse: collapse;
+    text-align: center;
+    background: rgba(255,255,255,0.3);
+    border-radius: 12px;
+    overflow: hidden;
+}
+.horario-row th, .horario-row td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+.horario-row th {
+    font-weight: bold;
+    background: rgba(0,0,0,0.05);
+}
+body.dark-mode .horario-row {
+    background: rgba(0,0,0,0.3);
+}
+body.dark-mode .horario-row th, body.dark-mode .horario-row td {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+body.dark-mode .horario-row th {
+    background: rgba(255,255,255,0.05);
+}
+
 .feedback-author {
     font-weight: 700;
     color: var(--brand-color);
     text-align: right;
     font-size: 0.9rem;
+}
+
+/* --- UNIVERSAL BUTTON POP (Premium 3D Upgrade) --- */
+.btn-auth, .btn-search-home, .btn-mostrar-receitas, .btn-guardar, 
+.btn-add-recipe, .btn-create-submit, .btn-add-fridge-premium, 
+.btn-profile-pill:not(.secondary) {
+    position: relative;
+    overflow: hidden;
+    /* Overlay gradient para dar profundidade de luz (3D) mantendo a cor original */
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.15) 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), filter 0.2s !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.4) !important;
+}
+
+
+
+.btn-auth:hover, .btn-search-home:hover, .btn-mostrar-receitas:hover, .btn-guardar:hover, 
+.btn-add-recipe:hover, .btn-create-submit:hover, .btn-add-fridge-premium:hover, 
+.btn-profile-pill:not(.secondary):hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.5) !important;
+    filter: brightness(1.15) !important;
+}
+
+.btn-auth:active, .btn-search-home:active, .btn-mostrar-receitas:active, .btn-guardar:active, 
+.btn-add-recipe:active, .btn-create-submit:active, .btn-add-fridge-premium:active, 
+.btn-profile-pill:not(.secondary):active {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,255,255,0.2) !important;
+}
+
+/* --- SECONDARY PREMIUM GLASS ELEMENTS (Filtros, Voltar, Caixas de Perfil) --- */
+.shortcut-card, .calendar-filter-wrapper, .btn-filter-fridge:not(.active), 
+.btn-cancel, .btn-cancel-small, .btn-edit-profile, .btn-logout-link {
+    position: relative;
+    overflow: hidden;
+    /* Glassmorphism base para light mode */
+    background-color: rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(15px) !important;
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.0) 100%) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    color: #4A3A31;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), filter 0.2s !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05), inset 0 1px 2px rgba(255,255,255,0.8) !important;
+}
+
+body.dark-mode .shortcut-card, body.dark-mode .calendar-filter-wrapper, body.dark-mode .btn-filter-fridge:not(.active), 
+body.dark-mode .btn-cancel, body.dark-mode .btn-cancel-small, body.dark-mode .btn-edit-profile, body.dark-mode .btn-logout-link {
+    background-color: rgba(30, 30, 30, 0.5) !important;
+    color: #e0e0e0;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.2) 100%) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.15) !important;
+}
+
+
+
+.shortcut-card:hover, .calendar-filter-wrapper:hover, .btn-filter-fridge:not(.active):hover, 
+.btn-cancel:hover, .btn-cancel-small:hover, .btn-edit-profile:hover, .btn-logout-link:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.9) !important;
+}
+
+body.dark-mode .shortcut-card:hover, body.dark-mode .calendar-filter-wrapper:hover, body.dark-mode .btn-filter-fridge:not(.active):hover, 
+body.dark-mode .btn-cancel:hover, body.dark-mode .btn-cancel-small:hover, body.dark-mode .btn-edit-profile:hover, body.dark-mode .btn-logout-link:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.3) !important;
+}
+
+/* --- FRIDGE FILTER ACTIVE STATE (Keep 3D styling but with brand color) --- */
+.btn-filter-fridge.active {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--brand-color) !important;
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(0,0,0,0.15) 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), filter 0.2s !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.4) !important;
+}
+.btn-filter-fridge.active:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.6) !important;
+}
+
+/* --- DATEPICKER ANCHOR FIX (Fix top-left popup positioning) --- */
+.datepicker-anchor {
+    position: relative;
+    display: inline-block;
+}
+
+/* --- PREMIUM INPUT FIELDS (Barras de escrever e comentários) --- */
+.auth-input, .search-container, .recipe-search-box, .comment-textarea, .input-beige {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05) !important;
+    color: #4A3A31 !important;
+    transition: all 0.3s ease !important;
+}
+
+.auth-input:focus, .search-container:focus-within, .recipe-search-box:focus, .comment-textarea:focus, .input-beige:focus {
+    background-color: rgba(255, 255, 255, 0.85) !important;
+    border-color: var(--brand-color) !important;
+    box-shadow: 0 0 15px rgba(0,0,0,0.05), inset 0 2px 4px rgba(0,0,0,0.05) !important;
+}
+
+body.dark-mode .auth-input, body.dark-mode .search-container, body.dark-mode .recipe-search-box, body.dark-mode .comment-textarea, body.dark-mode .input-beige {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #e0e0e0 !important;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.2) !important;
+}
+
+body.dark-mode .auth-input:focus, body.dark-mode .search-container:focus-within, body.dark-mode .recipe-search-box:focus, body.dark-mode .comment-textarea:focus, body.dark-mode .input-beige:focus {
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3), inset 0 2px 5px rgba(0,0,0,0.2) !important;
+}
+
+/* Ensure the input inside the container stays transparent */
+.search-container .main-search-input {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+}
+
+/* --- DATEPICKER TEXT OVERRIDE --- */
+.react-datepicker__month-text, 
+.react-datepicker__month-text--keyboard-selected, 
+.react-datepicker__month-text--today,
+.react-datepicker__month-text--selected {
+    font-weight: normal !important;
+}
+
+body.dark-mode .feedback-card {
+    background: rgba(30, 30, 30, 0.7) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
 }

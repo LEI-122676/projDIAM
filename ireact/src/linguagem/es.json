@@ -166,6 +166,12 @@
         "horario": "Horario*",
         "capacidade": "Capacidad*",
         "pessoas_max": "personas Max.",
+        "sem_data_hora": "Sin fecha/hora",
+        "evento_comecou": "¡El evento ha comenzado!",
+        "contagem_decrescente": "Cuenta regresiva:",
+        "a_calcular": "Calculando...",
+        "atividade": "Actividad",
+        "horarios": "Horarios",
         "popups": {
             "acesso_restrito_criar": "¡Necesitas iniciar sesión para crear un nuevo evento. Crea una cuenta o inicia sesión para crear tu evento!",
             "acesso_restrito_inscrever": "inscribirte en este evento",
@@ -302,6 +308,7 @@
     "admin": {
         "gerir_utilizadores": "Gestionar Usuarios",
         "criar_utilizador": "Crear Usuario",
+        "foto_perfil": "Foto de Perfil",
         "tabela": {
             "username": "Nombre de usuario",
             "nome_completo": "Nombre Completo",

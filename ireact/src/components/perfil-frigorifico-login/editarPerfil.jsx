@@ -232,7 +232,7 @@ const EditarPerfil = () => {
                   <img
                     src={fotoPreview}
                     alt="Foto de Perfil"
-                    className="cover-image-large-rounded"
+                    className="image-preview-fit"
                   />
                 ) : (
                   <div className="avatar-placeholder-container">

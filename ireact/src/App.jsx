@@ -26,7 +26,6 @@ function App() {
         <DynamicBackground />
         <Routes>
           <Route path="/" element={<Homepage/>} />
-          
           <Route path="/perfil" element={<Perfil/>} />
           <Route path="/perfil/editar-perfil" element={<EditarPerfil/>} />
           <Route path="/perfil/meus-eventos" element={<MeusEventos/>} />
