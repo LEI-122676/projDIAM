@@ -21,7 +21,7 @@ const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => 
                 <select
                     value={currentPage}
                     onChange={(e) => onPageChange(Number(e.target.value))}
-                    className="page-select-dropdown input-beige text-black"
+                    className="page-select-dropdown"
                 >
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map(num => (
                         <option key={num} value={num}>

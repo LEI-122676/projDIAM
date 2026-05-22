@@ -1657,10 +1657,10 @@ select.page-select-dropdown,
     border: none !important;
     border-bottom: 2px dashed var(--brand-color) !important;
     color: var(--brand-color) !important;
-    font-weight: 800;
+    font-weight: 700;
     font-size: 1.1rem;
     cursor: pointer;
-    padding: 0 4px;
+    padding: 0 5px;
     outline: none;
     text-align: center;
     -webkit-appearance: none;
