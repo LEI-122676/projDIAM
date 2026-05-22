@@ -7,8 +7,10 @@ import PopupModal from '../maincomponents/popupModal.jsx';
 import '../../css/styles.css';
 import axios from 'axios';
 import { getCSRFToken } from '../../utils/csrf.js';
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 
 const AdminCriarUtilizador = () => {
+    const { t } = useLanguage();
     const URL_BASE = 'http://localhost:8000';
     const CREATE_USER_URL = `${URL_BASE}/idjango/api/admin/create-user/`;
     const navigate = useNavigate();
