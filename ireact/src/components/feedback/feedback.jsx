@@ -173,9 +173,9 @@ const FeedbackPage = () => {
             <div className="main-wrapper">
                 <Sidebar />
                 <main className="content-profile">
-                    <div className="feedback-container" style={{ maxWidth: '900px', margin: '0 auto' }}>
+                    <div className="feedback-container" style={{ maxWidth: '100%', margin: '0', marginBottom: '50px' }}>
                         <h1 className="page-title-underline">{t('feedback.titulo')}</h1>
-                        <p style={{ color: '#716259', marginBottom: '30px', fontSize: '1.1rem' }}>{t('feedback.subtitulo')}</p>
+                        <p style={{ color: '#716259', marginBottom: '30px', fontSize: '1.1rem', textAlign: 'left' }}>{t('feedback.subtitulo')}</p>
                         
                         <div className="profile-layout-container" style={{ flexDirection: 'column', gap: '30px' }}>
                             <div className="content-box-light" style={{ width: '100%' }}>
@@ -200,7 +200,7 @@ const FeedbackPage = () => {
                                 </div>
 
                                 <h3 className="section-subtitle" style={{ marginTop: '30px' }}>{t('feedback.diz_nos_porque')}</h3>
-                                <textarea className="auth-input" style={{ minHeight: '100px', width: '100%', resize: 'vertical' }}
+                                <textarea className="auth-input" style={{ minHeight: '100px', width: '100%', resize: 'none' }}
                                     placeholder={t('feedback.placeholder_comentario')}
                                     value={comentarioLivre} onChange={e => setComentarioLivre(e.target.value)}
                                     maxLength="150"></textarea>
