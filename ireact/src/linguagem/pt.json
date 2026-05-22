@@ -298,5 +298,35 @@
         "chocolate": "Chocolate",
         "canela": "Canela",
         "salsa": "Salsa"
+    },
+    "admin": {
+        "gerir_utilizadores": "Gerir Utilizadores",
+        "criar_utilizador": "Criar Utilizador",
+        "tabela": {
+            "username": "Username",
+            "nome_completo": "Nome Completo",
+            "email": "Email",
+            "permissao": "Permissão",
+            "acoes": "Ações",
+            "vazio": "Não existem outros utilizadores registados."
+        },
+        "botoes": {
+            "guardar": "Guardar",
+            "eliminar": "Eliminar"
+        },
+        "popups": {
+            "erro_carregar": "Não foi possível carregar os utilizadores.",
+            "sucesso_titulo": "Sucesso",
+            "permissoes_atualizadas": "Permissões do utilizador atualizadas.",
+            "erro_titulo": "Erro",
+            "falha_atualizar": "Falha ao atualizar as permissões do utilizador.",
+            "confirmar_eliminacao": "Confirmar Eliminação",
+            "apagar_conta_msg": "Tens a certeza que desejas eliminar esta conta? Esta ação irá desativar a conta.",
+            "eliminar": "Eliminar",
+            "cancelar": "Cancelar",
+            "conta_eliminada": "Conta Eliminada",
+            "conta_eliminada_msg": "A conta do utilizador foi eliminada/desativada com sucesso.",
+            "erro_eliminar_msg": "Não foi possível eliminar a conta do utilizador."
+        }
     }
 }

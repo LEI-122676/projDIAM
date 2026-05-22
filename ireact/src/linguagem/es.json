@@ -298,5 +298,35 @@
         "chocolate": "Chocolate",
         "canela": "Canela",
         "salsa": "Perejil"
+    },
+    "admin": {
+        "gerir_utilizadores": "Gestionar Usuarios",
+        "criar_utilizador": "Crear Usuario",
+        "tabela": {
+            "username": "Nombre de usuario",
+            "nome_completo": "Nombre Completo",
+            "email": "Email",
+            "permissao": "Permiso",
+            "acoes": "Acciones",
+            "vazio": "No hay otros usuarios registrados."
+        },
+        "botoes": {
+            "guardar": "Guardar",
+            "eliminar": "Eliminar"
+        },
+        "popups": {
+            "erro_carregar": "No se pudieron cargar los usuarios.",
+            "sucesso_titulo": "Éxito",
+            "permissoes_atualizadas": "Permisos de usuario actualizados.",
+            "erro_titulo": "Error",
+            "falha_atualizar": "No se pudieron actualizar los permisos del usuario.",
+            "confirmar_eliminacao": "Confirmar Eliminación",
+            "apagar_conta_msg": "¿Estás seguro de que deseas eliminar esta cuenta? Esta acción desactivará la cuenta.",
+            "eliminar": "Eliminar",
+            "cancelar": "Cancelar",
+            "conta_eliminada": "Cuenta Eliminada",
+            "conta_eliminada_msg": "La cuenta del usuario fue eliminada/desactivada con éxito.",
+            "erro_eliminar_msg": "No se pudo eliminar la cuenta del usuario."
+        }
     }
 }

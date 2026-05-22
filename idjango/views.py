@@ -637,3 +637,9 @@ def feedback_stats(request):
         'comentarios_recentes': comments_serializer.data,
         'total_respostas': feedbacks.count()
     }, status=status.HTTP_200_OK)
+
+from django.middleware.csrf import get_token
+from django.http import JsonResponse
+
+def csrf(request):
+    return JsonResponse({'csrfToken': get_token(request)})
