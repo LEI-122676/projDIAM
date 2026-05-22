@@ -477,6 +477,25 @@ html, body, #root {
     border-color: #2E4A35;
 }
 
+.auth-password-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.auth-password-eye {
+    position: absolute;
+    right: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #716259;
+    padding: 0;
+    outline: none;
+}
+
 /* BOTÕES */
 .btn-auth {
     background-color: #344938; /* Verde escuro da imagem */
