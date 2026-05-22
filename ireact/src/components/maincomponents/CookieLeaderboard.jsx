@@ -49,7 +49,7 @@ const CookieLeaderboard = () => {
         <div className="leaderboard-section">
             <div className="leaderboard-header">
                 <img src={cookieImg} alt="Cookie" className="leaderboard-cookie-icon" />
-                <h2 className="leaderboard-title">Top Cookie Clickers</h2>
+                <h2 className="leaderboard-title">{t('cookie_leaderboard.top_clickers')}</h2>
             </div>
             <div className="leaderboard-container">
                 {paddedLeaderboard.map((user, index) => (
@@ -64,7 +64,7 @@ const CookieLeaderboard = () => {
                         </div>
                         <div className="leaderboard-score">
                             <span className="score-value">{user.cookie_clicks.toLocaleString?.() ?? user.cookie_clicks}</span>
-                            {!user.isPlaceholder && <span className="score-label">cookies</span>}
+                            {!user.isPlaceholder && <span className="score-label">{t('cookie_leaderboard.cookies')}</span>}
                         </div>
                     </div>
                 ))}

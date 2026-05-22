@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
@@ -11,6 +12,7 @@ import { getCSRFToken } from '../../utils/csrf.js';
 const GerirUtilizadores = () => {
     const URL_BASE = 'http://localhost:8000';
     const URL_UTILIZADORES = `${URL_BASE}/idjango/api/utilizadores/`;
+    const { t } = useLanguage();
 
     const navigate = useNavigate();
     const [utilizadores, setUtilizadores] = useState([]);
@@ -37,10 +39,10 @@ const GerirUtilizadores = () => {
                 console.error("Erro ao procurar utilizadores:", err);
                 setPopupConfig({
                     isOpen: true,
-                    title: 'Erro',
-                    message: 'Não foi possível carregar os utilizadores.',
+                    title: t('admin.popups.erro'),
+                    message: t('admin.popups.nao_possivel_carregar'),
                     singleButton: true,
-                    confirmText: 'OK',
+                    confirmText: t('comum.ok'),
                     onConfirm: closePopup,
                     onCancel: closePopup
                 });
@@ -79,10 +81,10 @@ const GerirUtilizadores = () => {
             .then(() => {
                 setPopupConfig({
                     isOpen: true,
-                    title: 'Sucesso',
-                    message: `Permissões do utilizador ${user.username} atualizadas para ${user.role}.`,
+                    title: t('admin.popups.sucesso'),
+                    message: t('admin.popups.permissoes_atualizadas'),
                     singleButton: true,
-                    confirmText: 'OK',
+                    confirmText: t('comum.ok'),
                     onConfirm: closePopup,
                     onCancel: closePopup
                 });
@@ -92,10 +94,10 @@ const GerirUtilizadores = () => {
                 console.error("Erro ao atualizar papel:", err);
                 setPopupConfig({
                     isOpen: true,
-                    title: 'Erro',
-                    message: 'Falha ao atualizar as permissões do utilizador.',
+                    title: t('admin.popups.erro'),
+                    message: t('admin.popups.falha_atualizar_permissoes'),
                     singleButton: true,
-                    confirmText: 'OK',
+                    confirmText: t('comum.ok'),
                     onConfirm: closePopup,
                     onCancel: closePopup
                 });
@@ -105,11 +107,11 @@ const GerirUtilizadores = () => {
     const handleDeleteUser = (user) => {
         setPopupConfig({
             isOpen: true,
-            title: 'Confirmar Eliminação',
-            message: `Tens a certeza que desejas eliminar a conta de ${user.nome} ${user.apelido} (${user.username})? Esta ação irá desativar a conta.`,
+            title: t('admin.popups.confirmar_eliminacao'),
+            message: t('admin.popups.confirmar_eliminacao_msg'),
             singleButton: false,
-            confirmText: 'Eliminar',
-            cancelText: 'Cancelar',
+            confirmText: t('admin.eliminar'),
+            cancelText: t('comum.cancelar'),
             onConfirm: () => {
                 axios.delete(`${URL_UTILIZADORES}${user.id}`, { 
                     headers: { 'X-CSRFToken': getCSRFToken() },
@@ -118,10 +120,10 @@ const GerirUtilizadores = () => {
                     .then(() => {
                         setPopupConfig({
                             isOpen: true,
-                            title: 'Conta Eliminada',
-                            message: 'A conta do utilizador foi eliminada/desativada com sucesso.',
+                            title: t('admin.popups.conta_eliminada'),
+                            message: t('admin.popups.conta_eliminada_msg'),
                             singleButton: true,
-                            confirmText: 'OK',
+                            confirmText: t('comum.ok'),
                             onConfirm: () => {
                                 closePopup();
                                 fetchUtilizadores();
@@ -133,10 +135,10 @@ const GerirUtilizadores = () => {
                         console.error("Erro ao eliminar conta:", err);
                         setPopupConfig({
                             isOpen: true,
-                            title: 'Erro',
-                            message: 'Não foi possível eliminar a conta do utilizador.',
+                            title: t('admin.popups.erro'),
+                            message: t('admin.popups.erro_eliminar_conta'),
                             singleButton: true,
-                            confirmText: 'OK',
+                            confirmText: t('comum.ok'),
                             onConfirm: closePopup,
                             onCancel: closePopup
                         });
@@ -153,9 +155,9 @@ const GerirUtilizadores = () => {
                 <Sidebar />
                 <main className="content-profile">
                     <div className="admin-actions-header">
-                        <h1 className="page-title-underline">Gerir Utilizadores</h1>
+                        <h1 className="page-title-underline">{t('admin.gerir_utilizadores')}</h1>
                         <button className="btn-create-submit" onClick={() => navigate('/admin/criar-utilizador')}>
-                            ➕ Criar Utilizador
+                            ➕ {t('admin.criar_utilizador')}
                         </button>
                     </div>
 
@@ -164,10 +166,10 @@ const GerirUtilizadores = () => {
                             <thead>
                                 <tr>
                                     <th>Username</th>
-                                    <th>Nome Completo</th>
+                                    <th>{t('admin.nome_completo')}</th>
                                     <th>Email</th>
-                                    <th>Permissão</th>
-                                    <th>Ações</th>
+                                    <th>{t('admin.permissao')}</th>
+                                    <th>{t('admin.acoes')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -197,13 +199,13 @@ const GerirUtilizadores = () => {
                                                     disabled={!hasChanges}
                                                     onClick={() => handleSaveRole(user)}
                                                 >
-                                                    Guardar
+                                                    {t('admin.guardar')}
                                                 </button>
                                                 <button
                                                     className="admin-btn-delete"
                                                     onClick={() => handleDeleteUser(user)}
                                                 >
-                                                    Eliminar
+                                                    {t('admin.eliminar')}
                                                 </button>
                                             </td>
                                         </tr>
@@ -211,7 +213,7 @@ const GerirUtilizadores = () => {
                                 })}
                                 {utilizadores.length === 0 && (
                                     <tr>
-                                        <td colSpan="5" className="admin-table-empty">Não existem outros utilizadores registados.</td>
+                                        <td colSpan="5" className="admin-table-empty">{t('admin.nao_existem_utilizadores')}</td>
                                     </tr>
                                 )}
                             </tbody>
@@ -226,8 +228,8 @@ const GerirUtilizadores = () => {
                 title={popupConfig.title}
                 message={popupConfig.message}
                 singleButton={popupConfig.singleButton}
-                confirmText={popupConfig.confirmText || 'OK'}
-                cancelText={popupConfig.cancelText || 'Cancelar'}
+                confirmText={popupConfig.confirmText || t('comum.ok')}
+                cancelText={popupConfig.cancelText || t('comum.cancelar')}
                 onConfirm={popupConfig.onConfirm}
                 onCancel={popupConfig.onCancel}
             />
