@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
-import Footer from '../maincomponents/Footer.jsx';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../../css/styles.css';
@@ -173,9 +172,8 @@ const FeedbackPage = () => {
             <div className="main-wrapper">
                 <Sidebar />
                 <main className="content-profile">
-                    <div className="feedback-container" style={{ maxWidth: '100%', margin: '0', marginBottom: '50px' }}>
+                    <div className="feedback-container" style={{ maxWidth: '900px', margin: '0 auto' }}>
                         <h1 className="page-title-underline">{t('feedback.titulo')}</h1>
-                        <p style={{ color: '#716259', marginBottom: '30px', fontSize: '1.1rem', textAlign: 'left' }}>{t('feedback.subtitulo')}</p>
                         
                         <div className="profile-layout-container" style={{ flexDirection: 'column', gap: '30px' }}>
                             <div className="content-box-light" style={{ width: '100%' }}>
@@ -200,7 +198,7 @@ const FeedbackPage = () => {
                                 </div>
 
                                 <h3 className="section-subtitle" style={{ marginTop: '30px' }}>{t('feedback.diz_nos_porque')}</h3>
-                                <textarea className="auth-input" style={{ minHeight: '100px', width: '100%', resize: 'none' }}
+                                <textarea className="auth-input" style={{ minHeight: '100px', width: '100%', resize: 'vertical' }}
                                     placeholder={t('feedback.placeholder_comentario')}
                                     value={comentarioLivre} onChange={e => setComentarioLivre(e.target.value)}
                                     maxLength="150"></textarea>
@@ -210,9 +208,9 @@ const FeedbackPage = () => {
                                 </div>
 
                                 <div style={{ display: 'flex', gap: '15px', marginTop: '10px' }}>
-                                    <button className="btn-create-submit" onClick={handleSubmit}>{t('feedback.submeter_feedback')}</button>
+                                    <button className="btn-create-submit" style={{ flex: 1 }} onClick={handleSubmit}>{t('feedback.submeter_feedback')}</button>
                                     {hasFeedback && (
-                                        <button className="btn-profile-pill secondary" style={{ color: 'red', borderColor: 'red' }} onClick={handleDelete}>{t('feedback.remover_feedback')}</button>
+                                        <button className="btn-create-submit" style={{ flex: 1, backgroundColor: 'transparent', color: 'red', border: '1px solid red' }} onClick={handleDelete}>{t('feedback.remover_feedback')}</button>
                                     )}
                                 </div>
                             </div>
@@ -245,7 +243,6 @@ const FeedbackPage = () => {
                             )}
                         </div>
                     </div>
-                    <Footer />
                 </main>
             </div>
             <PopupModal isOpen={popupConfig.isOpen} title={popupConfig.title} message={popupConfig.message} singleButton={popupConfig.singleButton} confirmText={popupConfig.confirmText} cancelText={popupConfig.cancelText} onConfirm={popupConfig.onConfirm} onCancel={popupConfig.onCancel} />

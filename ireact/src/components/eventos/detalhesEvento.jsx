@@ -100,7 +100,7 @@ const VerEvento = () => {
             }
 
             if (!dataEvento || !horaInicio) {
-                setContagem("Sem data/hora");
+                setContagem(t('eventos.sem_data_hora'));
                 return;
             }
 
@@ -109,7 +109,7 @@ const VerEvento = () => {
             const dif = Math.floor((dataInicioEvento - dataAtual) / 1000);
             
             if (dif <= 0) {
-                setContagem("O evento começou!");
+                setContagem(t('eventos.evento_comecou'));
                 return;
             }
 
@@ -247,9 +247,9 @@ const VerEvento = () => {
                                 </div>
                                 
                                 <div className="step-detail">
-                                    <label className="section-subtitle">Sobre o Evento</label>
+                                    <label className="section-subtitle">{t('eventos.sobre_evento')}</label>
                                     <div className="content-box-light text-black event-description-box" style={{ marginTop: '8px' }}>
-                                        {evento.descricao || "Este evento não possui uma descrição detalhada."}
+                                        {evento.descricao || t('eventos.sem_descricao')}
                                     </div>
                                 </div>
                             </div>
@@ -259,14 +259,14 @@ const VerEvento = () => {
                                     📅 {evento.data_evento ? formatarDataExibicao(evento.data_evento.substring(0, 10)) : t('eventos.sem_data')}
                                 </div>
                                 <div className="step-nav-item step-nav-item-default">
-                                    ⏳ Contagem Decrescente: <br />{contagem || "A calcular..."}
+                                    ⏳ {t('eventos.contagem_decrescente')} <br />{contagem || t('eventos.a_calcular')}
                                 </div>
                                 <div className="step-nav-item step-nav-item-default">
                                     <table className="horario-row">
                                         <thead>
                                             <tr>
-                                                <th>🕒 Atividade</th>
-                                                <th>🕒 Horários</th>
+                                                <th>🕒 {t('eventos.atividade')}</th>
+                                                <th>🕒 {t('eventos.horarios')}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -280,11 +280,11 @@ const VerEvento = () => {
                                     </table>
                                 </div>
                                 <div className="step-nav-item step-nav-item-default">
-                                    🔢 Capacidade Máxima: {evento.capacidade_max || 5} pessoas
+                                    🔢 {t('eventos.capacidade_maxima')} {evento.capacidade_max || 5} {t('eventos.pessoas')}
                                 </div>
 
                                 <div className="view-actions-group mt-auto">
-                                    <button className="btn-cancel" onClick={() => navigate(-1)}>Voltar</button>
+                                    <button className="btn-cancel" onClick={() => navigate(-1)}>{t('comum.voltar')}</button>
 
                                     {(Number(evento.criador) !== Number(utilizadorId) || isAdmin) && (
                                         <button

@@ -1,19 +1,18 @@
 import { useState, useEffect } from 'react';
 import { getFieldLimits, validateInput } from '../../utils/validation.js';
-import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
-import Footer from '../maincomponents/Footer.jsx';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import '../../css/styles.css';
 import axios from 'axios';
 import { getCSRFToken } from '../../utils/csrf.js';
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 
 const AdminCriarUtilizador = () => {
+    const { t } = useLanguage();
     const URL_BASE = 'http://localhost:8000';
     const CREATE_USER_URL = `${URL_BASE}/idjango/api/admin/create-user/`;
-    const { t } = useLanguage();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         firstName: '',
@@ -50,8 +49,8 @@ const AdminCriarUtilizador = () => {
         if (!formData.firstName || !formData.lastName || !formData.username || !formData.email || !formData.password) {
             setModalConfig({
                 isOpen: true,
-                title: t('admin.popups.aviso'),
-                message: t('admin.popups.preencher_obrigatorios'),
+                title: 'Aviso',
+                message: 'Preencha todos os campos obrigatórios (*).',
                 onConfirm: () => setModalConfig({ ...modalConfig, isOpen: false })
             });
             return;
@@ -61,8 +60,8 @@ const AdminCriarUtilizador = () => {
         if (!nameValidation.isValid) {
             setModalConfig({
                 isOpen: true,
-                title: t('admin.popups.erro_validacao'),
-                message: `${t('perfil.nome')}: ${nameValidation.error}`,
+                title: 'Erro de Validação',
+                message: `Nome: ${nameValidation.error}`,
                 onConfirm: () => setModalConfig({ ...modalConfig, isOpen: false })
             });
             return;
@@ -72,8 +71,8 @@ const AdminCriarUtilizador = () => {
         if (!lastNameValidation.isValid) {
             setModalConfig({
                 isOpen: true,
-                title: t('admin.popups.erro_validacao'),
-                message: `${t('perfil.apelido')}: ${lastNameValidation.error}`,
+                title: 'Erro de Validação',
+                message: `Apelido: ${lastNameValidation.error}`,
                 onConfirm: () => setModalConfig({ ...modalConfig, isOpen: false })
             });
             return;
@@ -83,7 +82,7 @@ const AdminCriarUtilizador = () => {
         if (!usernameValidation.isValid) {
             setModalConfig({
                 isOpen: true,
-                title: t('admin.popups.erro_validacao'),
+                title: 'Erro de Validação',
                 message: `Username: ${usernameValidation.error}`,
                 onConfirm: () => setModalConfig({ ...modalConfig, isOpen: false })
             });
@@ -110,8 +109,8 @@ const AdminCriarUtilizador = () => {
             if (response.status === 201) {
                 setModalConfig({
                     isOpen: true,
-                    title: t('admin.popups.sucesso'),
-                    message: `${t('admin.popups.utilizador_criado')} Role: ${formData.role}`,
+                    title: 'Sucesso',
+                    message: `Utilizador criado com sucesso! Papel: ${formData.role}`,
                     onConfirm: () => {
                         setModalConfig({ ...modalConfig, isOpen: false });
                         navigate('/admin/gerir-utilizadores');
@@ -121,8 +120,8 @@ const AdminCriarUtilizador = () => {
         } catch (error) {
             setModalConfig({
                 isOpen: true,
-                title: t('admin.popups.erro'),
-                message: error.response?.data?.msg || t('admin.popups.erro_criar_utilizador'),
+                title: 'Erro',
+                message: error.response?.data?.msg || 'Erro ao criar utilizador',
                 onConfirm: () => setModalConfig({ ...modalConfig, isOpen: false })
             });
         }
@@ -139,7 +138,7 @@ const AdminCriarUtilizador = () => {
                     <div className="create-recipe-container">
                         <form onSubmit={handleSubmit} className="recipe-form-section">
                             <div className="form-group">
-                                <label>{t('perfil.nome')}* <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({formData.firstName.length}/{limits.user_first_name_max_length || 30})</span></label>
+                                <label>{t('autenticacao.nome')}* <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({formData.firstName.length}/{limits.user_first_name_max_length || 30})</span></label>
                                 <input 
                                     type="text" 
                                     name="firstName" 
@@ -152,7 +151,7 @@ const AdminCriarUtilizador = () => {
                             </div>
 
                             <div className="form-group">
-                                <label>{t('perfil.apelido')}* <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({formData.lastName.length}/{limits.user_last_name_max_length || 30})</span></label>
+                                <label>{t('autenticacao.apelido')}* <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({formData.lastName.length}/{limits.user_last_name_max_length || 30})</span></label>
                                 <input 
                                     type="text" 
                                     name="lastName" 
@@ -165,7 +164,7 @@ const AdminCriarUtilizador = () => {
                             </div>
 
                             <div className="form-group">
-                                <label>Username* <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({formData.username.length}/{limits.user_username_max_length || 30})</span></label>
+                                <label>{t('autenticacao.username')}* <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({formData.username.length}/{limits.user_username_max_length || 30})</span></label>
                                 <input 
                                     type="text" 
                                     name="username" 
@@ -178,7 +177,7 @@ const AdminCriarUtilizador = () => {
                             </div>
 
                             <div className="form-group">
-                                <label>Email*</label>
+                                <label>{t('autenticacao.email')}*</label>
                                 <input 
                                     type="email" 
                                     name="email" 
@@ -202,7 +201,7 @@ const AdminCriarUtilizador = () => {
                             </div>
 
                             <div className="form-group">
-                                <label>{t('admin.permissao')}*</label>
+                                <label>{t('admin.tabela.permissao')}*</label>
                                 <select 
                                     name="role" 
                                     className="input-beige text-black event-metadata-select" 
@@ -218,14 +217,14 @@ const AdminCriarUtilizador = () => {
 
                         <div className="recipe-image-section">
                             <div className="form-group admin-create-image-group">
-                                <label className="admin-create-image-label">{t('admin.foto_perfil')}</label>
+                                <label className="admin-create-image-label">{t('admin.foto_perfil') || 'Foto de Perfil'}</label>
                                 <div className="image-upload-placeholder" onClick={() => document.getElementById('profilePicInput').click()}>
                                     {previewUrl ? (
                                         <img src={previewUrl} alt="Preview" className="admin-create-preview-img" />
                                     ) : (
                                         <div className="admin-create-upload-info">
                                             <span className="admin-create-upload-icon">👤</span>
-                                            <span className="image-upload-text">{t('admin.selecionar_foto')}</span>
+                                            <span className="image-upload-text">Selecionar Foto</span>
                                         </div>
                                     )}
                                 </div>
@@ -238,13 +237,12 @@ const AdminCriarUtilizador = () => {
                                 />
                             </div>
 
-                            <div className="admin-create-actions mt-20">
+                            <div className="create-actions-group">
                                 <button type="button" className="btn-cancel admin-create-btn-flex" onClick={() => navigate(-1)}>{t('comum.cancelar')}</button>
                                 <button type="button" className="btn-create-submit admin-create-btn-flex" onClick={handleSubmit}>{t('admin.criar_utilizador')}</button>
                             </div>
                         </div>
                     </div>
-                    <Footer />
                 </main>
             </div>
 

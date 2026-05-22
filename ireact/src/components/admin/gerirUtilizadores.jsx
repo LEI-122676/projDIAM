@@ -1,18 +1,17 @@
 import { useState, useEffect } from 'react';
-import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
-import Footer from '../maincomponents/Footer.jsx';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import axios from 'axios';
 import '../../css/styles.css';
 import { getCSRFToken } from '../../utils/csrf.js';
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 
 const GerirUtilizadores = () => {
+    const { t } = useLanguage();
     const URL_BASE = 'http://localhost:8000';
     const URL_UTILIZADORES = `${URL_BASE}/idjango/api/utilizadores/`;
-    const { t } = useLanguage();
 
     const navigate = useNavigate();
     const [utilizadores, setUtilizadores] = useState([]);
@@ -39,10 +38,10 @@ const GerirUtilizadores = () => {
                 console.error("Erro ao procurar utilizadores:", err);
                 setPopupConfig({
                     isOpen: true,
-                    title: t('admin.popups.erro'),
-                    message: t('admin.popups.nao_possivel_carregar'),
+                    title: t('admin.popups.erro_titulo'),
+                    message: t('admin.popups.erro_carregar'),
                     singleButton: true,
-                    confirmText: t('comum.ok'),
+                    confirmText: 'OK',
                     onConfirm: closePopup,
                     onCancel: closePopup
                 });
@@ -81,10 +80,10 @@ const GerirUtilizadores = () => {
             .then(() => {
                 setPopupConfig({
                     isOpen: true,
-                    title: t('admin.popups.sucesso'),
-                    message: t('admin.popups.permissoes_atualizadas'),
+                    title: t('admin.popups.sucesso_titulo'),
+                    message: t('admin.popups.permissoes_atualizadas').replace('{username}', user.username).replace('{role}', user.role),
                     singleButton: true,
-                    confirmText: t('comum.ok'),
+                    confirmText: 'OK',
                     onConfirm: closePopup,
                     onCancel: closePopup
                 });
@@ -94,10 +93,10 @@ const GerirUtilizadores = () => {
                 console.error("Erro ao atualizar papel:", err);
                 setPopupConfig({
                     isOpen: true,
-                    title: t('admin.popups.erro'),
-                    message: t('admin.popups.falha_atualizar_permissoes'),
+                    title: t('admin.popups.erro_titulo'),
+                    message: t('admin.popups.falha_atualizar'),
                     singleButton: true,
-                    confirmText: t('comum.ok'),
+                    confirmText: 'OK',
                     onConfirm: closePopup,
                     onCancel: closePopup
                 });
@@ -108,10 +107,10 @@ const GerirUtilizadores = () => {
         setPopupConfig({
             isOpen: true,
             title: t('admin.popups.confirmar_eliminacao'),
-            message: t('admin.popups.confirmar_eliminacao_msg'),
+            message: t('admin.popups.apagar_conta_msg').replace('{nome}', `${user.nome} ${user.apelido}`).replace('{username}', user.username),
             singleButton: false,
-            confirmText: t('admin.eliminar'),
-            cancelText: t('comum.cancelar'),
+            confirmText: t('admin.popups.eliminar'),
+            cancelText: t('admin.popups.cancelar'),
             onConfirm: () => {
                 axios.delete(`${URL_UTILIZADORES}${user.id}`, { 
                     headers: { 'X-CSRFToken': getCSRFToken() },
@@ -123,7 +122,7 @@ const GerirUtilizadores = () => {
                             title: t('admin.popups.conta_eliminada'),
                             message: t('admin.popups.conta_eliminada_msg'),
                             singleButton: true,
-                            confirmText: t('comum.ok'),
+                            confirmText: 'OK',
                             onConfirm: () => {
                                 closePopup();
                                 fetchUtilizadores();
@@ -135,10 +134,10 @@ const GerirUtilizadores = () => {
                         console.error("Erro ao eliminar conta:", err);
                         setPopupConfig({
                             isOpen: true,
-                            title: t('admin.popups.erro'),
-                            message: t('admin.popups.erro_eliminar_conta'),
+                            title: t('admin.popups.erro_titulo'),
+                            message: t('admin.popups.erro_eliminar_msg'),
                             singleButton: true,
-                            confirmText: t('comum.ok'),
+                            confirmText: 'OK',
                             onConfirm: closePopup,
                             onCancel: closePopup
                         });
@@ -165,11 +164,11 @@ const GerirUtilizadores = () => {
                         <table className="admin-table">
                             <thead>
                                 <tr>
-                                    <th>Username</th>
-                                    <th>{t('admin.nome_completo')}</th>
-                                    <th>Email</th>
-                                    <th>{t('admin.permissao')}</th>
-                                    <th>{t('admin.acoes')}</th>
+                                    <th>{t('admin.tabela.username')}</th>
+                                    <th>{t('admin.tabela.nome_completo')}</th>
+                                    <th>{t('admin.tabela.email')}</th>
+                                    <th>{t('admin.tabela.permissao')}</th>
+                                    <th>{t('admin.tabela.acoes')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -199,13 +198,13 @@ const GerirUtilizadores = () => {
                                                     disabled={!hasChanges}
                                                     onClick={() => handleSaveRole(user)}
                                                 >
-                                                    {t('admin.guardar')}
+                                                    {t('admin.botoes.guardar')}
                                                 </button>
                                                 <button
                                                     className="admin-btn-delete"
                                                     onClick={() => handleDeleteUser(user)}
                                                 >
-                                                    {t('admin.eliminar')}
+                                                    {t('admin.botoes.eliminar')}
                                                 </button>
                                             </td>
                                         </tr>
@@ -213,13 +212,12 @@ const GerirUtilizadores = () => {
                                 })}
                                 {utilizadores.length === 0 && (
                                     <tr>
-                                        <td colSpan="5" className="admin-table-empty">{t('admin.nao_existem_utilizadores')}</td>
+                                        <td colSpan="5" className="admin-table-empty">{t('admin.tabela.vazio')}</td>
                                     </tr>
                                 )}
                             </tbody>
                         </table>
                     </div>
-                    <Footer />
                 </main>
             </div>
 
@@ -228,8 +226,8 @@ const GerirUtilizadores = () => {
                 title={popupConfig.title}
                 message={popupConfig.message}
                 singleButton={popupConfig.singleButton}
-                confirmText={popupConfig.confirmText || t('comum.ok')}
-                cancelText={popupConfig.cancelText || t('comum.cancelar')}
+                confirmText={popupConfig.confirmText || 'OK'}
+                cancelText={popupConfig.cancelText || 'Cancelar'}
                 onConfirm={popupConfig.onConfirm}
                 onCancel={popupConfig.onCancel}
             />

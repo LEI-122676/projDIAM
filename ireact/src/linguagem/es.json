@@ -3,7 +3,17 @@
         "ok": "OK",
         "cancelar": "Cancelar",
         "iniciar_sessao": "Iniciar Sesión",
-        "voltar": "Volver"
+        "voltar": "Volver",
+        "anterior": "Anterior",
+        "seguinte": "Siguiente",
+        "pagina": "Página",
+        "de": "de"
+    },
+    "footer": {
+        "sobre_nos": "Sobre Nosotros",
+        "termos": "Términos de Servicio",
+        "privacidade": "Política de Privacidad",
+        "direitos": "© 2026 Flavor & Fun. Todos los derechos reservados."
     },
     "header": {
         "sair": "Salir",
@@ -166,6 +176,12 @@
         "horario": "Horario*",
         "capacidade": "Capacidad*",
         "pessoas_max": "personas Max.",
+        "sem_data_hora": "Sin fecha/hora",
+        "evento_comecou": "¡El evento ha comenzado!",
+        "contagem_decrescente": "Cuenta regresiva:",
+        "a_calcular": "Calculando...",
+        "atividade": "Actividad",
+        "horarios": "Horarios",
         "popups": {
             "acesso_restrito_criar": "¡Necesitas iniciar sesión para crear un nuevo evento. Crea una cuenta o inicia sesión para crear tu evento!",
             "acesso_restrito_inscrever": "inscribirte en este evento",
@@ -299,50 +315,35 @@
         "canela": "Canela",
         "salsa": "Perejil"
     },
-    "footer": {
-        "sobre_nos": "Sobre Nosotros",
-        "privacidade": "Privacidad",
-        "termos_de_uso": "Términos de Uso",
-        "contactos": "Contactos",
-        "direitos_reservados": "Todos los derechos reservados."
-    },
-    "paginacao": {
-        "anterior": "Anterior",
-        "seguinte": "Siguiente",
-        "pagina": "Página",
-        "de": "de"
-    },
-    "cookie_leaderboard": {
-        "top_clickers": "Top Cookie Clickers",
-        "cookies": "cookies"
-    },
     "admin": {
         "gerir_utilizadores": "Gestionar Usuarios",
         "criar_utilizador": "Crear Usuario",
-        "nome_completo": "Nombre Completo",
-        "permissao": "Permiso",
-        "acoes": "Acciones",
-        "guardar": "Guardar",
-        "eliminar": "Eliminar",
-        "nao_existem_utilizadores": "No hay otros usuarios registrados.",
         "foto_perfil": "Foto de Perfil",
-        "selecionar_foto": "Seleccionar Foto",
+        "tabela": {
+            "username": "Nombre de usuario",
+            "nome_completo": "Nombre Completo",
+            "email": "Email",
+            "permissao": "Permiso",
+            "acoes": "Acciones",
+            "vazio": "No hay otros usuarios registrados."
+        },
+        "botoes": {
+            "guardar": "Guardar",
+            "eliminar": "Eliminar"
+        },
         "popups": {
-            "erro": "Error",
-            "sucesso": "Éxito",
-            "nao_possivel_carregar": "No se pudieron cargar los usuarios.",
-            "permissoes_atualizadas": "Permisos de usuario actualizados con éxito.",
-            "falha_atualizar_permissoes": "Fallo al actualizar los permisos del usuario.",
+            "erro_carregar": "No se pudieron cargar los usuarios.",
+            "sucesso_titulo": "Éxito",
+            "permissoes_atualizadas": "Permisos de usuario actualizados.",
+            "erro_titulo": "Error",
+            "falha_atualizar": "No se pudieron actualizar los permisos del usuario.",
             "confirmar_eliminacao": "Confirmar Eliminación",
-            "confirmar_eliminacao_msg": "¿Estás seguro de que deseas eliminar esta cuenta? Esta acción desactivará la cuenta del usuario.",
+            "apagar_conta_msg": "¿Estás seguro de que deseas eliminar esta cuenta? Esta acción desactivará la cuenta.",
+            "eliminar": "Eliminar",
+            "cancelar": "Cancelar",
             "conta_eliminada": "Cuenta Eliminada",
             "conta_eliminada_msg": "La cuenta del usuario fue eliminada/desactivada con éxito.",
-            "erro_eliminar_conta": "No se pudo eliminar la cuenta del usuario.",
-            "aviso": "Aviso",
-            "preencher_obrigatorios": "Por favor, rellena todos los campos obligatorios (*).",
-            "erro_validacao": "Error de Validación",
-            "utilizador_criado": "¡Usuario creado con éxito!",
-            "erro_criar_utilizador": "Error al crear el usuario"
+            "erro_eliminar_msg": "No se pudo eliminar la cuenta del usuario."
         }
     }
 }

@@ -638,6 +638,12 @@ def feedback_stats(request):
         'total_respostas': feedbacks.count()
     }, status=status.HTTP_200_OK)
 
+from django.middleware.csrf import get_token
+from django.http import JsonResponse
+
+def csrf(request):
+    return JsonResponse({'csrfToken': get_token(request)})
+
 @api_view(['GET'])
 @permission_classes([AllowAny])
 @authentication_classes([])

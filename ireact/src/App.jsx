@@ -15,6 +15,7 @@ import Login from "./components/perfil-frigorifico-login/login.jsx";
 import AdminCriarUtilizador from "./components/admin/criarUtilizador.jsx";
 import GerirUtilizadores from "./components/admin/gerirUtilizadores.jsx";
 import FeedbackPage from "./components/feedback/feedback.jsx";
+import DynamicBackground from "./components/maincomponents/DynamicBackground.jsx";
 
 import { LanguageProvider } from './linguagem/LanguageContext.jsx';
 
@@ -22,9 +23,9 @@ function App() {
     return (
     <LanguageProvider>
       <BrowserRouter>
+        <DynamicBackground />
         <Routes>
           <Route path="/" element={<Homepage/>} />
-          
           <Route path="/perfil" element={<Perfil/>} />
           <Route path="/perfil/editar-perfil" element={<EditarPerfil/>} />
           <Route path="/perfil/meus-eventos" element={<MeusEventos/>} />
