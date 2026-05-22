@@ -1,6 +1,7 @@
-import 'react';
+import { useLanguage } from '../../linguagem/LanguageContext';
 
 const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => {
+    const { t } = useLanguage();
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
     if (totalPages <= 1) return null;
@@ -12,15 +13,15 @@ const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => 
                 onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
                 disabled={currentPage === 1}
             >
-                Anterior
+                {t('comum.anterior')}
             </button>
             
             <span className="pagination-page-display">
-                Página
+                {t('comum.pagina')}
                 <select
                     value={currentPage}
                     onChange={(e) => onPageChange(Number(e.target.value))}
-                    className="page-select-dropdown"
+                    className="page-select-dropdown input-beige text-black"
                 >
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map(num => (
                         <option key={num} value={num}>
@@ -28,7 +29,7 @@ const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => 
                         </option>
                     ))}
                 </select>
-                de {totalPages}
+                {t('comum.de')} {totalPages}
             </span>
             
             <button
@@ -36,7 +37,7 @@ const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => 
                 onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
                 disabled={currentPage === totalPages}
             >
-                Seguinte
+                {t('comum.seguinte')}
             </button>
         </div>
     );

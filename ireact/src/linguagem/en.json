@@ -3,7 +3,17 @@
         "ok": "OK",
         "cancelar": "Cancel",
         "iniciar_sessao": "Log In",
-        "voltar": "Back"
+        "voltar": "Back",
+        "anterior": "Previous",
+        "seguinte": "Next",
+        "pagina": "Page",
+        "de": "of"
+    },
+    "footer": {
+        "sobre_nos": "About Us",
+        "termos": "Terms of Service",
+        "privacidade": "Privacy Policy",
+        "direitos": "© 2026 Flavor & Fun. All rights reserved."
     },
     "header": {
         "sair": "Log Out",
