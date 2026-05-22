@@ -298,5 +298,51 @@
         "chocolate": "Chocolate",
         "canela": "Canela",
         "salsa": "Salsa"
+    },
+    "footer": {
+        "sobre_nos": "Sobre Nós",
+        "privacidade": "Privacidade",
+        "termos_de_uso": "Termos de Uso",
+        "contactos": "Contactos",
+        "direitos_reservados": "Todos os direitos reservados."
+    },
+    "paginacao": {
+        "anterior": "Anterior",
+        "seguinte": "Seguinte",
+        "pagina": "Página",
+        "de": "de"
+    },
+    "cookie_leaderboard": {
+        "top_clickers": "Top Cookie Clickers",
+        "cookies": "cookies"
+    },
+    "admin": {
+        "gerir_utilizadores": "Gerir Utilizadores",
+        "criar_utilizador": "Criar Utilizador",
+        "nome_completo": "Nome Completo",
+        "permissao": "Permissão",
+        "acoes": "Ações",
+        "guardar": "Guardar",
+        "eliminar": "Eliminar",
+        "nao_existem_utilizadores": "Não existem outros utilizadores registados.",
+        "foto_perfil": "Foto de Perfil",
+        "selecionar_foto": "Selecionar Foto",
+        "popups": {
+            "erro": "Erro",
+            "sucesso": "Sucesso",
+            "nao_possivel_carregar": "Não foi possível carregar os utilizadores.",
+            "permissoes_atualizadas": "Permissões do utilizador atualizadas com sucesso.",
+            "falha_atualizar_permissoes": "Falha ao atualizar as permissões do utilizador.",
+            "confirmar_eliminacao": "Confirmar Eliminação",
+            "confirmar_eliminacao_msg": "Tens a certeza que desejas eliminar esta conta? Esta ação irá desativar a conta do utilizador.",
+            "conta_eliminada": "Conta Eliminada",
+            "conta_eliminada_msg": "A conta do utilizador foi eliminada/desativada com sucesso.",
+            "erro_eliminar_conta": "Não foi possível eliminar a conta do utilizador.",
+            "aviso": "Aviso",
+            "preencher_obrigatorios": "Preencha todos os campos obrigatórios (*).",
+            "erro_validacao": "Erro de Validação",
+            "utilizador_criado": "Utilizador criado com sucesso!",
+            "erro_criar_utilizador": "Erro ao criar utilizador"
+        }
     }
 }
