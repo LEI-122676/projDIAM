@@ -99,12 +99,13 @@ const ExplorarEventos = () => {
     // 2. CREATED THIS FORWARDED CUSTOM INPUT COMPONENT TO PASS REFS SAFELY
     const CustomCalendarInput = forwardRef(({ onClick }, ref) => (
         <button className="calendar-filter-wrapper" onClick={onClick} ref={ref} type="button">
-            <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg mr-6" />
-            <img src={iconeCalendario} alt="Calendário" className="recipe-icon-svg mr-8" />
+            <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg icon-mr-8" />
             
             <span className={`calendar-display-text font-600 ${dataFiltro ? "mr-4" : ""}`}>
                 {formatarDataExibicao(dataFiltro)}
             </span>
+            
+            <img src={iconeCalendario} alt="Calendário" className="recipe-icon-svg icon-ml-8" />
             
             {dataFiltro && (
                 <button 
