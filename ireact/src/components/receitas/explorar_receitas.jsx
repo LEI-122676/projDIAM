@@ -8,11 +8,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 
 const ExplorarReceitas = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const autoFilterAttempted = useRef(false);
+    const { t } = useLanguage();
 
     const URL_BASE = 'http://localhost:8000';
     const RECEITAS_URL = `${URL_BASE}/idjango/api/receitas/`;
@@ -59,10 +61,10 @@ const ExplorarReceitas = () => {
         if (!userId) {
             setPopupConfig({
                 isOpen: true,
-                title: 'Acesso Restrito',
-                message: 'Precisas de iniciar sessão para utilizar o filtro do Frigorífico.',
+                title: t('receitas.popups.acesso_restrito_titulo'),
+                message: t('receitas.popups.acesso_restrito_frigorifico'),
                 singleButton: false,
-                confirmText: 'Iniciar Sessão',
+                confirmText: t('comum.iniciar_sessao'),
                 onConfirm: () => navigate('/login'),
                 onCancel: closePopup
             });
@@ -75,16 +77,16 @@ const ExplorarReceitas = () => {
             return;
         }
 
-        axios.get(`${UTILIZADORES_URL}${userId}/frigorifico`)
+        axios.get(`${UTILIZADORES_URL}${userId}/frigorifico`, { withCredentials: true })
             .then(res => {
                 const ingredientes = res.data.ingredientes;
                 if (!ingredientes || ingredientes.length === 0) {
                     setPopupConfig({
                         isOpen: true,
-                        title: 'Frigorífico Vazio',
-                        message: 'Ainda não tens nenhum ingrediente no teu frigorífico! Queres ir adicioná-los agora?',
+                        title: t('receitas.popups.frigorifico_vazio_titulo'),
+                        message: t('receitas.popups.frigorifico_vazio_msg'),
                         singleButton: false,
-                        confirmText: 'Ir para o Frigorífico',
+                        confirmText: t('receitas.popups.ir_para_frigorifico'),
                         onConfirm: () => navigate('/frigorifico'),
                         onCancel: closePopup
                     });
@@ -97,10 +99,10 @@ const ExplorarReceitas = () => {
                 console.error("Erro ao carregar frigorífico:", err);
                 setPopupConfig({
                     isOpen: true,
-                    title: 'Sem Frigorífico',
-                    message: 'O teu frigorífico está vazio ou ainda não existe. Queres ir adicioná-los agora?',
+                    title: t('receitas.popups.sem_frigorifico_titulo'),
+                    message: t('receitas.popups.sem_frigorifico_msg'),
                     singleButton: false,
-                    confirmText: 'Ir para o Frigorífico',
+                    confirmText: t('receitas.popups.ir_para_frigorifico'),
                     onConfirm: () => navigate('/frigorifico'),
                     onCancel: closePopup
                 });
@@ -119,10 +121,10 @@ const ExplorarReceitas = () => {
         if (!userId) {
             setPopupConfig({
                 isOpen: true,
-                title: 'Acesso Restrito',
-                message: 'Precisas de iniciar sessão para criar uma nova receita. Cria uma conta ou faz login para partilhares as tuas criações culinárias!',
+                title: t('receitas.popups.acesso_restrito_titulo'),
+                message: t('receitas.popups.acesso_restrito_criar'),
                 singleButton: false,
-                confirmText: 'Iniciar Sessão',
+                confirmText: t('comum.iniciar_sessao'),
                 onConfirm: () => navigate('/login'),
                 onCancel: closePopup
             });
@@ -167,13 +169,13 @@ const ExplorarReceitas = () => {
                 <main className="content-profile">
                     <div className="profile-grid profile-grid-full">
 
-                        <h1 className="page-title-underline">Descobrir Receitas</h1>
+                        <h1 className="page-title-underline">{t('receitas.explorar_titulo')}</h1>
 
                         <div className="recipes-action-bar">
                             <div className="recipes-search-container">
                                 <input
                                     type="text"
-                                    placeholder="Pesquisar receitas..."
+                                    placeholder={t('receitas.pesquisar_placeholder')}
                                     className="main-search-input recipe-search-box text-black"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -187,7 +189,7 @@ const ExplorarReceitas = () => {
                                     onClick={handleFridgeFilterToggle}
                                 >
                                     <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg icon-mr-8" />
-                                    Frigorífico
+                                    {t('receitas.filtro_frigorifico')}
                                     <img src={iconeFrig} alt="Frigorifico" className="recipe-icon-svg icon-ml-8" />
                                 </button>
 
@@ -231,7 +233,7 @@ const ExplorarReceitas = () => {
                             })()}
                             {filteredReceitas.length === 0 && (
                                 <div className="text-empty-state-center">
-                                    <p>Nenhuma receita encontrada com estes critérios.</p>
+                                    <p>{t('receitas.nenhuma_receita')}</p>
                                 </div>
                             )}
                         </div>
@@ -251,8 +253,8 @@ const ExplorarReceitas = () => {
                 title={popupConfig.title}
                 message={popupConfig.message}
                 singleButton={popupConfig.singleButton}
-                confirmText={popupConfig.confirmText || 'OK'}
-                cancelText={popupConfig.cancelText || 'Cancelar'}
+                confirmText={popupConfig.confirmText || t('comum.ok')}
+                cancelText={popupConfig.cancelText || t('comum.cancelar')}
                 onConfirm={popupConfig.onConfirm}
                 onCancel={popupConfig.onCancel}
             />

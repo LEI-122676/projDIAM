@@ -8,12 +8,14 @@ import PopupModal from '../maincomponents/popupModal.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
 import { getCSRFToken } from '../../utils/csrf.js';
 import { getFieldLimits, validateInput } from '../../utils/validation.js';
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 
 
 const VerReceita = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const recipeId = location.state?.id;
+    const { t } = useLanguage();
 
     const [receita, setReceita] = useState(null);
     const [dbIngredientes, setDbIngredientes] = useState([]);
@@ -23,6 +25,8 @@ const VerReceita = () => {
     const [isAdmin, setIsAdmin] = useState(false);
 
     const [novoComentario, setNovoComentario] = useState('');
+    const [editingCommentId, setEditingCommentId] = useState(null);
+    const [editingCommentText, setEditingCommentText] = useState('');
     const [novaClassificacao, setNovaClassificacao] = useState(5);
     const [guardado, setGuardado] = useState(false);
     const [isLoadError, setIsLoadError] = useState(false);
@@ -48,10 +52,10 @@ const VerReceita = () => {
     const showLoginPopup = (actionMessage) => {
         setPopupConfig({
             isOpen: true,
-            title: 'Acesso Restrito',
-            message: `Precisas de iniciar sessão para ${actionMessage}. Cria uma conta ou faz login!`,
+            title: t('receitas.popups.acesso_restrito_titulo'),
+            message: `${t('receitas.popups.acesso_restrito_msg_base')}${actionMessage}${t('receitas.popups.acesso_restrito_msg_fim')}`,
             singleButton: false,
-            confirmText: 'Iniciar Sessão',
+            confirmText: t('comum.iniciar_sessao'),
             onConfirm: () => navigate('/login'),
             onCancel: closePopup
         });
@@ -63,7 +67,7 @@ const VerReceita = () => {
             title,
             message,
             singleButton: true,
-            confirmText: 'OK',
+            confirmText: t('comum.ok'),
             onConfirm: closePopup,
             onCancel: closePopup
         });
@@ -149,10 +153,10 @@ const VerReceita = () => {
                 console.error(err);
                 setPopupConfig({
                     isOpen: true,
-                    title: 'Erro',
-                    message: 'Ocorreu um erro ao guardar a receita. Tenta novamente.',
+                    title: t('receitas.popups.erro_titulo'),
+                    message: t('receitas.popups.erro_guardar'),
                     singleButton: true,
-                    confirmText: 'OK',
+                    confirmText: t('comum.ok'),
                     onConfirm: closePopup,
                     onCancel: closePopup
                 });
@@ -162,11 +166,11 @@ const VerReceita = () => {
     const handleDelete = () => {
         setPopupConfig({
             isOpen: true,
-            title: 'Confirmar Eliminação',
-            message: 'Tens a certeza que pretendes apagar esta receita? Esta ação é irreversível.',
+            title: t('receitas.popups.confirmar_eliminacao_titulo'),
+            message: t('receitas.popups.apagar_receita_msg'),
             singleButton: false,
-            confirmText: 'Apagar',
-            cancelText: 'Cancelar',
+            confirmText: t('receitas.popups.apagar'),
+            cancelText: t('comum.cancelar'),
             onConfirm: () => {
                 axios.delete(RECEITA_URL + recipeId, {
                     headers: { 'X-CSRFToken': getCSRFToken() },
@@ -175,10 +179,10 @@ const VerReceita = () => {
                     .then(() => {
                         setPopupConfig({
                             isOpen: true,
-                            title: 'Receita Apagada',
-                            message: 'A tua receita foi removida com sucesso.',
+                            title: t('receitas.popups.receita_apagada_titulo'),
+                            message: t('receitas.popups.receita_apagada_msg'),
                             singleButton: true,
-                            confirmText: 'OK',
+                            confirmText: t('comum.ok'),
                             onConfirm: () => navigate('/receitas'),
                             onCancel: () => navigate('/receitas')
                         });
@@ -187,10 +191,10 @@ const VerReceita = () => {
                         console.error(err);
                         setPopupConfig({
                             isOpen: true,
-                            title: 'Erro ao Apagar',
-                            message: 'Não foi possível apagar a receita. Tenta novamente.',
+                            title: t('receitas.popups.erro_apagar_titulo'),
+                            message: t('receitas.popups.erro_apagar_msg'),
                             singleButton: true,
-                            confirmText: 'OK',
+                            confirmText: t('comum.ok'),
                             onConfirm: closePopup,
                             onCancel: closePopup
                         });
@@ -219,10 +223,10 @@ const VerReceita = () => {
 
             setPopupConfig({
                 isOpen: true,
-                title: 'Avaliação Registada!',
-                message: 'Obrigado pela tua classificação.',
+                title: t('receitas.popups.avaliacao_registada_titulo'),
+                message: t('receitas.popups.avaliacao_registada_msg'),
                 singleButton: true,
-                confirmText: 'OK',
+                confirmText: t('comum.ok'),
                 onConfirm: closePopup,
                 onCancel: closePopup
             });
@@ -243,7 +247,7 @@ const VerReceita = () => {
         const maxLen = limits.comentario_max_length || 150;
         const validation = validateInput(novoComentario, maxLen);
         if (!validation.isValid) {
-            showPopup('Erro de Validação', validation.error);
+            showPopup(t('receitas.popups.erro_validacao_titulo'), validation.error);
             return;
         }
 
@@ -263,7 +267,7 @@ const VerReceita = () => {
             })
             .catch(err => {
                 console.error(err);
-                let message = 'Por favor, tenha atenção à sua linguagem. Não são permitidos palavrões, links ou anúncios no comentário.';
+                let message = t('receitas.popups.atencao_linguagem_msg');
                 if (err.response && err.response.data) {
                     const data = err.response.data;
                     if (typeof data === 'object') {
@@ -279,19 +283,69 @@ const VerReceita = () => {
                         message = data;
                     }
                 }
-                showPopup('Atenção à Linguagem', message);
+                showPopup(t('receitas.popups.atencao_linguagem_titulo'), message);
             });
     };
 
+    const handleDeleteComentario = (comentarioId) => {
+        setPopupConfig({
+            isOpen: true,
+            title: t('receitas.popups.confirmar_eliminacao_titulo'),
+            message: t('receitas.popups.apagar_comentario_msg'),
+            singleButton: false,
+            confirmText: t('receitas.popups.apagar'),
+            cancelText: t('comum.cancelar'),
+            onConfirm: () => {
+                axios.delete(COMENTARIOS_URL + comentarioId, {
+                    headers: { 'X-CSRFToken': getCSRFToken() },
+                    withCredentials: true
+                })
+                .then(() => {
+                    setComentarios(comentarios.filter(c => c.id !== comentarioId));
+                    closePopup();
+                })
+                .catch(err => {
+                    console.error(err);
+                    showPopup('Erro', 'Não foi possível apagar o comentário.');
+                });
+            },
+            onCancel: closePopup
+        });
+    };
+
+    const handleSaveEditComentario = (comentarioId) => {
+        if (!editingCommentText.trim()) return;
+
+        const maxLen = limits.comentario_max_length || 150;
+        const validation = validateInput(editingCommentText, maxLen);
+        if (!validation.isValid) {
+            showPopup('Erro de Validação', validation.error);
+            return;
+        }
+
+        axios.patch(COMENTARIOS_URL + comentarioId, { texto: editingCommentText }, {
+            headers: { 'X-CSRFToken': getCSRFToken() },
+            withCredentials: true
+        })
+        .then(res => {
+            setComentarios(comentarios.map(c => c.id === comentarioId ? res.data : c));
+            setEditingCommentId(null);
+            setEditingCommentText('');
+        })
+        .catch(err => {
+            console.error(err);
+            showPopup('Atenção à Linguagem', 'Erro ao editar o comentário. Verifica a linguagem usada.');
+        });
+    };
 
     if (isLoadError) return (
         <div className="loading-container">
-            <p className="error-message">❌ Não foi possível carregar a receita.</p>
-            <button className="btn-cancel" onClick={() => navigate('/receitas')}>Voltar às Receitas</button>
+            <p className="error-message">{t('receitas.detalhes.nao_foi_possivel_carregar')}</p>
+            <button className="btn-cancel" onClick={() => navigate('/receitas')}>{t('receitas.detalhes.voltar_as_receitas')}</button>
         </div>
     );
 
-    if (!receita) return <div className="loading-container">A carregar receita...</div>;
+    if (!receita) return <div className="loading-container">{t('receitas.detalhes.a_carregar')}</div>;
 
     return (
         <div className="body-wrapper">
@@ -333,21 +387,21 @@ const VerReceita = () => {
                                                 el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                             }
                                         }}
-                                        title={`Ir para o Passo ${index + 1}`}
+                                        title={`${t('receitas.detalhes.passo')} ${index + 1}`}
                                     >
-                                        {index + 1}. Passo {index + 1}
+                                        {index + 1}. {t('receitas.detalhes.passo')} {index + 1}
                                     </div>
                                 ))}
 
                                 <div className="view-actions-group mt-auto">
-                                    <button className="btn-cancel" onClick={() => navigate(-1)}>Voltar</button>
+                                    <button className="btn-cancel" onClick={() => navigate(-1)}>{t('comum.voltar')}</button>
 
                                     {(Number(receita.criador) !== Number(userId) || isAdmin) && (
                                         <button
                                             className={`btn-create-submit ${guardado ? "btn-saved" : ""}`}
                                             onClick={handleGuardar}
                                         >
-                                            {guardado ? 'Guardado' : 'Guardar'}
+                                            {guardado ? t('receitas.detalhes.guardado') : t('receitas.detalhes.guardar')}
                                         </button>
                                     )}
 
@@ -357,13 +411,13 @@ const VerReceita = () => {
                                                 className="btn-create-submit btn-action-edit"
                                                 onClick={() => navigate('/receitas/criar-receita', { state: { editReceita: receita } })}
                                             >
-                                                Editar
+                                                {t('receitas.detalhes.editar')}
                                             </button>
                                             <button
                                                 className="btn-create-submit btn-action-delete"
                                                 onClick={handleDelete}
                                             >
-                                                Remover
+                                                {t('receitas.detalhes.remover')}
                                             </button>
                                         </>
                                     )}
@@ -375,8 +429,8 @@ const VerReceita = () => {
 
                             <div className="recipe-descriptions-column recipe-col-2">
                                 {receita.instrucao.map((passo, index) => {
-                                    const hasPrefix = passo.match(/^(Passo \d+:\s*)(.*)/);
-                                    const subtitle = hasPrefix ? `Passo ${index + 1}` : `Passo ${index + 1}`;
+                                    const hasPrefix = passo.match(/^(Passo \d+:\s*|Step \d+:\s*|Paso \d+:\s*)(.*)/i);
+                                    const subtitle = `${t('receitas.detalhes.passo')} ${index + 1}`;
                                     const description = hasPrefix ? hasPrefix[2] : passo;
 
                                     return (
@@ -391,19 +445,24 @@ const VerReceita = () => {
                             </div>
 
                             <div className="recipe-ingredients-column recipe-col-1">
-                                <label className="section-subtitle">Ingredientes</label>
+                                <label className="section-subtitle">{t('receitas.detalhes.ingredientes')}</label>
                                 <div className="content-box-light ingredients-box">
                                     <ul className="ingredients-list-ul">
                                         {receita.ingredientes.map((ingId, idx) => {
                                             const ingObj = dbIngredientes.find(i => i.id === ingId);
-                                            return <li key={idx}>{ingObj ? ingObj.nome : `Ingrediente #${ingId}`}</li>;
+                                            let nome = ingObj ? ingObj.nome : `Ingrediente #${ingId}`;
+                                            if (ingObj) {
+                                                const key = ingObj.nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_");
+                                                nome = t(`ingredientes.${key}`) !== `ingredientes.${key}` ? t(`ingredientes.${key}`) : ingObj.nome;
+                                            }
+                                            return <li key={idx}>{nome}</li>;
                                         })}
-                                        {receita.ingredientes.length === 0 && <li>Sem ingredientes listados.</li>}
+                                        {receita.ingredientes.length === 0 && <li>{t('receitas.detalhes.sem_ingredientes')}</li>}
                                     </ul>
                                 </div>
 
                                 <div className="rating-section">
-                                    <label className="section-subtitle rating-title">Avaliar Receita</label>
+                                    <label className="section-subtitle rating-title">{t('receitas.detalhes.avaliar_receita')}</label>
                                     <div className="rating-stars">
                                         {[1, 2, 3, 4, 5].map(star => (
                                             <span
@@ -418,7 +477,7 @@ const VerReceita = () => {
                                             className="btn-create-submit btn-rate"
                                             onClick={handleAvaliar}
                                         >
-                                            Avaliar
+                                            {t('receitas.detalhes.avaliar')}
                                         </button>
                                     </div>
                                 </div>
@@ -427,13 +486,13 @@ const VerReceita = () => {
 
                         <div className="comments-section">
                             <h3 className="comments-title">
-                                Comentários ({comentarios.length})
+                                {t('receitas.detalhes.comentarios')} ({comentarios.length})
                             </h3>
 
                             <div className="comment-input-area">
                                 <textarea
                                     className="comment-textarea"
-                                    placeholder="O que achaste desta receita? Partilha a tua experiência..."
+                                    placeholder={t('receitas.detalhes.placeholder_comentario')}
                                     value={novoComentario}
                                     onChange={(e) => setNovoComentario(e.target.value)}
                                     maxLength={limits.comentario_max_length || 150}
@@ -445,14 +504,14 @@ const VerReceita = () => {
                                     className="btn-create-submit btn-publish-comment"
                                     onClick={handleAddComentario}
                                 >
-                                    Publicar Comentário
+                                    {t('receitas.detalhes.publicar_comentario')}
                                 </button>
                             </div>
 
                             <div className="comments-list">
                                 {comentarios.length === 0 ? (
                                     <p className="comment-empty">
-                                        Ainda não há comentários. Sê o primeiro a partilhar a tua opinião!
+                                        {t('receitas.detalhes.sem_comentarios')}
                                     </p>
                                 ) : (
                                     (() => {
@@ -469,7 +528,33 @@ const VerReceita = () => {
                                                     </strong>
                                                     <span className="comment-date">{new Date(comentario.data).toLocaleDateString()}</span>
                                                 </div>
-                                                <p className="comment-text">{comentario.texto}</p>
+                                                
+                                                {editingCommentId === comentario.id ? (
+                                                    <div className="comment-edit-area" style={{ marginTop: '10px' }}>
+                                                        <textarea
+                                                            className="comment-textarea"
+                                                            value={editingCommentText}
+                                                            onChange={(e) => setEditingCommentText(e.target.value)}
+                                                            maxLength={limits.comentario_max_length || 150}
+                                                        />
+                                                        <div style={{ textAlign: 'right', fontSize: '0.85rem', color: '#888', marginBottom: '8px' }}>
+                                                            {editingCommentText.length} / {limits.comentario_max_length || 150}
+                                                        </div>
+                                                        <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+                                                            <button className="btn-cancel" onClick={() => { setEditingCommentId(null); setEditingCommentText(''); }}>{t('comum.cancelar')}</button>
+                                                            <button className="btn-create-submit" style={{ padding: '8px 16px', fontSize: '0.9rem' }} onClick={() => handleSaveEditComentario(comentario.id)}>{t('receitas.detalhes.guardar')}</button>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <p className="comment-text">{comentario.texto}</p>
+                                                )}
+
+                                                {(Number(comentario.utilizador) === Number(userId) || isAdmin) && editingCommentId !== comentario.id && (
+                                                    <div className="comment-actions" style={{ marginTop: '10px', display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+                                                        <button className="btn-profile-pill" style={{ padding: '4px 10px', fontSize: '0.8rem' }} onClick={() => { setEditingCommentId(comentario.id); setEditingCommentText(comentario.texto); }}>{t('receitas.detalhes.editar')}</button>
+                                                        <button className="btn-profile-pill secondary" style={{ padding: '4px 10px', fontSize: '0.8rem', color: 'red', borderColor: 'red' }} onClick={() => handleDeleteComentario(comentario.id)}>{t('receitas.detalhes.remover')}</button>
+                                                    </div>
+                                                )}
                                             </div>
                                         ));
                                     })()
@@ -493,8 +578,8 @@ const VerReceita = () => {
                 title={popupConfig.title}
                 message={popupConfig.message}
                 singleButton={popupConfig.singleButton}
-                confirmText={popupConfig.confirmText || 'OK'}
-                cancelText={popupConfig.cancelText || 'Cancelar'}
+                confirmText={popupConfig.confirmText || t('comum.ok')}
+                cancelText={popupConfig.cancelText || t('comum.cancelar')}
                 onConfirm={popupConfig.onConfirm}
                 onCancel={popupConfig.onCancel}
             />

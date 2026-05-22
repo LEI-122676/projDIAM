@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import axios from 'axios';
 import { useState } from 'react';
-
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 
 const Header = () => {
   const URL_BASE = 'http://localhost:8000';
@@ -66,6 +66,8 @@ const Header = () => {
 
   const navigate = useNavigate();
 
+  const { language, setLanguage, t } = useLanguage();
+
   return (
     <header className="header">
       <button onClick={() => navigate('/')} className="logo">
@@ -73,6 +75,16 @@ const Header = () => {
         <span className="brand-name">iFridge</span>
       </button>
       <div className="auth-group">
+        <select 
+            value={language} 
+            onChange={(e) => setLanguage(e.target.value)}
+            className="language-selector"
+            style={{ padding: '5px', borderRadius: '5px', border: '1px solid #ccc', background: 'var(--bg-secondary)', color: 'var(--text-primary)', cursor: 'pointer', marginRight: '10px' }}
+        >
+            <option value="pt">🇵🇹 PT</option>
+            <option value="en">🇬🇧 EN</option>
+            <option value="es">🇪🇸 ES</option>
+        </select>
         <button onClick={toggleTheme} className="theme-toggle-btn">
           {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
         </button>
@@ -80,12 +92,12 @@ const Header = () => {
           {username ?
             <>
               <button className="logout-text" onClick={() => handleLogout()}>
-                Sair, {username}
+                {t('header.sair')}, {username}
               </button>
             </> :
             <>
               <button className="login-text" onClick={() => navigate('/login')}>
-                Registar/Login
+                {t('header.registar_login')}
               </button>
             </>
           }

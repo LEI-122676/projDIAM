@@ -343,11 +343,13 @@ def comentario_detail(request, comentario_id):
     if request.method == 'GET':
         serializer = ComentarioSerializer(comentario)
         return Response(serializer.data)
-    elif request.method == 'PUT':
-        serializer = ComentarioSerializer(comentario, data=request.data)
+    elif request.method in ['PUT', 'PATCH']:
+        partial = (request.method == 'PATCH')
+        serializer = ComentarioSerializer(comentario, data=request.data, partial=partial)
         if serializer.is_valid():
             serializer.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         comentario.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -548,3 +550,90 @@ def user_info(request, id):
 def get_field_limits(request):
     from .moderator import FIELD_LIMITS
     return Response(FIELD_LIMITS)
+
+@api_view(['GET', 'POST', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def submit_feedback(request):
+    try:
+        utilizador = Utilizador.objects.get(user=request.user)
+    except Utilizador.DoesNotExist:
+        return Response({'error': 'Utilizador não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        try:
+            feedback = Feedback.objects.get(utilizador=utilizador)
+            serializer = FeedbackSerializer(feedback)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Feedback.DoesNotExist:
+            return Response({'msg': 'Não existe feedback'}, status=status.HTTP_200_OK)
+
+    elif request.method == 'POST':
+        data = request.data.copy()
+        data['utilizador'] = utilizador.id
+
+        try:
+            feedback = Feedback.objects.get(utilizador=utilizador)
+            serializer = FeedbackSerializer(feedback, data=data)
+        except Feedback.DoesNotExist:
+            serializer = FeedbackSerializer(data=data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK if 'feedback' in locals() else status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    elif request.method == 'DELETE':
+        try:
+            feedback = Feedback.objects.get(utilizador=utilizador)
+            feedback.delete()
+            return Response({'msg': 'Feedback removido com sucesso'}, status=status.HTTP_204_NO_CONTENT)
+        except Feedback.DoesNotExist:
+            return Response({'error': 'Não existe feedback para remover'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+@authentication_classes([])
+def feedback_stats(request):
+    from django.db.models import Avg, Count
+    feedbacks = Feedback.objects.all()
+    
+    if not feedbacks.exists():
+        return Response({'msg': 'Ainda não há feedback'}, status=status.HTTP_200_OK)
+
+    # Calculate averages
+    averages = feedbacks.aggregate(
+        avg_receitas=Avg('nota_receitas'),
+        avg_eventos=Avg('nota_eventos'),
+        avg_frigorifico=Avg('nota_frigorifico'),
+        avg_estetica=Avg('nota_estetica')
+    )
+
+    # Calculate poll counts
+    favorite_counts = feedbacks.values('funcionalidade_favorita').annotate(count=Count('funcionalidade_favorita'))
+    
+    # Format poll results into a dictionary
+    poll = {item['funcionalidade_favorita']: item['count'] for item in favorite_counts}
+
+    # Best evaluated category
+    avg_dict = {
+        'Receitas': averages['avg_receitas'] or 0,
+        'Eventos': averages['avg_eventos'] or 0,
+        'Frigorífico': averages['avg_frigorifico'] or 0,
+        'Estética': averages['avg_estetica'] or 0,
+    }
+    melhor_categoria = max(avg_dict.items(), key=lambda x: x[1])
+
+    # Get recent comments (limit to 10 for the homepage scroll)
+    recent_comments = feedbacks.exclude(comentario_livre__isnull=True).exclude(comentario_livre__exact='').order_by('-data')[:10]
+    comments_serializer = FeedbackSerializer(recent_comments, many=True)
+
+    return Response({
+        'averages': averages,
+        'poll': poll,
+        'melhor_categoria': {
+            'nome': melhor_categoria[0],
+            'nota': round(melhor_categoria[1], 1)
+        },
+        'comentarios_recentes': comments_serializer.data,
+        'total_respostas': feedbacks.count()
+    }, status=status.HTTP_200_OK)

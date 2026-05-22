@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import cookieImg from '../../assets/cookie-clicker.gif';
 import { getCSRFToken } from '../../utils/csrf.js';
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 
 // Module-level cache to persist click counts across component mount/unmount (e.g. during page navigation)
 // without losing unsynced clicks or causing race conditions.
@@ -21,6 +22,7 @@ const getSafeUserId = () => {
 };
 
 const CookieClicker = ({ sidebarOpen }) => {
+  const { t } = useLanguage();
   const URL_BASE = 'http://localhost:8000';
   const URL_UTILIZADORES = `${URL_BASE}/idjango/api/utilizadores/`;
   const URL_CLICK_SOUND = `${URL_BASE}/idjango/media/cookie-clicker-click-sound.mp3`;
@@ -231,7 +233,7 @@ const CookieClicker = ({ sidebarOpen }) => {
 
   return (
     <div className="cookie-clicker-container">
-      {sidebarOpen && <div className="cookie-title">Fome de Cookies?</div>}
+      {sidebarOpen && <div className="cookie-title">{t('cookies.fome_de_cookies')}</div>}
       
       <div className="cookie-wrapper" onClick={handleCookieClick}>
         <img 
@@ -254,7 +256,7 @@ const CookieClicker = ({ sidebarOpen }) => {
       <div className="cliques-display">
         {sidebarOpen ? (
           <>
-            <span className="counter-label">Cliques:</span>
+            <span className="counter-label">{t('cookies.cliques')}</span>
             <span className="counter-number">{safeParseInt(count)}</span>
           </>
         ) : (

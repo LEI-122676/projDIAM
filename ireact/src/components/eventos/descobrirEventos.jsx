@@ -13,8 +13,10 @@ import PopupModal from '../maincomponents/popupModal.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 
 const ExplorarEventos = () => {
+    const { t } = useLanguage();
 
     const URL_BASE = 'http://localhost:8000';
     const URL_EVENTOS = `${URL_BASE}/idjango/api/eventos/`;
@@ -83,10 +85,10 @@ const ExplorarEventos = () => {
         else{
             setPopupConfig({
                 isOpen: true,
-                title: 'Acesso Restrito',
-                message: 'Precisas de iniciar sessão para criar um novo evento. Crie uma conta ou faça login para criar o seu evento!',
+                title: t('receitas.popups.acesso_restrito_titulo'),
+                message: t('eventos.popups.acesso_restrito_criar'),
                 singleButton: false,
-                confirmText: 'Iniciar Sessão',
+                confirmText: t('comum.iniciar_sessao'),
                 onConfirm: () => navigate('/login'),
                 onCancel: closePopup
             });
@@ -128,12 +130,12 @@ const ExplorarEventos = () => {
                 <Sidebar />
                 <main className="content-profile">
                     <div className="profile-grid event-grid-full">
-                        <h1 className="page-title-underline">Descobrir Eventos</h1>
+                        <h1 className="page-title-underline">{t('eventos.descobrir_eventos')}</h1>
                             <div className="recipes-action-bar">
                                 <div className="recipes-search-container">
                                     <input
                                         type="text"
-                                        placeholder="Pesquisar eventos..."
+                                        placeholder={t('eventos.pesquisar_eventos')}
                                         className="main-search-input recipe-search-box"
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -202,7 +204,7 @@ const ExplorarEventos = () => {
                             })()}
                             {eventosFiltrados.length === 0 && (
                                 <p className="full-width-center-mt20">
-                                    Nenhum evento encontrado com estes critérios.
+                                    {t('eventos.nenhum_evento_encontrado')}
                                 </p>
                             )}
                         </div>
@@ -220,8 +222,8 @@ const ExplorarEventos = () => {
                     title={popupConfig.title}
                     message={popupConfig.message}
                     singleButton={popupConfig.singleButton}
-                    confirmText={popupConfig.confirmText || 'OK'}
-                    cancelText={popupConfig.cancelText || 'Cancelar'}
+                    confirmText={popupConfig.confirmText || t('comum.ok')}
+                    cancelText={popupConfig.cancelText || t('comum.cancelar')}
                     onConfirm={popupConfig.onConfirm}
                     onCancel={popupConfig.onCancel}
                 />

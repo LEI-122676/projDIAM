@@ -7,6 +7,7 @@ import iconeEventos from '../../assets/calendario.svg';
 import iconeFrigorifico from '../../assets/frigorifico.svg';
 import iconePerfil from '../../assets/perfil.svg';
 import CookieClicker from './CookieClicker.jsx';
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(() => {
@@ -15,6 +16,7 @@ const Sidebar = () => {
   });
   
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   useEffect(() => {
     localStorage.setItem('sidebarOpen', JSON.stringify(isOpen));
@@ -23,7 +25,7 @@ const Sidebar = () => {
   return (
     <nav className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
       <div className="sidebar-header-section">
-        {isOpen && <span className="explore-text">Explorar</span>}
+        {isOpen && <span className="explore-text">{t('sidebar.explorar')}</span>}
 
         <button
           className={`hamburger-btn ${isOpen ? 'is-active' : ''}`}
@@ -37,23 +39,28 @@ const Sidebar = () => {
 
       <ul className="nav-list">
         <li className="nav-item" onClick={() => navigate('/receitas')}>
-          <img src={iconeReceitas} alt="Receitas" className="nav-icon-img" />
-          {isOpen && <span className="nav-text">Receitas</span>}
+          <img src={iconeReceitas} alt={t('sidebar.receitas')} className="nav-icon-img" />
+          {isOpen && <span className="nav-text">{t('sidebar.receitas')}</span>}
         </li>
 
         <li className="nav-item" onClick={() => navigate('/eventos')}>
-          <img src={iconeEventos} alt="Eventos" className="nav-icon-img" />
-          {isOpen && <span className="nav-text">Eventos</span>}
+          <img src={iconeEventos} alt={t('sidebar.eventos')} className="nav-icon-img" />
+          {isOpen && <span className="nav-text">{t('sidebar.eventos')}</span>}
         </li>
 
         <li className="nav-item" onClick={() => navigate('/frigorifico')}>
-          <img src={iconeFrigorifico} alt="Frigorífico" className="nav-icon-img" />
-          {isOpen && <span className="nav-text">Frigorífico</span>}
+          <img src={iconeFrigorifico} alt={t('sidebar.frigorifico')} className="nav-icon-img" />
+          {isOpen && <span className="nav-text">{t('sidebar.frigorifico')}</span>}
         </li>
 
         <li className="nav-item" onClick={() => navigate('/perfil')}>
-          <img src={iconePerfil} alt="Perfil" className="nav-icon-img" />
-          {isOpen && <span className="nav-text">Perfil</span>}
+          <img src={iconePerfil} alt={t('sidebar.perfil')} className="nav-icon-img" />
+          {isOpen && <span className="nav-text">{t('sidebar.perfil')}</span>}
+        </li>
+
+        <li className="nav-item" onClick={() => navigate('/feedback')}>
+          <span className="nav-icon-img" style={{ fontSize: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>💬</span>
+          {isOpen && <span className="nav-text">{t('sidebar.dar_feedback')}</span>}
         </li>
       </ul>
 

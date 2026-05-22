@@ -7,8 +7,10 @@ import PopupModal from '../maincomponents/popupModal.jsx';
 import axios from 'axios';
 import { getCSRFToken } from '../../utils/csrf.js';
 import { getFieldLimits, validateInput } from '../../utils/validation.js';
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 
 const EditarPerfil = () => {
+  const { t } = useLanguage();
   const URL_BASE = 'http://localhost:8000';
   const URL_USER = `${URL_BASE}/idjango/api/user_info/`;
   const URL_USER_INFO = `${URL_BASE}/idjango/api/utilizadores/`;
@@ -18,8 +20,7 @@ const EditarPerfil = () => {
   const userId = localStorage.getItem('utilizadorId');
 
   const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
-  const [userData, setUserData] = useState({ username: '', nome: '', apelido: '', imagem: '', user: null, frigorifico: null });
-  const [userInfo, setUserInfo] = useState({ email: '', username: '' });
+  const [userData, setUserData] = useState({ username: '', email: '', first_name: '', last_name: '', imagem: '', user: null, frigorifico: null });
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -33,7 +34,7 @@ const EditarPerfil = () => {
   const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
   
   const showPopup = (title, message) => {
-    setPopupConfig({ isOpen: true, title, message, singleButton: true, confirmText: 'OK', onConfirm: closePopup, onCancel: closePopup });
+    setPopupConfig({ isOpen: true, title, message, singleButton: true, confirmText: t('comum.ok'), onConfirm: closePopup, onCancel: closePopup });
   };
 
   useEffect(() => {
@@ -45,10 +46,10 @@ const EditarPerfil = () => {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setPopupConfig({
         isOpen: true,
-        title: 'Sessão Expirada',
-        message: 'Precisas de estar autenticado para ver o teu perfil.',
+        title: t('perfil.popups.sessao_expirada'),
+        message: t('perfil.popups.precisas_autenticado'),
         singleButton: false,
-        confirmText: 'Login',
+        confirmText: t('autenticacao.login'),
         onConfirm: () => navigate('/login'),
         onCancel: () => navigate('/')
       });
@@ -60,20 +61,14 @@ const EditarPerfil = () => {
         setUserData(res.data);
         setFirstName(res.data.first_name || '');
         setLastName(res.data.last_name || '');
+        setEmail(res.data.email || '');
         setBio(res.data.bio || '');
         if (res.data.imagem) {
-          const imagePath = res.data.imagem.startsWith('http') ? res.data.imagem : `${URL_BASE}${res.data.imagem}`;
+          const imagePath = res.data.imagem.startsWith('http') ? res.data.imagem : `${URL_BASE}${res.data.imagem.startsWith('/') ? '' : '/'}${res.data.imagem}`;
           setFotoPreview(imagePath);
         }
       })
       .catch(err => console.error("Erro ao carregar perfil (utilizador):", err));
-
-    axios.get(`${URL_USER}${userId}`, { withCredentials: true })
-      .then(res => {
-        setUserInfo(res.data);
-        setEmail(res.data.email || '');
-      })
-      .catch(err => console.error("Erro ao carregar perfil (user):", err));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, navigate]);
 
@@ -88,41 +83,39 @@ const EditarPerfil = () => {
     e.preventDefault();
 
     if (!userId) {
-      showPopup('Erro', 'Utilizador não identificado. Faça login novamente.');
+      showPopup(t('receitas.popups.erro_titulo'), t('perfil.popups.erro_identificacao'));
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.trim()) {
-      showPopup('Campo Obrigatório', 'Por favor, insira um e-mail.');
+      showPopup(t('receitas.popups.campo_obrigatorio_titulo'), t('perfil.popups.campo_obrigatorio'));
       return;
     }
     if (!emailRegex.test(email)) {
-      showPopup('E-mail Inválido', 'O formato do e-mail introduzido não é válido.');
+      showPopup(t('perfil.popups.email_invalido_titulo'), t('perfil.popups.email_invalido_msg'));
       return;
     }
 
     const nameValidation = validateInput(firstName, limits.user_first_name_max_length || 30);
     if (!nameValidation.isValid) {
-      showPopup('Erro de Validação', `Nome: ${nameValidation.error}`);
+      showPopup(t('receitas.popups.erro_validacao_titulo'), `${t('perfil.nome')}: ${nameValidation.error}`);
       return;
     }
 
     const lastNameValidation = validateInput(lastName, limits.user_last_name_max_length || 30);
     if (!lastNameValidation.isValid) {
-      showPopup('Erro de Validação', `Apelido: ${lastNameValidation.error}`);
+      showPopup(t('receitas.popups.erro_validacao_titulo'), `${t('perfil.apelido')}: ${lastNameValidation.error}`);
       return;
     }
 
     const bioValidation = validateInput(bio, limits.utilizador_bio_max_length || 200);
     if (!bioValidation.isValid) {
-      showPopup('Erro de Validação', `Biografia: ${bioValidation.error}`);
+      showPopup(t('receitas.popups.erro_validacao_titulo'), `${t('perfil.biografia')}: ${bioValidation.error}`);
       return;
     }
 
     const formDataUtilizador = new FormData();
-    formDataUtilizador.append('nome', firstName);
-    formDataUtilizador.append('apelido', lastName);
     formDataUtilizador.append('bio', bio);
     
     if (userData.user) formDataUtilizador.append('user', userData.user);
@@ -133,7 +126,7 @@ const EditarPerfil = () => {
     }
 
     const dataUser = {
-      username: userInfo.username,
+      username: userData.username,
       email: email,
       first_name: firstName,
       last_name: lastName
@@ -150,7 +143,7 @@ const EditarPerfil = () => {
         withCredentials: true
       });
 
-      await axios.put(`${URL_USER}${userId}`, dataUser, {
+      await axios.put(`${URL_USER}${userData.user}`, dataUser, {
         headers: { 
           'X-CSRFToken': csrfToken,
           'Content-Type': 'application/json'
@@ -160,10 +153,10 @@ const EditarPerfil = () => {
 
       setPopupConfig({
         isOpen: true,
-        title: 'Perfil Atualizado!',
-        message: 'As tuas alterações foram salvas com sucesso.',
+        title: t('perfil.popups.perfil_atualizado_titulo'),
+        message: t('perfil.popups.perfil_atualizado_msg'),
         singleButton: true,
-        confirmText: 'OK',
+        confirmText: t('comum.ok'),
         onConfirm: () => navigate('/perfil'), 
         onCancel: () => navigate('/perfil')
       });
@@ -171,7 +164,7 @@ const EditarPerfil = () => {
     } catch (err) {
       console.error(err);
       const detail = err.response?.data ? JSON.stringify(err.response.data) : 'Erro de conexão ao salvar dados.';
-      showPopup('Erro ao Guardar', detail);
+      showPopup(t('perfil.popups.erro_guardar'), detail);
     }
   };
 
@@ -181,47 +174,47 @@ const EditarPerfil = () => {
       <div className="main-wrapper">
         <Sidebar />
         <main className="content-profile">
-          <h1 className="page-title-underline">Editar Perfil</h1>
+          <h1 className="page-title-underline">{t('perfil.editar_titulo')}</h1>
           <div className="create-recipe-container">
             
             <div className="recipe-form-section">
               <div className="form-group">
-                <label>Nome <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({firstName.length}/{limits.user_first_name_max_length || 30})</span>:</label>
+                <label>{t('perfil.nome')} <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({firstName.length}/{limits.user_first_name_max_length || 30})</span>:</label>
                 <input 
                   type="text" 
                   className="input-beige text-black" 
-                  placeholder={userData.first_name || "O teu nome"} 
+                  placeholder={userData.first_name || t('perfil.o_teu_nome')} 
                   value={firstName} 
                   onChange={(e) => setFirstName(e.target.value)} 
                   maxLength={limits.user_first_name_max_length || 30}
                 />
               </div>
               <div className="form-group">
-                <label>Apelido <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({lastName.length}/{limits.user_last_name_max_length || 30})</span>:</label>
+                <label>{t('perfil.apelido')} <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({lastName.length}/{limits.user_last_name_max_length || 30})</span>:</label>
                 <input 
                   type="text" 
                   className="input-beige text-black" 
-                  placeholder={userData.last_name || "O teu apelido"} 
+                  placeholder={userData.last_name || t('perfil.o_teu_apelido')} 
                   value={lastName} 
                   onChange={(e) => setLastName(e.target.value)} 
                   maxLength={limits.user_last_name_max_length || 30}
                 />
               </div>
               <div className="form-group">
-                <label>Email:</label>
+                <label>{t('perfil.email')}:</label>
                 <input 
                   type="email" 
                   className="input-beige text-black" 
-                  placeholder={userInfo.email || "exemplo@email.com"} 
+                  placeholder={userData.email || t('perfil.exemplo_email')} 
                   value={email} 
                   onChange={(e) => setEmail(e.target.value)} 
                 />
               </div>
               <div className="form-group">
-                <label>Biografia <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({bio.length}/{limits.utilizador_bio_max_length || 200})</span>:</label>
+                <label>{t('perfil.biografia')} <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({bio.length}/{limits.utilizador_bio_max_length || 200})</span>:</label>
                 <textarea
                   className="input-beige text-area-bio"
-                  placeholder={userData.bio || "Conta um pouco sobre ti..."}
+                  placeholder={userData.bio || t('perfil.conta_sobre_ti')}
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
                   maxLength={limits.utilizador_bio_max_length || 200}
@@ -233,7 +226,7 @@ const EditarPerfil = () => {
               <div
                 className="image-upload-placeholder"
                 onClick={() => fileInputRef.current.click()}
-                title="Clica para alterar a foto de perfil"
+                title={t('perfil.clica_alterar_foto')}
               >
                 {fotoPreview ? (
                   <img
@@ -244,7 +237,7 @@ const EditarPerfil = () => {
                 ) : (
                   <div className="avatar-placeholder-container">
                     <div className="avatar-placeholder-icon">👤</div>
-                    <p className="text-small">Clica para adicionar foto de perfil</p>
+                    <p className="text-small">{t('perfil.clica_adicionar_foto')}</p>
                   </div>
                 )}
               </div>
@@ -262,17 +255,22 @@ const EditarPerfil = () => {
                   className="mt-8-center"
                   onClick={() => { 
                     setFoto(null); 
-                    setFotoPreview(userData.imagem || null); 
+                    if (userData.imagem) {
+                      const imagePath = userData.imagem.startsWith('http') ? userData.imagem : `${URL_BASE}${userData.imagem.startsWith('/') ? '' : '/'}${userData.imagem}`;
+                      setFotoPreview(imagePath);
+                    } else {
+                      setFotoPreview(null);
+                    }
                     fileInputRef.current.value = ''; 
                   }}
                 >
-                  Cancelar alteração
+                  {t('perfil.cancelar_alteracao')}
                 </button>
               )}
 
               <div className="create-actions-group">
-                <button className="btn-cancel" onClick={() => navigate(-1)}>Cancelar</button>
-                <button className="btn-create-submit" onClick={handleSubmit}>Guardar</button>
+                <button className="btn-cancel" onClick={() => navigate(-1)}>{t('comum.cancelar')}</button>
+                <button className="btn-create-submit" onClick={handleSubmit}>{t('receitas.detalhes.guardar')}</button>
               </div>
             </div>
 
@@ -285,8 +283,8 @@ const EditarPerfil = () => {
         title={popupConfig.title}
         message={popupConfig.message}
         singleButton={popupConfig.singleButton}
-        confirmText={popupConfig.confirmText || 'OK'}
-        cancelText={popupConfig.cancelText || 'Cancelar'}
+        confirmText={popupConfig.confirmText || t('comum.ok')}
+        cancelText={popupConfig.cancelText || t('comum.cancelar')}
         onConfirm={popupConfig.onConfirm}
         onCancel={popupConfig.onCancel}
       />

@@ -1986,6 +1986,9 @@ body.dark-mode .page-select-dropdown option {
     min-height: 100px;
     color: #4A3A31;
     text-align: left;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-wrap;
 }
 
 .section-subtitle {
@@ -2201,6 +2204,9 @@ body.dark-mode .page-select-dropdown option {
     color: #333;
     line-height: 1.5;
     text-align: left;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-wrap;
 }
 
 /* --- AS MINHAS RECEITAS --- */
@@ -3256,4 +3262,52 @@ body.dark-mode .horario-row tr:hover td {
 
 body.dark-mode .counter-number-mini {
     color: #F5C79A;
+}
+/* Feedback Carousel */
+.horizontal-scroll-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding: 20px 10px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.horizontal-scroll-container::-webkit-scrollbar {
+    height: 8px;
+}
+.horizontal-scroll-container::-webkit-scrollbar-track {
+    background: #EAEAEA;
+    border-radius: 10px;
+}
+.horizontal-scroll-container::-webkit-scrollbar-thumb {
+    background: #2E4A35;
+    border-radius: 10px;
+}
+
+.feedback-card {
+    flex: 0 0 300px;
+    background: #FDFBEE;
+    border: 1px solid #D1CDBC;
+    border-radius: 15px;
+    padding: 20px;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.feedback-text {
+    font-style: italic;
+    color: #4A3A31;
+    margin-bottom: 15px;
+    overflow-wrap: break-word;
+}
+
+.feedback-author {
+    font-weight: 700;
+    color: #2E4A35;
+    text-align: right;
+    font-size: 0.9rem;
 }

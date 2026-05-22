@@ -95,3 +95,24 @@ class Comentario(models.Model):
 
     def __str__(self):
         return f"Utilizador: {self.utilizador}\nTexto:{self.texto}"
+
+class Feedback(models.Model):
+    utilizador = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
+    
+    nota_receitas = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    nota_eventos = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    nota_frigorifico = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    nota_estetica = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    
+    FAVORITE_CHOICES = [
+        ('Receitas', 'Receitas'),
+        ('Eventos', 'Eventos'),
+        ('Frigorifico', 'Frigorífico'),
+        ('Estetica', 'Estética'),
+    ]
+    funcionalidade_favorita = models.CharField(max_length=20, choices=FAVORITE_CHOICES)
+    comentario_livre = models.TextField(blank=True, null=True)
+    data = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Feedback de {self.utilizador.user.username} ({self.data.strftime('%Y-%m-%d')})"
