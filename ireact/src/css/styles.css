@@ -816,8 +816,8 @@ body.dark-mode .slideshow-container {
 }
 
 .fridge-container {
-    max-width: 1000px;
-    margin: 0 auto;
+    max-width: 100%;
+    margin: 0;
 }
 
 .fridge-header {
