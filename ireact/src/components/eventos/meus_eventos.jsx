@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
-import Footer from '../maincomponents/Footer.jsx';
 import iconeLupa from "../../assets/lupa.svg";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
@@ -192,7 +191,7 @@ const OsMeusEventos = () => {
                             />
                         </div>
                     </div>
-                    <Footer />
+                    
                 </main>
             </div>
 

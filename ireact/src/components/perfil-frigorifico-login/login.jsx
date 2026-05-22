@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { getFieldLimits, validateInput } from '../../utils/validation.js';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
-import Footer from '../maincomponents/Footer.jsx';
 import '../../css/styles.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -272,7 +271,7 @@ const Login = () => {
             </form>
           </section>
           </div>
-            <Footer />
+            
         </main>
       </div>
 
