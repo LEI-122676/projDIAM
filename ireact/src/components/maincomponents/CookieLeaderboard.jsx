@@ -44,19 +44,13 @@ const CookieLeaderboard = () => {
             </div>
             <div className="leaderboard-container">
                 {leaderboard.map((user, index) => (
-                    <div key={user.id} className={`leaderboard-row rank-${index + 1}`}>
+                    <div key={user.username} className={`leaderboard-row rank-${index + 1}`}>
                         <div className="leaderboard-rank-wrapper">
                             <span className="leaderboard-rank">
                                 {index === 0 ? '🏆' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
                             </span>
                         </div>
                         <div className="leaderboard-user-info">
-                            <img 
-                                src={`http://localhost:8000${user.imagem}`} 
-                                alt={user.username} 
-                                className="leaderboard-avatar"
-                                onError={(e) => { e.target.src = '/defaultProfile.png'; }}
-                            />
                             <span className="leaderboard-username">{user.username}</span>
                         </div>
                         <div className="leaderboard-score">

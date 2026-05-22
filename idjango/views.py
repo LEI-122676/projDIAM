@@ -642,6 +642,13 @@ def feedback_stats(request):
 @permission_classes([AllowAny])
 @authentication_classes([])
 def cookie_leaderboard(request):
-    top_utilizadores = Utilizador.objects.filter(is_active=True).exclude(role='Guest').order_by('-cookie_clicks')[:10]
-    serializer = UtilizadorSerializer(top_utilizadores, many=True)
-    return Response(serializer.data)
+    top_utilizadores = Utilizador.objects.filter(is_active=True).exclude(role='Guest').order_by('-cookie_clicks').values('user__username', 'cookie_clicks')[:5]
+    
+    data = [
+        {
+            'username': u['user__username'],
+            'cookie_clicks': u['cookie_clicks']
+        }
+        for u in top_utilizadores
+    ]
+    return Response(data)
