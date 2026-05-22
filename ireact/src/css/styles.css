@@ -201,7 +201,7 @@ html, body, #root {
 }
 
 .nav-item:hover .nav-text {
-    color: #2E4A35;
+    color: var(--brand-color);
 }
 
 /* 4. CONTEÚDO PRINCIPAL */
@@ -293,8 +293,8 @@ html, body, #root {
 
 .btn-edit-profile {
     background-color: #FDFBEE;
-    border: 1px solid #2E4A35;
-    color: #2E4A35;
+    border: 1px solid var(--brand-color);
+    color: var(--brand-color);
     padding: 12px;
     border-radius: 30px;
     font-weight: 700;
@@ -350,11 +350,11 @@ html, body, #root {
     transition: all 0.2s ease;
     font-size: 0.95rem;
     border: none;
-    background-color: #344938;
+    background-color: var(--brand-color);
 }
 
 .login-text:hover {
-    color: #2E4A35;
+    color: var(--brand-color);
     background-color: #f0f7f1;
 }
 
@@ -374,7 +374,7 @@ html, body, #root {
 }
 
 .btn-profile-pill:not(.secondary) {
-    background-color: #2E4A35;
+    background-color: var(--brand-color);
     color: white;
 }
 
@@ -397,7 +397,7 @@ html, body, #root {
     border: 2px transparent solid; 
     width: fit-content;
 }
-.brand-name { font-size: 24px; font-weight: 800; color: #2E4A35; letter-spacing: -0.5px; }
+.brand-name { font-size: 24px; font-weight: 800; color: var(--brand-color); letter-spacing: -0.5px; }
 .breadcrumb { color: #A0A0A0; font-size: 0.9rem; }
 
 .header-profile-img {
@@ -440,7 +440,7 @@ html, body, #root {
 
 .auth-title {
     font-size: 48px;
-    color: #2E4A35;
+    color: var(--brand-color);
     margin-bottom: 40px;
     font-weight: 700;
     border-bottom: none;
@@ -472,12 +472,12 @@ html, body, #root {
 }
 
 .auth-input:focus {
-    border-color: #2E4A35;
+    border-color: var(--brand-color);
 }
 
 /* BOTÕES */
 .btn-auth {
-    background-color: #344938; /* Verde escuro da imagem */
+    background-color: var(--brand-color); /* Verde escuro da imagem */
     color: white;
     border: none;
     padding: 15px 45px;
@@ -491,7 +491,7 @@ html, body, #root {
 }
 
 .btn-auth:hover {
-    background-color: #233a2a;
+    background-color: var(--brand-color);
 }
 
 /* DIVISOR CENTRAL (LINHA E O "OR") */
@@ -718,7 +718,7 @@ body.dark-mode .slideshow-container {
 .home-welcome-title {
     font-size: 50px;
     font-weight: 800;
-    color: #2E4A35;
+    color: var(--brand-color);
     margin-bottom: 10px;
     letter-spacing: -1px;
 }
@@ -755,7 +755,7 @@ body.dark-mode .slideshow-container {
 }
 
 .btn-search-home {
-    background-color: #2E4A35;
+    background-color: var(--brand-color);
     color: white;
     border: none;
     padding: 0 35px;
@@ -777,7 +777,7 @@ body.dark-mode .slideshow-container {
 }
 
 .btn-search-home:hover {
-    background-color: #233a2a;
+    background-color: var(--brand-color);
 }
 
 /* Ações Rápidas */
@@ -794,7 +794,7 @@ body.dark-mode .slideshow-container {
     border-radius: 15px;
     cursor: pointer;
     font-weight: 700;
-    color: #2E4A35;
+    color: var(--brand-color);
     transition: all 0.2s;
 }
 
@@ -824,7 +824,7 @@ body.dark-mode .slideshow-container {
 }
 
 .btn-mostrar-receitas {
-    background-color: #2E4A35;
+    background-color: var(--brand-color);
     color: white;
     border: none;
     padding: 15px 30px;
@@ -874,7 +874,7 @@ body.dark-mode .slideshow-container {
 }
 
 .btn-guardar {
-    background-color: #2E4A35;
+    background-color: var(--brand-color);
     color: white;
     border: none;
     padding: 12px 40px;
@@ -939,8 +939,8 @@ body.dark-mode .slideshow-container {
 /* 2. Título (Apenas este elemento fica fixo à esquerda com a linha do seu tamanho) */
 .page-title-underline {
     font-size: 36px;
-    color: #2E4A35;
-    border-bottom: 4px solid #2E4A35;
+    color: var(--brand-color);
+    border-bottom: 4px solid var(--brand-color);
     display: table; /* Garante que a borda acompanha apenas o texto */
     padding-bottom: 8px;
     margin-bottom: 40px;
@@ -1013,15 +1013,25 @@ body.dark-mode .slideshow-container {
 
 /* --- DARK MODE RULES --- */
 body.dark-mode {
-    background-color: #121212 !important;
+    background-color: transparent !important;
     color: #e0e0e0 !important;
+    --brand-color: #6a36a8; /* Darker purple for buttons so white text is readable */
 }
 
 body.dark-mode .header,
+body.dark-mode .sidebar {
+    background-color: rgba(20, 20, 20, 0.4) !important;
+    backdrop-filter: blur(12px) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
 body.dark-mode .content-profile,
 body.dark-mode .content-home,
 body.dark-mode .content-frigorifico,
-body.dark-mode .auth-container,
+body.dark-mode .auth-container {
+    background-color: transparent !important;
+}
+
 body.dark-mode .profile-details-card,
 body.dark-mode .recipes-container,
 body.dark-mode .recipe-details-container,
@@ -1030,14 +1040,9 @@ body.dark-mode .event-details-container {
     border-color: #333 !important;
 }
 
-body.dark-mode .sidebar {
-    background-color: #1a1a1a !important;
-    border-color: #333 !important;
-}
-
 body.dark-mode .sidebar-header-only,
 body.dark-mode .sidebar-header-section {
-    background-color: #1e1e1e !important;
+    background-color: transparent !important;
 }
 
 body.dark-mode .nav-item:hover,
@@ -1482,21 +1487,23 @@ body.dark-mode .content-home,
 body.dark-mode .content-profile,
 body.dark-mode .content-frigorifico,
 body.dark-mode .auth-container {
-    background-color: #121212 !important;
+    background-color: transparent !important;
 }
 
 /* Level 1: Core structural shells (Header, Sidebar) */
 body.dark-mode .header {
-    background-color: #181818 !important;
-    border-bottom: 1px solid #282828 !important;
+    background-color: rgba(20, 20, 20, 0.4) !important;
+    backdrop-filter: blur(12px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 body.dark-mode .sidebar {
-    background-color: #181818 !important;
-    border-right: 1px solid #282828 !important;
+    background-color: rgba(20, 20, 20, 0.4) !important;
+    backdrop-filter: blur(12px) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 body.dark-mode .sidebar-header-only,
 body.dark-mode .sidebar-header-section {
-    background-color: #181818 !important;
+    background-color: transparent !important;
 }
 
 /* Level 2: Cards, containers, standard content blocks */
@@ -1692,7 +1699,7 @@ body.dark-mode .page-select-dropdown option {
 .btn-add-recipe {
     width: 180px;
     height: 45px;
-    background-color: #344938;
+    background-color: var(--brand-color);
     color: #ffffff;
     border: none;
     border-radius: 8px;
@@ -1705,7 +1712,7 @@ body.dark-mode .page-select-dropdown option {
 }
 
 .btn-add-recipe:hover {
-    background-color: #233a2a;
+    background-color: var(--brand-color);
 }
 
 /* 7. Grid de Receitas */
@@ -1862,8 +1869,8 @@ body.dark-mode .page-select-dropdown option {
 }
 
 .btn-add-dashed:hover {
-    border-color: #344938;
-    color: #344938;
+    border-color: var(--brand-color);
+    color: var(--brand-color);
     background-color: #fcfaf0;
 }
 
@@ -1905,13 +1912,20 @@ body.dark-mode .page-select-dropdown option {
 }
 
 .btn-create-submit {
-    background-color: #344938;
+    background-color: var(--brand-color);
     color: white;
     border: none;
     padding: 12px 45px;
     border-radius: 30px;
     font-weight: 700;
     cursor: pointer;
+}
+
+.btn-create-submit:disabled {
+    background-color: #555555 !important;
+    color: #a1a1a1 !important;
+    cursor: not-allowed;
+    opacity: 0.7;
 }
 
 /* --- PÁGINA: DETALHE DA RECEITA --- */
@@ -2315,7 +2329,7 @@ body.dark-mode .page-select-dropdown option {
 }
 
 .ingredient-chip-premium:hover {
-    border-color: #2E4A35;
+    border-color: var(--brand-color);
     background: #ffffff;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(46, 74, 53, 0.1);
@@ -2342,7 +2356,7 @@ body.dark-mode .page-select-dropdown option {
 }
 
 .btn-add-fridge-premium {
-    background: #2E4A35;
+    background: var(--brand-color);
     color: white;
     border: none;
     height: 50px;
@@ -2355,13 +2369,13 @@ body.dark-mode .page-select-dropdown option {
 }
 
 .btn-add-fridge-premium:hover {
-    background: #233a2a;
+    background: var(--brand-color);
     transform: scale(1.02);
     box-shadow: 0 6px 20px rgba(46, 74, 53, 0.3);
 }
 
 .badge-count {
-    background: #2E4A35;
+    background: var(--brand-color);
     color: white;
     padding: 4px 12px;
     border-radius: 20px;
@@ -2418,7 +2432,7 @@ body.dark-mode .page-select-dropdown option {
     border-radius: 50px;
     font-weight: 700;
     font-size: 0.85rem;
-    color: #2E4A35;
+    color: var(--brand-color);
     display: flex;
     align-items: center;
     gap: 5px;
@@ -2440,7 +2454,7 @@ body.dark-mode .page-select-dropdown option {
 
 .calendar-filter-wrapper:hover {
     background-color: #F6F4E9;
-    border-color: #2E4A35;
+    border-color: var(--brand-color);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(46, 74, 53, 0.08);
 }
@@ -2633,8 +2647,8 @@ body.dark-mode .btn-remove-photo:hover {
 }
 
 .admin-shortcut {
-    border: 2px dashed #2E4A35 !important;
-    color: #2E4A35 !important;
+    border: 2px dashed var(--brand-color) !important;
+    color: var(--brand-color) !important;
     font-weight: bold !important;
 }
 
@@ -2722,7 +2736,7 @@ body.dark-mode .admin-role-select {
 }
 
 .admin-btn-save {
-    background-color: #2E4A35;
+    background-color: var(--brand-color);
     color: #ffffff;
     border: none;
     padding: 8px 16px;
@@ -2878,7 +2892,7 @@ body.dark-mode .btn-action-delete:hover {
 .mt-8-center { margin-top: 8px; align-self: center; }
 .profile-container-inner { max-width: 1200px; margin: 0 auto; width: 100%; }
 .flex-center-overflow-hidden { display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.profile-name-text { color: #2E4A35; margin: 0; }
+.profile-name-text { color: var(--brand-color); margin: 0; }
 .profile-username-text { color: #716259; font-size: 0.9rem; }
 .btn-saved { background-color: #8a9b8e !important; }
 .pagination-btn { padding: 10px 25px; }
@@ -3176,7 +3190,7 @@ body.dark-mode .counter-number-mini {
     border-radius: 10px;
 }
 .horizontal-scroll-container::-webkit-scrollbar-thumb {
-    background: #2E4A35;
+    background: var(--brand-color);
     border-radius: 10px;
 }
 
@@ -3202,7 +3216,7 @@ body.dark-mode .counter-number-mini {
 
 .feedback-author {
     font-weight: 700;
-    color: #2E4A35;
+    color: var(--brand-color);
     text-align: right;
     font-size: 0.9rem;
 }
