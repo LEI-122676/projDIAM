@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../../css/styles.css';
@@ -244,6 +245,7 @@ const FeedbackPage = () => {
                             )}
                         </div>
                     </div>
+                    <Footer />
                 </main>
             </div>
             <PopupModal isOpen={popupConfig.isOpen} title={popupConfig.title} message={popupConfig.message} singleButton={popupConfig.singleButton} confirmText={popupConfig.confirmText} cancelText={popupConfig.cancelText} onConfirm={popupConfig.onConfirm} onCancel={popupConfig.onCancel} />

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 import '../../css/styles.css'
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
@@ -347,6 +348,7 @@ const CriarReceita = () => {
                         </div>
 
                     </div>
+                    <Footer />
                 </main>
             </div>
 

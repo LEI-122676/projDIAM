@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 import iconeLupa from "../../assets/lupa.svg";
 import iconeFiltro from "../../assets/filtro.svg";
 import iconeFrig from "../../assets/frigorifico.svg";
@@ -265,6 +266,7 @@ const AsMinhasReceitas = () => {
 
 
                     </div>
+                    <Footer />
                 </main>
             </div>
 

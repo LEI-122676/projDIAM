@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 import iconeLupa from "../../assets/lupa.svg";
 import iconeFiltro from "../../assets/filtro.svg";
 import iconeCalendario from "../../assets/calendario.svg"; 
@@ -215,6 +216,7 @@ const ExplorarEventos = () => {
                             itemsPerPage={eventsPerPage}
                             onPageChange={setCurrentPage}
                         />
+                        <Footer />
                     </main>
                 </div>
                 <PopupModal 
