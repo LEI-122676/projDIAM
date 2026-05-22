@@ -18,7 +18,6 @@ const VerEvento = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
-
     const eventoId = location.state?.id;
 
     const [evento, setEvento] = useState(null);
@@ -32,7 +31,7 @@ const VerEvento = () => {
     });
     const closePopup = () => setPopupConfig(prev => ({ ...prev, isOpen: false }));
 
-    
+    const [contagem, setContagem] = useState('');
 
     const showLoginPopup = (actionMessage) => {
         setPopupConfig({
@@ -51,7 +50,6 @@ const VerEvento = () => {
             navigate('/eventos');
             return;
         }
-
         axios.get(`${URL_EVENTOS}${eventoId}`)
             .then(res => {
                 setEvento(res.data);
@@ -73,6 +71,7 @@ const VerEvento = () => {
                 })
                 .catch(err => console.error("Erro ao obter papel do utilizador:", err));
         }
+
     }, [eventoId, utilizadorId, navigate, URL_EVENTOS]);
 
     const getImageUrl = (caminho) => {
@@ -81,25 +80,50 @@ const VerEvento = () => {
         return `${URL_BASE}${caminho.startsWith('/') ? '' : '/'}${caminho}`;
     };
 
-    const formatarHorario = (h) => {
-        if (!h) return null;
-        if (typeof h === 'object') {
-            if (h.inicio && h.fim) {
-                return `Inicio: ${h.inicio}, Fim: ${h.fim}`;
-            }
-            if (Object.keys(h).length === 0) return null;
-        }
-        if (typeof h === 'string') {
-            try {
-                const parsed = JSON.parse(h);
-                if (parsed && typeof parsed === 'object' && parsed.inicio && parsed.fim) {
-                    return `Inicio: ${parsed.inicio}, Fim: ${parsed.fim}`;
+    useEffect(() => {
+        if (!evento || !evento.data_evento || !evento.horario) return;
+
+        const decreaseTimer = () => {
+            const dataEvento = evento.data_evento.substring(0, 10);
+            let horaInicio = '';
+
+            if (typeof evento.horario === 'string') {
+                try {
+                    const parsed = JSON.parse(evento.horario);
+                    horaInicio = parsed.inicio || '';
+                } catch (e) {
+                    horaInicio = evento.horario;
                 }
-            } catch (e) { /* empty */ }
-            return h.replace(/"/g, '');
-        }
-        return JSON.stringify(h).replace(/"/g, '');
-    };
+            } else if (evento.horario && evento.horario.inicio) {
+                horaInicio = evento.horario.inicio;
+            }
+
+            if (!dataEvento || !horaInicio) {
+                setContagem("Sem data/hora");
+                return;
+            }
+
+            const dataInicioEvento = new Date(`${dataEvento}T${horaInicio}`);
+            const dataAtual = new Date();
+            const dif = Math.floor((dataInicioEvento - dataAtual) / 1000);
+            
+            if (dif <= 0) {
+                setContagem("O evento começou!");
+                return;
+            }
+
+            const dias = Math.floor(dif / (60 * 60 * 24));
+            const horas = Math.floor((dif % (60 * 60 * 24)) / (60 * 60));
+            const minutos = Math.floor((dif % (60 * 60)) / 60);
+            const segundos = dif % 60;
+            
+            setContagem(`${dias}d ${horas}h ${minutos}m ${segundos}s`);
+        };
+
+        decreaseTimer();
+        const intervaloId = setInterval(decreaseTimer, 1000);
+        return () => clearInterval(intervaloId);
+    }, [evento]);
 
     const handleJoin = () => {
         if (!utilizadorId) {
@@ -116,12 +140,9 @@ const VerEvento = () => {
             newInscritos.push(parseInt(utilizadorId, 10));
         }
 
+        const updatedPayload = { inscritos: newInscritos };
 
-        const updatedPayload = {
-            inscritos: newInscritos
-        };
-
-        axios.patch(`${EVENTO_URL}${eventoId}`, updatedPayload, { 
+        axios.patch(`${URL_EVENTOS}${eventoId}`, updatedPayload, { 
             headers: { 'X-CSRFToken': getCSRFToken() },
             withCredentials: true 
         })
@@ -149,7 +170,7 @@ const VerEvento = () => {
             confirmText: t('receitas.popups.apagar'),
             cancelText: t('comum.cancelar'),
             onConfirm: () => {
-                axios.delete(`${EVENTO_URL}${eventoId}`, {
+                axios.delete(`${URL_EVENTOS}${eventoId}`, {
                     headers: { 'X-CSRFToken': getCSRFToken() },
                     withCredentials: true
                 })
@@ -214,14 +235,22 @@ const VerEvento = () => {
                     </div>
 
                     <div className="recipe-view-container">
-
                         <div className="recipe-top-row">
-                            <div className="recipe-main-image flex-center">
-                                <img
-                                    src={getImageUrl(imagemCaminho)}
-                                    alt={evento.nome}
-                                    className="cover-image-rounded"
-                                />
+                            <div className="recipe-main-image-column" style={{ display: 'flex', flexDirection: 'column', gap: '20px', flex: '1' }}>
+                                <div className="recipe-main-image flex-center">
+                                    <img
+                                        src={getImageUrl(imagemCaminho)}
+                                        alt={evento.nome}
+                                        className="cover-image-rounded"
+                                    />
+                                </div>
+                                
+                                <div className="step-detail">
+                                    <label className="section-subtitle">Sobre o Evento</label>
+                                    <div className="content-box-light text-black event-description-box" style={{ marginTop: '8px' }}>
+                                        {evento.descricao || "Este evento não possui uma descrição detalhada."}
+                                    </div>
+                                </div>
                             </div>
 
                             <div className="recipe-steps-nav">
@@ -229,14 +258,32 @@ const VerEvento = () => {
                                     📅 {evento.data_evento ? formatarDataExibicao(evento.data_evento.substring(0, 10)) : t('eventos.sem_data')}
                                 </div>
                                 <div className="step-nav-item step-nav-item-default">
-                                    🕒 {formatarHorario(evento.horario) || t('eventos.sem_horario')}
+                                    ⏳ Contagem Decrescente: <br />{contagem || "A calcular..."}
                                 </div>
                                 <div className="step-nav-item step-nav-item-default">
-                                    📍 {t('eventos.capacidade_maxima')}: {evento.capacidade_max || 5} {t('eventos.pessoas')}
+                                    <table className="horario-row">
+                                        <thead>
+                                            <tr>
+                                                <th>🕒 Atividade</th>
+                                                <th>🕒 Horários</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {evento.horario && Object.entries(evento.horario).map(([chave, valor], index) => (
+                                                <tr key={index}>
+                                                    <td>{chave}</td>
+                                                    <td>{valor}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div className="step-nav-item step-nav-item-default">
+                                    🔢 Capacidade Máxima: {evento.capacidade_max || 5} pessoas
                                 </div>
 
-                                 <div className="view-actions-group mt-auto">
-                                    <button className="btn-cancel" onClick={() => navigate(-1)}>{t('comum.voltar')}</button>
+                                <div className="view-actions-group mt-auto">
+                                    <button className="btn-cancel" onClick={() => navigate(-1)}>Voltar</button>
 
                                     {(Number(evento.criador) !== Number(utilizadorId) || isAdmin) && (
                                         <button
@@ -266,18 +313,6 @@ const VerEvento = () => {
                                 </div>
                             </div>
                         </div>
-
-                        <div className="recipe-bottom-row recipe-bottom-row-flex">
-                            <div className="recipe-descriptions-column recipe-col-2">
-                                <div className="step-detail mb-15">
-                                    <label className="section-subtitle">{t('eventos.sobre_evento')}</label>
-                                    <div className="content-box-light text-black event-description-box">
-                                        {evento.descricao || t('eventos.sem_descricao')}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </main>
             </div>
