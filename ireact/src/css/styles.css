@@ -2452,7 +2452,6 @@ body.dark-mode .page-select-dropdown option {
 }
 .datepicker-anchor {
     position: relative;
-    display: inline-block;
 }
 
 .calendar-filter-wrapper .react-datepicker-wrapper,
@@ -2461,6 +2460,18 @@ body.dark-mode .page-select-dropdown option {
 .react-datepicker__input-container {
     display: inline-block !important;
     position: relative !important;
+}
+
+/* The actual injected container inside the popper */
+.react-datepicker-popper > div {
+    display: flex !important;
+    justify-content: flex-end !important; /* Aligns the inner calendar component to the right edge */
+}
+
+/* Ensuring the component itself respects the right-side alignment boundary */
+.react-datepicker {
+    left: auto !important;
+    right: 0 !important;
 }
 .clear-date-btn {
     background: rgba(139, 75, 75, 0.1);
@@ -2502,13 +2513,14 @@ body.dark-mode .page-select-dropdown option {
 }
 
 .react-datepicker-popper {
-    z-index: 99999 !important;
-    position: absolute !important; /* Forces layout tracking inside .datepicker-anchor */
-    top: 100% !important;          /* Positions it exactly below the button element */
+    z-index: 9999 !important;
+    position: absolute !important; 
+    bottom: 100% !important;       /* Aligns bottom edge of calendar with top edge of button */
+    top: auto !important;          /* Clears default top alignments */
     left: auto !important;
-    right: 0 !important;           /* Aligns with the right edge of the button (bottom-end style) */
-    transform: none !important;    /* Disables the erratic JS transform calculations */
-    margin-top: 6px !important;
+    right: -100px    !important;           /* Snaps perfectly to the right side of the field (top-end layout) */
+    transform: none !important;    /* Safely bypasses dynamic positioning calculations */
+    margin-bottom: 12px !important; /* Adds visual breathing room between calendar and button */
 }
 .create-recipe-container {
     display: flex;
@@ -2589,6 +2601,79 @@ body.dark-mode select option {
     height: 45px;
     text-align: center;
     text-align-last: center;
+    padding: 0 15px;
+    border-radius: 15px;
+    border: 1px solid #EAE6D6;
+    background-color: #FDFBEE;
+}
+
+.create-event-two-column-grid {
+    display: grid;
+    grid-template-columns: minmax(450px, 600px) 1fr 1px 500px;
+    gap: 40px;
+    width: 100%;
+    align-items: start;
+    box-sizing: border-box;
+}
+
+.event-form-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.event-schedule-card {
+    display: grid;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.event-schedule-row,
+.activity-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    align-items: stretch;
+}
+
+.event-activities {
+    display: grid;
+    gap: 12px;
+}
+
+.activity-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.activity-fields input,
+.activity-fields select {
+    min-height: 45px;
+}
+
+.btn-add-dashed {
+    width: 100%;
+    background: transparent;
+    border: 2px dashed #D1CDBC;
+    border-radius: 50px;
+    padding: 12px 0;
+    color: #D1CDBC;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin: 0;
+    max-width: 100%;
+}
+
+.btn-add-dashed:hover {
+    border-color: #344938;
+    color: #344938;
+    background-color: #fcfaf0;
 }
 
 .calendar-display-text {
@@ -3183,7 +3268,6 @@ body.dark-mode .counter-number-mini {
     max-width: 400px;
     background-color: #FDFBF7; 
     border: 1px solid #E6DCD3;
-    border-radius: 8px;
     overflow: hidden;
 }
 
