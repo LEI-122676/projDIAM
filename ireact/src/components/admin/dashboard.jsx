@@ -79,7 +79,7 @@ const Dashboard = () => {
 
                     {loading ? (
                         <p style={{ textAlign: 'center', marginTop: '40px' }}>A carregar dados...</p>
-                    ) : stats ? (
+                    ) : stats && stats.averages ? (
                         <div className="feedback-stats-container" style={{ display: 'flex', flexDirection: 'column', gap: '30px', padding: '20px' }}>
                             <div className="premium-card" style={{ padding: '30px', textAlign: 'center' }}>
                                 <h2 style={{ marginBottom: '10px' }}>Total de Respostas de Feedback</h2>
@@ -108,7 +108,7 @@ const Dashboard = () => {
                             </div>
                         </div>
                     ) : (
-                        <p style={{ textAlign: 'center', marginTop: '40px' }}>Sem dados de feedback disponíveis.</p>
+                        <p style={{ textAlign: 'center', marginTop: '40px' }}>{stats?.msg || 'Sem dados de feedback disponíveis.'}</p>
                     )}
                 </main>
             </div>
