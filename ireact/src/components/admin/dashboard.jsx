@@ -107,7 +107,7 @@ const Dashboard = () => {
                         <p style={{ textAlign: 'center', marginTop: '40px' }}>{t('dashboard.a_carregar')}</p>
                     ) : stats && stats.averages ? (
                         <>
-                            <div className="feedback-stats-container" style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '30px', padding: '20px' }}>
+                            <div className="feedback-stats-container" style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '30px', marginTop: '20px' }}>
                                 <div className="premium-card" style={{ padding: '30px', display: 'flex', flexDirection: 'column', flex: 1, minWidth: '300px' }}>
                                     <h2 style={{ marginBottom: '20px', borderBottom: '2px solid #D1CDBC', paddingBottom: '10px' }}>{t('dashboard.total_respostas')}</h2>
                                     <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
