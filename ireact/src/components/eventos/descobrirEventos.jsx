@@ -29,6 +29,7 @@ const ExplorarEventos = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [eventos, setEventos] = useState([]);
     const [userName, setUsername] = useState(null);
+    const [userRole, setUserRole] = useState(null);
 
     const [dataFiltro, setStartDate] = useState(null);
 
@@ -42,9 +43,15 @@ const ExplorarEventos = () => {
         axios.get(URL_EVENTOS).then( response => setEventos(response.data))
         .catch( () => console.log("unable to load events"));
 
-        axios.get(URL_USER, {withCredentials: true})
-            .then( response => setUsername(response.data.username))
-            .catch( () => console.log("user not logged in"));
+        const userId = localStorage.getItem('utilizadorId');
+        if (userId) {
+            axios.get(`${URL_BASE}/idjango/api/utilizadores/${userId}`, {withCredentials: true})
+                .then( response => {
+                    setUsername(response.data.username);
+                    setUserRole(response.data.role);
+                })
+                .catch( () => console.log("user not logged in"));
+        }
     
     },[]);
 
@@ -164,7 +171,9 @@ const ExplorarEventos = () => {
                                                 ]}
                                             />
                                     </div>
-                                    <button onClick={handleCriarEvento} className="btn-add-recipe">+</button>
+                                    {(userRole === 'Admin' || userRole === 'EventOrganizer') && (
+                                        <button onClick={handleCriarEvento} className="btn-add-recipe">+</button>
+                                    )}
                                 </div>
                             </div>
                         </div>

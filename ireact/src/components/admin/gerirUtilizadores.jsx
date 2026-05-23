@@ -156,7 +156,7 @@ const GerirUtilizadores = () => {
                     <div className="admin-actions-header">
                         <h1 className="page-title-underline">{t('admin.gerir_utilizadores')}</h1>
                         <button className="btn-create-submit" onClick={() => navigate('/admin/criar-utilizador')}>
-                            ➕ {t('admin.criar_utilizador')}
+                            {t('admin.criar_utilizador')}
                         </button>
                     </div>
 

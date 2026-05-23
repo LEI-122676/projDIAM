@@ -37,13 +37,6 @@
    ========================================= */
 .dynamic-bg-light {
     background: linear-gradient(135deg, #FFF3B0 0%, #CAE9FF 50%, #5FA8D3 100%);
-    background-size: 200% 200%;
-    animation: beachGradient 15s ease infinite alternate;
-}
-
-@keyframes beachGradient {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 100% 50%; }
 }
 
 
@@ -51,15 +44,7 @@
    DARK MODE: Deep Space Black with Stars
    ========================================= */
 .dynamic-bg-dark {
-    background: linear-gradient(135deg, #020202, #0a0a0a, #000000, #010101);
-    background-size: 400% 400%;
-    animation: nightGradient 20s ease infinite;
-}
-
-@keyframes nightGradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    background: linear-gradient(135deg, #0a0a0a, #000000);
 }
 
 /* Tiling Stars layers using radial-gradient */
@@ -81,7 +66,6 @@
         radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0));
     background-repeat: repeat;
     background-size: 200px 200px;
-    animation: starPan 100s linear infinite;
     opacity: 0.8;
 }
 
@@ -94,7 +78,6 @@
         radial-gradient(1px 1px at 180px 70px, #fff, rgba(0,0,0,0));
     background-repeat: repeat;
     background-size: 250px 250px;
-    animation: starPan 150s linear infinite reverse, twinkle 4s infinite alternate ease-in-out;
     opacity: 0.5;
 }
 
@@ -105,27 +88,14 @@
         radial-gradient(3px 3px at 300px 80px, rgba(255, 255, 255, 0.9), rgba(0,0,0,0));
     background-repeat: repeat;
     background-size: 400px 400px;
-    animation: starPan 200s linear infinite, twinkle 6s infinite alternate ease-in-out;
     opacity: 0.6;
-}
-
-@keyframes twinkle {
-    0% { opacity: 0.3; }
-    100% { opacity: 1; }
-}
-
-@keyframes starPan {
-    from { background-position: 0 0; }
-    to { background-position: -1000px -1000px; }
 }
 
 /* Nebulas */
 .nebula {
     position: absolute;
     border-radius: 50%;
-    filter: blur(80px);
     opacity: 0.6;
-    animation: nebulaDrift 20s infinite alternate ease-in-out;
 }
 
 .nebula-1 {
@@ -134,7 +104,6 @@
     background: radial-gradient(circle, rgba(138,43,226,0.4) 0%, transparent 70%);
     top: 10%;
     left: 20%;
-    animation-delay: 0s;
 }
 
 .nebula-2 {
@@ -143,7 +112,6 @@
     background: radial-gradient(circle, rgba(255,20,147,0.3) 0%, transparent 70%);
     bottom: 10%;
     right: 10%;
-    animation-delay: -5s;
 }
 
 .nebula-3 {
@@ -152,7 +120,6 @@
     background: radial-gradient(circle, rgba(0,191,255,0.3) 0%, transparent 70%);
     top: 40%;
     left: 50%;
-    animation-delay: -10s;
 }
 
 .nebula-4 {
@@ -161,11 +128,4 @@
     background: radial-gradient(circle, rgba(148,0,211,0.35) 0%, transparent 70%);
     top: -10%;
     right: 20%;
-    animation-delay: -15s;
-}
-
-@keyframes nebulaDrift {
-    0% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(50px, -30px) scale(1.1); }
-    100% { transform: translate(-30px, 50px) scale(0.9); }
 }

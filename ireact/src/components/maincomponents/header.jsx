@@ -79,7 +79,6 @@ const Header = () => {
             value={language} 
             onChange={(e) => setLanguage(e.target.value)}
             className="language-selector"
-            style={{ padding: '5px', borderRadius: '5px', border: '1px solid #ccc', background: 'var(--bg-secondary)', color: 'var(--text-primary)', cursor: 'pointer', marginRight: '10px' }}
         >
             <option value="pt">🇵🇹 PT</option>
             <option value="en">🇬🇧 EN</option>

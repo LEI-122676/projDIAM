@@ -13,7 +13,10 @@
         "sobre_nos": "Sobre Nosotros",
         "termos": "Términos de Servicio",
         "privacidade": "Política de Privacidad",
-        "direitos": "© 2026 Flavor & Fun. Todos los derechos reservados."
+        "direitos": "© 2026 Flavor & Fun. Todos los derechos reservados.",
+        "termos_de_uso": "Términos de Uso",
+        "contactos": "Contactos",
+        "direitos_reservados": "Todos los derechos reservados."
     },
     "header": {
         "sair": "Salir",
@@ -348,5 +351,9 @@
             "conta_eliminada_msg": "La cuenta del usuario fue eliminada/desactivada con éxito.",
             "erro_eliminar_msg": "No se pudo eliminar la cuenta del usuario."
         }
+    },
+    "cookie_leaderboard": {
+        "top_clickers": "Leaderboard de Galletas",
+        "cookies": "Galletas"
     }
 }
