@@ -1006,6 +1006,7 @@ body.dark-mode .slideshow-container {
 .recipes-search-container {
     position: relative;
     flex: 1;
+    min-width: 0; /* Permite que o container encolha no flexbox */
     max-width: 800px; /* Largura confortável para a barra de busca */
 }
 
@@ -1016,6 +1017,8 @@ body.dark-mode .slideshow-container {
     background-color: #FDFBEE !important;
     padding: 12px 45px 12px 20px !important;
     width: 100%;
+    min-width: 0; /* Permite que o input encolha também */
+    box-sizing: border-box;
     font-family: 'Inter', sans-serif;
     outline: none;
     font-size: 1rem;
@@ -1371,11 +1374,11 @@ body.dark-mode .step-nav-item:hover {
 }
 
 /* Active state for fridge filter button in dark mode */
-body.dark-mode .btn-filter-fridge.active, body.dark-mode .rating-filter-wrapper.active {
+body.dark-mode .btn-filter-fridge.active, body.dark-mode .rating-filter-wrapper.active, body.dark-mode .calendar-filter-wrapper.active {
     background-color: var(--brand-color) !important;
     color: white !important;
 }
-body.dark-mode .btn-filter-fridge.active .recipe-icon-svg, body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
+body.dark-mode .btn-filter-fridge.active .recipe-icon-svg, body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg, body.dark-mode .calendar-filter-wrapper.active .recipe-icon-svg {
     filter: brightness(0) invert(1) !important;
 }
 
@@ -2364,8 +2367,8 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 
 /* Receitas/Popups */
 .text-black { color: black !important; }
-.btn-filter-fridge.active, .rating-filter-wrapper.active { background-color: var(--brand-color) !important; color: white !important; }
-.btn-filter-fridge.active .recipe-icon-svg, .rating-filter-wrapper.active .recipe-icon-svg { filter: brightness(0) invert(1) !important; }
+.btn-filter-fridge.active, .rating-filter-wrapper.active, .calendar-filter-wrapper.active { background-color: var(--brand-color) !important; color: white !important; }
+.btn-filter-fridge.active .recipe-icon-svg, .rating-filter-wrapper.active .recipe-icon-svg, .calendar-filter-wrapper.active .recipe-icon-svg { filter: brightness(0) invert(1) !important; }
 .icon-mr-8 { margin-right: 8px !important; }
 .icon-ml-8 { margin-left: 8px !important; }
 .mt-20 { margin-top: 20px !important; }
@@ -2569,6 +2572,7 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
     position: relative;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     height: 45px;
+    white-space: nowrap;
 }
 
 .calendar-filter-wrapper:hover {
@@ -2620,6 +2624,16 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 .clear-date-btn:hover {
     background: #8b4b4b;
     color: white;
+}
+
+.calendar-filter-wrapper.active .clear-date-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+.calendar-filter-wrapper.active .clear-date-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    color: #ffffff;
 }
 
 .calendar-filter-wrapper .recipe-icon-svg {
@@ -3470,7 +3484,7 @@ body.dark-mode .btn-cancel:hover, body.dark-mode .btn-cancel-small:hover, body.d
 }
 
 /* --- FRIDGE & RATING FILTER ACTIVE STATE (Keep 3D styling but with brand color) --- */
-.btn-filter-fridge.active, .rating-filter-wrapper.active {
+.btn-filter-fridge.active, .rating-filter-wrapper.active, .calendar-filter-wrapper.active {
     position: relative;
     overflow: hidden;
     background-color: var(--brand-color) !important;
@@ -3480,7 +3494,7 @@ body.dark-mode .btn-cancel:hover, body.dark-mode .btn-cancel-small:hover, body.d
     transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), filter 0.2s !important;
     box-shadow: 0 4px 15px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.4) !important;
 }
-.btn-filter-fridge.active:hover, .rating-filter-wrapper.active:hover {
+.btn-filter-fridge.active:hover, .rating-filter-wrapper.active:hover, .calendar-filter-wrapper.active:hover {
     transform: translateY(-4px) !important;
     box-shadow: 0 8px 25px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.6) !important;
 }
@@ -3772,4 +3786,259 @@ body.dark-mode .score-value {
 body.dark-mode .score-label {
     color: #8C7B70;
 }
+
+/* --- REACT DATEPICKER PREMIUM THEMING --- */
+
+.react-datepicker-popper {
+    z-index: 1000 !important;
+}
+
+/* Light Mode DatePicker Styles */
+.react-datepicker {
+    font-family: 'Inter', sans-serif !important;
+    background-color: #FDFBEE !important;
+    border: 1px solid #D1CDBC !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 25px rgba(74, 58, 49, 0.15) !important;
+    color: #4A3A31 !important;
+    overflow: hidden;
+    width: 320px !important;
+}
+
+.react-datepicker__month {
+    margin: 12px 10px !important;
+    text-align: center !important;
+}
+
+.react-datepicker__month-wrapper {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+}
+
+.react-datepicker__header {
+    background-color: #F6F4E9 !important;
+    border-bottom: 1px solid #D1CDBC !important;
+    border-top-left-radius: 12px !important;
+    border-top-right-radius: 12px !important;
+    padding-top: 12px !important;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-year-header {
+    color: #4A3A31 !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+}
+
+.react-datepicker__month-text,
+.react-datepicker__year-text {
+    color: #4A3A31 !important;
+    font-weight: 600 !important;
+    padding: 10px 0 !important;
+    margin: 6px 4px !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+    flex: 1 !important;
+    display: block !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+}
+
+.react-datepicker__month-text:hover,
+.react-datepicker__year-text:hover {
+    background-color: #F0EDE0 !important;
+    color: var(--brand-color) !important;
+}
+
+.react-datepicker__month-text--selected,
+.react-datepicker__month-text--keyboard-selected,
+.react-datepicker__year-text--selected,
+.react-datepicker__year-text--keyboard-selected {
+    background-color: var(--brand-color) !important;
+    color: #ffffff !important;
+}
+
+.react-datepicker__month-text--selected:hover,
+.react-datepicker__year-text--selected:hover {
+    background-color: var(--brand-color) !important;
+    color: #ffffff !important;
+}
+
+.react-datepicker__navigation {
+    top: 10px !important;
+}
+
+.react-datepicker__navigation-icon::before {
+    border-color: #4A3A31 !important;
+    border-width: 2px 2px 0 0 !important;
+}
+
+/* Dark Mode DatePicker Styles */
+body.dark-mode .react-datepicker {
+    background-color: #1a1a1a !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .react-datepicker__header {
+    background-color: #242424 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dark-mode .react-datepicker__current-month,
+body.dark-mode .react-datepicker-year-header {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .react-datepicker__month-text,
+body.dark-mode .react-datepicker__year-text {
+    color: #ccc !important;
+}
+
+body.dark-mode .react-datepicker__month-text:hover,
+body.dark-mode .react-datepicker__year-text:hover {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .react-datepicker__month-text--selected,
+body.dark-mode .react-datepicker__month-text--keyboard-selected,
+body.dark-mode .react-datepicker__year-text--selected,
+body.dark-mode .react-datepicker__year-text--keyboard-selected {
+    background-color: var(--brand-color) !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .react-datepicker__navigation-icon::before {
+    border-color: #e0e0e0 !important;
+}
+
+/* --- ISSUE 50: USER PROFILE INFO HIGHLIGHTS --- */
+.profile-info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    margin: 10px 0;
+}
+
+.profile-info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(46, 74, 53, 0.08);
+    border-radius: 16px;
+    padding: 16px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.profile-info-item:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.7);
+    border-color: rgba(46, 74, 53, 0.25);
+    box-shadow: 0 6px 16px rgba(46, 74, 53, 0.04);
+}
+
+.profile-info-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    background: rgba(46, 74, 53, 0.08);
+    color: var(--brand-color);
+    border-radius: 12px;
+    flex-shrink: 0;
+    transition: all 0.25s ease;
+}
+
+.profile-info-item:hover .profile-info-icon {
+    background: var(--brand-color);
+    color: #ffffff;
+}
+
+.info-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.profile-info-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+
+.profile-info-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #8E8A85;
+    margin-bottom: 4px;
+}
+
+.profile-info-value {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #4A3A31;
+    line-height: 1.5;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.profile-bio-text {
+    margin: 0;
+    color: #5C4D44;
+    white-space: pre-line;
+}
+
+.profile-no-bio {
+    color: #A59F98;
+    font-style: italic;
+}
+
+/* Dark mode compatibility for profile info items */
+body.dark-mode .profile-info-item {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border-color: rgba(255, 255, 255, 0.06) !important;
+    box-shadow: none !important;
+}
+
+body.dark-mode .profile-info-item:hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
+}
+
+body.dark-mode .profile-info-icon {
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .profile-info-item:hover .profile-info-icon {
+    background: #e0e0e0 !important;
+    color: #1e1e1e !important;
+}
+
+body.dark-mode .profile-info-label {
+    color: #888888 !important;
+}
+
+body.dark-mode .profile-info-value {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .profile-bio-text {
+    color: #cccccc !important;
+}
+
+body.dark-mode .profile-no-bio {
+    color: #666666 !important;
+}
+
 
