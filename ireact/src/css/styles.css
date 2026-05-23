@@ -2581,16 +2581,8 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(46, 74, 53, 0.08);
 }
-
-/* O input nativo fica invisível mas ocupa 100% do botão para o clique funcionar em todo o lado */
-.calendar-hidden-input {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0 !important; /* Força a opacidade a zero em qualquer estado */
-    cursor: pointer;
+.datepicker-anchor {
+    position: relative;
 }
 
 /* Esconde o ícone nativo de relógio/calendário para não colidir com o teu layout */
@@ -2604,6 +2596,17 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
     cursor: pointer;
 }
 
+/* The actual injected container inside the popper */
+.react-datepicker-popper > div {
+    display: flex !important;
+    justify-content: flex-end !important; /* Aligns the inner calendar component to the right edge */
+}
+
+/* Ensuring the component itself respects the right-side alignment boundary */
+.react-datepicker {
+    left: auto !important;
+    right: 0 !important;
+}
 .clear-date-btn {
     background: rgba(139, 75, 75, 0.1);
     border: none;
@@ -2645,6 +2648,21 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
     filter: invert(21%) sepia(15%) saturate(2500%) hue-rotate(92deg) brightness(90%) contrast(90%);
 }
 
+.react-datepicker-wrapper {
+    display: inline-block;
+    position: relative; /* Provides a local positioning boundary context */
+}
+
+.react-datepicker-popper {
+    z-index: 9999 !important;
+    position: absolute !important; 
+    bottom: 100% !important;       /* Aligns bottom edge of calendar with top edge of button */
+    top: auto !important;          /* Clears default top alignments */
+    left: auto !important;
+    right: -100px    !important;           /* Snaps perfectly to the right side of the field (top-end layout) */
+    transform: none !important;    /* Safely bypasses dynamic positioning calculations */
+    margin-bottom: 12px !important; /* Adds visual breathing room between calendar and button */
+}
 .create-recipe-container {
     display: flex;
     gap: 60px;
@@ -2724,6 +2742,79 @@ body.dark-mode select option {
     height: 45px;
     text-align: center;
     text-align-last: center;
+    padding: 0 15px;
+    border-radius: 15px;
+    border: 1px solid #EAE6D6;
+    background-color: #FDFBEE;
+}
+
+.create-event-two-column-grid {
+    display: grid;
+    grid-template-columns: minmax(450px, 600px) 1fr 1px 500px;
+    gap: 40px;
+    width: 100%;
+    align-items: start;
+    box-sizing: border-box;
+}
+
+.event-form-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.event-schedule-card {
+    display: grid;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.event-schedule-row,
+.activity-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    align-items: stretch;
+}
+
+.event-activities {
+    display: grid;
+    gap: 12px;
+}
+
+.activity-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.activity-fields input,
+.activity-fields select {
+    min-height: 45px;
+}
+
+.btn-add-dashed {
+    width: 100%;
+    background: transparent;
+    border: 2px dashed #D1CDBC;
+    border-radius: 50px;
+    padding: 12px 0;
+    color: #D1CDBC;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin: 0;
+    max-width: 100%;
+}
+
+.btn-add-dashed:hover {
+    border-color: #344938;
+    color: #344938;
+    background-color: #fcfaf0;
 }
 
 .calendar-display-text {
@@ -3336,6 +3427,98 @@ body.dark-mode .counter-number-mini {
     color: #F5C79A;
 }
 
+.step-nav-item-default {
+    text-align: center;
+    width: 100%;
+}
+
+/* --- TEMA CLARO (Padrão) --- */
+.horario-row {
+    margin: 15px auto;
+    border-collapse: collapse;
+    width: 90%;
+    max-width: 400px;
+    background-color: #FDFBF7; 
+    border: 1px solid #E6DCD3;
+    overflow: hidden;
+}
+
+.horario-row th {
+    background-color: #F0E6DF;
+    color: #5C3A21;
+    padding: 14px 15px;
+    font-weight: 800;
+    text-align: center;
+    border-bottom: 2px solid #D9C5B6;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.horario-row td {
+    padding: 10px 15px;
+    text-align: center;
+    color: #4A4A4A;
+}
+
+
+.horario-row th:first-child, 
+.horario-row td:first-child {
+    border-right: 1px solid #E6DCD3;
+}
+
+.horario-row td:first-child {
+    text-transform: capitalize;
+}
+
+.horario-row tbody tr {
+    border-bottom: 1px solid #F5EFEA;
+}
+
+
+
+/* --- TEMA ESCURO (body.dark-mode) --- */
+body.dark-mode .horario-row {
+    background-color: #1E1E1E;
+    border: 1px solid #333333;
+}
+
+body.dark-mode .horario-row th {
+    background-color: #2D2D2D;
+    color: #F5C79A;
+    border-bottom: 2px solid #444444;
+}
+
+body.dark-mode .horario-row td {
+    color: #E0E0E0;
+}
+
+/* Linha vertical no modo escuro */
+body.dark-mode .horario-row th:first-child, 
+body.dark-mode .horario-row td:first-child {
+    border-right: 1px solid #444444;
+}
+
+body.dark-mode .horario-row tbody tr {
+    border-bottom: 1px solid #2A2A2A;
+}
+
+body.dark-mode .horario-row tr:hover td {
+    background-color: #252525;
+}
+
+
+/* --- CONTADOR MINI (O teu código original) --- */
+.counter-number-mini {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #8A5C38;
+    margin-top: 4px;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+body.dark-mode .counter-number-mini {
+    color: #F5C79A;
+}
 /* Feedback Carousel */
 .horizontal-scroll-container {
     display: flex;
