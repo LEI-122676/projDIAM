@@ -151,11 +151,9 @@ const ExplorarReceitas = () => {
                     return Number(id);
                 });
 
-                matchesFridge = fridgeIds.every(fId => {
-                    return (receita.ingredientes || []).some(ing => {
-                        const recipeIngId = typeof ing === 'object' && ing !== null ? Number(ing.id) : Number(ing);
-                        return recipeIngId === Number(fId);
-                    });
+                matchesFridge = (receita.ingredientes || []).every(ing => {
+                    const recipeIngId = typeof ing === 'object' && ing !== null ? Number(ing.id) : Number(ing);
+                    return fridgeIds.includes(recipeIngId);
                 });
             }
         }
