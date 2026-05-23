@@ -16,7 +16,7 @@
         "direitos": "© 2026 Flavor & Fun. Todos os direitos reservados.",
         "termos_de_uso": "Termos de Uso",
         "contactos": "Contactos",
-        "direitos_reservados": "© 2026 iFridge. Todos os direitos reservados."
+        "direitos_reservados": "Todos os direitos reservados."
     },
     "header": {
         "sair": "Sair",
@@ -350,6 +350,7 @@
         }
     },
     "cookie_leaderboard": {
-        "top_clickers": "Leaderboard Cookies"
+        "top_clickers": "Leaderboard Cookies",
+        "cookies": "Cookies"
     }
 }
