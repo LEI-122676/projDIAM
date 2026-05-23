@@ -172,7 +172,7 @@ const FeedbackPage = () => {
             <div className="main-wrapper">
                 <Sidebar />
                 <main className="content-profile">
-                    <div className="feedback-container" style={{ maxWidth: '900px', margin: '0 auto' }}>
+                    <div className="feedback-container" style={{ maxWidth: 'none', margin: '0' }}>
                         <h1 className="page-title-underline">{t('feedback.titulo')}</h1>
                         
                         <div className="profile-layout-container" style={{ flexDirection: 'column', gap: '30px' }}>

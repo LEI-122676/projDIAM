@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
+import eyeIcon from '../../assets/eye.svg';
+import eyeOffIcon from '../../assets/eye-off.svg';
 
 const Login = () => {
   
@@ -146,9 +148,20 @@ const Login = () => {
       
     axios.post(SIGN_UP_URL, formData, { withCredentials: true }).then( response => {
         console.log('Signup successful!', response.data.msg);
-        localStorage.setItem('utilizadorId', response.data.utilizadorId);
-        window.dispatchEvent(new Event('authChange'));
-        navigate(-1);
+        
+        // Auto-login after successful registration
+        axios.post(SIGN_IN_URL, { username: username, password: password }, { withCredentials: true })
+          .then((loginResponse) => {
+              localStorage.setItem('utilizadorId', loginResponse.data.utilizadorId || response.data.utilizadorId);
+              window.dispatchEvent(new Event('authChange'));
+              navigate(-1);
+          })
+          .catch(() => {
+              // Se falhar o auto-login, mantemos a lógica antiga
+              localStorage.setItem('utilizadorId', response.data.utilizadorId);
+              window.dispatchEvent(new Event('authChange'));
+              navigate(-1);
+          });
     }).catch( (error) => {
         let errorMsg = t('autenticacao.popups.atencao_linguagem_registo');
         if (error.response && error.response.data) {
@@ -197,7 +210,7 @@ const Login = () => {
                   onChange={(e) => setPasswordLogin(e.target.value)}
                 />
                 <button type="button" className="auth-password-eye" onClick={() => setShowLoginPassword(!showLoginPassword)} aria-label="Mostrar password">
-                  {showLoginPassword ? '🙈' : '👁️'}
+                  <img src={showLoginPassword ? eyeOffIcon : eyeIcon} alt="Toggle Password" style={{ width: '20px', height: '20px' }} />
                 </button>
               </div>
               <button type="submit" className="btn-auth">{t('autenticacao.login')}</button>
@@ -252,7 +265,7 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <button type="button" className="auth-password-eye" onClick={() => setShowRegisterPassword(!showRegisterPassword)} aria-label="Mostrar password">
-                  {showRegisterPassword ? '🙈' : '👁️'}
+                  <img src={showRegisterPassword ? eyeOffIcon : eyeIcon} alt="Toggle Password" style={{ width: '20px', height: '20px' }} />
                 </button>
               </div>
               <div className="auth-password-wrapper">
@@ -264,7 +277,7 @@ const Login = () => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />        
                 <button type="button" className="auth-password-eye" onClick={() => setShowConfirmPassword(!showConfirmPassword)} aria-label="Mostrar password">
-                  {showConfirmPassword ? '🙈' : '👁️'}
+                  <img src={showConfirmPassword ? eyeOffIcon : eyeIcon} alt="Toggle Password" style={{ width: '20px', height: '20px' }} />
                 </button>
               </div>
               <button type="submit" className="btn-auth">{t('autenticacao.registar')}</button>

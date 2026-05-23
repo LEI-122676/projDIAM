@@ -13,7 +13,10 @@
         "sobre_nos": "About Us",
         "termos": "Terms of Service",
         "privacidade": "Privacy Policy",
-        "direitos": "© 2026 Flavor & Fun. All rights reserved."
+        "direitos": "© 2026 Flavor & Fun. All rights reserved.",
+        "termos_de_uso": "Terms of Use",
+        "contactos": "Contacts",
+        "direitos_reservados": "All rights reserved."
     },
     "header": {
         "sair": "Log Out",
@@ -348,5 +351,9 @@
             "conta_eliminada_msg": "User account was successfully deleted/deactivated.",
             "erro_eliminar_msg": "Unable to delete user account."
         }
+    },
+    "cookie_leaderboard": {
+        "top_clickers": "Cookie Leaderboard",
+        "cookies": "Cookies"
     }
 }

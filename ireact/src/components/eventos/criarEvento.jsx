@@ -116,10 +116,12 @@ const CriarEvento = () => {
     const [foto, setFoto] = useState(null);
     const [fotoPreview, setFotoPreview] = useState(() => {
         if (editEvento) {
-            if (editEvento.foto_url) {
-                return `${URL_BASE}${editEvento.foto_url}`;
-            } else if (editEvento.foto) {
-                return editEvento.foto;
+            const fotoSource = editEvento.foto_url || editEvento.foto;
+            if (fotoSource) {
+                if (typeof fotoSource === 'string' && fotoSource.startsWith('http')) {
+                    return fotoSource;
+                }
+                return `${URL_BASE}${fotoSource.startsWith('/') ? '' : '/'}${fotoSource}`;
             }
         }
         return null;
