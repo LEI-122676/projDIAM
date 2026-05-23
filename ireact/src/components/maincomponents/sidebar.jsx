@@ -6,8 +6,11 @@ import iconeReceitas from '../../assets/receitas.svg';
 import iconeEventos from '../../assets/calendario.svg';
 import iconeFrigorifico from '../../assets/frigorifico.svg';
 import iconePerfil from '../../assets/perfil.svg';
+import iconeDashboard from '../../assets/dashboard.svg';
 import CookieClicker from './CookieClicker.jsx';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
+
+import axios from 'axios';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(() => {
@@ -15,6 +18,18 @@ const Sidebar = () => {
     return savedState !== null ? JSON.parse(savedState) : true;
   });
   
+  const [userRole, setUserRole] = useState(null);
+  
+  useEffect(() => {
+    const userId = localStorage.getItem('utilizadorId');
+    if (userId) {
+      const URL_BASE = 'http://localhost:8000';
+      axios.get(`${URL_BASE}/idjango/api/utilizadores/${userId}`, {withCredentials: true})
+        .then(response => setUserRole(response.data.role))
+        .catch(err => console.error("Error fetching user role for sidebar", err));
+    }
+  }, []);
+
   const navigate = useNavigate();
   const { t } = useLanguage();
 
@@ -62,6 +77,13 @@ const Sidebar = () => {
           <span className="nav-icon-img" style={{ fontSize: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>💬</span>
           {isOpen && <span className="nav-text">{t('sidebar.dar_feedback')}</span>}
         </li>
+        
+        {userRole === 'Admin' && (
+          <li className="nav-item" onClick={() => navigate('/admin/dashboard')}>
+            <img src={iconeDashboard} alt="Dashboard" className="nav-icon-img" />
+            {isOpen && <span className="nav-text">Dashboard</span>}
+          </li>
+        )}
       </ul>
 
       <CookieClicker sidebarOpen={isOpen} />
