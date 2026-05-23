@@ -355,5 +355,23 @@
     "cookie_leaderboard": {
         "top_clickers": "Leaderboard de Galletas",
         "cookies": "Galletas"
+    },
+    "dashboard": {
+        "titulo": "Dashboard (Admin)",
+        "a_carregar": "Cargando datos...",
+        "total_respostas": "Total de Respuestas de Feedback",
+        "medias_classificacao": "Calificaciones Promedio (1 a 5)",
+        "funcionalidades_favoritas": "Funciones Favoritas (Votos)",
+        "votos": "votos",
+        "sem_dados": "No hay datos de feedback disponibles.",
+        "acesso_restrito": "Acceso Restringido",
+        "precisas_login": "Necesitas iniciar sesión como Administrador.",
+        "apenas_admins": "Solo los administradores pueden acceder al Dashboard.",
+        "tabela_username": "Usuario",
+        "tabela_receitas": "Recetas",
+        "tabela_eventos": "Eventos",
+        "tabela_frigorifico": "Refrigerador",
+        "tabela_estetica": "Estética",
+        "tabela_favorita": "Característica Favorita"
     }
 }

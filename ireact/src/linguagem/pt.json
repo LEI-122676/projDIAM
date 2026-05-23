@@ -355,5 +355,23 @@
     "cookie_leaderboard": {
         "top_clickers": "Leaderboard Cookies",
         "cookies": "Cookies"
+    },
+    "dashboard": {
+        "titulo": "Dashboard (Admin)",
+        "a_carregar": "A carregar dados...",
+        "total_respostas": "Total de Respostas de Feedback",
+        "medias_classificacao": "Médias de Classificação (1 a 5)",
+        "funcionalidades_favoritas": "Funcionalidades Favoritas (Votos)",
+        "votos": "votos",
+        "sem_dados": "Sem dados de feedback disponíveis.",
+        "acesso_restrito": "Acesso Restrito",
+        "precisas_login": "Precisas de iniciar sessão como Administrador.",
+        "apenas_admins": "Apenas administradores podem aceder ao Dashboard.",
+        "tabela_username": "Utilizador",
+        "tabela_receitas": "Receitas",
+        "tabela_eventos": "Eventos",
+        "tabela_frigorifico": "Frigorífico",
+        "tabela_estetica": "Estética",
+        "tabela_favorita": "Funcionalidade Favorita"
     }
 }

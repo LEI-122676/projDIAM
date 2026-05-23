@@ -6,6 +6,7 @@ import iconeReceitas from '../../assets/receitas.svg';
 import iconeEventos from '../../assets/calendario.svg';
 import iconeFrigorifico from '../../assets/frigorifico.svg';
 import iconePerfil from '../../assets/perfil.svg';
+import iconeDashboard from '../../assets/dashboard.svg';
 import CookieClicker from './CookieClicker.jsx';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 
@@ -79,7 +80,7 @@ const Sidebar = () => {
         
         {userRole === 'Admin' && (
           <li className="nav-item" onClick={() => navigate('/admin/dashboard')}>
-            <span className="nav-icon-img" style={{ fontSize: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>📊</span>
+            <img src={iconeDashboard} alt="Dashboard" className="nav-icon-img" />
             {isOpen && <span className="nav-text">Dashboard</span>}
           </li>
         )}

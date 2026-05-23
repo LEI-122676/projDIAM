@@ -638,6 +638,20 @@ def feedback_stats(request):
         'total_respostas': feedbacks.count()
     }, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def feedback_list(request):
+    try:
+        utilizador = Utilizador.objects.get(user=request.user)
+        if utilizador.role != 'Admin':
+            return Response({'error': 'Acesso não autorizado'}, status=status.HTTP_403_FORBIDDEN)
+            
+        feedbacks = Feedback.objects.all().order_by('-data')
+        serializer = FeedbackSerializer(feedbacks, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Utilizador.DoesNotExist:
+        return Response({'error': 'Utilizador não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
 from django.middleware.csrf import get_token
 from django.http import JsonResponse
 
