@@ -141,7 +141,7 @@ const Frigorifico = () => {
     const ingredientesDisponiveis = dbIngredientes.filter(ing => {
         const fridgeIds = (ingredientesFrigorificoIds || []).map(id => Number(id));
         return !fridgeIds.includes(Number(ing.id));
-    });
+    }).sort((a, b) => a.nome.localeCompare(b.nome));
 
     return (
         <div className="body-wrapper">
