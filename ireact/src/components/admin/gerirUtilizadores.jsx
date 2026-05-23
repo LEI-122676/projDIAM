@@ -7,6 +7,7 @@ import axios from 'axios';
 import '../../css/styles.css';
 import { getCSRFToken } from '../../utils/csrf.js';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
+import Pagination from '../maincomponents/pagination.jsx';
 import Footer from '../maincomponents/Footer.jsx';
 
 const GerirUtilizadores = () => {
@@ -17,6 +18,8 @@ const GerirUtilizadores = () => {
     const navigate = useNavigate();
     const [utilizadores, setUtilizadores] = useState([]);
     const [originalUtilizadores, setOriginalUtilizadores] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
     const [popupConfig, setPopupConfig] = useState({
         isOpen: false,
         title: '',
@@ -148,6 +151,14 @@ const GerirUtilizadores = () => {
         });
     };
 
+    // Pagination logic
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = utilizadores.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(utilizadores.length / itemsPerPage);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
     return (
         <div className="body-wrapper">
             <Header />
@@ -173,7 +184,7 @@ const GerirUtilizadores = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {utilizadores.map(user => {
+                                {currentItems.map(user => {
                                     const origUser = originalUtilizadores.find(u => u.id === user.id);
                                     const hasChanges = origUser && origUser.role !== user.role;
 
@@ -219,6 +230,14 @@ const GerirUtilizadores = () => {
                                 )}
                             </tbody>
                         </table>
+                        {totalPages > 1 && (
+                            <Pagination 
+                                currentPage={currentPage}
+                                totalItems={utilizadores.length}
+                                itemsPerPage={itemsPerPage}
+                                onPageChange={paginate}
+                            />
+                        )}
                     </div>
                     <div className="footer-spacer"></div>
           <Footer />
