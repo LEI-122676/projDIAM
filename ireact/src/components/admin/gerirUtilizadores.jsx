@@ -191,7 +191,7 @@ const GerirUtilizadores = () => {
                                     return (
                                         <tr key={user.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
                                             <td style={{ padding: '15px', fontWeight: 'bold' }}>{user.username}</td>
-                                            <td style={{ padding: '15px' }}>{user.nome} {user.apelido}</td>
+                                            <td style={{ padding: '15px' }}>{user.first_name} {user.last_name}</td>
                                             <td style={{ padding: '15px' }}>{user.email}</td>
                                             <td style={{ padding: '15px' }}>
                                                 <select
