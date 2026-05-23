@@ -155,15 +155,7 @@ const EditarPerfil = () => {
         withCredentials: true
       });
 
-      setPopupConfig({
-        isOpen: true,
-        title: t('perfil.popups.perfil_atualizado_titulo'),
-        message: t('perfil.popups.perfil_atualizado_msg'),
-        singleButton: true,
-        confirmText: t('comum.ok'),
-        onConfirm: () => navigate('/perfil'), 
-        onCancel: () => navigate('/perfil')
-      });
+      navigate('/perfil');
 
     } catch (err) {
       console.error(err);
