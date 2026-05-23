@@ -1865,10 +1865,13 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
     width: 100%;
     background-color: #ffffff;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
+    text-align: center;
     border-top: 1px solid #EAEAEA;
     overflow: hidden;
+    padding: 0 10px;
+    box-sizing: border-box;
 }
 
 .recipe-card-footer .ingredient-name {

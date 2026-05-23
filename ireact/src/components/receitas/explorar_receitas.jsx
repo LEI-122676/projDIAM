@@ -9,6 +9,7 @@ import axios from 'axios';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
+import DisplayCard from '../maincomponents/DisplayCard.jsx';
 
 const ExplorarReceitas = () => {
     const navigate = useNavigate();
@@ -238,31 +239,15 @@ const ExplorarReceitas = () => {
                                 const currentRecipes = reversedFiltered.slice(indexOfFirstRecipe, indexOfLastRecipe);
 
                                 return currentRecipes.map((receita, index) => (
-                                    <div
-                                        key={receita.id || index}
-                                        className="recipe-card-premium cursor-pointer relative-container"
-                                        onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
-                                    >
-                                        <div className="card-rating-badge">
-                                            ⭐ {receita.classificacao || '0.0'}
-                                        </div>
-
-                                        <div className="recipe-image-placeholder">
-                                            {receita.foto_url ? (
-                                                <img
-                                                    src={`${URL_BASE}${receita.foto_url}`}
-                                                    alt={receita.nome}
-                                                    className="cover-image"
-                                                />
-                                            ) : (
-                                                <span className="recipe-icon-large">🍲</span>
-                                            )}
-                                        </div>
-                                        <div className="recipe-card-footer">
-                                            <span className="ingredient-name">{receita.nome}</span>
-                                        </div>
-                                    </div>
-                                ));
+                                     <DisplayCard
+                                         key={receita.id || index}
+                                         title={receita.nome}
+                                         imageUrl={receita.foto_url ? `${URL_BASE}${receita.foto_url}` : null}
+                                         fallbackText="🍲"
+                                         rating={receita.classificacao}
+                                         onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
+                                     />
+                                 ));
                             })()}
                             {filteredReceitas.length === 0 && (
                                 <div className="text-empty-state-center">
