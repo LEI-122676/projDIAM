@@ -43,12 +43,15 @@ const ExplorarEventos = () => {
         axios.get(URL_EVENTOS).then( response => setEventos(response.data))
         .catch( () => console.log("unable to load events"));
 
-        axios.get(URL_USER, {withCredentials: true})
-            .then( response => {
-                setUsername(response.data.username);
-                setUserRole(response.data.role);
-            })
-            .catch( () => console.log("user not logged in"));
+        const userId = localStorage.getItem('utilizadorId');
+        if (userId) {
+            axios.get(`${URL_BASE}/idjango/api/utilizadores/${userId}`, {withCredentials: true})
+                .then( response => {
+                    setUsername(response.data.username);
+                    setUserRole(response.data.role);
+                })
+                .catch( () => console.log("user not logged in"));
+        }
     
     },[]);
 
