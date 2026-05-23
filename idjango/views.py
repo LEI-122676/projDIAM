@@ -196,13 +196,14 @@ def avaliar_receita(request):
 @permission_classes([EventoACL])
 def eventos(request):
     if request.method == 'GET':
-        evento_list = Evento.objects.all()
+        evento_list = Evento.objects.filter(is_active=True)
         serializer = EventoSerializer(evento_list, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
         serializer = EventoSerializer(data=request.data)
         if serializer.is_valid():
-            evento = serializer.save()
+            # Ensure new events are active regardless of incoming data
+            evento = serializer.save(is_active=True)
             if evento.criador:
                 evento.inscritos.add(evento.criador)
             serializer = EventoSerializer(evento)
@@ -233,6 +234,7 @@ def evento_detail(request, evento_id):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
+        # Soft-delete the event
         evento.is_active = False
         evento.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
