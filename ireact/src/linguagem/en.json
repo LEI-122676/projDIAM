@@ -349,8 +349,17 @@
             "cancelar": "Cancel",
             "conta_eliminada": "Account Deleted",
             "conta_eliminada_msg": "User account was successfully deleted/deactivated.",
-            "erro_eliminar_msg": "Unable to delete user account."
-        }
+            "erro_eliminar_msg": "Unable to delete user account.",
+            "aviso_titulo": "Warning",
+            "campos_obrigatorios": "Please fill in all required fields (*).",
+            "erro_validacao_titulo": "Validation Error",
+            "utilizador_criado_msg": "User created successfully! Role: {role}",
+            "erro_criar_msg": "Error creating user"
+        },
+        "selecionar_foto": "Select Photo",
+        "nome": "First Name",
+        "apelido": "Last Name",
+        "username": "Username"
     },
     "cookie_leaderboard": {
         "top_clickers": "Cookie Leaderboard",

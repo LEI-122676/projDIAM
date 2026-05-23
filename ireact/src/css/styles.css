@@ -4021,10 +4021,13 @@ body.dark-mode .score-label {
     padding: 30px 20px 15px;
     text-align: center;
     font-family: 'Inter', sans-serif;
-    margin-top: auto;
-    border-top: 50px solid transparent;
-    background-clip: padding-box;
+    margin-top: 0;
     width: 100%;
+}
+
+.footer-spacer {
+    flex-grow: 1;
+    min-height: 80px;
 }
 
 /* Break out of padding only for padded containers */
@@ -4077,7 +4080,6 @@ body.dark-mode .score-label {
 /* Dark mode overrides for footer */
 body.dark-mode .main-footer {
     background-color: #1a1a1a;
-    border-top: 1px solid #333;
 }
 body.dark-mode .footer-links a {
     color: #aaa;

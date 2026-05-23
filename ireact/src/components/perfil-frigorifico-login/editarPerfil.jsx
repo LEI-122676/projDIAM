@@ -8,6 +8,7 @@ import axios from 'axios';
 import { getCSRFToken } from '../../utils/csrf.js';
 import { getFieldLimits, validateInput } from '../../utils/validation.js';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 
 const EditarPerfil = () => {
   const { t } = useLanguage();
@@ -282,7 +283,9 @@ const EditarPerfil = () => {
 
           </div>
             
-        </main>
+            <div className="footer-spacer"></div>
+          <Footer />
+                </main>
       </div>
       
       <PopupModal 

@@ -7,6 +7,7 @@ import '../../css/styles.css';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import { getCSRFToken } from '../../utils/csrf.js';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 
 const Frigorifico = () => {
     const { t } = useLanguage();
@@ -217,6 +218,8 @@ const Frigorifico = () => {
 
                     </div>
                     
+                    <div className="footer-spacer"></div>
+          <Footer />
                 </main>
             </div>
 
