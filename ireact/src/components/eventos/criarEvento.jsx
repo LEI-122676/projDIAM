@@ -396,7 +396,7 @@ const CriarEvento = () => {
                 <main className="content-profile">
                     <h1 className="page-title-underline">{editEvento ? t('eventos.editar_evento') : t('eventos.criar_evento')}</h1>
                     <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-                    {/* Grid Principal Modificado: 5 Colunas (A terceira consome o espaço dinâmico) */}
+
                     <div className="create-event-two-column-grid" style={{ 
                         display: 'grid',
                         gridTemplateColumns: 'minmax(450px, 600px) 160px 1fr 1px 500px',
@@ -412,7 +412,7 @@ const CriarEvento = () => {
                             display: 'flex', 
                             flexDirection: 'column', 
                             gap: '20px',
-                            boxSizing: 'border-box'
+                            boxSizing: 'border-box', minWidth: '600px'
                         }}>
                             
                             {/* Nome */}
@@ -448,7 +448,7 @@ const CriarEvento = () => {
                                     value={descricao}
                                     onChange={(e) => setDescricao(e.target.value)}
                                     maxLength={limits.evento_descricao_max_length || 500}
-                                    style={{ minHeight: '100px', maxHeight: '220px', resize: 'vertical', maxWidth: '600px', width: '100%' }}
+                                    style={{ minHeight: '100px', maxHeight: '150px', resize: 'vertical', maxWidth: '600px', width: '100%' }}
                                 />
                             </div>
 
@@ -498,17 +498,7 @@ const CriarEvento = () => {
                                     </select>
                                 </div>
                             </div>
-                        </div>
-
-                        {/* COLUNA 2 (MEIO): Pinned closely next to column 1 */}
-                        <div style={{ 
-                            margin: 0, 
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '20px',
-                            width: '300%'
-                        }}>
-                            <div className="form-group" style={{ margin: 0 }}>
+                                                        <div className="form-group" style={{ margin: 0 }}>
                                 <label className="event-metadata-label" style={{ marginBottom: '6px', display: 'block', fontWeight: '600', textAlign: 'left' }}>
                                     {t('eventos.horario')}
                                 </label>
@@ -591,7 +581,7 @@ const CriarEvento = () => {
                                                 </button>
                                             </div>
                                         ))}
-                                        <button type="button" className="btn-add-dashed" style= {{ width: '100%', height: '45px'}} onClick={handleAddAtividade}>
+                                        <button type="button" className="btn-add-dashed" style= {{ width: '100%', height: '45px', color: '#4A3A31'}} onClick={handleAddAtividade}>
                                             + Adicionar atividade
                                         </button>
                                     </div>
@@ -599,16 +589,14 @@ const CriarEvento = () => {
                             </div>
                         </div>
 
-                        {/* ESPAÇO VAZIO DINÂMICO (1fr): Soaks up layout space and pushes column 4 & 5 far right */}
-                        <div style={{ display: 'block' }} />
-
                         {/* LINHA DIVISÓRIA VERTICAL: Aligned right */}
                         <div className="vertical-divider" style={{
                             width: '1px',
                             alignSelf: 'stretch',
                             backgroundColor: '#4A3A3122',
                             minHeight: '100%',
-                            display: 'block'
+                            display: 'block',
+                            margin: '0 300px'
                         }} />
 
                         {/* COLUNA 3: Secção da Imagem e Botões de Ação: Aligned right */}
@@ -618,13 +606,14 @@ const CriarEvento = () => {
                             gap: '15px', 
                             margin: 0,
                             boxSizing: 'border-box',
-                            width: '100%'
+                            width: '150%',
+                            marginLeft: '200px'
                         }}>
                             <div
                                 className="image-upload-placeholder"
                                 onClick={() => fileInputRef.current.click()}
                                 title={t('receitas.criar_receita.adicionar_foto_title')}
-                                style={{ transition: 'all 0.2s ease', cursor: 'pointer', minHeight: '260px', width: '100%' }}
+                                style={{ transition: 'all 0.2s ease', cursor: 'pointer', minHeight: '100px', width: '100%', maxHeight: '550px' }}
                             >
                                 {fotoPreview ? (
                                     <img
