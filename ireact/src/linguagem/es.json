@@ -13,7 +13,10 @@
         "sobre_nos": "Sobre Nosotros",
         "termos": "Términos de Servicio",
         "privacidade": "Política de Privacidad",
-        "direitos": "© 2026 Flavor & Fun. Todos los derechos reservados."
+        "direitos": "© 2026 Flavor & Fun. Todos los derechos reservados.",
+        "termos_de_uso": "Términos de Uso",
+        "contactos": "Contactos",
+        "direitos_reservados": "© 2026 iFridge. Todos los derechos reservados."
     },
     "header": {
         "sair": "Salir",
