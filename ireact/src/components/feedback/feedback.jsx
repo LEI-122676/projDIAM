@@ -8,6 +8,7 @@ import PopupModal from '../maincomponents/popupModal.jsx';
 import { getCSRFToken } from '../../utils/csrf.js';
 import { validateInput } from '../../utils/validation.js';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 
 const FeedbackPage = () => {
     const { t } = useLanguage();
@@ -243,6 +244,8 @@ const FeedbackPage = () => {
                             )}
                         </div>
                     </div>
+                    <div className="footer-spacer"></div>
+          <Footer />
                 </main>
             </div>
             <PopupModal isOpen={popupConfig.isOpen} title={popupConfig.title} message={popupConfig.message} singleButton={popupConfig.singleButton} confirmText={popupConfig.confirmText} cancelText={popupConfig.cancelText} onConfirm={popupConfig.onConfirm} onCancel={popupConfig.onCancel} />

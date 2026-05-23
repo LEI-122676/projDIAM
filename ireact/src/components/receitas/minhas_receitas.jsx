@@ -9,6 +9,7 @@ import axios from 'axios';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
 import DisplayCard from '../maincomponents/DisplayCard.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 
 const AsMinhasReceitas = () => {
     const navigate = useNavigate();
@@ -237,6 +238,8 @@ const AsMinhasReceitas = () => {
 
                     </div>
                     
+                    <div className="footer-spacer"></div>
+          <Footer />
                 </main>
             </div>
 

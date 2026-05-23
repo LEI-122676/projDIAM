@@ -12,6 +12,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { getCSRFToken } from '../../utils/csrf.js';
 import { getFieldLimits, validateInput } from '../../utils/validation.js';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 
 const CriarEvento = () => {
     const { t } = useLanguage();
@@ -653,6 +654,8 @@ const CriarEvento = () => {
 
                     </div>
                     </form>
+                    <div className="footer-spacer"></div>
+          <Footer />
                 </main>
             </div>
 

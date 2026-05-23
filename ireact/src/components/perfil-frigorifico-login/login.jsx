@@ -9,6 +9,7 @@ import PopupModal from '../maincomponents/popupModal.jsx';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 import eyeIcon from '../../assets/eye.svg';
 import eyeOffIcon from '../../assets/eye-off.svg';
+import Footer from '../maincomponents/Footer.jsx';
 
 const Login = () => {
   
@@ -285,7 +286,9 @@ const Login = () => {
           </section>
           </div>
             
-        </main>
+            <div className="footer-spacer"></div>
+          <Footer />
+                </main>
       </div>
 
       <PopupModal

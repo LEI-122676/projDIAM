@@ -9,6 +9,7 @@ import Pagination from '../maincomponents/pagination.jsx';
 import { getCSRFToken } from '../../utils/csrf.js';
 import { getFieldLimits, validateInput } from '../../utils/validation.js';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 
 
 const VerReceita = () => {
@@ -571,6 +572,8 @@ const VerReceita = () => {
 
                     </div>
                     
+                    <div className="footer-spacer"></div>
+          <Footer />
                 </main>
             </div>
 

@@ -3,6 +3,7 @@ import { getFieldLimits, validateInput } from '../../utils/validation.js';
 import { useNavigate } from 'react-router-dom';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import '../../css/styles.css';
 import axios from 'axios';
@@ -49,8 +50,8 @@ const AdminCriarUtilizador = () => {
         if (!formData.firstName || !formData.lastName || !formData.username || !formData.email || !formData.password) {
             setModalConfig({
                 isOpen: true,
-                title: 'Aviso',
-                message: 'Preencha todos os campos obrigatórios (*).',
+                title: t('admin.popups.aviso_titulo'),
+                message: t('admin.popups.campos_obrigatorios'),
                 onConfirm: () => setModalConfig({ ...modalConfig, isOpen: false })
             });
             return;
@@ -60,8 +61,8 @@ const AdminCriarUtilizador = () => {
         if (!nameValidation.isValid) {
             setModalConfig({
                 isOpen: true,
-                title: 'Erro de Validação',
-                message: `Nome: ${nameValidation.error}`,
+                title: t('admin.popups.erro_validacao_titulo'),
+                message: `${t('admin.nome')}: ${nameValidation.error}`,
                 onConfirm: () => setModalConfig({ ...modalConfig, isOpen: false })
             });
             return;
@@ -71,8 +72,8 @@ const AdminCriarUtilizador = () => {
         if (!lastNameValidation.isValid) {
             setModalConfig({
                 isOpen: true,
-                title: 'Erro de Validação',
-                message: `Apelido: ${lastNameValidation.error}`,
+                title: t('admin.popups.erro_validacao_titulo'),
+                message: `${t('admin.apelido')}: ${lastNameValidation.error}`,
                 onConfirm: () => setModalConfig({ ...modalConfig, isOpen: false })
             });
             return;
@@ -82,8 +83,8 @@ const AdminCriarUtilizador = () => {
         if (!usernameValidation.isValid) {
             setModalConfig({
                 isOpen: true,
-                title: 'Erro de Validação',
-                message: `Username: ${usernameValidation.error}`,
+                title: t('admin.popups.erro_validacao_titulo'),
+                message: `${t('admin.username')}: ${usernameValidation.error}`,
                 onConfirm: () => setModalConfig({ ...modalConfig, isOpen: false })
             });
             return;
@@ -109,8 +110,8 @@ const AdminCriarUtilizador = () => {
             if (response.status === 201) {
                 setModalConfig({
                     isOpen: true,
-                    title: 'Sucesso',
-                    message: `Utilizador criado com sucesso! Papel: ${formData.role}`,
+                    title: t('admin.popups.sucesso_titulo'),
+                    message: t('admin.popups.utilizador_criado_msg').replace('{role}', formData.role),
                     onConfirm: () => {
                         setModalConfig({ ...modalConfig, isOpen: false });
                         navigate('/admin/gerir-utilizadores');
@@ -120,8 +121,8 @@ const AdminCriarUtilizador = () => {
         } catch (error) {
             setModalConfig({
                 isOpen: true,
-                title: 'Erro',
-                message: error.response?.data?.msg || 'Erro ao criar utilizador',
+                title: t('admin.popups.erro_titulo'),
+                message: error.response?.data?.msg || t('admin.popups.erro_criar_msg'),
                 onConfirm: () => setModalConfig({ ...modalConfig, isOpen: false })
             });
         }
@@ -224,7 +225,7 @@ const AdminCriarUtilizador = () => {
                                     ) : (
                                         <div className="admin-create-upload-info">
                                             <span className="admin-create-upload-icon">👤</span>
-                                            <span className="image-upload-text">Selecionar Foto</span>
+                                            <span className="image-upload-text">{t('admin.selecionar_foto')}</span>
                                         </div>
                                     )}
                                 </div>
@@ -243,6 +244,8 @@ const AdminCriarUtilizador = () => {
                             </div>
                         </div>
                     </div>
+                    <div className="footer-spacer"></div>
+          <Footer />
                 </main>
             </div>
 

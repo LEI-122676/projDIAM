@@ -349,8 +349,17 @@
             "cancelar": "Cancelar",
             "conta_eliminada": "Cuenta Eliminada",
             "conta_eliminada_msg": "La cuenta del usuario fue eliminada/desactivada con éxito.",
-            "erro_eliminar_msg": "No se pudo eliminar la cuenta del usuario."
-        }
+            "erro_eliminar_msg": "No se pudo eliminar la cuenta del usuario.",
+            "aviso_titulo": "Aviso",
+            "campos_obrigatorios": "Por favor, completa todos los campos obligatorios (*).",
+            "erro_validacao_titulo": "Error de Validación",
+            "utilizador_criado_msg": "¡Usuario creado con éxito! Rol: {role}",
+            "erro_criar_msg": "Error al crear usuario"
+        },
+        "selecionar_foto": "Seleccionar Foto",
+        "nome": "Nombre",
+        "apelido": "Apellido",
+        "username": "Username"
     },
     "cookie_leaderboard": {
         "top_clickers": "Leaderboard de Galletas",

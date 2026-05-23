@@ -8,6 +8,7 @@ import '../../css/styles.css';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import { getCSRFToken } from '../../utils/csrf.js';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 
 const VerEvento = () => {
     const { t } = useLanguage();
@@ -315,6 +316,8 @@ const VerEvento = () => {
                         </div>
                     </div>
                     
+                    <div className="footer-spacer"></div>
+          <Footer />
                 </main>
             </div>
 

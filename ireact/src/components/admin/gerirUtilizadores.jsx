@@ -7,6 +7,7 @@ import axios from 'axios';
 import '../../css/styles.css';
 import { getCSRFToken } from '../../utils/csrf.js';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 
 const GerirUtilizadores = () => {
     const { t } = useLanguage();
@@ -218,6 +219,8 @@ const GerirUtilizadores = () => {
                             </tbody>
                         </table>
                     </div>
+                    <div className="footer-spacer"></div>
+          <Footer />
                 </main>
             </div>
 
