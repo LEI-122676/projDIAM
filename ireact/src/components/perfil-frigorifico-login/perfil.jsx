@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
-import Footer from '../maincomponents/Footer.jsx';
 import '../../css/styles.css';
 import { useNavigate } from 'react-router-dom';
 import PopupModal from '../maincomponents/popupModal.jsx';
@@ -71,7 +70,9 @@ const Perfil = () => {
                 <div className="user-main-info">
                   <div className="user-avatar-large flex-center-overflow-hidden">
                       <img
-                        src={userData.imagem ? (userData.imagem.startsWith('http') ? userData.imagem : `${URL_BASE}${userData.imagem.startsWith('/') ? '' : '/'}${userData.imagem}`) : URL_DEFAULT_PROFILE}
+                        src={!userData.imagem || userData.imagem.endsWith('defaultProfile.png') || userData.imagem.endsWith('defaultProfile.svg')
+                          ? URL_DEFAULT_PROFILE
+                          : (userData.imagem.startsWith('http') ? userData.imagem : `${URL_BASE}${userData.imagem.startsWith('/') ? '' : '/'}${userData.imagem}`)}
                         alt="Imagem do utilizador"
                         className="cover-image-large-rounded"
                       />
@@ -85,11 +86,38 @@ const Perfil = () => {
 
                 <hr className="profile-divider" />
 
-                <div className="user-extra-info">
-                  {/* Puxa diretamente do serializer também */}
-                  <span><strong>{t('perfil.email')}:</strong> {userData.email} </span>
-                  <br />
-                  <span><strong>{t('perfil.biografia')}:</strong> {userData.bio || t('perfil.sem_biografia')}</span>
+                <div className="profile-info-section">
+                  <div className="profile-info-item">
+                    <div className="profile-info-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="info-icon">
+                        <rect x="2" y="4" width="20" height="16" rx="2" />
+                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                      </svg>
+                    </div>
+                    <div className="profile-info-content">
+                      <span className="profile-info-label">{t('perfil.email')}</span>
+                      <span className="profile-info-value">{userData.email}</span>
+                    </div>
+                  </div>
+
+                  <div className="profile-info-item">
+                    <div className="profile-info-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="info-icon">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                      </svg>
+                    </div>
+                    <div className="profile-info-content">
+                      <span className="profile-info-label">{t('perfil.biografia')}</span>
+                      <div className="profile-info-value">
+                        {userData.bio ? (
+                          <p className="profile-bio-text">{userData.bio}</p>
+                        ) : (
+                          <span className="profile-no-bio">{t('perfil.sem_biografia')}</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="profile-actions">
@@ -130,7 +158,7 @@ const Perfil = () => {
             </div>
 
           </div>
-            <Footer />
+            
         </main>
       </div>
       <PopupModal 

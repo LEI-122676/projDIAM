@@ -2,7 +2,6 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
-import Footer from '../maincomponents/Footer.jsx';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import '../../css/styles.css';
@@ -254,7 +253,7 @@ const VerEvento = () => {
                                 </div>
                             </div>
 
-                            <div className="recipe-steps-nav">
+                            <div className="recipe-steps-nav" style= {{ maxWidth: '650px' }}>
                                 <div className="step-nav-item step-nav-item-default">
                                     📅 {evento.data_evento ? formatarDataExibicao(evento.data_evento.substring(0, 10)) : t('eventos.sem_data')}
                                 </div>
@@ -315,7 +314,7 @@ const VerEvento = () => {
                             </div>
                         </div>
                     </div>
-                    <Footer />
+                    
                 </main>
             </div>
 
