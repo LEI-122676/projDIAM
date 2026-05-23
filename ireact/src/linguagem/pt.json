@@ -43,6 +43,9 @@
         "explorar_titulo": "Descobrir Receitas",
         "pesquisar_placeholder": "Pesquisar receitas...",
         "filtro_frigorifico": "Frigorífico",
+        "filtro_classificacao": "Classificação",
+        "classificacao_todas": "Todas as Classificações",
+        "classificacao_superior": "ou superior",
         "nenhuma_receita": "Nenhuma receita encontrada com estes critérios.",
         "detalhes": {
             "passo": "Passo",

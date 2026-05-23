@@ -1371,11 +1371,11 @@ body.dark-mode .step-nav-item:hover {
 }
 
 /* Active state for fridge filter button in dark mode */
-body.dark-mode .btn-filter-fridge.active {
+body.dark-mode .btn-filter-fridge.active, body.dark-mode .rating-filter-wrapper.active {
     background-color: var(--brand-color) !important;
     color: white !important;
 }
-body.dark-mode .btn-filter-fridge.active .recipe-icon-svg {
+body.dark-mode .btn-filter-fridge.active .recipe-icon-svg, body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
     filter: brightness(0) invert(1) !important;
 }
 
@@ -1721,17 +1721,67 @@ body.dark-mode .page-select-dropdown option {
     align-items: center;
     padding: 10px 20px;
     border-radius: 12px;
-    border: 1.5px solid #4A3A31;
-    background-color: #ffffff;
     cursor: pointer;
     font-weight: 600;
-    color: #4A3A31;
-    transition: all 0.2s ease;
+    height: 45px;
+    box-sizing: border-box;
 }
 
-.btn-filter-fridge:hover {
-    background-color: #fcfaf0;
-    transform: translateY(-1px);
+/* Filtro de Classificação */
+.rating-filter-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    height: 45px;
+    box-sizing: border-box;
+}
+
+/* O select nativo fica invisível por cima para o clique funcionar em todo o lado */
+.rating-filter-select-hidden {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 2;
+    cursor: pointer;
+}
+
+.rating-display-text {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.chevron-down-icon {
+    transition: transform 0.2s ease;
+}
+
+/* Ocultar seta nativa no select e estilizar as opções */
+.rating-filter-select-hidden option {
+    background-color: #ffffff !important;
+    color: #4a3a31 !important;
+    font-weight: 600;
+}
+
+body.dark-mode .rating-filter-select-hidden option {
+    background-color: #1e1e1e !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .rating-filter-wrapper.active .rating-display-text {
+    color: white !important;
+}
+
+body.dark-mode .rating-filter-wrapper.active .chevron-down-icon {
+    color: white !important;
+}
+
+body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
+    filter: brightness(0) invert(1) !important;
 }
 
 /* Botão Adicionar (+) */
@@ -1815,10 +1865,13 @@ body.dark-mode .page-select-dropdown option {
     width: 100%;
     background-color: #ffffff;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
+    text-align: center;
     border-top: 1px solid #EAEAEA;
     overflow: hidden;
+    padding: 0 10px;
+    box-sizing: border-box;
 }
 
 .recipe-card-footer .ingredient-name {
@@ -2311,8 +2364,8 @@ body.dark-mode .page-select-dropdown option {
 
 /* Receitas/Popups */
 .text-black { color: black !important; }
-.btn-filter-fridge.active { background-color: var(--brand-color) !important; color: white !important; }
-.btn-filter-fridge.active .recipe-icon-svg { filter: brightness(0) invert(1) !important; }
+.btn-filter-fridge.active, .rating-filter-wrapper.active { background-color: var(--brand-color) !important; color: white !important; }
+.btn-filter-fridge.active .recipe-icon-svg, .rating-filter-wrapper.active .recipe-icon-svg { filter: brightness(0) invert(1) !important; }
 .icon-mr-8 { margin-right: 8px !important; }
 .icon-ml-8 { margin-left: 8px !important; }
 .mt-20 { margin-top: 20px !important; }
@@ -3380,7 +3433,7 @@ body.dark-mode .horario-row th {
 }
 
 /* --- SECONDARY PREMIUM GLASS ELEMENTS (Filtros, Voltar, Caixas de Perfil) --- */
-.shortcut-card, .calendar-filter-wrapper, .btn-filter-fridge:not(.active), 
+.shortcut-card, .calendar-filter-wrapper, .btn-filter-fridge:not(.active), .rating-filter-wrapper:not(.active), 
 .btn-cancel, .btn-cancel-small, .btn-edit-profile, .btn-logout-link {
     position: relative;
     overflow: hidden;
@@ -3394,7 +3447,7 @@ body.dark-mode .horario-row th {
     box-shadow: 0 4px 15px rgba(0,0,0,0.05), inset 0 1px 2px rgba(255,255,255,0.8) !important;
 }
 
-body.dark-mode .shortcut-card, body.dark-mode .calendar-filter-wrapper, body.dark-mode .btn-filter-fridge:not(.active), 
+body.dark-mode .shortcut-card, body.dark-mode .calendar-filter-wrapper, body.dark-mode .btn-filter-fridge:not(.active), body.dark-mode .rating-filter-wrapper:not(.active), 
 body.dark-mode .btn-cancel, body.dark-mode .btn-cancel-small, body.dark-mode .btn-edit-profile, body.dark-mode .btn-logout-link {
     background-color: rgba(30, 30, 30, 0.5) !important;
     color: #e0e0e0;
@@ -3405,19 +3458,19 @@ body.dark-mode .btn-cancel, body.dark-mode .btn-cancel-small, body.dark-mode .bt
 
 
 
-.shortcut-card:hover, .calendar-filter-wrapper:hover, .btn-filter-fridge:not(.active):hover, 
+.shortcut-card:hover, .calendar-filter-wrapper:hover, .btn-filter-fridge:not(.active):hover, .rating-filter-wrapper:not(.active):hover, 
 .btn-cancel:hover, .btn-cancel-small:hover, .btn-edit-profile:hover, .btn-logout-link:hover {
     transform: translateY(-4px) !important;
     box-shadow: 0 8px 25px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.9) !important;
 }
 
-body.dark-mode .shortcut-card:hover, body.dark-mode .calendar-filter-wrapper:hover, body.dark-mode .btn-filter-fridge:not(.active):hover, 
+body.dark-mode .shortcut-card:hover, body.dark-mode .calendar-filter-wrapper:hover, body.dark-mode .btn-filter-fridge:not(.active):hover, body.dark-mode .rating-filter-wrapper:not(.active):hover, 
 body.dark-mode .btn-cancel:hover, body.dark-mode .btn-cancel-small:hover, body.dark-mode .btn-edit-profile:hover, body.dark-mode .btn-logout-link:hover {
     box-shadow: 0 8px 25px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.3) !important;
 }
 
-/* --- FRIDGE FILTER ACTIVE STATE (Keep 3D styling but with brand color) --- */
-.btn-filter-fridge.active {
+/* --- FRIDGE & RATING FILTER ACTIVE STATE (Keep 3D styling but with brand color) --- */
+.btn-filter-fridge.active, .rating-filter-wrapper.active {
     position: relative;
     overflow: hidden;
     background-color: var(--brand-color) !important;
@@ -3427,7 +3480,7 @@ body.dark-mode .btn-cancel:hover, body.dark-mode .btn-cancel-small:hover, body.d
     transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), filter 0.2s !important;
     box-shadow: 0 4px 15px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.4) !important;
 }
-.btn-filter-fridge.active:hover {
+.btn-filter-fridge.active:hover, .rating-filter-wrapper.active:hover {
     transform: translateY(-4px) !important;
     box-shadow: 0 8px 25px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.6) !important;
 }
