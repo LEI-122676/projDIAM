@@ -29,6 +29,7 @@ const ExplorarEventos = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [eventos, setEventos] = useState([]);
     const [userName, setUsername] = useState(null);
+    const [userRole, setUserRole] = useState(null);
 
     const [dataFiltro, setStartDate] = useState(null);
 
@@ -43,7 +44,10 @@ const ExplorarEventos = () => {
         .catch( () => console.log("unable to load events"));
 
         axios.get(URL_USER, {withCredentials: true})
-            .then( response => setUsername(response.data.username))
+            .then( response => {
+                setUsername(response.data.username);
+                setUserRole(response.data.role);
+            })
             .catch( () => console.log("user not logged in"));
     
     },[]);
@@ -165,7 +169,9 @@ const ExplorarEventos = () => {
                                                 ]}
                                             />
                                     </div>
-                                    <button onClick={handleCriarEvento} className="btn-add-recipe">+</button>
+                                    {(userRole === 'Admin' || userRole === 'EventOrganizer') && (
+                                        <button onClick={handleCriarEvento} className="btn-add-recipe">+</button>
+                                    )}
                                 </div>
                             </div>
                         </div>
