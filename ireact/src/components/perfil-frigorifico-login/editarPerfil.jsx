@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
-import Footer from '../maincomponents/Footer.jsx';
 import '../../css/styles.css';
 import { useNavigate } from 'react-router-dom';
 import PopupModal from '../maincomponents/popupModal.jsx';
@@ -65,7 +64,10 @@ const EditarPerfil = () => {
         setEmail(res.data.email || '');
         setBio(res.data.bio || '');
         if (res.data.imagem) {
-          const imagePath = res.data.imagem.startsWith('http') ? res.data.imagem : `${URL_BASE}${res.data.imagem.startsWith('/') ? '' : '/'}${res.data.imagem}`;
+          const isDefault = res.data.imagem.endsWith('defaultProfile.png') || res.data.imagem.endsWith('defaultProfile.svg');
+          const imagePath = isDefault 
+            ? `${URL_BASE}/idjango/media/defaultProfile.svg`
+            : (res.data.imagem.startsWith('http') ? res.data.imagem : `${URL_BASE}${res.data.imagem.startsWith('/') ? '' : '/'}${res.data.imagem}`);
           setFotoPreview(imagePath);
         }
       })
@@ -257,7 +259,10 @@ const EditarPerfil = () => {
                   onClick={() => { 
                     setFoto(null); 
                     if (userData.imagem) {
-                      const imagePath = userData.imagem.startsWith('http') ? userData.imagem : `${URL_BASE}${userData.imagem.startsWith('/') ? '' : '/'}${userData.imagem}`;
+                      const isDefault = userData.imagem.endsWith('defaultProfile.png') || userData.imagem.endsWith('defaultProfile.svg');
+                      const imagePath = isDefault
+                        ? `${URL_BASE}/idjango/media/defaultProfile.svg`
+                        : (userData.imagem.startsWith('http') ? userData.imagem : `${URL_BASE}${userData.imagem.startsWith('/') ? '' : '/'}${userData.imagem}`);
                       setFotoPreview(imagePath);
                     } else {
                       setFotoPreview(null);
@@ -276,7 +281,7 @@ const EditarPerfil = () => {
             </div>
 
           </div>
-            <Footer />
+            
         </main>
       </div>
       

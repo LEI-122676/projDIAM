@@ -1036,6 +1036,7 @@ body.dark-mode .slideshow-container {
 .recipes-search-container {
     position: relative;
     flex: 1;
+    min-width: 0; /* Permite que o container encolha no flexbox */
     max-width: 800px; /* Largura confortável para a barra de busca */
 }
 
@@ -1046,6 +1047,8 @@ body.dark-mode .slideshow-container {
     background-color: #FDFBEE !important;
     padding: 12px 45px 12px 20px !important;
     width: 100%;
+    min-width: 0; /* Permite que o input encolha também */
+    box-sizing: border-box;
     font-family: 'Inter', sans-serif;
     outline: none;
     font-size: 1rem;
@@ -1401,11 +1404,11 @@ body.dark-mode .step-nav-item:hover {
 }
 
 /* Active state for fridge filter button in dark mode */
-body.dark-mode .btn-filter-fridge.active {
+body.dark-mode .btn-filter-fridge.active, body.dark-mode .rating-filter-wrapper.active, body.dark-mode .calendar-filter-wrapper.active {
     background-color: var(--brand-color) !important;
     color: white !important;
 }
-body.dark-mode .btn-filter-fridge.active .recipe-icon-svg {
+body.dark-mode .btn-filter-fridge.active .recipe-icon-svg, body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg, body.dark-mode .calendar-filter-wrapper.active .recipe-icon-svg {
     filter: brightness(0) invert(1) !important;
 }
 
@@ -1749,17 +1752,67 @@ body.dark-mode .page-select-dropdown option {
     align-items: center;
     padding: 10px 20px;
     border-radius: 12px;
-    border: 1.5px solid #4A3A31;
-    background-color: #ffffff;
     cursor: pointer;
     font-weight: 600;
-    color: #4A3A31;
-    transition: all 0.2s ease;
+    height: 45px;
+    box-sizing: border-box;
 }
 
-.btn-filter-fridge:hover {
-    background-color: #fcfaf0;
-    transform: translateY(-1px);
+/* Filtro de Classificação */
+.rating-filter-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    height: 45px;
+    box-sizing: border-box;
+}
+
+/* O select nativo fica invisível por cima para o clique funcionar em todo o lado */
+.rating-filter-select-hidden {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 2;
+    cursor: pointer;
+}
+
+.rating-display-text {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.chevron-down-icon {
+    transition: transform 0.2s ease;
+}
+
+/* Ocultar seta nativa no select e estilizar as opções */
+.rating-filter-select-hidden option {
+    background-color: #ffffff !important;
+    color: #4a3a31 !important;
+    font-weight: 600;
+}
+
+body.dark-mode .rating-filter-select-hidden option {
+    background-color: #1e1e1e !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .rating-filter-wrapper.active .rating-display-text {
+    color: white !important;
+}
+
+body.dark-mode .rating-filter-wrapper.active .chevron-down-icon {
+    color: white !important;
+}
+
+body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
+    filter: brightness(0) invert(1) !important;
 }
 
 /* Botão Adicionar (+) */
@@ -1848,6 +1901,8 @@ body.dark-mode .page-select-dropdown option {
     text-align: center;
     border-top: 1px solid #EAEAEA;
     overflow: hidden;
+    padding: 0 10px;
+    box-sizing: border-box;
 }
 
 .recipe-card-footer .ingredient-name {
@@ -2340,8 +2395,8 @@ body.dark-mode .page-select-dropdown option {
 
 /* Receitas/Popups */
 .text-black { color: black !important; }
-.btn-filter-fridge.active { background-color: var(--brand-color) !important; color: white !important; }
-.btn-filter-fridge.active .recipe-icon-svg { filter: brightness(0) invert(1) !important; }
+.btn-filter-fridge.active, .rating-filter-wrapper.active, .calendar-filter-wrapper.active { background-color: var(--brand-color) !important; color: white !important; }
+.btn-filter-fridge.active .recipe-icon-svg, .rating-filter-wrapper.active .recipe-icon-svg, .calendar-filter-wrapper.active .recipe-icon-svg { filter: brightness(0) invert(1) !important; }
 .icon-mr-8 { margin-right: 8px !important; }
 .icon-ml-8 { margin-left: 8px !important; }
 .mt-20 { margin-top: 20px !important; }
@@ -2545,6 +2600,7 @@ body.dark-mode .page-select-dropdown option {
     position: relative;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     height: 45px;
+    white-space: nowrap;
 }
 
 .calendar-filter-wrapper:hover {
@@ -2553,16 +2609,8 @@ body.dark-mode .page-select-dropdown option {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(46, 74, 53, 0.08);
 }
-
-/* O input nativo fica invisível mas ocupa 100% do botão para o clique funcionar em todo o lado */
-.calendar-hidden-input {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0 !important; /* Força a opacidade a zero em qualquer estado */
-    cursor: pointer;
+.datepicker-anchor {
+    position: relative;
 }
 
 /* Esconde o ícone nativo de relógio/calendário para não colidir com o teu layout */
@@ -2576,6 +2624,17 @@ body.dark-mode .page-select-dropdown option {
     cursor: pointer;
 }
 
+/* The actual injected container inside the popper */
+.react-datepicker-popper > div {
+    display: flex !important;
+    justify-content: flex-end !important; /* Aligns the inner calendar component to the right edge */
+}
+
+/* Ensuring the component itself respects the right-side alignment boundary */
+.react-datepicker {
+    left: auto !important;
+    right: 0 !important;
+}
 .clear-date-btn {
     background: rgba(139, 75, 75, 0.1);
     border: none;
@@ -2598,6 +2657,16 @@ body.dark-mode .page-select-dropdown option {
     color: white;
 }
 
+.calendar-filter-wrapper.active .clear-date-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+.calendar-filter-wrapper.active .clear-date-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    color: #ffffff;
+}
+
 .calendar-filter-wrapper .recipe-icon-svg {
     filter: invert(21%) sepia(15%) saturate(1200%) hue-rotate(345deg) brightness(30%) contrast(85%);
     transition: filter 0.2s;
@@ -2607,6 +2676,21 @@ body.dark-mode .page-select-dropdown option {
     filter: invert(21%) sepia(15%) saturate(2500%) hue-rotate(92deg) brightness(90%) contrast(90%);
 }
 
+.react-datepicker-wrapper {
+    display: inline-block;
+    position: relative; /* Provides a local positioning boundary context */
+}
+
+.react-datepicker-popper {
+    z-index: 9999 !important;
+    position: absolute !important; 
+    bottom: 100% !important;       /* Aligns bottom edge of calendar with top edge of button */
+    top: auto !important;          /* Clears default top alignments */
+    left: auto !important;
+    right: -100px    !important;           /* Snaps perfectly to the right side of the field (top-end layout) */
+    transform: none !important;    /* Safely bypasses dynamic positioning calculations */
+    margin-bottom: 12px !important; /* Adds visual breathing room between calendar and button */
+}
 .create-recipe-container {
     display: flex;
     gap: 60px;
@@ -2686,6 +2770,79 @@ body.dark-mode select option {
     height: 45px;
     text-align: center;
     text-align-last: center;
+    padding: 0 15px;
+    border-radius: 15px;
+    border: 1px solid #EAE6D6;
+    background-color: #FDFBEE;
+}
+
+.create-event-two-column-grid {
+    display: grid;
+    grid-template-columns: minmax(450px, 600px) 1fr 1px 500px;
+    gap: 40px;
+    width: 100%;
+    align-items: start;
+    box-sizing: border-box;
+}
+
+.event-form-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.event-schedule-card {
+    display: grid;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.event-schedule-row,
+.activity-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    align-items: stretch;
+}
+
+.event-activities {
+    display: grid;
+    gap: 12px;
+}
+
+.activity-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.activity-fields input,
+.activity-fields select {
+    min-height: 45px;
+}
+
+.btn-add-dashed {
+    width: 100%;
+    background: transparent;
+    border: 2px dashed #D1CDBC;
+    border-radius: 50px;
+    padding: 12px 0;
+    color: #D1CDBC;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin: 0;
+    max-width: 100%;
+}
+
+.btn-add-dashed:hover {
+    border-color: #344938;
+    color: #344938;
+    background-color: #fcfaf0;
 }
 
 .calendar-display-text {
@@ -3312,6 +3469,98 @@ body.dark-mode .counter-number-mini {
     color: #F5C79A;
 }
 
+.step-nav-item-default {
+    text-align: center;
+    width: 100%;
+}
+
+/* --- TEMA CLARO (Padrão) --- */
+.horario-row {
+    margin: 15px auto;
+    border-collapse: collapse;
+    width: 90%;
+    max-width: 400px;
+    background-color: #FDFBF7; 
+    border: 1px solid #E6DCD3;
+    overflow: hidden;
+}
+
+.horario-row th {
+    background-color: #F0E6DF;
+    color: #5C3A21;
+    padding: 14px 15px;
+    font-weight: 800;
+    text-align: center;
+    border-bottom: 2px solid #D9C5B6;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.horario-row td {
+    padding: 10px 15px;
+    text-align: center;
+    color: #4A4A4A;
+}
+
+
+.horario-row th:first-child, 
+.horario-row td:first-child {
+    border-right: 1px solid #E6DCD3;
+}
+
+.horario-row td:first-child {
+    text-transform: capitalize;
+}
+
+.horario-row tbody tr {
+    border-bottom: 1px solid #F5EFEA;
+}
+
+
+
+/* --- TEMA ESCURO (body.dark-mode) --- */
+body.dark-mode .horario-row {
+    background-color: #1E1E1E;
+    border: 1px solid #333333;
+}
+
+body.dark-mode .horario-row th {
+    background-color: #2D2D2D;
+    color: #F5C79A;
+    border-bottom: 2px solid #444444;
+}
+
+body.dark-mode .horario-row td {
+    color: #E0E0E0;
+}
+
+/* Linha vertical no modo escuro */
+body.dark-mode .horario-row th:first-child, 
+body.dark-mode .horario-row td:first-child {
+    border-right: 1px solid #444444;
+}
+
+body.dark-mode .horario-row tbody tr {
+    border-bottom: 1px solid #2A2A2A;
+}
+
+body.dark-mode .horario-row tr:hover td {
+    background-color: #252525;
+}
+
+
+/* --- CONTADOR MINI (O teu código original) --- */
+.counter-number-mini {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #8A5C38;
+    margin-top: 4px;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+body.dark-mode .counter-number-mini {
+    color: #F5C79A;
+}
 /* Feedback Carousel */
 .horizontal-scroll-container {
     display: flex;
@@ -3423,7 +3672,7 @@ body.dark-mode .horario-row th {
 }
 
 /* --- SECONDARY PREMIUM GLASS ELEMENTS (Filtros, Voltar, Caixas de Perfil) --- */
-.shortcut-card, .calendar-filter-wrapper, .btn-filter-fridge:not(.active), 
+.shortcut-card, .calendar-filter-wrapper, .btn-filter-fridge:not(.active), .rating-filter-wrapper:not(.active), 
 .btn-cancel, .btn-cancel-small, .btn-edit-profile, .btn-logout-link {
     position: relative;
     overflow: hidden;
@@ -3437,7 +3686,7 @@ body.dark-mode .horario-row th {
     box-shadow: 0 4px 15px rgba(0,0,0,0.05), inset 0 1px 2px rgba(255,255,255,0.8) !important;
 }
 
-body.dark-mode .shortcut-card, body.dark-mode .calendar-filter-wrapper, body.dark-mode .btn-filter-fridge:not(.active), 
+body.dark-mode .shortcut-card, body.dark-mode .calendar-filter-wrapper, body.dark-mode .btn-filter-fridge:not(.active), body.dark-mode .rating-filter-wrapper:not(.active), 
 body.dark-mode .btn-cancel, body.dark-mode .btn-cancel-small, body.dark-mode .btn-edit-profile, body.dark-mode .btn-logout-link {
     background-color: rgba(30, 30, 30, 0.5) !important;
     color: #e0e0e0;
@@ -3448,19 +3697,19 @@ body.dark-mode .btn-cancel, body.dark-mode .btn-cancel-small, body.dark-mode .bt
 
 
 
-.shortcut-card:hover, .calendar-filter-wrapper:hover, .btn-filter-fridge:not(.active):hover, 
+.shortcut-card:hover, .calendar-filter-wrapper:hover, .btn-filter-fridge:not(.active):hover, .rating-filter-wrapper:not(.active):hover, 
 .btn-cancel:hover, .btn-cancel-small:hover, .btn-edit-profile:hover, .btn-logout-link:hover {
     transform: translateY(-4px) !important;
     box-shadow: 0 8px 25px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.9) !important;
 }
 
-body.dark-mode .shortcut-card:hover, body.dark-mode .calendar-filter-wrapper:hover, body.dark-mode .btn-filter-fridge:not(.active):hover, 
+body.dark-mode .shortcut-card:hover, body.dark-mode .calendar-filter-wrapper:hover, body.dark-mode .btn-filter-fridge:not(.active):hover, body.dark-mode .rating-filter-wrapper:not(.active):hover, 
 body.dark-mode .btn-cancel:hover, body.dark-mode .btn-cancel-small:hover, body.dark-mode .btn-edit-profile:hover, body.dark-mode .btn-logout-link:hover {
     box-shadow: 0 8px 25px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.3) !important;
 }
 
-/* --- FRIDGE FILTER ACTIVE STATE (Keep 3D styling but with brand color) --- */
-.btn-filter-fridge.active {
+/* --- FRIDGE & RATING FILTER ACTIVE STATE (Keep 3D styling but with brand color) --- */
+.btn-filter-fridge.active, .rating-filter-wrapper.active, .calendar-filter-wrapper.active {
     position: relative;
     overflow: hidden;
     background-color: var(--brand-color) !important;
@@ -3470,7 +3719,7 @@ body.dark-mode .btn-cancel:hover, body.dark-mode .btn-cancel-small:hover, body.d
     transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), filter 0.2s !important;
     box-shadow: 0 4px 15px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.4) !important;
 }
-.btn-filter-fridge.active:hover {
+.btn-filter-fridge.active:hover, .rating-filter-wrapper.active:hover, .calendar-filter-wrapper.active:hover {
     transform: translateY(-4px) !important;
     box-shadow: 0 8px 25px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.6) !important;
 }
@@ -3914,4 +4163,259 @@ body.dark-mode .theme-toggle-btn {
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0,0,0,0.2);
 }
+
+/* --- REACT DATEPICKER PREMIUM THEMING --- */
+
+.react-datepicker-popper {
+    z-index: 1000 !important;
+}
+
+/* Light Mode DatePicker Styles */
+.react-datepicker {
+    font-family: 'Inter', sans-serif !important;
+    background-color: #FDFBEE !important;
+    border: 1px solid #D1CDBC !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 25px rgba(74, 58, 49, 0.15) !important;
+    color: #4A3A31 !important;
+    overflow: hidden;
+    width: 320px !important;
+}
+
+.react-datepicker__month {
+    margin: 12px 10px !important;
+    text-align: center !important;
+}
+
+.react-datepicker__month-wrapper {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+}
+
+.react-datepicker__header {
+    background-color: #F6F4E9 !important;
+    border-bottom: 1px solid #D1CDBC !important;
+    border-top-left-radius: 12px !important;
+    border-top-right-radius: 12px !important;
+    padding-top: 12px !important;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-year-header {
+    color: #4A3A31 !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+}
+
+.react-datepicker__month-text,
+.react-datepicker__year-text {
+    color: #4A3A31 !important;
+    font-weight: 600 !important;
+    padding: 10px 0 !important;
+    margin: 6px 4px !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+    flex: 1 !important;
+    display: block !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+}
+
+.react-datepicker__month-text:hover,
+.react-datepicker__year-text:hover {
+    background-color: #F0EDE0 !important;
+    color: var(--brand-color) !important;
+}
+
+.react-datepicker__month-text--selected,
+.react-datepicker__month-text--keyboard-selected,
+.react-datepicker__year-text--selected,
+.react-datepicker__year-text--keyboard-selected {
+    background-color: var(--brand-color) !important;
+    color: #ffffff !important;
+}
+
+.react-datepicker__month-text--selected:hover,
+.react-datepicker__year-text--selected:hover {
+    background-color: var(--brand-color) !important;
+    color: #ffffff !important;
+}
+
+.react-datepicker__navigation {
+    top: 10px !important;
+}
+
+.react-datepicker__navigation-icon::before {
+    border-color: #4A3A31 !important;
+    border-width: 2px 2px 0 0 !important;
+}
+
+/* Dark Mode DatePicker Styles */
+body.dark-mode .react-datepicker {
+    background-color: #1a1a1a !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .react-datepicker__header {
+    background-color: #242424 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dark-mode .react-datepicker__current-month,
+body.dark-mode .react-datepicker-year-header {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .react-datepicker__month-text,
+body.dark-mode .react-datepicker__year-text {
+    color: #ccc !important;
+}
+
+body.dark-mode .react-datepicker__month-text:hover,
+body.dark-mode .react-datepicker__year-text:hover {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .react-datepicker__month-text--selected,
+body.dark-mode .react-datepicker__month-text--keyboard-selected,
+body.dark-mode .react-datepicker__year-text--selected,
+body.dark-mode .react-datepicker__year-text--keyboard-selected {
+    background-color: var(--brand-color) !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .react-datepicker__navigation-icon::before {
+    border-color: #e0e0e0 !important;
+}
+
+/* --- ISSUE 50: USER PROFILE INFO HIGHLIGHTS --- */
+.profile-info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    margin: 10px 0;
+}
+
+.profile-info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(46, 74, 53, 0.08);
+    border-radius: 16px;
+    padding: 16px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.profile-info-item:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.7);
+    border-color: rgba(46, 74, 53, 0.25);
+    box-shadow: 0 6px 16px rgba(46, 74, 53, 0.04);
+}
+
+.profile-info-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    background: rgba(46, 74, 53, 0.08);
+    color: var(--brand-color);
+    border-radius: 12px;
+    flex-shrink: 0;
+    transition: all 0.25s ease;
+}
+
+.profile-info-item:hover .profile-info-icon {
+    background: var(--brand-color);
+    color: #ffffff;
+}
+
+.info-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.profile-info-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+
+.profile-info-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #8E8A85;
+    margin-bottom: 4px;
+}
+
+.profile-info-value {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #4A3A31;
+    line-height: 1.5;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.profile-bio-text {
+    margin: 0;
+    color: #5C4D44;
+    white-space: pre-line;
+}
+
+.profile-no-bio {
+    color: #A59F98;
+    font-style: italic;
+}
+
+/* Dark mode compatibility for profile info items */
+body.dark-mode .profile-info-item {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border-color: rgba(255, 255, 255, 0.06) !important;
+    box-shadow: none !important;
+}
+
+body.dark-mode .profile-info-item:hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
+}
+
+body.dark-mode .profile-info-icon {
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .profile-info-item:hover .profile-info-icon {
+    background: #e0e0e0 !important;
+    color: #1e1e1e !important;
+}
+
+body.dark-mode .profile-info-label {
+    color: #888888 !important;
+}
+
+body.dark-mode .profile-info-value {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .profile-bio-text {
+    color: #cccccc !important;
+}
+
+body.dark-mode .profile-no-bio {
+    color: #666666 !important;
+}
+
 

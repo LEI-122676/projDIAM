@@ -1,7 +1,6 @@
 import React from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
-import Footer from '../maincomponents/Footer.jsx';
 import iconeLupa from "../../assets/lupa.svg";
 import iconeFiltro from "../../assets/filtro.svg";
 import iconeCalendario from "../../assets/calendario.svg"; 
@@ -15,9 +14,10 @@ import Pagination from '../maincomponents/pagination.jsx';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
+import DisplayCard from '../maincomponents/DisplayCard.jsx';
 
 const ExplorarEventos = () => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
 
     const URL_BASE = 'http://localhost:8000';
     const URL_EVENTOS = `${URL_BASE}/idjango/api/eventos/`;
@@ -29,6 +29,7 @@ const ExplorarEventos = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [eventos, setEventos] = useState([]);
     const [userName, setUsername] = useState(null);
+    const [userRole, setUserRole] = useState(null);
 
     const [dataFiltro, setStartDate] = useState(null);
 
@@ -42,16 +43,23 @@ const ExplorarEventos = () => {
         axios.get(URL_EVENTOS).then( response => setEventos(response.data))
         .catch( () => console.log("unable to load events"));
 
-        axios.get(URL_USER, {withCredentials: true})
-            .then( response => setUsername(response.data.username))
-            .catch( () => console.log("user not logged in"));
+        const userId = localStorage.getItem('utilizadorId');
+        if (userId) {
+            axios.get(`${URL_BASE}/idjango/api/utilizadores/${userId}`, {withCredentials: true})
+                .then( response => {
+                    setUsername(response.data.username);
+                    setUserRole(response.data.role);
+                })
+                .catch( () => console.log("user not logged in"));
+        }
     
     },[]);
 
     const formatarDataExibicao = (dateObj) => {
-        if (!dateObj) return "Filtrar por data";
+        if (!dateObj) return t('eventos.filtrar_data');
         
-        const formatador = new Intl.DateTimeFormat('pt-PT', { month: 'long', year: 'numeric' });
+        const localeCode = language === 'pt' ? 'pt-PT' : language === 'es' ? 'es-ES' : 'en-US';
+        const formatador = new Intl.DateTimeFormat(localeCode, { month: 'long', year: 'numeric' });
         const dataFormatada = formatador.format(dateObj);
         
         return dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1);
@@ -69,7 +77,6 @@ const ExplorarEventos = () => {
         if (!evento.data_evento) return false;
 
         const [anoEvento, mesEvento] = evento.data_evento.split('-'); 
-        
         const anoFiltro = dataFiltro.getFullYear().toString();
         const mesFiltro = (dataFiltro.getMonth() + 1).toString().padStart(2, '0');
 
@@ -96,9 +103,8 @@ const ExplorarEventos = () => {
         }
     }
 
-    // 2. CREATED THIS FORWARDED CUSTOM INPUT COMPONENT TO PASS REFS SAFELY
     const CustomCalendarInput = forwardRef(({ onClick }, ref) => (
-        <button className="calendar-filter-wrapper" onClick={onClick} ref={ref} type="button">
+        <button className={`calendar-filter-wrapper ${dataFiltro ? 'active' : ''}`} onClick={onClick} ref={ref} type="button">
             <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg icon-mr-8" />
             
             <span className={`calendar-display-text font-600 ${dataFiltro ? "mr-4" : ""}`}>
@@ -165,7 +171,9 @@ const ExplorarEventos = () => {
                                                 ]}
                                             />
                                     </div>
-                                    <button onClick={handleCriarEvento} className="btn-add-recipe">+</button>
+                                    {(userRole === 'Admin' || userRole === 'EventOrganizer') && (
+                                        <button onClick={handleCriarEvento} className="btn-add-recipe">+</button>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -177,32 +185,21 @@ const ExplorarEventos = () => {
                                 const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
                                 const currentEvents = reversedFiltered.slice(indexOfFirstEvent, indexOfLastEvent);
 
-                                return currentEvents.map((evento, index) => (
-                                <div 
-                                    key={evento.id || index} 
-                                    className="recipe-card-premium cursor-pointer relative-container"
-                                    onClick={() => navigate('verEvento', { state: { id: evento.id } })}
-                                >
-                                    <div className="recipe-image-placeholder">
-                                        {(evento.foto_url || evento.foto) ? (
-                                            <img
-                                                 src={`${URL_BASE}${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
-                                                alt={evento.nome}
-                                                className="cover-image"
-                                            />
-                                        ) : (
-                                            <img
-                                                src={URL_DEFAULT_EVENT}
-                                                alt={evento.nome}
-                                                className="cover-image"
-                                            />
-                                        )}
-                                    </div>
-                                    <div className="recipe-card-footer">
-                                        <span className="ingredient-name">{evento.nome}</span>
-                                    </div>
-                                </div>
-                                ));
+                                return currentEvents.map((evento, index) => {
+                                    const fotoPath = evento.foto_url || evento.foto;
+                                    const imageUrl = fotoPath 
+                                        ? `${URL_BASE}${fotoPath.startsWith('/') ? '' : '/'}${fotoPath}` 
+                                        : URL_DEFAULT_EVENT;
+
+                                    return (
+                                        <DisplayCard
+                                            key={evento.id || index}
+                                            title={evento.nome}
+                                            imageUrl={imageUrl}
+                                            onClick={() => navigate('verEvento', { state: { id: evento.id } })}
+                                        />
+                                    );
+                                });
                             })()}
                             {eventosFiltrados.length === 0 && (
                                 <p className="full-width-center-mt20">
@@ -217,7 +214,7 @@ const ExplorarEventos = () => {
                             itemsPerPage={eventsPerPage}
                             onPageChange={setCurrentPage}
                         />
-                        <Footer />
+                        
                     </main>
                 </div>
                 <PopupModal 
