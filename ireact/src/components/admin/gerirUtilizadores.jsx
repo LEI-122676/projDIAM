@@ -161,15 +161,15 @@ const GerirUtilizadores = () => {
                         </button>
                     </div>
 
-                    <div className="admin-table-container">
-                        <table className="admin-table">
-                            <thead>
+                    <div className="premium-card" style={{ padding: '0', overflow: 'hidden', marginTop: '20px' }}>
+                        <table className="users-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                            <thead style={{ backgroundColor: 'var(--brand-color)', color: '#fff' }}>
                                 <tr>
-                                    <th>{t('admin.tabela.username')}</th>
-                                    <th>{t('admin.tabela.nome_completo')}</th>
-                                    <th>{t('admin.tabela.email')}</th>
-                                    <th>{t('admin.tabela.permissao')}</th>
-                                    <th>{t('admin.tabela.acoes')}</th>
+                                    <th style={{ padding: '15px' }}>{t('admin.tabela.username')}</th>
+                                    <th style={{ padding: '15px' }}>{t('admin.tabela.nome_completo')}</th>
+                                    <th style={{ padding: '15px' }}>{t('admin.tabela.email')}</th>
+                                    <th style={{ padding: '15px' }}>{t('admin.tabela.permissao')}</th>
+                                    <th style={{ padding: '15px' }}>{t('admin.tabela.acoes')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -178,11 +178,11 @@ const GerirUtilizadores = () => {
                                     const hasChanges = origUser && origUser.role !== user.role;
 
                                     return (
-                                        <tr key={user.id}>
-                                            <td>{user.username}</td>
-                                            <td>{user.nome} {user.apelido}</td>
-                                            <td>{user.email}</td>
-                                            <td>
+                                        <tr key={user.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
+                                            <td style={{ padding: '15px', fontWeight: 'bold' }}>{user.username}</td>
+                                            <td style={{ padding: '15px' }}>{user.nome} {user.apelido}</td>
+                                            <td style={{ padding: '15px' }}>{user.email}</td>
+                                            <td style={{ padding: '15px' }}>
                                                 <select
                                                     className="admin-role-select"
                                                     value={user.role}
@@ -193,7 +193,7 @@ const GerirUtilizadores = () => {
                                                     <option value="Admin">Admin</option>
                                                 </select>
                                             </td>
-                                            <td>
+                                            <td style={{ padding: '15px' }}>
                                                 <button
                                                     className="admin-btn-save"
                                                     disabled={!hasChanges}
@@ -203,6 +203,7 @@ const GerirUtilizadores = () => {
                                                 </button>
                                                 <button
                                                     className="admin-btn-delete"
+                                                    style={{ marginLeft: '10px' }}
                                                     onClick={() => handleDeleteUser(user)}
                                                 >
                                                     {t('admin.botoes.eliminar')}
@@ -213,7 +214,7 @@ const GerirUtilizadores = () => {
                                 })}
                                 {utilizadores.length === 0 && (
                                     <tr>
-                                        <td colSpan="5" className="admin-table-empty">{t('admin.tabela.vazio')}</td>
+                                        <td colSpan="5" className="admin-table-empty" style={{ padding: '15px', textAlign: 'center' }}>{t('admin.tabela.vazio')}</td>
                                     </tr>
                                 )}
                             </tbody>
