@@ -12,7 +12,7 @@ const Perfil = () => {
   const { t } = useLanguage();
   const URL_BASE = 'http://localhost:8000';
   const URL_UTILIZADOR = `${URL_BASE}/idjango/api/utilizadores/`;
-  const URL_DEFAULT_PROFILE = `${URL_BASE}/idjango/media/defaultProfile.png`;
+  const URL_DEFAULT_PROFILE = `${URL_BASE}/idjango/media/defaultProfile.svg`;
   const URL_LOGOUT = `${URL_BASE}/idjango/api/logout/`;
   const navigate = useNavigate();
 

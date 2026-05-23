@@ -348,5 +348,8 @@
             "conta_eliminada_msg": "A conta do utilizador foi eliminada/desativada com sucesso.",
             "erro_eliminar_msg": "Não foi possível eliminar a conta do utilizador."
         }
+    },
+    "cookie_leaderboard": {
+        "top_clickers": "Leaderboard Cookies"
     }
 }

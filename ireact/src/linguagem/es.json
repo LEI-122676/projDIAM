@@ -348,5 +348,8 @@
             "conta_eliminada_msg": "La cuenta del usuario fue eliminada/desactivada con éxito.",
             "erro_eliminar_msg": "No se pudo eliminar la cuenta del usuario."
         }
+    },
+    "cookie_leaderboard": {
+        "top_clickers": "Leaderboard de Galletas"
     }
 }

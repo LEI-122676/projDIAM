@@ -233,8 +233,8 @@ html, body, #root {
 }
 
 .profile-grid {
-    max-width: 1100px;
-    margin: 0 auto;
+    max-width: none;
+    margin: 0;
 }
 
 /* --- LAYOUT DO PERFIL --- */
@@ -244,7 +244,7 @@ html, body, #root {
     gap: 50px;
     align-items: flex-start;
     width: 100%;
-    max-width: 1200px;
+    max-width: none;
 }
 
 /* Coluna Esquerda (Cartão) */
@@ -2852,6 +2852,13 @@ body.dark-mode .admin-role-select {
     box-shadow: 0 6px 20px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.3);
 }
 
+.admin-btn-save:not(:disabled) {
+    background-color: #2E4A35;
+    border-color: #2E4A35;
+}
+.admin-btn-save:not(:disabled):hover {
+    background-color: #1f3324;
+}
 .admin-btn-save:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -2869,6 +2876,13 @@ body.dark-mode .admin-btn-save:hover {
     box-shadow: 0 8px 25px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.3);
 }
 
+body.dark-mode .admin-btn-save:not(:disabled) {
+    background-color: #7c3aed;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+body.dark-mode .admin-btn-save:not(:disabled):hover {
+    background-color: #6d28d9;
+}
 body.dark-mode .admin-btn-save:disabled {
     opacity: 0.4;
 }
@@ -3010,7 +3024,7 @@ body.dark-mode .btn-action-delete:hover {
 .avatar-placeholder-icon { font-size: 48px; margin-bottom: 10px; }
 .text-small { font-size: 0.9rem; }
 .mt-8-center { margin-top: 8px; align-self: center; }
-.profile-container-inner { max-width: 1200px; margin: 0 auto; width: 100%; }
+.profile-container-inner { max-width: none; margin: 0; width: 100%; }
 .flex-center-overflow-hidden { display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .profile-name-text { color: var(--brand-color); margin: 0; }
 .profile-username-text { color: #716259; font-size: 0.9rem; }
@@ -3893,7 +3907,8 @@ body.dark-mode .language-selector:hover {
 }
 body.dark-mode .theme-toggle-btn {
     background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%);
-    color: #111;
+    color: #ffffff !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
 }
 .theme-toggle-btn:hover {
     transform: translateY(-2px);

@@ -348,5 +348,8 @@
             "conta_eliminada_msg": "User account was successfully deleted/deactivated.",
             "erro_eliminar_msg": "Unable to delete user account."
         }
+    },
+    "cookie_leaderboard": {
+        "top_clickers": "Cookie Leaderboard"
     }
 }
