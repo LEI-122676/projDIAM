@@ -17,7 +17,7 @@ import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 import DisplayCard from '../maincomponents/DisplayCard.jsx';
 
 const ExplorarEventos = () => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
 
     const URL_BASE = 'http://localhost:8000';
     const URL_EVENTOS = `${URL_BASE}/idjango/api/eventos/`;
@@ -49,9 +49,10 @@ const ExplorarEventos = () => {
     },[]);
 
     const formatarDataExibicao = (dateObj) => {
-        if (!dateObj) return "Filtrar por data";
+        if (!dateObj) return t('eventos.filtrar_data');
         
-        const formatador = new Intl.DateTimeFormat('pt-PT', { month: 'long', year: 'numeric' });
+        const localeCode = language === 'pt' ? 'pt-PT' : language === 'es' ? 'es-ES' : 'en-US';
+        const formatador = new Intl.DateTimeFormat(localeCode, { month: 'long', year: 'numeric' });
         const dataFormatada = formatador.format(dateObj);
         
         return dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1);
@@ -69,7 +70,6 @@ const ExplorarEventos = () => {
         if (!evento.data_evento) return false;
 
         const [anoEvento, mesEvento] = evento.data_evento.split('-'); 
-        
         const anoFiltro = dataFiltro.getFullYear().toString();
         const mesFiltro = (dataFiltro.getMonth() + 1).toString().padStart(2, '0');
 
@@ -98,7 +98,7 @@ const ExplorarEventos = () => {
 
     // 2. CREATED THIS FORWARDED CUSTOM INPUT COMPONENT TO PASS REFS SAFELY
     const CustomCalendarInput = forwardRef(({ onClick }, ref) => (
-        <button className="calendar-filter-wrapper" onClick={onClick} ref={ref} type="button">
+        <button className={`calendar-filter-wrapper ${dataFiltro ? 'active' : ''}`} onClick={onClick} ref={ref} type="button">
             <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg icon-mr-8" />
             
             <span className={`calendar-display-text font-600 ${dataFiltro ? "mr-4" : ""}`}>
