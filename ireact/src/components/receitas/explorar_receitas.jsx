@@ -9,6 +9,7 @@ import axios from 'axios';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
+import DisplayCard from '../maincomponents/DisplayCard.jsx';
 
 const ExplorarReceitas = () => {
     const navigate = useNavigate();
@@ -24,6 +25,7 @@ const ExplorarReceitas = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [isFridgeFilterActive, setIsFridgeFilterActive] = useState(false);
     const [fridgeIngredients, setFridgeIngredients] = useState([]);
+    const [ratingFilter, setRatingFilter] = useState('all');
 
     const [currentPage, setCurrentPage] = useState(1);
     const recipesPerPage = parseInt(import.meta.env.VITE_RECIPES_PER_PAGE || '20', 10);
@@ -43,7 +45,7 @@ const ExplorarReceitas = () => {
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [searchQuery, isFridgeFilterActive]);
+    }, [searchQuery, isFridgeFilterActive, ratingFilter]);
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
@@ -158,7 +160,14 @@ const ExplorarReceitas = () => {
             }
         }
 
-        return matchesSearch && matchesFridge;
+        let matchesRating = true;
+        if (ratingFilter !== 'all') {
+            const minRating = parseFloat(ratingFilter);
+            const recipeRating = receita.classificacao !== undefined && receita.classificacao !== null ? Number(receita.classificacao) : 0.0;
+            matchesRating = recipeRating >= minRating;
+        }
+
+        return matchesSearch && matchesFridge && matchesRating;
     });
 
     return (
@@ -184,6 +193,31 @@ const ExplorarReceitas = () => {
                             </div>
 
                             <div className="recipes-button-group">
+                                <div className={`rating-filter-wrapper ${ratingFilter !== 'all' ? 'active' : ''}`}>
+                                    <select
+                                        className="rating-filter-select-hidden"
+                                        value={ratingFilter}
+                                        onChange={(e) => setRatingFilter(e.target.value)}
+                                    >
+                                        <option value="all">{t('receitas.classificacao_todas')}</option>
+                                        <option value="4.5">★ 4.5 {t('receitas.classificacao_superior')}</option>
+                                        <option value="4.0">★ 4.0 {t('receitas.classificacao_superior')}</option>
+                                        <option value="3.0">★ 3.0 {t('receitas.classificacao_superior')}</option>
+                                        <option value="2.0">★ 2.0 {t('receitas.classificacao_superior')}</option>
+                                        <option value="1.0">★ 1.0 {t('receitas.classificacao_superior')}</option>
+                                    </select>
+                                    <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg icon-mr-8" />
+                                    <span className="rating-display-text">
+                                        {ratingFilter === 'all' 
+                                            ? t('receitas.classificacao_todas') 
+                                            : `★ ${ratingFilter} ${t('receitas.classificacao_superior')}`
+                                        }
+                                    </span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="chevron-down-icon icon-ml-8">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </div>
+
                                 <button
                                     className={`btn-filter-fridge ${isFridgeFilterActive ? 'active' : ''}`}
                                     onClick={handleFridgeFilterToggle}
@@ -205,31 +239,15 @@ const ExplorarReceitas = () => {
                                 const currentRecipes = reversedFiltered.slice(indexOfFirstRecipe, indexOfLastRecipe);
 
                                 return currentRecipes.map((receita, index) => (
-                                    <div
-                                        key={receita.id || index}
-                                        className="recipe-card-premium cursor-pointer relative-container"
-                                        onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
-                                    >
-                                        <div className="card-rating-badge">
-                                            ⭐ {receita.classificacao || '0.0'}
-                                        </div>
-
-                                        <div className="recipe-image-placeholder">
-                                            {receita.foto_url ? (
-                                                <img
-                                                    src={`${URL_BASE}${receita.foto_url}`}
-                                                    alt={receita.nome}
-                                                    className="cover-image"
-                                                />
-                                            ) : (
-                                                <span className="recipe-icon-large">🍲</span>
-                                            )}
-                                        </div>
-                                        <div className="recipe-card-footer">
-                                            <span className="ingredient-name">{receita.nome}</span>
-                                        </div>
-                                    </div>
-                                ));
+                                     <DisplayCard
+                                         key={receita.id || index}
+                                         title={receita.nome}
+                                         imageUrl={receita.foto_url ? `${URL_BASE}${receita.foto_url}` : null}
+                                         fallbackText="🍲"
+                                         rating={receita.classificacao}
+                                         onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
+                                     />
+                                 ));
                             })()}
                             {filteredReceitas.length === 0 && (
                                 <div className="text-empty-state-center">
@@ -245,6 +263,7 @@ const ExplorarReceitas = () => {
                         />
 
                     </div>
+                    
                 </main>
             </div>
 

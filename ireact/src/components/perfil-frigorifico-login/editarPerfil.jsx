@@ -64,7 +64,10 @@ const EditarPerfil = () => {
         setEmail(res.data.email || '');
         setBio(res.data.bio || '');
         if (res.data.imagem) {
-          const imagePath = res.data.imagem.startsWith('http') ? res.data.imagem : `${URL_BASE}${res.data.imagem.startsWith('/') ? '' : '/'}${res.data.imagem}`;
+          const isDefault = res.data.imagem.endsWith('defaultProfile.png') || res.data.imagem.endsWith('defaultProfile.svg');
+          const imagePath = isDefault 
+            ? `${URL_BASE}/idjango/media/defaultProfile.svg`
+            : (res.data.imagem.startsWith('http') ? res.data.imagem : `${URL_BASE}${res.data.imagem.startsWith('/') ? '' : '/'}${res.data.imagem}`);
           setFotoPreview(imagePath);
         }
       })
@@ -232,7 +235,7 @@ const EditarPerfil = () => {
                   <img
                     src={fotoPreview}
                     alt="Foto de Perfil"
-                    className="cover-image-large-rounded"
+                    className="image-preview-fit"
                   />
                 ) : (
                   <div className="avatar-placeholder-container">
@@ -256,7 +259,10 @@ const EditarPerfil = () => {
                   onClick={() => { 
                     setFoto(null); 
                     if (userData.imagem) {
-                      const imagePath = userData.imagem.startsWith('http') ? userData.imagem : `${URL_BASE}${userData.imagem.startsWith('/') ? '' : '/'}${userData.imagem}`;
+                      const isDefault = userData.imagem.endsWith('defaultProfile.png') || userData.imagem.endsWith('defaultProfile.svg');
+                      const imagePath = isDefault
+                        ? `${URL_BASE}/idjango/media/defaultProfile.svg`
+                        : (userData.imagem.startsWith('http') ? userData.imagem : `${URL_BASE}${userData.imagem.startsWith('/') ? '' : '/'}${userData.imagem}`);
                       setFotoPreview(imagePath);
                     } else {
                       setFotoPreview(null);
@@ -275,6 +281,7 @@ const EditarPerfil = () => {
             </div>
 
           </div>
+            
         </main>
       </div>
       

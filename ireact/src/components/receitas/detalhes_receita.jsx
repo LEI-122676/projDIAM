@@ -570,6 +570,7 @@ const VerReceita = () => {
                         </div>
 
                     </div>
+                    
                 </main>
             </div>
 

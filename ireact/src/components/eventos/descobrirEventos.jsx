@@ -14,9 +14,10 @@ import Pagination from '../maincomponents/pagination.jsx';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
+import DisplayCard from '../maincomponents/DisplayCard.jsx';
 
 const ExplorarEventos = () => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
 
     const URL_BASE = 'http://localhost:8000';
     const URL_EVENTOS = `${URL_BASE}/idjango/api/eventos/`;
@@ -48,9 +49,10 @@ const ExplorarEventos = () => {
     },[]);
 
     const formatarDataExibicao = (dateObj) => {
-        if (!dateObj) return "Filtrar por data";
+        if (!dateObj) return t('eventos.filtrar_data');
         
-        const formatador = new Intl.DateTimeFormat('pt-PT', { month: 'long', year: 'numeric' });
+        const localeCode = language === 'pt' ? 'pt-PT' : language === 'es' ? 'es-ES' : 'en-US';
+        const formatador = new Intl.DateTimeFormat(localeCode, { month: 'long', year: 'numeric' });
         const dataFormatada = formatador.format(dateObj);
         
         return dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1);
@@ -68,7 +70,6 @@ const ExplorarEventos = () => {
         if (!evento.data_evento) return false;
 
         const [anoEvento, mesEvento] = evento.data_evento.split('-'); 
-        
         const anoFiltro = dataFiltro.getFullYear().toString();
         const mesFiltro = (dataFiltro.getMonth() + 1).toString().padStart(2, '0');
 
@@ -96,13 +97,14 @@ const ExplorarEventos = () => {
     }
 
     const CustomCalendarInput = forwardRef(({ onClick }, ref) => (
-        <button className="calendar-filter-wrapper" onClick={onClick} ref={ref} type="button">
-            <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg mr-6" />
-            <img src={iconeCalendario} alt="Calendário" className="recipe-icon-svg mr-8" />
+        <button className={`calendar-filter-wrapper ${dataFiltro ? 'active' : ''}`} onClick={onClick} ref={ref} type="button">
+            <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg icon-mr-8" />
             
             <span className={`calendar-display-text font-600 ${dataFiltro ? "mr-4" : ""}`}>
                 {formatarDataExibicao(dataFiltro)}
             </span>
+            
+            <img src={iconeCalendario} alt="Calendário" className="recipe-icon-svg icon-ml-8" />
             
             {dataFiltro && (
                 <button 
@@ -174,32 +176,21 @@ const ExplorarEventos = () => {
                                 const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
                                 const currentEvents = reversedFiltered.slice(indexOfFirstEvent, indexOfLastEvent);
 
-                                return currentEvents.map((evento, index) => (
-                                <div 
-                                    key={evento.id || index} 
-                                    className="recipe-card-premium cursor-pointer relative-container"
-                                    onClick={() => navigate('verEvento', { state: { id: evento.id } })}
-                                >
-                                    <div className="recipe-image-placeholder">
-                                        {(evento.foto_url || evento.foto) ? (
-                                            <img
-                                                 src={`${URL_BASE}${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
-                                                alt={evento.nome}
-                                                className="cover-image"
-                                            />
-                                        ) : (
-                                            <img
-                                                src={URL_DEFAULT_EVENT}
-                                                alt={evento.nome}
-                                                className="cover-image"
-                                            />
-                                        )}
-                                    </div>
-                                    <div className="recipe-card-footer">
-                                        <span className="ingredient-name">{evento.nome}</span>
-                                    </div>
-                                </div>
-                                ));
+                                return currentEvents.map((evento, index) => {
+                                    const fotoPath = evento.foto_url || evento.foto;
+                                    const imageUrl = fotoPath 
+                                        ? `${URL_BASE}${fotoPath.startsWith('/') ? '' : '/'}${fotoPath}` 
+                                        : URL_DEFAULT_EVENT;
+
+                                    return (
+                                        <DisplayCard
+                                            key={evento.id || index}
+                                            title={evento.nome}
+                                            imageUrl={imageUrl}
+                                            onClick={() => navigate('verEvento', { state: { id: evento.id } })}
+                                        />
+                                    );
+                                });
                             })()}
                             {eventosFiltrados.length === 0 && (
                                 <p className="full-width-center-mt20">
@@ -214,6 +205,7 @@ const ExplorarEventos = () => {
                             itemsPerPage={eventsPerPage}
                             onPageChange={setCurrentPage}
                         />
+                        
                     </main>
                 </div>
                 <PopupModal 

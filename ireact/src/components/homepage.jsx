@@ -4,6 +4,7 @@ import Header from './maincomponents/header.jsx';
 import Sidebar from './maincomponents/sidebar.jsx';
 import Slideshow from './maincomponents/Slideshow.jsx';
 import LogoSlider from './maincomponents/LogoSlider.jsx';
+import CookieLeaderboard from './maincomponents/CookieLeaderboard.jsx';
 import axios from 'axios';
 import '../css/styles.css';
 import { useLanguage } from '../linguagem/LanguageContext.jsx';
@@ -75,9 +76,14 @@ const Home = () => {
                 </div>
               </div>
             )}
-
-            <LogoSlider />
           </div>
+          
+          {/* Logo Slider placed outside home-container to allow full bleed */}
+          <div className="full-width-section">
+            <LogoSlider />
+            <CookieLeaderboard />
+          </div>
+          
         </main>
       </div>
     </div>

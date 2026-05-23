@@ -3,7 +3,17 @@
         "ok": "OK",
         "cancelar": "Cancelar",
         "iniciar_sessao": "Iniciar Sesión",
-        "voltar": "Volver"
+        "voltar": "Volver",
+        "anterior": "Anterior",
+        "seguinte": "Siguiente",
+        "pagina": "Página",
+        "de": "de"
+    },
+    "footer": {
+        "sobre_nos": "Sobre Nosotros",
+        "termos": "Términos de Servicio",
+        "privacidade": "Política de Privacidad",
+        "direitos": "© 2026 Flavor & Fun. Todos los derechos reservados."
     },
     "header": {
         "sair": "Salir",
@@ -33,6 +43,9 @@
         "explorar_titulo": "Descubrir Recetas",
         "pesquisar_placeholder": "Buscar recetas...",
         "filtro_frigorifico": "Nevera",
+        "filtro_classificacao": "Calificación",
+        "classificacao_todas": "Todas las Calificaciones",
+        "classificacao_superior": "o superior",
         "nenhuma_receita": "No se han encontrado recetas con estos criterios.",
         "detalhes": {
             "passo": "Paso",
@@ -166,6 +179,12 @@
         "horario": "Horario*",
         "capacidade": "Capacidad*",
         "pessoas_max": "personas Max.",
+        "sem_data_hora": "Sin fecha/hora",
+        "evento_comecou": "¡El evento ha comenzado!",
+        "contagem_decrescente": "Cuenta regresiva:",
+        "a_calcular": "Calculando...",
+        "atividade": "Actividad",
+        "horarios": "Horarios",
         "popups": {
             "acesso_restrito_criar": "¡Necesitas iniciar sesión para crear un nuevo evento. Crea una cuenta o inicia sesión para crear tu evento!",
             "acesso_restrito_inscrever": "inscribirte en este evento",
@@ -298,5 +317,36 @@
         "chocolate": "Chocolate",
         "canela": "Canela",
         "salsa": "Perejil"
+    },
+    "admin": {
+        "gerir_utilizadores": "Gestionar Usuarios",
+        "criar_utilizador": "Crear Usuario",
+        "foto_perfil": "Foto de Perfil",
+        "tabela": {
+            "username": "Nombre de usuario",
+            "nome_completo": "Nombre Completo",
+            "email": "Email",
+            "permissao": "Permiso",
+            "acoes": "Acciones",
+            "vazio": "No hay otros usuarios registrados."
+        },
+        "botoes": {
+            "guardar": "Guardar",
+            "eliminar": "Eliminar"
+        },
+        "popups": {
+            "erro_carregar": "No se pudieron cargar los usuarios.",
+            "sucesso_titulo": "Éxito",
+            "permissoes_atualizadas": "Permisos de usuario actualizados.",
+            "erro_titulo": "Error",
+            "falha_atualizar": "No se pudieron actualizar los permisos del usuario.",
+            "confirmar_eliminacao": "Confirmar Eliminación",
+            "apagar_conta_msg": "¿Estás seguro de que deseas eliminar esta cuenta? Esta acción desactivará la cuenta.",
+            "eliminar": "Eliminar",
+            "cancelar": "Cancelar",
+            "conta_eliminada": "Cuenta Eliminada",
+            "conta_eliminada_msg": "La cuenta del usuario fue eliminada/desactivada con éxito.",
+            "erro_eliminar_msg": "No se pudo eliminar la cuenta del usuario."
+        }
     }
 }

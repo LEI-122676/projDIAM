@@ -347,6 +347,7 @@ const CriarReceita = () => {
                         </div>
 
                     </div>
+                    
                 </main>
             </div>
 

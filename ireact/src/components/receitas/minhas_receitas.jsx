@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
+import DisplayCard from '../maincomponents/DisplayCard.jsx';
 
 const AsMinhasReceitas = () => {
     const navigate = useNavigate();
@@ -175,29 +176,14 @@ const AsMinhasReceitas = () => {
                                     const currentCriadas = reversedCriadas.slice(indexOfFirst, indexOfLast);
                                     
                                     return currentCriadas.map((receita) => (
-                                        <div
+                                        <DisplayCard
                                             key={`criada-${receita.id}`}
-                                            className="recipe-card-premium cursor-pointer relative-container"
+                                            title={receita.nome}
+                                            imageUrl={receita.foto_url ? `${URL_BASE}${receita.foto_url}` : null}
+                                            fallbackText="🍲"
+                                            rating={receita.classificacao}
                                             onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
-                                        >
-                                            <div className="card-rating-badge">
-                                                ⭐ {receita.classificacao || '0.0'}
-                                            </div>
-                                            <div className="recipe-image-placeholder">
-                                                {receita.foto_url ? (
-                                                    <img
-                                                        src={`${URL_BASE}${receita.foto_url}`}
-                                                        alt={receita.nome}
-                                                        className="cover-image"
-                                                    />
-                                                ) : (
-                                                    <span className="recipe-icon-large">🍲</span>
-                                                )}
-                                            </div>
-                                            <div className="recipe-card-footer">
-                                                <span className="ingredient-name">{receita.nome}</span>
-                                            </div>
-                                        </div>
+                                        />
                                     ));
                                 })()}
                                 {criadasPorMim.length === 0 && (
@@ -224,29 +210,14 @@ const AsMinhasReceitas = () => {
                                     const currentGuardadas = reversedGuardadas.slice(indexOfFirst, indexOfLast);
                                     
                                     return currentGuardadas.map((receita) => (
-                                        <div
+                                        <DisplayCard
                                             key={`guardada-${receita.id}`}
-                                            className="recipe-card-premium cursor-pointer relative-container"
+                                            title={receita.nome}
+                                            imageUrl={receita.foto_url ? `${URL_BASE}${receita.foto_url}` : null}
+                                            fallbackText="🍲"
+                                            rating={receita.classificacao}
                                             onClick={() => navigate('/receitas/ver-receita', { state: { id: receita.id } })}
-                                        >
-                                            <div className="card-rating-badge">
-                                                ⭐ {receita.classificacao || '0.0'}
-                                            </div>
-                                            <div className="recipe-image-placeholder">
-                                                {receita.foto_url ? (
-                                                    <img
-                                                        src={`${URL_BASE}${receita.foto_url}`}
-                                                        alt={receita.nome}
-                                                        className="cover-image"
-                                                    />
-                                                ) : (
-                                                    <span className="recipe-icon-large">🍲</span>
-                                                )}
-                                            </div>
-                                            <div className="recipe-card-footer">
-                                                <span className="ingredient-name">{receita.nome}</span>
-                                            </div>
-                                        </div>
+                                        />
                                     ));
                                 })()}
                                 {receitasGuardadas.length === 0 && (
@@ -265,6 +236,7 @@ const AsMinhasReceitas = () => {
 
 
                     </div>
+                    
                 </main>
             </div>
 

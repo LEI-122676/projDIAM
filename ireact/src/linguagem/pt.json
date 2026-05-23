@@ -3,7 +3,17 @@
         "ok": "OK",
         "cancelar": "Cancelar",
         "iniciar_sessao": "Iniciar Sessão",
-        "voltar": "Voltar"
+        "voltar": "Voltar",
+        "anterior": "Anterior",
+        "seguinte": "Seguinte",
+        "pagina": "Página",
+        "de": "de"
+    },
+    "footer": {
+        "sobre_nos": "Sobre Nós",
+        "termos": "Termos de Serviço",
+        "privacidade": "Política de Privacidade",
+        "direitos": "© 2026 Flavor & Fun. Todos os direitos reservados."
     },
     "header": {
         "sair": "Sair",
@@ -33,6 +43,9 @@
         "explorar_titulo": "Descobrir Receitas",
         "pesquisar_placeholder": "Pesquisar receitas...",
         "filtro_frigorifico": "Frigorífico",
+        "filtro_classificacao": "Classificação",
+        "classificacao_todas": "Todas as Classificações",
+        "classificacao_superior": "ou superior",
         "nenhuma_receita": "Nenhuma receita encontrada com estes critérios.",
         "detalhes": {
             "passo": "Passo",
@@ -166,6 +179,12 @@
         "horario": "Horário*",
         "capacidade": "Capacidade*",
         "pessoas_max": "pessoas Max.",
+        "sem_data_hora": "Sem data/hora",
+        "evento_comecou": "O evento começou!",
+        "contagem_decrescente": "Contagem Decrescente:",
+        "a_calcular": "A calcular...",
+        "atividade": "Atividade",
+        "horarios": "Horários",
         "popups": {
             "acesso_restrito_criar": "Precisas de iniciar sessão para criar um novo evento. Crie uma conta ou faça login para criar o seu evento!",
             "acesso_restrito_inscrever": "te inscreveres neste evento",
@@ -298,5 +317,36 @@
         "chocolate": "Chocolate",
         "canela": "Canela",
         "salsa": "Salsa"
+    },
+    "admin": {
+        "gerir_utilizadores": "Gerir Utilizadores",
+        "criar_utilizador": "Criar Utilizador",
+        "foto_perfil": "Foto de Perfil",
+        "tabela": {
+            "username": "Username",
+            "nome_completo": "Nome Completo",
+            "email": "Email",
+            "permissao": "Permissão",
+            "acoes": "Ações",
+            "vazio": "Não existem outros utilizadores registados."
+        },
+        "botoes": {
+            "guardar": "Guardar",
+            "eliminar": "Eliminar"
+        },
+        "popups": {
+            "erro_carregar": "Não foi possível carregar os utilizadores.",
+            "sucesso_titulo": "Sucesso",
+            "permissoes_atualizadas": "Permissões do utilizador atualizadas.",
+            "erro_titulo": "Erro",
+            "falha_atualizar": "Falha ao atualizar as permissões do utilizador.",
+            "confirmar_eliminacao": "Confirmar Eliminação",
+            "apagar_conta_msg": "Tens a certeza que desejas eliminar esta conta? Esta ação irá desativar a conta.",
+            "eliminar": "Eliminar",
+            "cancelar": "Cancelar",
+            "conta_eliminada": "Conta Eliminada",
+            "conta_eliminada_msg": "A conta do utilizador foi eliminada/desativada com sucesso.",
+            "erro_eliminar_msg": "Não foi possível eliminar a conta do utilizador."
+        }
     }
 }

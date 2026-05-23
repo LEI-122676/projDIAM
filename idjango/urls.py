@@ -35,5 +35,7 @@ urlpatterns = [
     
     path('api/feedback/', views.submit_feedback),
     path('api/feedback/stats/', views.feedback_stats),
+    path('api/csrf/', views.csrf),
+    path('api/cookie-leaderboard/', views.cookie_leaderboard),
 ]
 

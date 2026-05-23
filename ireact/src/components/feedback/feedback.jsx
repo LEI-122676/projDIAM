@@ -174,7 +174,6 @@ const FeedbackPage = () => {
                 <main className="content-profile">
                     <div className="feedback-container" style={{ maxWidth: '900px', margin: '0 auto' }}>
                         <h1 className="page-title-underline">{t('feedback.titulo')}</h1>
-                        <p style={{ color: '#716259', marginBottom: '30px', fontSize: '1.1rem' }}>{t('feedback.subtitulo')}</p>
                         
                         <div className="profile-layout-container" style={{ flexDirection: 'column', gap: '30px' }}>
                             <div className="content-box-light" style={{ width: '100%' }}>
@@ -209,9 +208,9 @@ const FeedbackPage = () => {
                                 </div>
 
                                 <div style={{ display: 'flex', gap: '15px', marginTop: '10px' }}>
-                                    <button className="btn-create-submit" onClick={handleSubmit}>{t('feedback.submeter_feedback')}</button>
+                                    <button className="btn-create-submit" style={{ flex: 1 }} onClick={handleSubmit}>{t('feedback.submeter_feedback')}</button>
                                     {hasFeedback && (
-                                        <button className="btn-profile-pill secondary" style={{ color: 'red', borderColor: 'red' }} onClick={handleDelete}>{t('feedback.remover_feedback')}</button>
+                                        <button className="btn-create-submit" style={{ flex: 1, backgroundColor: 'transparent', color: 'red', border: '1px solid red' }} onClick={handleDelete}>{t('feedback.remover_feedback')}</button>
                                     )}
                                 </div>
                             </div>

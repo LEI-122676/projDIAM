@@ -153,7 +153,11 @@ const Frigorifico = () => {
 
                         <div className="fridge-header fridge-header-flex">
                             <h1 className="page-title-underline m-0">{t('frigorifico.titulo')}</h1>
-                            <button className="btn-create-submit btn-rounded-20" onClick={irParaReceitas}>
+                            <button 
+                                className="btn-create-submit btn-rounded-20" 
+                                onClick={irParaReceitas}
+                                disabled={ingredientesFrigorificoIds.length === 0}
+                            >
                                 {t('frigorifico.mostrar_receitas')}
                             </button>
                         </div>
@@ -212,6 +216,7 @@ const Frigorifico = () => {
                         </section>
 
                     </div>
+                    
                 </main>
             </div>
 

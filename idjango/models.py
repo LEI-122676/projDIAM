@@ -24,7 +24,7 @@ class Utilizador(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     frigorifico = models.OneToOneField(Frigorifico, on_delete=models.DO_NOTHING)
     
-    imagem = models.ImageField(upload_to='profile_pics', default='defaultProfile.png')
+    imagem = models.ImageField(upload_to='profile_pics', default='defaultProfile.svg')
     bio = models.TextField(null=True)
     cookie_clicks = models.IntegerField(default=0)
 

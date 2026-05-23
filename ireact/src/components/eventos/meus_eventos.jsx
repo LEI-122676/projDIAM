@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
+import DisplayCard from '../maincomponents/DisplayCard.jsx';
 
 const OsMeusEventos = () => {
     const navigate = useNavigate();
@@ -99,32 +100,21 @@ const OsMeusEventos = () => {
                                     const indexOfFirst = indexOfLast - itemsPerPage;
                                     const currentCriados = reversedCriados.slice(indexOfFirst, indexOfLast);
                                     
-                                    return currentCriados.map((evento) => (
-                                        <div
-                                            key={`criada-${evento.id}`}
-                                            className="recipe-card-premium cursor-pointer relative-container"
-                                            onClick={() => navigate('/eventos/verEvento', { state: { id: evento.id } })}
-                                        >
-                                            <div className="recipe-image-placeholder">
-                                                {(evento.foto_url || evento.foto) ? (
-                                                    <img
-                                                        src={`${URL_BASE}${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
-                                                        alt={evento.nome}
-                                                        className="cover-image"
-                                                    />
-                                                ) : (
-                                                    <img
-                                                        src={URL_DEFAULT_EVENT}
-                                                        alt={evento.nome}
-                                                        className="cover-image"
-                                                    />
-                                                )}
-                                            </div>
-                                            <div className="recipe-card-footer">
-                                                <span className="ingredient-name">{evento.nome}</span>
-                                            </div>
-                                        </div>
-                                    ));
+                                    return currentCriados.map((evento) => {
+                                        const fotoPath = evento.foto_url || evento.foto;
+                                        const imageUrl = fotoPath 
+                                            ? `${URL_BASE}${fotoPath.startsWith('/') ? '' : '/'}${fotoPath}` 
+                                            : URL_DEFAULT_EVENT;
+
+                                        return (
+                                            <DisplayCard
+                                                key={`criada-${evento.id}`}
+                                                title={evento.nome}
+                                                imageUrl={imageUrl}
+                                                onClick={() => navigate('/eventos/verEvento', { state: { id: evento.id } })}
+                                            />
+                                        );
+                                    });
                                 })()}
                                 {criadasPorMim.length === 0 && (
                                     <p className="text-empty-state">
@@ -149,33 +139,21 @@ const OsMeusEventos = () => {
                                     const indexOfFirst = indexOfLast - itemsPerPage;
                                     const currentInscritos = reversedInscritos.slice(indexOfFirst, indexOfLast);
                                     
-                                    return currentInscritos.map((evento) => (
-                                        <div
-                                            key={`guardada-${evento.id}`}
-                                            className="recipe-card-premium cursor-pointer relative-container"
-                                            onClick={() => navigate('/eventos/verEvento', { state: { id: evento.id } })}
-                                        >
+                                    return currentInscritos.map((evento) => {
+                                         const fotoPath = evento.foto_url || evento.foto;
+                                         const imageUrl = fotoPath 
+                                             ? `${URL_BASE}${fotoPath.startsWith('/') ? '' : '/'}${fotoPath}` 
+                                             : URL_DEFAULT_EVENT;
 
-                                            <div className="recipe-image-placeholder">
-                                                {(evento.foto_url || evento.foto) ? (
-                                                    <img
-                                                        src={`${URL_BASE}${(evento.foto_url || evento.foto).startsWith('/') ? '' : '/'}${evento.foto_url || evento.foto}`}
-                                                        alt={evento.nome}
-                                                        className="cover-image"
-                                                    />
-                                                ) : (
-                                                    <img
-                                                        src={URL_DEFAULT_EVENT}
-                                                        alt={evento.nome}
-                                                        className="cover-image"
-                                                    />
-                                                )}
-                                            </div>
-                                            <div className="recipe-card-footer">
-                                                <span className="ingredient-name">{evento.nome}</span>
-                                            </div>
-                                        </div>
-                                    ));
+                                         return (
+                                             <DisplayCard
+                                                 key={`guardada-${evento.id}`}
+                                                 title={evento.nome}
+                                                 imageUrl={imageUrl}
+                                                 onClick={() => navigate('/eventos/verEvento', { state: { id: evento.id } })}
+                                             />
+                                         );
+                                     });
                                 })()}
                                 {eventosInscritos.length === 0 && (
                                     <p className="text-empty-state">
@@ -191,6 +169,7 @@ const OsMeusEventos = () => {
                             />
                         </div>
                     </div>
+                    
                 </main>
             </div>
 
