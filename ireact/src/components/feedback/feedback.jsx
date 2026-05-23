@@ -233,7 +233,7 @@ const FeedbackPage = () => {
                                             <ul style={{ listStyle: 'none', padding: 0, lineHeight: '2' }}>
                                                 {Object.entries(stats.poll).map(([k, v]) => (
                                                     <li key={k}>
-                                                        <strong>{k === 'Frigorifico' ? t('feedback.frigorifico') : k === 'Estetica' ? t('feedback.estetica') : k === 'Receitas' ? t('feedback.receitas') : t('feedback.eventos')}</strong>: {v} {t('feedback.votos')}
+                                                        {k === 'Frigorifico' ? t('feedback.frigorifico') : k === 'Estetica' ? t('feedback.estetica') : k === 'Receitas' ? t('feedback.receitas') : t('feedback.eventos')}: {v} {t('feedback.votos')}
                                                     </li>
                                                 ))}
                                             </ul>
