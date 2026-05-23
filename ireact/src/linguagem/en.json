@@ -43,6 +43,9 @@
         "explorar_titulo": "Discover Recipes",
         "pesquisar_placeholder": "Search recipes...",
         "filtro_frigorifico": "Fridge",
+        "filtro_classificacao": "Rating",
+        "classificacao_todas": "All Ratings",
+        "classificacao_superior": "or higher",
         "nenhuma_receita": "No recipes found with these criteria.",
         "detalhes": {
             "passo": "Step",

@@ -43,6 +43,9 @@
         "explorar_titulo": "Descubrir Recetas",
         "pesquisar_placeholder": "Buscar recetas...",
         "filtro_frigorifico": "Nevera",
+        "filtro_classificacao": "Calificación",
+        "classificacao_todas": "Todas las Calificaciones",
+        "classificacao_superior": "o superior",
         "nenhuma_receita": "No se han encontrado recetas con estos criterios.",
         "detalhes": {
             "passo": "Paso",
