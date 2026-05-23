@@ -15,6 +15,7 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 import DisplayCard from '../maincomponents/DisplayCard.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 
 const ExplorarEventos = () => {
     const { t, language } = useLanguage();
@@ -215,7 +216,9 @@ const ExplorarEventos = () => {
                             onPageChange={setCurrentPage}
                         />
                         
-                    </main>
+                        <div className="footer-spacer"></div>
+          <Footer />
+                </main>
                 </div>
                 <PopupModal 
                     isOpen={popupConfig.isOpen}

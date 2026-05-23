@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import axios from 'axios';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 
 const Perfil = () => {
   const { t } = useLanguage();
@@ -159,7 +160,9 @@ const Perfil = () => {
 
           </div>
             
-        </main>
+            <div className="footer-spacer"></div>
+          <Footer />
+                </main>
       </div>
       <PopupModal 
         isOpen={popupConfig.isOpen}

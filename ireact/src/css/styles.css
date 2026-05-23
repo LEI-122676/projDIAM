@@ -2683,7 +2683,7 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 
 .react-datepicker-popper {
     z-index: 9999 !important;
-    position: absolute !important; 
+    position: absolute !important;
     bottom: 100% !important;       /* Aligns bottom edge of calendar with top edge of button */
     top: auto !important;          /* Clears default top alignments */
     left: auto !important;
@@ -3480,7 +3480,7 @@ body.dark-mode .counter-number-mini {
     border-collapse: collapse;
     width: 90%;
     max-width: 400px;
-    background-color: #FDFBF7; 
+    background-color: #FDFBF7;
     border: 1px solid #E6DCD3;
     overflow: hidden;
 }
@@ -3503,7 +3503,7 @@ body.dark-mode .counter-number-mini {
 }
 
 
-.horario-row th:first-child, 
+.horario-row th:first-child,
 .horario-row td:first-child {
     border-right: 1px solid #E6DCD3;
 }
@@ -3535,7 +3535,7 @@ body.dark-mode .horario-row td {
 }
 
 /* Linha vertical no modo escuro */
-body.dark-mode .horario-row th:first-child, 
+body.dark-mode .horario-row th:first-child,
 body.dark-mode .horario-row td:first-child {
     border-right: 1px solid #444444;
 }
@@ -3672,7 +3672,7 @@ body.dark-mode .horario-row th {
 }
 
 /* --- SECONDARY PREMIUM GLASS ELEMENTS (Filtros, Voltar, Caixas de Perfil) --- */
-.shortcut-card, .calendar-filter-wrapper, .btn-filter-fridge:not(.active), .rating-filter-wrapper:not(.active), 
+.shortcut-card, .calendar-filter-wrapper, .btn-filter-fridge:not(.active), .rating-filter-wrapper:not(.active),
 .btn-cancel, .btn-cancel-small, .btn-edit-profile, .btn-logout-link {
     position: relative;
     overflow: hidden;
@@ -3686,7 +3686,7 @@ body.dark-mode .horario-row th {
     box-shadow: 0 4px 15px rgba(0,0,0,0.05), inset 0 1px 2px rgba(255,255,255,0.8) !important;
 }
 
-body.dark-mode .shortcut-card, body.dark-mode .calendar-filter-wrapper, body.dark-mode .btn-filter-fridge:not(.active), body.dark-mode .rating-filter-wrapper:not(.active), 
+body.dark-mode .shortcut-card, body.dark-mode .calendar-filter-wrapper, body.dark-mode .btn-filter-fridge:not(.active), body.dark-mode .rating-filter-wrapper:not(.active),
 body.dark-mode .btn-cancel, body.dark-mode .btn-cancel-small, body.dark-mode .btn-edit-profile, body.dark-mode .btn-logout-link {
     background-color: rgba(30, 30, 30, 0.5) !important;
     color: #e0e0e0;
@@ -3697,13 +3697,13 @@ body.dark-mode .btn-cancel, body.dark-mode .btn-cancel-small, body.dark-mode .bt
 
 
 
-.shortcut-card:hover, .calendar-filter-wrapper:hover, .btn-filter-fridge:not(.active):hover, .rating-filter-wrapper:not(.active):hover, 
+.shortcut-card:hover, .calendar-filter-wrapper:hover, .btn-filter-fridge:not(.active):hover, .rating-filter-wrapper:not(.active):hover,
 .btn-cancel:hover, .btn-cancel-small:hover, .btn-edit-profile:hover, .btn-logout-link:hover {
     transform: translateY(-4px) !important;
     box-shadow: 0 8px 25px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.9) !important;
 }
 
-body.dark-mode .shortcut-card:hover, body.dark-mode .calendar-filter-wrapper:hover, body.dark-mode .btn-filter-fridge:not(.active):hover, body.dark-mode .rating-filter-wrapper:not(.active):hover, 
+body.dark-mode .shortcut-card:hover, body.dark-mode .calendar-filter-wrapper:hover, body.dark-mode .btn-filter-fridge:not(.active):hover, body.dark-mode .rating-filter-wrapper:not(.active):hover,
 body.dark-mode .btn-cancel:hover, body.dark-mode .btn-cancel-small:hover, body.dark-mode .btn-edit-profile:hover, body.dark-mode .btn-logout-link:hover {
     box-shadow: 0 8px 25px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.3) !important;
 }
@@ -4021,10 +4021,13 @@ body.dark-mode .score-label {
     padding: 30px 20px 15px;
     text-align: center;
     font-family: 'Inter', sans-serif;
-    margin-top: auto;
-    border-top: 50px solid transparent;
-    background-clip: padding-box;
+    margin-top: 0;
     width: 100%;
+}
+
+.footer-spacer {
+    flex-grow: 1;
+    min-height: 80px;
 }
 
 /* Break out of padding only for padded containers */
@@ -4077,7 +4080,6 @@ body.dark-mode .score-label {
 /* Dark mode overrides for footer */
 body.dark-mode .main-footer {
     background-color: #1a1a1a;
-    border-top: 1px solid #333;
 }
 body.dark-mode .footer-links a {
     color: #aaa;

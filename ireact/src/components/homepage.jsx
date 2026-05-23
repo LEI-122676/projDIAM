@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './maincomponents/header.jsx';
 import Sidebar from './maincomponents/sidebar.jsx';
+import Footer from './maincomponents/Footer.jsx';
 import Slideshow from './maincomponents/Slideshow.jsx';
 import LogoSlider from './maincomponents/LogoSlider.jsx';
 import CookieLeaderboard from './maincomponents/CookieLeaderboard.jsx';
@@ -83,7 +84,8 @@ const Home = () => {
             <LogoSlider />
             <CookieLeaderboard />
           </div>
-          
+          <div className="footer-spacer"></div>
+          <Footer />
         </main>
       </div>
     </div>
