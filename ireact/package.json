@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@rolldown/binding-win32-x64-msvc": "^1.0.2",
     "axios": "^1.16.0",
     "bootstrap": "^5.3.8",
     "moment": "^2.30.1",
