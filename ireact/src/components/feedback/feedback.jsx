@@ -41,7 +41,7 @@ const FeedbackPage = () => {
         };
 
         if (userId) {
-            axios.get(`${URL_BASE}/utilizador/info/`, { withCredentials: true })
+            axios.get(`${URL_BASE}/utilizadores/${userId}`, { withCredentials: true })
                 .then(response => {
                     if (response.data.role === 'Guest') {
                         showRestrictedPopup();
@@ -212,8 +212,11 @@ const FeedbackPage = () => {
                                 <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', marginBottom: '20px' }}>
                                     {['Receitas', 'Eventos', 'Frigorifico', 'Estetica'].map(f => (
                                         <button key={f} 
-                                                className={`btn-profile-pill ${funcFavorita === f ? '' : 'secondary'}`}
+                                                className={`feedback-category-btn ${funcFavorita === f ? 'active' : ''}`}
                                                 onClick={() => setFuncFavorita(f)}>
+                                            <span className="feedback-cat-icon">
+                                                {f === 'Frigorifico' ? '❄️' : f === 'Estetica' ? '✨' : f === 'Receitas' ? '🍳' : '📅'}
+                                            </span>
                                             {f === 'Frigorifico' ? t('feedback.frigorifico') : f === 'Estetica' ? t('feedback.estetica') : f === 'Receitas' ? t('feedback.receitas') : t('feedback.eventos')}
                                         </button>
                                     ))}
