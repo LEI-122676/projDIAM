@@ -106,7 +106,14 @@ const ExplorarEventos = () => {
     }
 
     const CustomCalendarInput = forwardRef(({ onClick }, ref) => (
-        <button className={`calendar-filter-wrapper ${dataFiltro ? 'active' : ''}`} onClick={onClick} ref={ref} type="button">
+        <div 
+            className={`calendar-filter-wrapper ${dataFiltro ? "active" : ""}`} 
+            onClick={onClick} 
+            ref={ref} 
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClick(e); }}
+        >
             <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg icon-mr-8" />
             
             <span className={`calendar-display-text font-600 ${dataFiltro ? "mr-4" : ""}`}>
@@ -128,7 +135,7 @@ const ExplorarEventos = () => {
                     ×
                 </button>
             )}
-        </button>
+        </div>
     ));
 
     CustomCalendarInput.displayName = 'CustomCalendarInput';
@@ -161,14 +168,6 @@ const ExplorarEventos = () => {
                                                 customInput={<CustomCalendarInput />}
                                                 popperPlacement="bottom-end"
                                                 showPopperArrow={false}
-                                                popperModifiers={[
-                                                    { name: "flip", enabled: false },
-                                                    { 
-                                                        name: "preventOverflow", 
-                                                        enabled: true,
-                                                        options: { boundary: "viewport", altAxis: true, padding: 10 }
-                                                    }
-                                                ]}
                                             />
                                     </div>
                                     {(userRole === 'Admin' || userRole === 'EventOrganizer') && (
