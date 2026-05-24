@@ -183,6 +183,11 @@ const Dashboard = () => {
                                                         </td>
                                                     </tr>
                                                 ))}
+                                                {filteredFeedbacks.length === 0 && (
+                                                    <tr>
+                                                        <td colSpan="6" className="admin-table-empty" style={{ padding: '15px', textAlign: 'center' }}>{t('admin.tabela.vazio')}</td>
+                                                    </tr>
+                                                )}
                                             </tbody>
                                         </table>
                                     </div>
