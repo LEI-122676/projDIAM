@@ -2633,7 +2633,6 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
     gap: 60px;
     width: 100%;
     align-items: flex-start;
-    padding-bottom: 120px; /* Garante espaço abaixo do formulário para os dropdowns abrirem para baixo */
 }
 
 .event-metadata-single-line {
