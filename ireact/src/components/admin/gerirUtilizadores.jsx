@@ -172,64 +172,70 @@ const GerirUtilizadores = () => {
                         </button>
                     </div>
 
-                    <div className="premium-card" style={{ padding: '0', overflow: 'hidden', marginTop: '20px' }}>
-                        <table className="users-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                            <thead style={{ backgroundColor: 'var(--brand-color)', color: '#fff' }}>
-                                <tr>
-                                    <th style={{ padding: '15px' }}>{t('admin.tabela.username')}</th>
-                                    <th style={{ padding: '15px' }}>{t('admin.tabela.nome_completo')}</th>
-                                    <th style={{ padding: '15px' }}>{t('admin.tabela.email')}</th>
-                                    <th style={{ padding: '15px' }}>{t('admin.tabela.permissao')}</th>
-                                    <th style={{ padding: '15px' }}>{t('admin.tabela.acoes')}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {currentItems.map(user => {
-                                    const origUser = originalUtilizadores.find(u => u.id === user.id);
-                                    const hasChanges = origUser && origUser.role !== user.role;
-
-                                    return (
-                                        <tr key={user.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
-                                            <td style={{ padding: '15px', fontWeight: 'bold' }}>{user.username}</td>
-                                            <td style={{ padding: '15px' }}>{user.first_name} {user.last_name}</td>
-                                            <td style={{ padding: '15px' }}>{user.email}</td>
-                                            <td style={{ padding: '15px' }}>
-                                                <select
-                                                    className="admin-role-select"
-                                                    value={user.role}
-                                                    onChange={(e) => handleRoleChange(user.id, e.target.value)}
-                                                >
-                                                    <option value="User">User</option>
-                                                    <option value="EventOrganizer">EventOrganizer</option>
-                                                    <option value="Admin">Admin</option>
-                                                </select>
-                                            </td>
-                                            <td style={{ padding: '15px' }}>
-                                                <button
-                                                    className="admin-btn-save"
-                                                    disabled={!hasChanges}
-                                                    onClick={() => handleSaveRole(user)}
-                                                >
-                                                    {t('admin.botoes.guardar')}
-                                                </button>
-                                                <button
-                                                    className="admin-btn-delete"
-                                                    style={{ marginLeft: '10px' }}
-                                                    onClick={() => handleDeleteUser(user)}
-                                                >
-                                                    {t('admin.botoes.eliminar')}
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                                {utilizadores.length === 0 && (
+                    <div style={{ marginTop: '20px' }}>
+                        <div className="premium-card" style={{ padding: '0', overflow: 'hidden' }}>
+                            {/* FIX: tableLayout: 'fixed' added here */}
+                            <table className="users-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', tableLayout: 'fixed' }}>
+                                <thead style={{ backgroundColor: 'var(--brand-color)', color: '#fff' }}>
                                     <tr>
-                                        <td colSpan="5" className="admin-table-empty" style={{ padding: '15px', textAlign: 'center' }}>{t('admin.tabela.vazio')}</td>
+                                        {/* FIX: Width percentages added to prevent columns from crushing each other */}
+                                        <th style={{ padding: '15px', width: '20%' }}>{t('admin.tabela.username')}</th>
+                                        <th style={{ padding: '15px', width: '25%' }}>{t('admin.tabela.nome_completo')}</th>
+                                        <th style={{ padding: '15px', width: '25%' }}>{t('admin.tabela.email')}</th>
+                                        <th style={{ padding: '15px', width: '15%' }}>{t('admin.tabela.permissao')}</th>
+                                        <th style={{ padding: '15px', width: '15%' }}>{t('admin.tabela.acoes')}</th>
                                     </tr>
-                                )}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {currentItems.map(user => {
+                                        const origUser = originalUtilizadores.find(u => u.id === user.id);
+                                        const hasChanges = origUser && origUser.role !== user.role;
+
+                                        return (
+                                            <tr key={user.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
+                                                {/* FIX: wordBreak and overflowWrap added to all text-heavy cells */}
+                                                <td style={{ padding: '15px', fontWeight: 'bold', wordBreak: 'break-word', overflowWrap: 'break-word' }}>{user.username}</td>
+                                                <td style={{ padding: '15px', wordBreak: 'break-word', overflowWrap: 'break-word' }}>{user.first_name} {user.last_name}</td>
+                                                <td style={{ padding: '15px', wordBreak: 'break-word', overflowWrap: 'break-word' }}>{user.email}</td>
+                                                <td style={{ padding: '15px' }}>
+                                                    <select
+                                                        className="admin-role-select"
+                                                        value={user.role}
+                                                        onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                                                        style={{ width: '100%' }}
+                                                    >
+                                                        <option value="User">User</option>
+                                                        <option value="EventOrganizer">EventOrganizer</option>
+                                                        <option value="Admin">Admin</option>
+                                                    </select>
+                                                </td>
+                                                <td style={{ padding: '15px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                                                    <button
+                                                        className="admin-btn-save"
+                                                        disabled={!hasChanges}
+                                                        onClick={() => handleSaveRole(user)}
+                                                    >
+                                                        {t('admin.botoes.guardar')}
+                                                    </button>
+                                                    <button
+                                                        className="admin-btn-delete"
+                                                        onClick={() => handleDeleteUser(user)}
+                                                    >
+                                                        {t('admin.botoes.eliminar')}
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                    {utilizadores.length === 0 && (
+                                        <tr>
+                                            <td colSpan="5" className="admin-table-empty" style={{ padding: '15px', textAlign: 'center' }}>{t('admin.tabela.vazio')}</td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+
                         {totalPages > 1 && (
                             <Pagination 
                                 currentPage={currentPage}
@@ -239,8 +245,9 @@ const GerirUtilizadores = () => {
                             />
                         )}
                     </div>
+                    
                     <div className="footer-spacer"></div>
-          <Footer />
+                    <Footer />
                 </main>
             </div>
 
