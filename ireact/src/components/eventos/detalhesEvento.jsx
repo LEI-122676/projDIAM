@@ -254,7 +254,7 @@ const VerEvento = () => {
                                 </div>
                             </div>
 
-                            <div className="recipe-steps-nav" style= {{ maxWidth: '650px' }}>
+                            <div className="recipe-steps-nav" style={{ width: '100%', maxWidth: '100%' }}>
                                 <div className="step-nav-item step-nav-item-default">
                                     📅 {evento.data_evento ? formatarDataExibicao(evento.data_evento.substring(0, 10)) : t('eventos.sem_data')}
                                 </div>
