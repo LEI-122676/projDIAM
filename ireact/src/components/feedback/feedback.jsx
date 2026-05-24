@@ -29,12 +29,33 @@ const FeedbackPage = () => {
     const URL_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/idjango/api';
 
     useEffect(() => {
-        fetchStats();
+        const showRestrictedPopup = () => {
+            const timeoutId = setTimeout(() => {
+                setPopupConfig({
+                    isOpen: true, title: t('receitas.popups.acesso_restrito_titulo'), message: t('feedback.popups.login_necessario_msg'),
+                    singleButton: false, confirmText: t('autenticacao.login'), cancelText: t('comum.cancelar'),
+                    onConfirm: () => navigate('/login'), onCancel: () => navigate('/')
+                });
+            }, 0);
+            return () => clearTimeout(timeoutId);
+        };
+
         if (userId) {
-            fetchMyFeedback();
+            axios.get(`${URL_BASE}/utilizador/info/`, { withCredentials: true })
+                .then(response => {
+                    if (response.data.role === 'Guest') {
+                        showRestrictedPopup();
+                    } else {
+                        fetchMyFeedback();
+                        fetchStats();
+                    }
+                })
+                .catch(err => console.error("Error fetching user info", err));
+        } else {
+            showRestrictedPopup();
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userId]);
+    }, [userId, navigate]);
 
     const fetchMyFeedback = () => {
         axios.get(`${URL_BASE}/feedback/`, { withCredentials: true })
@@ -68,7 +89,7 @@ const FeedbackPage = () => {
     const handleSubmit = () => {
         if (!userId) {
             setPopupConfig({
-                isOpen: true, title: t('feedback.popups.login_necessario_titulo'), message: t('feedback.popups.login_necessario_msg'),
+                isOpen: true, title: t('receitas.popups.acesso_restrito_titulo'), message: t('feedback.popups.login_necessario_msg'),
                 singleButton: false, confirmText: t('autenticacao.login'), cancelText: t('comum.cancelar'),
                 onConfirm: () => navigate('/login'), onCancel: closePopup
             });
