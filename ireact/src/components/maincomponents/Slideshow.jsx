@@ -79,8 +79,8 @@ const Slideshow = () => {
           >
             <div className="slide-overlay">
               <div className="slide-content">
-                <h2 className="slide-title">{slide.title}</h2>
-                <p className="slide-description">{slide.description}</p>
+                <h2 className="slide-title">{t(slide.title)}</h2>
+                <p className="slide-description">{t(slide.description)}</p>
               </div>
             </div>
           </div>

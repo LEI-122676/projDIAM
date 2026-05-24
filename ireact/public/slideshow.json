@@ -1,22 +1,22 @@
 [
   {
     "image": "http://localhost:8000/idjango/media/slideshow/breakfast.jpg",
-    "title": "Pequeno-Almoço Saudável",
-    "description": "Comece o seu dia com refeições nutritivas e fáceis de preparar."
+    "title": "slideshow.slide_0_title",
+    "description": "slideshow.slide_0_desc"
   },
   {
     "image": "http://localhost:8000/idjango/media/slideshow/burger.jpg",
-    "title": "Hambúrgueres Caseiros",
-    "description": "Descubra o segredo de um hambúrguer gourmet suculento e saboroso."
+    "title": "slideshow.slide_1_title",
+    "description": "slideshow.slide_1_desc"
   },
   {
     "image": "http://localhost:8000/idjango/media/slideshow/foods.jpg",
-    "title": "Receitas Criativas",
-    "description": "Crie pratos fantásticos com os ingredientes que tem no frigorífico."
+    "title": "slideshow.slide_2_title",
+    "description": "slideshow.slide_2_desc"
   },
   {
     "image": "http://localhost:8000/idjango/media/slideshow/sushi.jpg",
-    "title": "Arte do Sushi",
-    "description": "Aprenda a fazer rolos de sushi perfeitos com peixe fresco e arroz temperado."
+    "title": "slideshow.slide_3_title",
+    "description": "slideshow.slide_3_desc"
   }
 ]

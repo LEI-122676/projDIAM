@@ -160,11 +160,20 @@
         }
     },
     "eventos": {
-      "meses": {
-        "0": "Ene", "1": "Feb", "2": "Mar", "3": "Abr",
-        "4": "May", "5": "Jun", "6": "Jul", "7": "Ago",
-        "8": "Sep", "9": "Oct", "10": "Nov", "11": "Dic"
-      },
+        "meses": {
+            "0": "Ene",
+            "1": "Feb",
+            "2": "Mar",
+            "3": "Abr",
+            "4": "May",
+            "5": "Jun",
+            "6": "Jul",
+            "7": "Ago",
+            "8": "Sep",
+            "9": "Oct",
+            "10": "Nov",
+            "11": "Dic"
+        },
         "descobrir_eventos": "Descubrir Eventos",
         "pesquisar_eventos": "Buscar eventos...",
         "filtrar_data": "Filtrar por fecha",
@@ -402,5 +411,15 @@
         "tabela_frigorifico": "Refrigerador",
         "tabela_estetica": "Estética",
         "tabela_favorita": "Característica Favorita"
+    },
+    "slideshow": {
+        "slide_0_title": "Desayuno Saludable",
+        "slide_0_desc": "Comienza tu día con comidas nutritivas y fáciles de preparar.",
+        "slide_1_title": "Hamburguesas Caseras",
+        "slide_1_desc": "Descubre el secreto de una hamburguesa gourmet jugosa y sabrosa.",
+        "slide_2_title": "Recetas Creativas",
+        "slide_2_desc": "Crea platos fantásticos con los ingredientes que tienes en tu refrigerador.",
+        "slide_3_title": "Arte del Sushi",
+        "slide_3_desc": "Aprende a hacer rollos de sushi perfectos con pescado fresco y arroz sazonado."
     }
 }
