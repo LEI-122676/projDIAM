@@ -85,7 +85,7 @@ def utilizador_frigorifico(request, utilizador_id):
         serializer = FrigorificoSerializer(frigorifico)
         return Response(serializer.data)
     except Utilizador.DoesNotExist:
-        return Response({'msg': 'Utilizador não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'msg': 'backend.erros.utilizador_nao_encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET', 'POST'])
@@ -370,7 +370,7 @@ def signup(request):
     email = request.data.get('email')
     
     if not all([firstName, lastName, username, password, email]):
-        return Response({'msg': 'invalid input'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'msg': 'backend.erros.input_invalido'}, status=status.HTTP_400_BAD_REQUEST)
 
     from .moderator import validar_texto, FIELD_LIMITS
     from rest_framework.exceptions import ValidationError
@@ -383,7 +383,7 @@ def signup(request):
         return Response({'msg': err_msg}, status=status.HTTP_400_BAD_REQUEST)
 
     if User.objects.filter(username=username).exists():
-        return Response({'msg': 'username already exists'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'msg': 'backend.erros.username_existe'}, status=status.HTTP_400_BAD_REQUEST)
     
     # User do Django
     user = User.objects.create_user(
@@ -405,7 +405,7 @@ def signup(request):
     )
     
     return Response({
-        'msg': 'user ' + user.username + ' created',
+        'msg': 'backend.erros.user_criado',
         'utilizadorId': utilizador.id
     }, status=status.HTTP_201_CREATED)
 
@@ -421,7 +421,7 @@ def admin_create_user(request):
     role = request.data.get('role', 'User')
     
     if not all([firstName, lastName, username, password, email]):
-        return Response({'msg': 'invalid input'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'msg': 'backend.erros.input_invalido'}, status=status.HTTP_400_BAD_REQUEST)
 
     from .moderator import validar_texto, FIELD_LIMITS
     from rest_framework.exceptions import ValidationError
@@ -434,7 +434,7 @@ def admin_create_user(request):
         return Response({'msg': err_msg}, status=status.HTTP_400_BAD_REQUEST)
 
     if User.objects.filter(username=username).exists():
-        return Response({'msg': 'username already exists'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'msg': 'backend.erros.username_existe'}, status=status.HTTP_400_BAD_REQUEST)
     
     imagem = request.FILES.get('imagem')
 
@@ -458,7 +458,7 @@ def admin_create_user(request):
 
     Utilizador.objects.create(**utilizador_params)
     
-    return Response({'msg': f'User {user.username} created with role {role}'}, status=status.HTTP_201_CREATED)
+    return Response({'msg': 'backend.erros.user_criado'}, status=status.HTTP_201_CREATED)
 
 
 @api_view(['POST'])
@@ -470,14 +470,14 @@ def login_view(request):
     if user is not None:
         login(request, user) # Criação da sessão
         utilizador = Utilizador.objects.get(user=user)
-        return Response({'msg': 'user logged in', 'utilizadorId': utilizador.id})
+        return Response({'msg': 'backend.erros.user_logado', 'utilizadorId': utilizador.id})
     else:
-        return Response({'msg': 'invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({'msg': 'backend.erros.credenciais_invalidas'}, status=status.HTTP_401_UNAUTHORIZED)
     
 @api_view(['GET'])
 def logout_view(request):
     logout(request)
-    return Response({'msg': 'user logged out'})
+    return Response({'msg': 'backend.erros.user_deslogado'})
 
 # Endpoint para verificar se o utilizador está autenticado e obter o seu username
 @api_view(['GET'])
@@ -590,7 +590,7 @@ def submit_feedback(request):
         try:
             feedback = Feedback.objects.get(utilizador=utilizador)
             feedback.delete()
-            return Response({'msg': 'Feedback removido com sucesso'}, status=status.HTTP_204_NO_CONTENT)
+            return Response({'msg': 'backend.erros.feedback_removido'}, status=status.HTTP_204_NO_CONTENT)
         except Feedback.DoesNotExist:
             return Response({'error': 'Não existe feedback para remover'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -602,7 +602,7 @@ def feedback_stats(request):
     feedbacks = Feedback.objects.all()
     
     if not feedbacks.exists():
-        return Response({'msg': 'Ainda não há feedback'}, status=status.HTTP_200_OK)
+        return Response({'msg': 'backend.erros.ainda_sem_feedback'}, status=status.HTTP_200_OK)
 
     # Calculate averages
     averages = feedbacks.aggregate(

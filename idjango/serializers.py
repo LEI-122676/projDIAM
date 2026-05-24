@@ -25,7 +25,7 @@ class EventoSerializer(serializers.ModelSerializer):
 
     def validate_data_evento(self, value):
         if value and value <= timezone.now():
-            raise serializers.ValidationError("A data do evento deve ser no futuro.")
+            raise serializers.ValidationError("backend.erros.data_evento_futuro")
         return value
 
     def validate_nome(self, value):

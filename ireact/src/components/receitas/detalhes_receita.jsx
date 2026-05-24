@@ -276,7 +276,7 @@ const VerReceita = () => {
                         if (Array.isArray(firstFieldErrors) && firstFieldErrors.length > 0) {
                             message = firstFieldErrors[0];
                         } else if (typeof data.msg === 'string') {
-                            message = data.msg;
+                            message = t(data.msg);
                         } else {
                             message = JSON.stringify(data);
                         }
