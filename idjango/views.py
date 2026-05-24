@@ -91,7 +91,7 @@ def utilizador_frigorifico(request, utilizador_id):
 @permission_classes([ReceitaACL])
 def receitas(request):
     if request.method == 'GET':
-        receita_list = Receita.objects.all()[:QUERY_LIMIT]
+        receita_list = Receita.objects.filter(is_active=True)[:QUERY_LIMIT]
         serializer = ReceitaSerializer(receita_list, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
@@ -144,7 +144,7 @@ def receitas(request):
 @permission_classes([ReceitaACL])
 def receita_detail(request, receita_id):
     try:
-        receita = Receita.objects.get(pk=receita_id)
+        receita = Receita.objects.get(pk=receita_id, is_active=True)
     except Receita.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -216,7 +216,7 @@ def eventos(request):
 @permission_classes([EventoACL])
 def evento_detail(request, evento_id):
     try:
-        evento = Evento.objects.get(pk=evento_id)
+        evento = Evento.objects.get(pk=evento_id, is_active=True)
     except Evento.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -664,7 +664,7 @@ def csrf(request):
 @permission_classes([AllowAny])
 @authentication_classes([])
 def cookie_leaderboard(request):
-    top_utilizadores = Utilizador.objects.filter(is_active=True, cookie_clicks__gt=0).exclude(role='Guest').order_by('-cookie_clicks').values('user__username', 'cookie_clicks')[:5]
+    top_utilizadores = Utilizador.objects.filter(is_active=True, user__is_active=True, cookie_clicks__gt=0).exclude(role='Guest').order_by('-cookie_clicks').values('user__username', 'cookie_clicks')[:5]
     
     data = [
         {
