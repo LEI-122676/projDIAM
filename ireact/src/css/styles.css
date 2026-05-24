@@ -2626,10 +2626,6 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 
 .react-datepicker-popper {
     z-index: 9999 !important;
-    top: 100% !important;
-    right: 0 !important;
-    left: auto !important;
-    transform: none !important;
     margin-top: 8px !important;
 }
 .create-recipe-container {
@@ -4214,9 +4210,10 @@ body.dark-mode .react-datepicker-year-header {
     color: var(--gray-light) !important;
 }
 
+body.dark-mode .react-datepicker__day-name,
 body.dark-mode .react-datepicker__month-text,
 body.dark-mode .react-datepicker__year-text {
-    color: #ccc !important;
+    color: #ffffff !important;
 }
 
 body.dark-mode .react-datepicker__month-text:hover,
