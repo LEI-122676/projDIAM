@@ -4547,7 +4547,7 @@ body.dark-mode .review-slide-author {
     .recipes-grid { grid-template-columns: 1fr !important; }
     .create-recipe-container { flex-direction: column !important; }
     .recipe-form-section, .recipe-image-section { width: 100% !important; max-width: 100% !important; }
-    .recipe-header-container { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
+    .recipe-header-container, .admin-actions-header, .fridge-header-flex { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
     .auth-container { flex-direction: column !important; justify-content: flex-start !important; }
     .auth-content { flex-direction: column !important; align-items: center !important; justify-content: flex-start !important; }
     .auth-section { max-width: 100% !important; width: 100% !important; padding: 0 5% !important; }

@@ -6,11 +6,6 @@
 - Sebastian Rodriguez, 122667
 - Tiago Candeias, 122676
 
-## 🏗️ Estrutura e Nomenclatura
-- **iFridge** (baseado em `sitepr`) -> Configurações gerais do projeto (Backend).
-- **iDjango** (baseado em `votacao`) -> Aplicação Django principal (Backend).
-- **iReact** (baseado em `votacao-frontend`) -> Aplicação React Vite (Frontend).
-
 ## 🚀 Como Instalar e Executar o Projeto
 
 Como o ficheiro `.gitignore` previne que pastas pesadas de bibliotecas e ambientes virtuais sejam enviadas para o GitHub, precisas de instalar as dependências localmente na tua máquina.
