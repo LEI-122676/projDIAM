@@ -264,30 +264,35 @@ const CriarEvento = () => {
 
         if (descricao.trim().length < 10) { showPopup(t('receitas.popups.erro_validacao_titulo'), t('eventos.popups.descricao_curta_msg')); return; }
         if (!dataEvento) { showPopup(t('receitas.popups.campos_em_branco_titulo'), t('eventos.popups.campos_em_branco_data')); return; }
-        if (!horarioInicio) { showPopup(t('receitas.popups.campos_em_branco_titulo'), 'Por favor, não deixe o horário de início em branco.'); return; }
-        if (!horarioFim) { showPopup(t('receitas.popups.campos_em_branco_titulo'), 'Por favor, não deixe o horário de fim em branco.'); return; }
+        if (!horarioInicio) { showPopup(t('receitas.popups.campos_em_branco_titulo'), t('eventos.popups.campos_em_branco_inicio')); return; }
+        if (!horarioFim) { showPopup(t('receitas.popups.campos_em_branco_titulo'), t('eventos.popups.campos_em_branco_fim')); return; }
         if (!utilizadorId) { showPopup(t('receitas.popups.erro_titulo'), t('receitas.popups.erro_identificacao_msg')); return; }
 
         const inicioMinutos = convertTimeToMinutes(horarioInicio);
         const fimMinutos = convertTimeToMinutes(horarioFim);
         if (Number.isNaN(inicioMinutos) || Number.isNaN(fimMinutos) || inicioMinutos >= fimMinutos) {
-            showPopup(t('receitas.popups.erro_validacao_titulo'), 'O horário de início deve ser anterior ao horário de fim.');
+            showPopup(t('receitas.popups.erro_validacao_titulo'), t('eventos.popups.erro_inicio_anterior_fim'));
             return;
         }
 
         for (let i = 0; i < atividades.length; i++) {
             const atividade = atividades[i];
             if (!atividade.nome.trim()) {
-                showPopup(t('receitas.popups.campos_em_branco_titulo'), 'Por favor, adicione um nome para cada atividade.');
+                showPopup(t('receitas.popups.campos_em_branco_titulo'), t('eventos.popups.campos_em_branco_atividade_nome'));
+                return;
+            }
+            const atividadeValidation = validateInput(atividade.nome, limits.evento_nome_max_length || 50);
+            if (!atividadeValidation.isValid) {
+                showPopup(t('receitas.popups.erro_validacao_titulo'), `${t('eventos.atividade')} ${i + 1}: ${atividadeValidation.error}`);
                 return;
             }
             if (!atividade.hora) {
-                showPopup(t('receitas.popups.campos_em_branco_titulo'), 'Por favor, adicione um horário para cada atividade.');
+                showPopup(t('receitas.popups.campos_em_branco_titulo'), t('eventos.popups.campos_em_branco_atividade_hora'));
                 return;
             }
             const atividadeMinutos = convertTimeToMinutes(atividade.hora);
             if (Number.isNaN(atividadeMinutos) || atividadeMinutos <= inicioMinutos || atividadeMinutos >= fimMinutos) {
-                showPopup(t('receitas.popups.erro_validacao_titulo'), 'Cada atividade deve estar entre o início e o fim do evento.');
+                showPopup(t('receitas.popups.erro_validacao_titulo'), t('eventos.popups.erro_atividade_entre_inicio_fim'));
                 return;
             }
         }
@@ -397,30 +402,19 @@ const CriarEvento = () => {
             <div className="main-wrapper">
                 <Sidebar />
                 <main className="content-profile">
-                    <h1 className="page-title-underline">{editEvento ? t('eventos.editar_evento') : t('eventos.criar_evento')}</h1>
+                    <div>
+                        <h1 className="page-title-underline">{editEvento ? t('eventos.editar_evento') : t('eventos.criar_evento')}</h1>
+                    </div>
                     <form onSubmit={handleSubmit} style={{ width: '100%' }}>
 
-                    <div className="create-event-two-column-grid" style={{ 
-                        display: 'grid',
-                        gridTemplateColumns: 'minmax(450px, 600px) 160px 1fr 1px 500px',
-                        gap: '40px', 
-                        width: '100%', 
-                        alignItems: 'start',
-                        boxSizing: 'border-box',
-                        marginTop: '20px'
-                    }}>
+                    <div className="create-recipe-container">
 
                         {/* COLUNA 1: Elementos do Formulário (Nome, Descrição, Data, Capacidade) */}
-                        <div style={{ 
-                            display: 'flex', 
-                            flexDirection: 'column', 
-                            gap: '20px',
-                            boxSizing: 'border-box', minWidth: '600px'
-                        }}>
+                        <div className="recipe-form-section">
                             
                             {/* Nome */}
-                            <div className="form-group" style={{ margin: 0 }}>
-                                <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', maxWidth: '600px' }}>
+                            <div className="form-group">
+                                <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                                     <span style={{ fontWeight: '600' }}>{t('eventos.nome')}</span>
                                     <span style={{ fontSize: '0.75rem', color: '#888', fontWeight: 'normal', backgroundColor: '#eae7dc33', padding: '1px 6px', borderRadius: '6px' }}>
                                         {nome.length} / {limits.evento_nome_max_length || 50}
@@ -433,13 +427,13 @@ const CriarEvento = () => {
                                     value={nome}
                                     onChange={(e) => setNome(e.target.value)}
                                     maxLength={limits.evento_nome_max_length || 50}
-                                    style={{ maxWidth: '600px', width: '100%' }}
+                                    style={{ width: '100%' }}
                                 />
                             </div>
 
                             {/* Descrição */}
-                            <div className="form-group" style={{ margin: 0 }}>
-                                <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', maxWidth: '600px' }}>
+                            <div className="form-group">
+                                <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                                     <span style={{ fontWeight: '600' }}>{t('eventos.descricao')}</span>
                                     <span style={{ fontSize: '0.75rem', color: '#888', fontWeight: 'normal', backgroundColor: '#eae7dc33', padding: '1px 6px', borderRadius: '6px' }}>
                                         {descricao.length} / {limits.evento_descricao_max_length || 500}
@@ -451,7 +445,7 @@ const CriarEvento = () => {
                                     value={descricao}
                                     onChange={(e) => setDescricao(e.target.value)}
                                     maxLength={limits.evento_descricao_max_length || 500}
-                                    style={{ minHeight: '100px', maxHeight: '150px', resize: 'vertical', maxWidth: '600px', width: '100%' }}
+                                    style={{ minHeight: '100px', maxHeight: '150px', resize: 'vertical', width: '100%' }}
                                 />
                             </div>
 
@@ -462,11 +456,10 @@ const CriarEvento = () => {
                                 flexWrap: 'wrap', 
                                 gap: '15px',
                                 width: '100%',
-                                maxWidth: '600px',
                                 boxSizing: 'border-box'
                             }}>
                                 {/* Data do Evento */}
-                                <div className="form-group" style={{ margin: 0, flex: '1 1 180px' }}>
+                                <div className="form-group" style={{ flex: 1 }}>
                                     <label className="event-metadata-label" style={{ marginBottom: '6px', display: 'block', fontWeight: '600' }}>{t('eventos.data_evento')}</label>
                                     <div className="datepicker-anchor" style={{ width: '100%' }}>
                                         <DatePicker
@@ -474,13 +467,14 @@ const CriarEvento = () => {
                                             onChange={(date) => setDataEvento(date)}
                                             dateFormat="dd/MM/yyyy"
                                             customInput={<CustomCalendarInput />}
-                                            popperPlacement="top-end"
+                                            popperPlacement="bottom-start"
+                                            popperProps={{ strategy: 'fixed' }}
                                         />
                                     </div>
                                 </div>
 
                                 {/* Capacidade */}
-                                <div className="form-group" style={{ margin: 0, flex: '1 1 150px' }}>
+                                <div className="form-group" style={{ flex: 1 }}>
                                     <label className="event-metadata-label" style={{ marginBottom: '6px', display: 'block', fontWeight: '600' }}>{t('eventos.capacidade')}</label>
                                     <select
                                         className="input-beige text-black event-metadata-select"
@@ -496,7 +490,7 @@ const CriarEvento = () => {
                                     </select>
                                 </div>
                             </div>
-                                                        <div className="form-group" style={{ margin: 0 }}>
+                                                        <div className="form-group">
                                 <label className="event-metadata-label" style={{ marginBottom: '6px', display: 'block', fontWeight: '600', textAlign: 'left' }}>
                                     {t('eventos.horario')}
                                 </label>
@@ -504,7 +498,7 @@ const CriarEvento = () => {
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                                         <div>
                                             <label className="event-metadata-label" style={{ display: 'block', marginBottom: '6px', fontWeight: '500' }}>
-                                                Início
+                                                {t('eventos.inicio')}
                                             </label>
                                             <select
                                                 className="input-beige text-black event-metadata-select"
@@ -521,7 +515,7 @@ const CriarEvento = () => {
                                         </div>
                                         <div>
                                             <label className="event-metadata-label" style={{ display: 'block', marginBottom: '6px', fontWeight: '500' }}>
-                                                Fim
+                                                {t('eventos.fim')}
                                             </label>
                                             <select
                                                 className="input-beige text-black event-metadata-select"
@@ -538,21 +532,27 @@ const CriarEvento = () => {
                                         </div>
                                     </div>
 
-                                    <div className="form-group" style={{ margin: 0 }}>
+                                    <div className="form-group">
                                         <label className="event-metadata-label" style={{ marginBottom: '6px', display: 'block', fontWeight: '500' }}>
-                                            Atividades
+                                            {t('eventos.atividades')}
                                         </label>
                                         {atividades.map((atividade, index) => (
                                             <div key={index} className="dynamic-list-item dynamic-list-item-flex" style={{ alignItems: 'flex-start' }}>
                                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', flex: 1 }}>
-                                                    <input
-                                                        type="text"
-                                                        className="input-beige text-black"
-                                                        placeholder="Nome da atividade"
-                                                        value={atividade.nome}
-                                                        onChange={(e) => handleAtividadeChange(index, 'nome', e.target.value)}
-                                                        style={{ width: '100%', height: '45px' }}
-                                                    />
+                                                    <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+                                                        <input
+                                                            type="text"
+                                                            className="input-beige text-black"
+                                                            placeholder={t('eventos.nome_atividade_placeholder')}
+                                                            value={atividade.nome}
+                                                            onChange={(e) => handleAtividadeChange(index, 'nome', e.target.value)}
+                                                            maxLength={limits.evento_nome_max_length || 50}
+                                                            style={{ width: '100%', height: '45px' }}
+                                                        />
+                                                        <span style={{ alignSelf: 'flex-end', fontSize: '0.75rem', color: '#888', marginTop: '2px', marginRight: '10px' }}>
+                                                            {atividade.nome.length} / {limits.evento_nome_max_length || 50}
+                                                        </span>
+                                                    </div>
                                                     <select
                                                         className="input-beige text-black event-metadata-select"
                                                         value={atividade.hora || ''}
@@ -560,7 +560,7 @@ const CriarEvento = () => {
                                                         style={{ width: '100%', height: '42px', borderRadius: '12px', border: '1.5px solid #4A3A31', padding: '0 10px' }}
                                                     >
                                                         <option value="" disabled>
-                                                            {opcoesHorasAtividades.length > 0 ? 'Selecionar horário' : 'Defina início e fim'}
+                                                            {opcoesHorasAtividades.length > 0 ? t('eventos.selecionar_horario') : t('eventos.defina_inicio_fim')}
                                                         </option>
                                                         {opcoesHorasAtividades.map(hora => (
                                                             <option key={hora} value={hora}>
@@ -579,39 +579,20 @@ const CriarEvento = () => {
                                                 </button>
                                             </div>
                                         ))}
-                                        <button type="button" className="btn-add-dashed" style= {{ width: '100%', height: '45px', color: '#4A3A31'}} onClick={handleAddAtividade}>
-                                            + Adicionar atividade
+                                        <button type="button" className="btn-add-dashed" style= {{ width: '100%', height: '45px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={handleAddAtividade}>
+                                            {t('eventos.adicionar_atividade')}
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* LINHA DIVISÓRIA VERTICAL: Aligned right */}
-                        <div className="vertical-divider" style={{
-                            width: '1px',
-                            alignSelf: 'stretch',
-                            backgroundColor: '#4A3A3122',
-                            minHeight: '100%',
-                            display: 'block',
-                            margin: '0 300px'
-                        }} />
-
-                        {/* COLUNA 3: Secção da Imagem e Botões de Ação: Aligned right */}
-                        <div className="recipe-image-section" style={{ 
-                            display: 'flex', 
-                            flexDirection: 'column', 
-                            gap: '15px', 
-                            margin: 0,
-                            boxSizing: 'border-box',
-                            width: '150%',
-                            marginLeft: '200px'
-                        }}>
+                        {/* COLUNA 3: Secção da Imagem e Botões de Ação */}
+                        <div className="recipe-image-section">
                             <div
                                 className="image-upload-placeholder"
                                 onClick={() => fileInputRef.current.click()}
                                 title={t('receitas.criar_receita.adicionar_foto_title')}
-                                style={{ transition: 'all 0.2s ease', cursor: 'pointer', minHeight: '100px', width: '100%', maxHeight: '550px' }}
                             >
                                 {fotoPreview ? (
                                     <img
@@ -620,9 +601,9 @@ const CriarEvento = () => {
                                         className="image-preview-fit"
                                     />
                                 ) : (
-                                    <div className="image-upload-info" style={{ padding: '50px 20px', textAlign: 'center' }}>
-                                        <div className="image-upload-icon" style={{ fontSize: '3rem', marginBottom: '12px' }}>📷</div>
-                                        <p className="image-upload-text" style={{ fontWeight: '500' }}>{t('receitas.criar_receita.adicionar_foto')}</p>
+                                    <div className="image-upload-info">
+                                        <div className="image-upload-icon">📷</div>
+                                        <p className="image-upload-text">{t('receitas.criar_receita.adicionar_foto')}</p>
                                     </div>
                                 )}
                             </div>
@@ -635,17 +616,21 @@ const CriarEvento = () => {
                             />
                             {fotoPreview && (
                                 <button
+                                    type="button"
                                     className="btn-cancel btn-cancel-small btn-remove-photo"
-                                    onClick={() => { setFoto(null); setFotoPreview(null); fileInputRef.current.value = ''; }}
-                                    style={{ width: '100%' }}
+                                    onClick={() => {
+                                        setFoto(null);
+                                        setFotoPreview(null);
+                                        if (fileInputRef.current) fileInputRef.current.value = '';
+                                    }}
                                 >
                                     {t('receitas.criar_receita.remover_foto')}
                                 </button>
                             )}
 
-                            <div className="create-actions-group" style={{ marginTop: '10px', display: 'flex', gap: '15px', width: '100%' }}>
-                                <button className="btn-cancel" style={{ flex: 1 }} type="button" onClick={() => navigate(-1)}>{t('comum.cancelar')}</button>
-                                <button className="btn-create-submit" style={{ flex: 1 }} type="submit" onClick={handleSubmit}>{editEvento ? t('receitas.criar_receita.guardar') : t('receitas.criar_receita.criar')}</button>
+                            <div className="create-actions-group">
+                                <button className="btn-cancel" type="button" onClick={() => navigate(-1)}>{t('comum.cancelar')}</button>
+                                <button className="btn-create-submit" type="submit" onClick={handleSubmit}>{editEvento ? t('receitas.criar_receita.guardar') : t('receitas.criar_receita.criar')}</button>
                             </div>
                         </div>
 
