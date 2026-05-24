@@ -4546,6 +4546,7 @@ body.dark-mode .review-slide-author {
     .auth-group { gap: 5px !important; }
     .recipes-grid { grid-template-columns: 1fr !important; }
     .create-recipe-container { flex-direction: column !important; }
+    .recipe-form-section, .recipe-image-section { width: 100% !important; max-width: 100% !important; }
     .auth-container { flex-direction: column !important; justify-content: flex-start !important; }
     .auth-content { flex-direction: column !important; align-items: center !important; justify-content: flex-start !important; }
     .auth-section { max-width: 100% !important; width: 100% !important; padding: 0 5% !important; }
