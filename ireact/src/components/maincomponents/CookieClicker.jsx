@@ -270,7 +270,7 @@ const CookieClicker = ({ sidebarOpen }) => {
     <div className="cookie-clicker-container">
       {sidebarOpen && <div className="cookie-title">{t('cookies.fome_de_cookies')}</div>}
       
-      <div className="cookie-wrapper" onClick={handleCookieClick}>
+      <div className="cookie-wrapper" onClick={handleCookieClick} style={{ position: 'relative', display: 'inline-block' }}>
         <img 
           src={cookieImg} 
           alt="Cookie Clicker" 
@@ -286,16 +286,30 @@ const CookieClicker = ({ sidebarOpen }) => {
             +1
           </span>
         ))}
+        {/* Badge with the number of clicks */}
+        <span 
+          className="cookie-badge" 
+          style={{
+            position: 'absolute',
+            top: '-5px',
+            right: '-10px',
+            background: 'var(--brand-color, #E85D04)',
+            color: 'white',
+            borderRadius: '12px',
+            padding: '2px 6px',
+            fontSize: '0.75rem',
+            fontWeight: 'bold',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+            zIndex: 10
+          }}
+        >
+          {safeParseInt(count)}
+        </span>
       </div>
 
-      <div className="cliques-display">
-        {sidebarOpen ? (
-          <>
-            <span className="counter-label">{t('cookies.cliques')}</span>
-            <span className="counter-number">{safeParseInt(count)}</span>
-          </>
-        ) : (
-          <span className="counter-number-mini">{safeParseInt(count)}</span>
+      <div className="cliques-display" style={{ marginTop: '8px' }}>
+        {sidebarOpen && (
+          <span className="counter-label">{t('cookies.cliques')}</span>
         )}
       </div>
     </div>

@@ -4590,6 +4590,16 @@ body.dark-mode .review-slide-author {
         padding: 15px;
     }
 
+    .content-profile .main-footer,
+    .content-home .main-footer,
+    .content-frigorifico .main-footer {
+        margin-left: -15px !important;
+        margin-right: -15px !important;
+        margin-bottom: -15px !important;
+        width: calc(100% + 30px) !important;
+        padding-bottom: 90px !important;
+    }
+
     .home-container, .eventos-container, .receitas-container, .profile-container, .feedback-container {
         width: 100%;
         padding: 10px;
@@ -4613,7 +4623,7 @@ body.dark-mode .review-slide-author {
         align-items: center;
         background: var(--white);
         box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
-        transition: none; /* Disable expansion animations */
+        overflow: visible !important; /* Critical to prevent clipping the floating cookie */
     }
 
     body.dark-mode .sidebar {
@@ -4661,7 +4671,43 @@ body.dark-mode .review-slide-author {
     }
 
     .cookie-clicker-container {
-        display: none !important; /* Hide cookie clicker on mobile to save space */
+        position: absolute !important;
+        bottom: 90px !important;
+        right: 20px !important;
+        z-index: 9999 !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 60px !important;
+        height: 60px !important;
+        display: flex !important;
+    }
+
+    .cookie-clicker-container .cookie-title, 
+    .cookie-clicker-container .counter-label {
+        display: none !important;
+    }
+    
+    .cookie-clicker-container .cookie-image {
+        width: 55px !important;
+        height: 55px !important;
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+    }
+    
+    .cookie-clicker-container .counter-number,
+    .cookie-clicker-container .counter-number-mini {
+        position: absolute !important;
+        top: -5px !important;
+        right: -5px !important;
+        background: var(--brand-color, #E85D04) !important;
+        color: white !important;
+        border-radius: 12px !important;
+        padding: 2px 6px !important;
+        font-size: 0.75rem !important;
+        font-weight: bold !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
     }
 
     /* 4. Grids - Single Vertical Column */

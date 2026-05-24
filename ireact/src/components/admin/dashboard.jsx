@@ -157,8 +157,8 @@ const Dashboard = () => {
                                             onChange={(e) => setSearchQuery(e.target.value)}
                                         />
                                     </div>
-                                    <div className="premium-card" style={{ padding: '0', overflow: 'hidden' }}>
-                                        <table className="users-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                                    <div className="premium-card" style={{ padding: '0', overflowX: 'auto' }}>
+                                        <table className="users-table" style={{ width: '100%', minWidth: '800px', borderCollapse: 'collapse', textAlign: 'left' }}>
                                             <thead style={{ backgroundColor: 'var(--brand-color)', color: '#fff' }}>
                                                 <tr>
                                                     <th style={{ padding: '15px' }}>{t('dashboard.tabela_username')}</th>
