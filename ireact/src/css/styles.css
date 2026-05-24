@@ -612,7 +612,7 @@ body.dark-mode .btn-logout-link:hover {
 
 .home-hero-section {
     width: 100%;
-    min-height: calc(100vh - 220px);
+    min-height: calc(90vh - 220px);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -4095,7 +4095,7 @@ body.dark-mode .language-selector:hover {
     box-shadow: 0 4px 6px rgba(0,0,0,0.15);
 }
 body.dark-mode .theme-toggle-btn {
-    background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%);
+    background: linear-gradient(135deg, #f8c471 0%, #f7dc6f 100%);
     color: var(--white) !important;
     text-shadow: 0 1px 3px rgba(0,0,0,0.4);
 }

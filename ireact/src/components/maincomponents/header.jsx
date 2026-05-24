@@ -75,6 +75,9 @@ const Header = () => {
         <span className="brand-name">iFridge</span>
       </button>
       <div className="auth-group">
+        <button onClick={toggleTheme} className="theme-toggle-btn">
+          {theme === 'light' ? '🌙' : '☀️'}
+        </button>
         <select 
             value={language} 
             onChange={(e) => setLanguage(e.target.value)}
@@ -84,9 +87,6 @@ const Header = () => {
             <option value="en">🇬🇧 EN</option>
             <option value="es">🇪🇸 ES</option>
         </select>
-        <button onClick={toggleTheme} className="theme-toggle-btn">
-          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
-        </button>
         <>
           {username ?
             <>
