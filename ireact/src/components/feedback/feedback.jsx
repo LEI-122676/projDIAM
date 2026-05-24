@@ -41,7 +41,7 @@ const FeedbackPage = () => {
         };
 
         if (userId) {
-            axios.get(`${URL_BASE}/utilizador/info/`, { withCredentials: true })
+            axios.get(`${URL_BASE}/utilizadores/${userId}`, { withCredentials: true })
                 .then(response => {
                     if (response.data.role === 'Guest') {
                         showRestrictedPopup();
