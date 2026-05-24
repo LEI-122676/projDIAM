@@ -201,7 +201,7 @@ const FeedbackPage = () => {
                             <div className="content-box-light" style={{ width: '100%' }}>
                                 <h3 className="section-subtitle">{t('feedback.seccao_opiniao')}</h3>
                                 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '20px' }}>
                                     <div><label>{t('feedback.nossas_receitas')}</label>{renderStars(notaReceitas, setNotaReceitas)}</div>
                                     <div><label>{t('feedback.nossos_eventos')}</label>{renderStars(notaEventos, setNotaEventos)}</div>
                                     <div><label>{t('feedback.seccao_frigorifico')}</label>{renderStars(notaFrigorifico, setNotaFrigorifico)}</div>
@@ -243,7 +243,7 @@ const FeedbackPage = () => {
                             {stats && (
                                 <div className="content-box-light" style={{ width: '100%' }}>
                                     <h3 className="section-subtitle">{t('feedback.resultados_comunidade')} ({stats.total_respostas} {t('feedback.respostas')})</h3>
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
                                         <div>
                                             <h4>{t('feedback.media_avaliacoes')}</h4>
                                             <ul style={{ listStyle: 'none', padding: 0, lineHeight: '2' }}>
