@@ -47,7 +47,7 @@ html, body, #root {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    padding: 0 10px;
+    padding: 0 40px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     box-shadow: 0 4px 20px rgba(0,0,0,0.05);
     flex-shrink: 0;
@@ -469,7 +469,7 @@ body.dark-mode .btn-logout-link:hover {
     gap: 12px; 
     cursor: pointer;
     font-weight: 600;
-    padding: 10px 5px; 
+    padding: 10px 20px; 
     background-color: transparent; 
     border-radius: 30px; 
     border: 2px transparent solid; 
@@ -4538,6 +4538,10 @@ body.dark-mode .review-slide-author {
    ========================================================================== */
 @media (max-width: 1024px) {
     /* -- SMARTPHONE VERTICAL STACKING OVERRIDES -- */
+    .header { padding: 0 10px !important; gap: 10px !important; }
+    .logo { padding: 5px 10px !important; gap: 8px !important; }
+    .brand-name { font-size: 20px !important; }
+    .auth-group { gap: 5px !important; }
     .recipes-grid { grid-template-columns: 1fr !important; }
     .create-recipe-container { flex-direction: column !important; }
     .auth-container { flex-direction: column !important; }
