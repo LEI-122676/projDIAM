@@ -354,13 +354,13 @@ const CriarEvento = () => {
                 tabIndex={0}
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClick(e); }}
                 style={{ 
-                    width: '250px', 
-                    minWidth: '100%', 
+                    width: '100%', 
+                    minWidth: '500px', 
                     boxSizing: 'border-box',
-                    height: '42px',               
+                    height: '48px',               
                     borderRadius: '12px',         
                     border: '1.5px solid #4A3A31',
-                    padding: '0 50px',            
+                    padding: '0 18px 0 50px',            
                     display: 'flex',              
                     alignItems: 'center'          
                 }}
@@ -368,10 +368,10 @@ const CriarEvento = () => {
             <img src={iconeCalendario} alt="Calendário" className="recipe-icon-svg mr-8" />
             
             <span 
-                className={`calendar-display-text font-600 ${dataEvento ? "mr-4" : ""}`} 
+                className="calendar-display-text font-600" 
                 style={{ 
                     flex: '1',                 
-                    textAlign: 'left', 
+                    textAlign: 'center', 
                     display: 'inline-block' 
                 }}
             >
@@ -468,7 +468,6 @@ const CriarEvento = () => {
                                             dateFormat="dd/MM/yyyy"
                                             customInput={<CustomCalendarInput />}
                                             popperPlacement="bottom-start"
-                                            popperProps={{ strategy: 'fixed' }}
                                         />
                                     </div>
                                 </div>
