@@ -2913,7 +2913,6 @@ body.dark-mode .admin-table td {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
 }
 
 .admin-role-select {
