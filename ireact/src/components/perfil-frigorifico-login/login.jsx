@@ -165,7 +165,7 @@ const Login = () => {
         let errorMsg = t('autenticacao.popups.atencao_linguagem_registo');
         if (error.response && error.response.data) {
             if (typeof error.response.data === 'object' && error.response.data.msg) {
-                errorMsg = error.response.data.msg;
+                errorMsg = t(error.response.data.msg);
             } else if (typeof error.response.data === 'string') {
                 errorMsg = error.response.data;
             }

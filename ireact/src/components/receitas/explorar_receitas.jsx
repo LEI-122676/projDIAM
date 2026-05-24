@@ -153,7 +153,7 @@ const ExplorarReceitas = () => {
                     return Number(id);
                 });
 
-                matchesFridge = (receita.ingredientes || []).every(ing => {
+                matchesFridge = (receita.ingredientes || []).some(ing => {
                     const recipeIngId = typeof ing === 'object' && ing !== null ? Number(ing.id) : Number(ing);
                     return fridgeIds.includes(recipeIngId);
                 });

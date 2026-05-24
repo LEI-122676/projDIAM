@@ -123,7 +123,7 @@ const AdminCriarUtilizador = () => {
             setModalConfig({
                 isOpen: true,
                 title: t('admin.popups.erro_titulo'),
-                message: error.response?.data?.msg || t('admin.popups.erro_criar_msg'),
+                message: (error.response?.data?.msg ? t(error.response.data.msg) : t('admin.popups.erro_criar_msg')),
                 onConfirm: () => setModalConfig({ ...modalConfig, isOpen: false })
             });
         }
