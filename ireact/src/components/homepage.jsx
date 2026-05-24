@@ -67,12 +67,18 @@ const Home = () => {
                 </p>
                 <div className="review-slider-container">
                   <div className="review-slider-track">
-                    {feedbackStats.comentarios_recentes && [...feedbackStats.comentarios_recentes, ...feedbackStats.comentarios_recentes].map((f, index) => (
-                      <div key={`${f.id}-${index}`} className="review-slide-item">
-                        <p className="review-slide-text">"{f.comentario_livre}"</p>
-                        <p className="review-slide-author">- {f.utilizador_nome}</p>
-                      </div>
-                    ))}
+                    {feedbackStats.comentarios_recentes && (() => {
+                        const maxWords = parseInt(import.meta.env.VITE_MAX_FEEDBACK_WORDS || "30", 10);
+                        const filteredComments = feedbackStats.comentarios_recentes.filter(f => 
+                            f.comentario_livre && f.comentario_livre.trim().split(/\s+/).length <= maxWords
+                        );
+                        return [...filteredComments, ...filteredComments].map((f, index) => (
+                          <div key={`${f.id}-${index}`} className="review-slide-item">
+                            <p className="review-slide-text">"{f.comentario_livre}"</p>
+                            <p className="review-slide-author">- {f.utilizador_nome}</p>
+                          </div>
+                        ));
+                    })()}
                   </div>
                 </div>
               </div>
