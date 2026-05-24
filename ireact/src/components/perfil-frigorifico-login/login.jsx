@@ -147,9 +147,7 @@ const Login = () => {
     formData.append('email', email);
     formData.append('role', 'User');
       
-    axios.post(SIGN_UP_URL, formData, { withCredentials: true }).then( response => {
-        console.log('Signup successful!', response.data.msg);
-        
+    axios.post(SIGN_UP_URL, formData, { withCredentials: true }).then( response => {      
         // Auto-login after successful registration
         axios.post(SIGN_IN_URL, { username: username, password: password }, { withCredentials: true })
           .then((loginResponse) => {

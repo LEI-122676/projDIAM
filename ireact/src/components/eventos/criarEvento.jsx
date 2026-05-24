@@ -341,11 +341,13 @@ const CriarEvento = () => {
     };
 
     const CustomCalendarInput = forwardRef(({ onClick }, ref) => (
-            <button 
+            <div 
                 className="calendar-filter-wrapper" 
                 onClick={onClick} 
                 ref={ref} 
-                type="button"
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClick(e); }}
                 style={{ 
                     width: '250px', 
                     minWidth: '100%', 
@@ -384,7 +386,7 @@ const CriarEvento = () => {
                     ×
                 </button>
             )}
-        </button>
+        </div>
     ));
 
     CustomCalendarInput.displayName = 'CustomCalendarInput';
@@ -473,11 +475,6 @@ const CriarEvento = () => {
                                             dateFormat="dd/MM/yyyy"
                                             customInput={<CustomCalendarInput />}
                                             popperPlacement="top-end"
-                                            popperModifiers={[
-                                                { name: "preventOverflow", options: { boundary: "viewport", altAxis: true } },
-                                                { name: "flip", options: { fallbackPlacements: [] } },
-                                                { name: "offset", options: { offset: [0, 10] } }
-                                            ]}
                                         />
                                     </div>
                                 </div>
