@@ -230,7 +230,7 @@ const VerEvento = () => {
 
                     <div className="recipe-header-container">
                         <h1 className="page-title-underline">{evento.nome}</h1>
-                        <div className="recipe-rating-text">
+                        <div className="recipe-rating-text" style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--brand-color)' }}>
                             👥 {totalInscritos} / {evento.capacidade_max || 5} {t('eventos.inscritos')}
                         </div>
                     </div>
@@ -262,7 +262,7 @@ const VerEvento = () => {
                                     ⏳ {t('eventos.contagem_decrescente')} <br />{contagem || t('eventos.a_calcular')}
                                 </div>
                                 <div className="step-nav-item step-nav-item-default">
-                                    <table className="horario-row">
+                                    <table className="horario-row" style={{ width: '100%', maxWidth: 'none', margin: '0' }}>
                                         <thead>
                                             <tr>
                                                 <th>🕒 {t('eventos.atividade')}</th>
@@ -270,17 +270,22 @@ const VerEvento = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {evento.horario && Object.entries(evento.horario).map(([chave, valor], index) => (
-                                                <tr key={index}>
-                                                    <td>{chave}</td>
-                                                    <td>{valor}</td>
-                                                </tr>
-                                            ))}
+                                            {evento.horario && Object.entries(evento.horario).map(([chave, valor], index) => {
+                                                let displayChave = chave;
+                                                if (chave.toLowerCase() === 'início' || chave.toLowerCase() === 'inicio') {
+                                                    displayChave = t('eventos.inicio');
+                                                } else if (chave.toLowerCase() === 'fim') {
+                                                    displayChave = t('eventos.fim');
+                                                }
+                                                return (
+                                                    <tr key={index}>
+                                                        <td>{displayChave}</td>
+                                                        <td>{valor}</td>
+                                                    </tr>
+                                                );
+                                            })}
                                         </tbody>
                                     </table>
-                                </div>
-                                <div className="step-nav-item step-nav-item-default">
-                                    🔢 {t('eventos.capacidade_maxima')} {evento.capacidade_max || 5} {t('eventos.pessoas')}
                                 </div>
 
                                 <div className="view-actions-group mt-auto">
