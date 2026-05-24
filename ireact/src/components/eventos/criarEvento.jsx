@@ -339,8 +339,26 @@ const CriarEvento = () => {
                 });
             })
             .catch(err => {
-                console.error(err);
-                const detail = err.response?.data ? JSON.stringify(err.response.data) : 'Erro de conexão.';
+                if (err.response?.status !== 400) {
+                    console.error("Erro inesperado:", err);
+                }
+                let detail = t('comum.erro_de_conexao') || 'Erro de conexão.';
+                if (err.response?.data) {
+                    const data = err.response.data;
+                    if (typeof data === 'object' && Object.keys(data).length > 0) {
+                        const firstKey = Object.keys(data)[0];
+                        let errorMsg = data[firstKey];
+                        if (Array.isArray(errorMsg)) errorMsg = errorMsg[0];
+                        
+                        // Try to translate the error message if it's a translation key
+                        const translated = t(errorMsg);
+                        // Make it look nice, e.g., "Data: A data tem de ser no futuro"
+                        const fieldName = firstKey.charAt(0).toUpperCase() + firstKey.slice(1).replace('_', ' ');
+                        detail = `${fieldName}: ${translated !== errorMsg ? translated : errorMsg}`;
+                    } else {
+                        detail = String(data);
+                    }
+                }
                 showPopup(editEvento ? t('eventos.popups.erro_ao_atualizar') : t('eventos.popups.erro_ao_criar'), detail);
             });
     };

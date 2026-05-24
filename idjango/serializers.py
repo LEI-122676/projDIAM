@@ -24,7 +24,7 @@ class EventoSerializer(serializers.ModelSerializer):
         read_only_fields = ['data', 'data_criacao']
 
     def validate_data_evento(self, value):
-        if value and value <= timezone.now():
+        if value and value.date() < timezone.now().date():
             raise serializers.ValidationError("backend.erros.data_evento_futuro")
         return value
 

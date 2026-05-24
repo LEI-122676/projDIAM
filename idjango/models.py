@@ -59,7 +59,7 @@ class Evento(models.Model):
 
     def clean(self):
         super().clean()
-        if self.data_evento and self.data_evento <= timezone.now():
+        if self.data_evento and self.data_evento.date() < timezone.now().date():
             raise ValidationError({'data_evento': 'A data do evento deve ser no futuro.'})
 
     def __str__(self):
