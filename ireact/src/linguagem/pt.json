@@ -450,6 +450,7 @@
       "utilizador_nao_encontrado": "Utilizador não encontrado.",
       "input_invalido": "Dados inválidos fornecidos.",
       "username_existe": "Este nome de utilizador já existe.",
+      "email_existe": "Este email já se encontra registado.",
       "user_criado": "Utilizador criado com sucesso.",
       "credenciais_invalidas": "Credenciais inválidas. Verifica o teu nome de utilizador e palavra-passe.",
       "user_logado": "Sessão iniciada com sucesso.",

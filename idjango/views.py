@@ -382,8 +382,11 @@ def signup(request):
         err_msg = e.detail[0] if isinstance(e.detail, list) else str(e.detail)
         return Response({'msg': err_msg}, status=status.HTTP_400_BAD_REQUEST)
 
-    if User.objects.filter(username=username).exists():
+    if User.objects.filter(username__iexact=username).exists():
         return Response({'msg': 'backend.erros.username_existe'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if User.objects.filter(email__iexact=email).exists():
+        return Response({'msg': 'backend.erros.email_existe'}, status=status.HTTP_400_BAD_REQUEST)
     
     # User do Django
     user = User.objects.create_user(

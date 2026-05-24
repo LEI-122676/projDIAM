@@ -450,6 +450,7 @@
       "utilizador_nao_encontrado": "User not found.",
       "input_invalido": "Invalid data provided.",
       "username_existe": "This username already exists.",
+      "email_existe": "This email is already registered.",
       "user_criado": "User created successfully.",
       "credenciais_invalidas": "Invalid credentials. Please check your username and password.",
       "user_logado": "Logged in successfully.",
