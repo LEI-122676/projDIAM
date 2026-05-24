@@ -282,26 +282,31 @@ const CriarReceita = () => {
                                 {ingredientesList.map((ingrediente, index) => (
                                     <div key={index} className="dynamic-list-item dynamic-list-item-flex">
                                         <span className="item-number">{index + 1}.</span>
-                                        <input
-                                            type="text"
+                                        <select
                                             className="input-beige flex-input-black"
-                                            placeholder={t('receitas.criar_receita.ingrediente_placeholder')}
-                                            list="lista-ingredientes"
                                             value={ingrediente}
                                             onChange={(e) => handleIngredienteChange(index, e.target.value)}
-                                        />
+                                        >
+                                            <option value="" disabled>{t('receitas.criar_receita.ingrediente_placeholder')}</option>
+                                            {dbIngredientes.map(dbI => {
+                                                const key = dbI.nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_");
+                                                const translatedName = t(`ingredientes.${key}`) !== `ingredientes.${key}` ? t(`ingredientes.${key}`) : dbI.nome;
+                                                
+                                                // Disable if chosen in another slot
+                                                const isSelectedElsewhere = ingredientesList.some((ing, i) => i !== index && ing === translatedName);
+                                                
+                                                return (
+                                                    <option key={dbI.id} value={translatedName} disabled={isSelectedElsewhere}>
+                                                        {translatedName}
+                                                    </option>
+                                                );
+                                            })}
+                                        </select>
                                         {ingredientesList.length > 1 && (
                                             <button className="btn-cancel btn-cancel-small" onClick={() => handleRemoveIngrediente(index)}>X</button>
                                         )}
                                     </div>
                                 ))}
-                                <datalist id="lista-ingredientes">
-                                    {dbIngredientes.map(dbI => {
-                                        const key = dbI.nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_");
-                                        const translatedName = t(`ingredientes.${key}`) !== `ingredientes.${key}` ? t(`ingredientes.${key}`) : dbI.nome;
-                                        return <option key={dbI.id} value={translatedName} />
-                                    })}
-                                </datalist>
                                 <button className="btn-add-dashed" onClick={handleAddIngrediente}>+</button>
                             </div>
                         </div>
