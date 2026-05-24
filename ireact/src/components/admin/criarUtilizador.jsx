@@ -9,6 +9,8 @@ import '../../css/styles.css';
 import axios from 'axios';
 import { getCSRFToken } from '../../utils/csrf.js';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
+import eyeIcon from '../../assets/eye.svg';
+import eyeOffIcon from '../../assets/eye-off.svg';
 
 const AdminCriarUtilizador = () => {
     const { t } = useLanguage();
@@ -135,9 +137,11 @@ const AdminCriarUtilizador = () => {
             <div className="main-wrapper">
                 <Sidebar />
                 <main className="content-profile">
-                    <h1 className="page-title-underline">{t('admin.criar_utilizador')}</h1>
+                    <div>
+                        <h1 className="page-title-underline">{t('admin.criar_utilizador')}</h1>
+                    </div>
                     
-                    <div className="create-recipe-container">
+                    <div className="create-recipe-container" style={{ alignItems: 'stretch' }}>
                         <form onSubmit={handleSubmit} className="recipe-form-section" style={{ maxWidth: '600px' }}>
                             <div className="form-group">
                                 <label>{t('autenticacao.nome')}* <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({formData.firstName.length}/{limits.user_first_name_max_length || 30})</span></label>
@@ -207,10 +211,10 @@ const AdminCriarUtilizador = () => {
                                     <button 
                                         type="button" 
                                         onClick={() => setShowPassword(!showPassword)}
-                                        style={{ position: 'absolute', right: '15px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', padding: 0 }}
+                                        style={{ position: 'absolute', right: '15px', background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                                         title={showPassword ? t('autenticacao.ocultar') || 'Ocultar' : t('autenticacao.mostrar') || 'Mostrar'}
                                     >
-                                        {showPassword ? "🙈" : "👁️"}
+                                        <img src={showPassword ? eyeOffIcon : eyeIcon} alt="Toggle Password" style={{ width: '20px', height: '20px' }} />
                                     </button>
                                 </div>
                             </div>
@@ -230,10 +234,10 @@ const AdminCriarUtilizador = () => {
                             </div>
                         </form>
 
-                        <div className="recipe-image-section">
-                            <div className="form-group admin-create-image-group">
-                                <label className="admin-create-image-label">{t('admin.foto_perfil') || 'Foto de Perfil'}</label>
-                                <div className="image-upload-placeholder" onClick={() => document.getElementById('profilePicInput').click()}>
+                        <div className="recipe-image-section" style={{ height: 'auto', justifyContent: 'space-between' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', flex: 1, minHeight: '0', justifyContent: 'center' }}>
+                                <label className="admin-create-image-label" style={{ marginBottom: '10px' }}>{t('admin.foto_perfil') || 'Foto de Perfil'}</label>
+                                <div className="image-upload-placeholder" style={{ width: '100%', maxWidth: '400px', aspectRatio: '1 / 1', margin: 'auto' }} onClick={() => document.getElementById('profilePicInput').click()}>
                                     {previewUrl ? (
                                         <img src={previewUrl} alt="Preview" className="admin-create-preview-img" />
                                     ) : (
@@ -253,8 +257,8 @@ const AdminCriarUtilizador = () => {
                             </div>
 
                             <div className="create-actions-group">
-                                <button type="button" className="btn-cancel admin-create-btn-flex" onClick={() => navigate(-1)}>{t('comum.cancelar')}</button>
-                                <button type="button" className="btn-create-submit admin-create-btn-flex" onClick={handleSubmit}>{t('admin.criar_utilizador')}</button>
+                                <button type="button" className="btn-cancel" onClick={() => navigate(-1)}>{t('comum.cancelar')}</button>
+                                <button type="button" className="btn-create-submit" style={{ whiteSpace: 'nowrap' }} onClick={handleSubmit}>{t('admin.criar_utilizador')}</button>
                             </div>
                         </div>
                     </div>
