@@ -504,6 +504,8 @@ body.dark-mode .btn-logout-link:hover {
     padding: 60px 20px;
     background-color: transparent;
     position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 /* SEÇÕES (LOGIN E REGISTO) */
@@ -4544,7 +4546,9 @@ body.dark-mode .review-slide-author {
     .auth-group { gap: 5px !important; }
     .recipes-grid { grid-template-columns: 1fr !important; }
     .create-recipe-container { flex-direction: column !important; }
-    .auth-container { flex-direction: column !important; }
+    .auth-container { flex-direction: column !important; justify-content: flex-start !important; }
+    .auth-content { flex-direction: column !important; align-items: center !important; justify-content: flex-start !important; }
+    .auth-section { max-width: 100% !important; width: 100% !important; padding: 0 5% !important; }
     .main-wrapper { flex-direction: column !important; }
     .home-quick-actions { flex-direction: column !important; }
     .recipe-top-row, .recipe-bottom-row { flex-direction: column !important; }

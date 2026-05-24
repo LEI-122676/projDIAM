@@ -189,7 +189,7 @@ const Login = () => {
         <Sidebar />
         
         <main className="auth-container" style={{ flexDirection: 'column', padding: 0 }}>
-          <div style={{ display: 'flex', width: '100%', flex: 1, alignItems: 'flex-start', justifyContent: 'center', padding: '60px 20px', flexWrap: 'wrap', gap: '40px' }}>
+          <div className="auth-content" style={{ display: 'flex', width: '100%', flex: 1, alignItems: 'flex-start', justifyContent: 'center', padding: '60px 20px', flexWrap: 'wrap', gap: '40px' }}>
           <section className="auth-section">
             <h1 className="auth-title">{t('autenticacao.login')}</h1>
             <form className="auth-form" onSubmit={handleLogin}>
