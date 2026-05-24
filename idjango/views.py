@@ -399,7 +399,8 @@ def signup(request):
     utilizador = Utilizador.objects.create(
         user=user, 
         frigorifico=novo_frigorifico,
-        role='User'
+        role='User',
+        is_active=True
     )
     
     return Response({
@@ -449,7 +450,8 @@ def admin_create_user(request):
     utilizador_params = {
         'user': user,
         'frigorifico': novo_frigorifico,
-        'role': role
+        'role': 'User',
+        'is_active': True
     }
     if imagem:
         utilizador_params['imagem'] = imagem
