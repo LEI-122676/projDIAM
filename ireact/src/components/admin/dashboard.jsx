@@ -6,6 +6,7 @@ import Sidebar from '../maincomponents/sidebar.jsx';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
+import SearchBar from '../maincomponents/SearchBar.jsx';
 import '../../css/styles.css';
 
 const Dashboard = () => {
@@ -17,6 +18,7 @@ const Dashboard = () => {
     const [allFeedbacks, setAllFeedbacks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchQuery, setSearchQuery] = useState('');
     const itemsPerPage = 10;
 
     const [popupConfig, setPopupConfig] = useState({ isOpen: false, title: '', message: '', singleButton: true, onConfirm: () => {}, onCancel: () => {} });
@@ -83,11 +85,19 @@ const Dashboard = () => {
             });
     };
 
-    // Pagination logic
+    // Pagination and Filtering logic
+    const filteredFeedbacks = allFeedbacks.filter(fb => 
+        (fb.utilizador_nome || '').toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = allFeedbacks.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(allFeedbacks.length / itemsPerPage);
+    const currentItems = filteredFeedbacks.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(filteredFeedbacks.length / itemsPerPage);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery]);
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -139,6 +149,13 @@ const Dashboard = () => {
 
                             {allFeedbacks.length > 0 && (
                                 <div style={{ marginTop: '20px' }}>
+                                    <div style={{ marginBottom: '15px' }}>
+                                        <SearchBar 
+                                            placeholder={t('dashboard.tabela_username')}
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                        />
+                                    </div>
                                     <div className="premium-card" style={{ padding: '0', overflow: 'hidden' }}>
                                         <table className="users-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                                             <thead style={{ backgroundColor: 'var(--brand-color)', color: '#fff' }}>
@@ -166,6 +183,11 @@ const Dashboard = () => {
                                                         </td>
                                                     </tr>
                                                 ))}
+                                                {filteredFeedbacks.length === 0 && (
+                                                    <tr>
+                                                        <td colSpan="6" className="admin-table-empty" style={{ padding: '15px', textAlign: 'center' }}>{t('admin.tabela.vazio')}</td>
+                                                    </tr>
+                                                )}
                                             </tbody>
                                         </table>
                                     </div>
@@ -173,7 +195,7 @@ const Dashboard = () => {
                                     {totalPages > 1 && (
                                         <Pagination 
                                             currentPage={currentPage}
-                                            totalItems={allFeedbacks.length}
+                                            totalItems={filteredFeedbacks.length}
                                             itemsPerPage={itemsPerPage}
                                             onPageChange={paginate}
                                         />

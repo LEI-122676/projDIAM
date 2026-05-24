@@ -179,7 +179,7 @@ const CookieClicker = ({ sidebarOpen }) => {
       });
   }, [utilizadorId]);
 
-  // Periodic synchronization routine (every 3 seconds)
+  // Periodic synchronization interval (every 3 seconds)
   useEffect(() => {
     if (!isLoaded) return;
 
@@ -206,10 +206,10 @@ const CookieClicker = ({ sidebarOpen }) => {
           console.error("Error syncing cookie clicks:", err);
         });
       }
-    }, 3000);
+    }, syncIntervalMs);
 
     return () => clearInterval(intervalId);
-  }, [isLoaded, utilizadorId]);
+  }, [isLoaded, utilizadorId, syncIntervalMs]);
 
   // Emergency synchronization on unmount
   useEffect(() => {

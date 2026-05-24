@@ -160,6 +160,20 @@
         }
     },
     "eventos": {
+        "meses": {
+            "0": "Jan",
+            "1": "Feb",
+            "2": "Mar",
+            "3": "Apr",
+            "4": "May",
+            "5": "Jun",
+            "6": "Jul",
+            "7": "Aug",
+            "8": "Sep",
+            "9": "Oct",
+            "10": "Nov",
+            "11": "Dec"
+        },
         "descobrir_eventos": "Discover Events",
         "pesquisar_eventos": "Search events...",
         "filtrar_data": "Filter by date",
@@ -397,5 +411,15 @@
         "tabela_frigorifico": "Fridge",
         "tabela_estetica": "Aesthetics",
         "tabela_favorita": "Favorite Feature"
+    },
+    "slideshow": {
+        "slide_0_title": "Healthy Breakfast",
+        "slide_0_desc": "Start your day with nutritious and easy-to-prepare meals.",
+        "slide_1_title": "Homemade Burgers",
+        "slide_1_desc": "Discover the secret of a juicy and tasty gourmet burger.",
+        "slide_2_title": "Creative Recipes",
+        "slide_2_desc": "Create fantastic dishes with the ingredients you have in your fridge.",
+        "slide_3_title": "Art of Sushi",
+        "slide_3_desc": "Learn to make perfect sushi rolls with fresh fish and seasoned rice."
     }
 }

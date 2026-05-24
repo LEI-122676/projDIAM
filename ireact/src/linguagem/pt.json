@@ -160,6 +160,20 @@
         }
     },
     "eventos": {
+        "meses": {
+            "0": "Jan",
+            "1": "Fev",
+            "2": "Mar",
+            "3": "Abr",
+            "4": "Mai",
+            "5": "Jun",
+            "6": "Jul",
+            "7": "Ago",
+            "8": "Set",
+            "9": "Out",
+            "10": "Nov",
+            "11": "Dez"
+        },
         "descobrir_eventos": "Descobrir Eventos",
         "pesquisar_eventos": "Pesquisar eventos...",
         "filtrar_data": "Filtrar por data",
@@ -397,5 +411,15 @@
         "tabela_frigorifico": "Frigorífico",
         "tabela_estetica": "Estética",
         "tabela_favorita": "Funcionalidade Favorita"
+    },
+    "slideshow": {
+        "slide_0_title": "Pequeno-Almoço Saudável",
+        "slide_0_desc": "Comece o seu dia com refeições nutritivas e fáceis de preparar.",
+        "slide_1_title": "Hambúrgueres Caseiros",
+        "slide_1_desc": "Descubra o segredo de um hambúrguer gourmet suculento e saboroso.",
+        "slide_2_title": "Receitas Criativas",
+        "slide_2_desc": "Crie pratos fantásticos com os ingredientes que tem no frigorífico.",
+        "slide_3_title": "Arte do Sushi",
+        "slide_3_desc": "Aprenda a fazer rolos de sushi perfeitos com peixe fresco e arroz temperado."
     }
 }

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
-import iconeLupa from "../../assets/lupa.svg";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import PopupModal from '../maincomponents/popupModal.jsx';
@@ -9,6 +8,7 @@ import Pagination from '../maincomponents/pagination.jsx';
 import DisplayCard from '../maincomponents/DisplayCard.jsx';
 import Footer from '../maincomponents/Footer.jsx';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
+import SearchBar from '../maincomponents/SearchBar.jsx';
 
 const OsMeusEventos = () => {
     const navigate = useNavigate();
@@ -79,16 +79,11 @@ const OsMeusEventos = () => {
                         <h1 className="page-title-underline">{t('eventos.meus_eventos')}</h1>
 
                         <div className="recipes-action-bar">
-                            <div className="recipes-search-container">
-                                <input
-                                    type="text"
-                                    placeholder={t('eventos.pesquisar_eventos')}
-                                    className="main-search-input recipe-search-box text-black"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                />
-                                <img src={iconeLupa} alt="Lupa" className="recipe-icon-svg search-icon-pos" />
-                            </div>
+                            <SearchBar
+                                placeholder={t('eventos.pesquisar_eventos')}
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
 
                             <div className="recipes-button-group">
                                 <button className="btn-add-recipe" onClick={() => navigate('/eventos/criarEvento')}>+</button>

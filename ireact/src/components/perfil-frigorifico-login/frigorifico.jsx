@@ -142,7 +142,11 @@ const Frigorifico = () => {
     const ingredientesDisponiveis = dbIngredientes.filter(ing => {
         const fridgeIds = (ingredientesFrigorificoIds || []).map(id => Number(id));
         return !fridgeIds.includes(Number(ing.id));
-    }).sort((a, b) => a.nome.localeCompare(b.nome));
+    }).map(ing => {
+        const key = ing.nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_");
+        const translatedName = t(`ingredientes.${key}`) !== `ingredientes.${key}` ? t(`ingredientes.${key}`) : ing.nome;
+        return { ...ing, translatedName };
+    }).sort((a, b) => a.translatedName.localeCompare(b.translatedName));
 
     return (
         <div className="body-wrapper">
@@ -174,7 +178,7 @@ const Frigorifico = () => {
                                     >
                                         <option value="">{t('frigorifico.selecionar_adicionar')}</option>
                                         {ingredientesDisponiveis.map(ing => (
-                                            <option key={ing.id} value={ing.id}>{ing.nome}</option>
+                                            <option key={ing.id} value={ing.id}>{ing.translatedName}</option>
                                         ))}
                                     </select>
                                 </div>
@@ -198,7 +202,11 @@ const Frigorifico = () => {
                             ) : (
                                 ingredientesFrigorificoIds.map((id) => {
                                     const obj = dbIngredientes.find(i => Number(i.id) === Number(id));
-                                    const nome = obj ? obj.nome : `Ingrediente #${id}`;
+                                    let nome = obj ? obj.nome : `Ingrediente #${id}`;
+                                    if (obj) {
+                                        const key = obj.nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_");
+                                        nome = t(`ingredientes.${key}`) !== `ingredientes.${key}` ? t(`ingredientes.${key}`) : obj.nome;
+                                    }
 
                                     return (
                                         <div key={id} className="ingredient-chip-premium">

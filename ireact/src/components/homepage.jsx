@@ -9,6 +9,7 @@ import CookieLeaderboard from './maincomponents/CookieLeaderboard.jsx';
 import axios from 'axios';
 import '../css/styles.css';
 import { useLanguage } from '../linguagem/LanguageContext.jsx';
+import SearchBar from './maincomponents/SearchBar.jsx';
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -45,18 +46,15 @@ const Home = () => {
             <div className="home-hero-section">
               <h1 className="home-welcome-title">{t('homepage.bem_vindo')}</h1>
 
-              <form onSubmit={handleSearch} className="search-container">
-                <input
-                  type="text"
-                  placeholder={t('homepage.pesquisar_placeholder')}
-                  className="main-search-input"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <button type="submit" className="btn-search-home">
-                  {t('homepage.pesquisar')}
-                </button>
-              </form>
+              <SearchBar 
+                className="search-container"
+                inputClassName=""
+                onSubmit={handleSearch}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder={t('homepage.pesquisar_placeholder')}
+                buttonText={t('homepage.pesquisar')}
+              />
             </div>
 
             <Slideshow />
