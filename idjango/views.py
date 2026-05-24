@@ -666,13 +666,18 @@ def csrf(request):
 @permission_classes([AllowAny])
 @authentication_classes([])
 def cookie_leaderboard(request):
-    top_utilizadores = Utilizador.objects.filter(is_active=True, cookie_clicks__gt=0).exclude(role='Guest').order_by('-cookie_clicks').values('user__username', 'cookie_clicks')[:5]
+    top_utilizadores = Utilizador.objects.filter(is_active=True, cookie_clicks__gt=0).exclude(role='Guest').order_by('-cookie_clicks').values('user__username', 'user__first_name', 'user__last_name', 'cookie_clicks')[:5]
     
-    data = [
-        {
-            'username': u['user__username'],
+    data = []
+    for u in top_utilizadores:
+        first = u['user__first_name'] or ""
+        last = u['user__last_name'] or ""
+        full_name = f"{first} {last}".strip()
+        if not full_name:
+            full_name = u['user__username']
+            
+        data.append({
+            'username': full_name,
             'cookie_clicks': u['cookie_clicks']
-        }
-        for u in top_utilizadores
-    ]
+        })
     return Response(data)
