@@ -27,7 +27,12 @@ const Sidebar = () => {
       const URL_BASE = 'http://localhost:8000';
       axios.get(`${URL_BASE}/idjango/api/utilizadores/${userId}`, {withCredentials: true})
         .then(response => setUserRole(response.data.role))
-        .catch(err => console.error("Error fetching user role for sidebar", err));
+        .catch(err => {
+            console.error("Error fetching user role for sidebar", err);
+            if (err.response && (err.response.status === 401 || err.response.status === 403 || err.response.status === 404)) {
+                localStorage.removeItem('utilizadorId');
+            }
+        });
     }
   }, []);
 
