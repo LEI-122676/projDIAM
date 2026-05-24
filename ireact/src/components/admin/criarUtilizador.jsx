@@ -235,9 +235,9 @@ const AdminCriarUtilizador = () => {
                         </form>
 
                         <div className="recipe-image-section" style={{ height: 'auto', justifyContent: 'space-between' }}>
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', flex: 1, minHeight: '0' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', flex: 1, minHeight: '0', justifyContent: 'center' }}>
                                 <label className="admin-create-image-label" style={{ marginBottom: '10px' }}>{t('admin.foto_perfil') || 'Foto de Perfil'}</label>
-                                <div className="image-upload-placeholder" style={{ width: '100%', height: '100%', flex: 1, maxHeight: 'none' }} onClick={() => document.getElementById('profilePicInput').click()}>
+                                <div className="image-upload-placeholder" style={{ width: '100%', maxWidth: '100%', aspectRatio: '1 / 1', margin: 'auto' }} onClick={() => document.getElementById('profilePicInput').click()}>
                                     {previewUrl ? (
                                         <img src={previewUrl} alt="Preview" className="admin-create-preview-img" />
                                     ) : (
