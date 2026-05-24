@@ -5,6 +5,16 @@
 /* 1. RESET E DEFINIÇÕES BASE */
 :root {
     --brand-color: #2E4A35;
+    --text-primary: #4A3A31;
+    --text-secondary: #716259;
+    --border-main: #D1CDBC;
+    --bg-light: #FDFBEE;
+    --border-divider: #EAEAEA;
+    --border-soft: #EAE6D6;
+    --bg-hover: #F6F4E9;
+    --white: #ffffff;
+    --gray-light: #e0e0e0;
+    --bg-dark: #1e1e1e;
 }
 
 * {
@@ -18,7 +28,7 @@ html, body, #root {
     height: 100%;
     width: 100%;
     background-color: transparent;
-    color: #4A3A31;
+    color: var(--text-primary);
     overflow: hidden;
 }
 
@@ -123,7 +133,7 @@ html, body, #root {
     font-family: 'Inter', sans-serif;
     font-weight: 700;
     font-size: 1.2rem;
-    color: #716259;
+    color: var(--text-secondary);
     letter-spacing: -0.02em;
     animation: fadeIn 0.3s ease forwards;
 }
@@ -163,7 +173,7 @@ html, body, #root {
 .hamburger-btn .line {
     width: 100%;
     height: 3px;
-    background-color: #716259;
+    background-color: var(--text-secondary);
     border-radius: 2px;
     transition: all 0.3s ease-in-out;
 }
@@ -200,7 +210,7 @@ html, body, #root {
     font-family: 'Inter', sans-serif;
     font-weight: 700;
     font-size: 1.15rem;
-    color: #716259;
+    color: var(--text-secondary);
     white-space: nowrap;
     animation: fadeIn 0.3s ease forwards;
 }
@@ -281,13 +291,13 @@ html, body, #root {
 
 .profile-divider {
     border: none;
-    border-top: 1px solid #EAEAEA;
+    border-top: 1px solid var(--border-divider);
     margin: 25px 0;
 }
 
 .user-extra-info h3 {
     font-size: 1.1rem;
-    color: #4A3A31;
+    color: var(--text-primary);
     margin-bottom: 10px;
 }
 
@@ -297,7 +307,7 @@ html, body, #root {
 }
 
 .user-extra-info li {
-    color: #716259;
+    color: var(--text-secondary);
     padding: 3px 0;
     font-size: 0.95rem;
 }
@@ -312,7 +322,7 @@ html, body, #root {
 }
 
 .btn-edit-profile {
-    background-color: #FDFBEE;
+    background-color: var(--bg-light);
     border: 1px solid var(--brand-color);
     color: var(--brand-color);
     padding: 12px;
@@ -322,7 +332,7 @@ html, body, #root {
 }
 
 .btn-logout-link {
-    background-color: #FDFBEE !important;
+    background-color: var(--bg-light) !important;
     background-image: none !important;
     border: 1px solid var(--brand-color) !important;
     color: var(--brand-color) !important;
@@ -367,15 +377,15 @@ body.dark-mode .btn-logout-link:hover {
 }
 
 .shortcut-card {
-    background-color: #FDFBEE;
-    border: 1px solid #EAE6D6;
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-soft);
     border-radius: 15px;
     height: 180px; /* Altura fixa para as caixas */
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    color: #4A3A31;
+    color: var(--text-primary);
     cursor: pointer;
     transition: transform 0.2s;
     text-align: center;
@@ -384,7 +394,7 @@ body.dark-mode .btn-logout-link:hover {
 
 .shortcut-card:hover {
     transform: translateY(-5px);
-    background-color: #F6F4E9;
+    background-color: var(--bg-hover);
 }
 
 /* 6. BOTÕES E LINKS DE AUTENTICAÇÃO */
@@ -427,8 +437,8 @@ body.dark-mode .btn-logout-link:hover {
 
 .btn-profile-pill.secondary {
     background-color: white;
-    border: 2px solid #D1CDBC;
-    color: #716259;
+    border: 2px solid var(--border-main);
+    color: var(--text-secondary);
 }
 
 .logo { 
@@ -505,10 +515,10 @@ body.dark-mode .btn-logout-link:hover {
 .auth-input {
     width: 100%;
     padding: 15px 25px;
-    border: 1.5px solid #EAE6D6; /* Cor da borda suave */
+    border: 1.5px solid var(--border-soft); /* Cor da borda suave */
     border-radius: 30px; /* Inputs ovais */
     font-size: 1rem;
-    color: #716259;
+    color: var(--text-secondary);
     outline: none;
     background-color: #f5f5f5;
     transition: border-color 0.2s;
@@ -557,7 +567,7 @@ body.dark-mode .btn-logout-link:hover {
     content: '';
     flex: 1;
     width: 1px;
-    background-color: #EAEAEA;
+    background-color: var(--border-divider);
 }
 
 .auth-divider span {
@@ -638,7 +648,7 @@ body.dark-mode .btn-logout-link:hover {
 }
 
 body.dark-mode .slideshow-container {
-    background-color: #1e1e1e;
+    background-color: var(--bg-dark);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
@@ -675,7 +685,7 @@ body.dark-mode .slideshow-container {
 
 .slide-content {
     max-width: 600px;
-    color: #ffffff;
+    color: var(--white);
     transform: translateY(20px);
     opacity: 0;
     transition: transform 0.6s ease-out, opacity 0.6s ease-out;
@@ -692,14 +702,14 @@ body.dark-mode .slideshow-container {
     font-weight: 800;
     margin-bottom: 12px;
     letter-spacing: -0.5px;
-    color: #ffffff;
+    color: var(--white);
     text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .slide-description {
     font-size: 1.1rem;
     line-height: 1.5;
-    color: #eaeaea;
+    color: var(--border-divider);
     text-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
@@ -709,7 +719,7 @@ body.dark-mode .slideshow-container {
     top: 50%;
     transform: translateY(-50%);
     background: rgba(0, 0, 0, 0.4);
-    color: #ffffff;
+    color: var(--white);
     border: none;
     width: 50px;
     height: 50px;
@@ -763,7 +773,7 @@ body.dark-mode .slideshow-container {
 }
 
 .slideshow-dots .dot.active {
-    background: #ffffff;
+    background: var(--white);
     transform: scale(1.2);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
 }
@@ -795,7 +805,7 @@ body.dark-mode .slideshow-container {
 
 .home-subtitle {
     font-size: 1.2rem;
-    color: #716259;
+    color: var(--text-secondary);
     margin-bottom: 40px;
 }
 
@@ -803,10 +813,10 @@ body.dark-mode .slideshow-container {
 .search-container {
     display: flex;
     gap: 15px;
-    background: #FDFBEE;
+    background: var(--bg-light);
     padding: 10px;
     border-radius: 50px;
-    border: 2px solid #EAEAEA;
+    border: 2px solid var(--border-divider);
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     margin-bottom: 50px;
     width: 100%;
@@ -821,7 +831,7 @@ body.dark-mode .slideshow-container {
     font-size: 1.1rem;
     font-family: 'Inter', sans-serif;
     outline: none;
-    color: #4A3A31;
+    color: var(--text-primary);
 }
 
 .btn-search-home {
@@ -859,8 +869,8 @@ body.dark-mode .slideshow-container {
 
 .quick-card {
     padding: 20px 40px;
-    background-color: #ffffff;
-    border: 1px solid #D1CDBC;
+    background-color: var(--white);
+    border: 1px solid var(--border-main);
     border-radius: 15px;
     cursor: pointer;
     font-weight: 700;
@@ -909,8 +919,8 @@ body.dark-mode .slideshow-container {
 
 /* Card de Input */
 .fridge-input-card {
-    background-color: #ffffff;
-    border: 1px solid #EAEAEA;
+    background-color: var(--white);
+    border: 1px solid var(--border-divider);
     border-radius: 15px;
     padding: 30px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.02);
@@ -932,16 +942,16 @@ body.dark-mode .slideshow-container {
 }
 
 .input-group label {
-    color: #4A3A31;
+    color: var(--text-primary);
     font-size: 1.1rem;
 }
 
 .input-group input {
     width: 100%;
     padding: 12px 20px;
-    border: 1px solid #D1CDBC;
+    border: 1px solid var(--border-main);
     border-radius: 8px;
-    background-color: #FDFBEE;
+    background-color: var(--bg-light);
     font-family: 'Inter', sans-serif;
     outline: none;
 }
@@ -964,7 +974,7 @@ body.dark-mode .slideshow-container {
 }
 
 .ingredient-tag {
-    background-color: #FDFBEE;
+    background-color: var(--bg-light);
     border-radius: 12px;
     width: 180px;
     height: 120px;
@@ -972,13 +982,13 @@ body.dark-mode .slideshow-container {
     justify-content: center;
     align-items: center;
     position: relative;
-    border: 1px solid #EAEAEA;
+    border: 1px solid var(--border-divider);
     overflow: hidden;
 }
 
 .ingredient-name {
     font-weight: 700;
-    color: #4A3A31;
+    color: var(--text-primary);
     font-size: 0.9rem;
 }
 
@@ -1042,9 +1052,9 @@ body.dark-mode .slideshow-container {
 
 /* Caixa de Input de Pesquisa */
 .recipe-search-box {
-    border: 1px solid #D1CDBC !important;
+    border: 1px solid var(--border-main) !important;
     border-radius: 10px !important;
-    background-color: #FDFBEE !important;
+    background-color: var(--bg-light) !important;
     padding: 12px 45px 12px 20px !important;
     width: 100%;
     min-width: 0; /* Permite que o input encolha também */
@@ -1052,19 +1062,19 @@ body.dark-mode .slideshow-container {
     font-family: 'Inter', sans-serif;
     outline: none;
     font-size: 1rem;
-    color: #4A3A31;
+    color: var(--text-primary);
 }
 
 .event-search-box {
-    border: 1px solid #D1CDBC !important;
+    border: 1px solid var(--border-main) !important;
     border-radius: 10px !important;
-    background-color: #FDFBEE !important;
+    background-color: var(--bg-light) !important;
     padding: 12px 45px 12px 20px !important;
     width: 100%;
     font-family: 'Inter', sans-serif;
     outline: none;
     font-size: 1rem;
-    color: #4A3A31;
+    color: var(--text-primary);
 }
 
 
@@ -1073,8 +1083,8 @@ body.dark-mode .slideshow-container {
 /* --- THEME TOGGLE BUTTON --- */
 .theme-toggle-btn {
     background-color: transparent;
-    border: 1px solid #D1CDBC;
-    color: #4A3A31;
+    border: 1px solid var(--border-main);
+    color: var(--text-primary);
     padding: 8px 16px;
     border-radius: 30px;
     cursor: pointer;
@@ -1092,7 +1102,7 @@ body.dark-mode .slideshow-container {
 /* --- DARK MODE RULES --- */
 body.dark-mode {
     background-color: transparent !important;
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
     --brand-color: #6a36a8; /* Darker purple for buttons so white text is readable */
 }
 
@@ -1141,7 +1151,7 @@ body.dark-mode .event-card,
 body.dark-mode .modal-content {
     background-color: #242424 !important;
     border-color: #444 !important;
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .brand-name,
@@ -1158,7 +1168,7 @@ body.dark-mode .auth-title,
 body.dark-mode .recipe-title,
 body.dark-mode .event-title,
 body.dark-mode .modal-title {
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .home-subtitle,
@@ -1178,12 +1188,12 @@ body.dark-mode .input-group input,
 body.dark-mode textarea,
 body.dark-mode select {
     background-color: #2c2c2c !important;
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
     border-color: #444 !important;
 }
 
 body.dark-mode .hamburger-btn .line {
-    background-color: #e0e0e0 !important;
+    background-color: var(--gray-light) !important;
 }
 
 body.dark-mode .page-title-underline {
@@ -1213,9 +1223,9 @@ body.dark-mode .btn-primary:hover {
 
 body.dark-mode .btn-profile-pill.secondary,
 body.dark-mode .btn-secondary {
-    background-color: #1e1e1e !important;
+    background-color: var(--bg-dark) !important;
     border-color: #555 !important;
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .theme-toggle-btn {
@@ -1252,7 +1262,7 @@ body.dark-mode .modal-overlay {
 }
 
 
-body.dark-mode #root { background-color: #121212 !important; color: #e0e0e0 !important; }
+body.dark-mode #root { background-color: #121212 !important; color: var(--gray-light) !important; }
 
 
 /* Fixes for dark mode missing components */
@@ -1268,17 +1278,17 @@ body.dark-mode .step-detail {
     background-color: rgba(30, 30, 30, 0.7) !important;
     backdrop-filter: blur(12px) !important;
     border-color: rgba(255, 255, 255, 0.05) !important;
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .ingredient-chip-premium {
     background-color: #242424 !important;
     border-color: #444 !important;
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .content-box-light.text-black {
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .fridge-status-bar,
@@ -1288,11 +1298,11 @@ body.dark-mode .recipe-top-row {
 }
 
 body.dark-mode .btn-filter-fridge {
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .chip-remove-btn {
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .chip-remove-btn:hover {
@@ -1308,7 +1318,7 @@ body.dark-mode .comments-title,
 body.dark-mode .comment-author,
 body.dark-mode .step-nav-item,
 body.dark-mode .recipe-rating-text {
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .comment-date,
@@ -1322,7 +1332,7 @@ body.dark-mode .step-nav-item:hover {
 }
 
 
-body.dark-mode .text-black { color: #e0e0e0 !important; }
+body.dark-mode .text-black { color: var(--gray-light) !important; }
 
 
 /* Refinement of Dark Mode Colors */
@@ -1339,7 +1349,7 @@ body.dark-mode .recipe-bottom-row,
 body.dark-mode .step-detail {
     background-color: #111111 !important;
     border-color: #2a2a2a !important;
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .recipe-card-premium:hover,
@@ -1349,7 +1359,7 @@ body.dark-mode .ingredient-chip-premium:hover {
 
 body.dark-mode .card-rating-badge {
     background-color: #222 !important;
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .recipe-card-premium .recipe-card-footer {
@@ -1362,7 +1372,7 @@ body.dark-mode .recipe-card,
 body.dark-mode .event-card {
     background-color: #111111 !important;
     border-color: #2a2a2a !important;
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .recipe-card:hover,
@@ -1392,11 +1402,11 @@ body.dark-mode .comments-section,
 body.dark-mode .comment-card {
     background-color: #111111 !important;
     border: 1px solid #2a2a2a !important;
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .step-nav-item {
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .step-nav-item:hover {
@@ -1423,7 +1433,7 @@ body.dark-mode .recipe-bottom-row {
 
 body.dark-mode .btn-edit-profile {
     background-color: #111111 !important;
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
     border: 1px solid #2a2a2a !important;
 }
 
@@ -1466,12 +1476,12 @@ body.dark-mode .calendar-filter-wrapper {
 }
 
 body.dark-mode .calendar-display-text {
-    color: #ffffff !important;
+    color: var(--white) !important;
 }
 
 body.dark-mode .main-search-input {
     background-color: transparent !important;
-    color: #ffffff !important;
+    color: var(--white) !important;
     border: none !important;
 }
 
@@ -1480,7 +1490,7 @@ body.dark-mode .main-search-input::placeholder {
 }
 
 body.dark-mode .home-welcome-title {
-    color: #ffffff !important;
+    color: var(--white) !important;
 }
 
 body.dark-mode .home-subtitle {
@@ -1502,19 +1512,19 @@ body.dark-mode .popup-content {
 }
 
 body.dark-mode .popup-title {
-    color: #ffffff !important;
+    color: var(--white) !important;
     border-bottom-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 body.dark-mode .popup-message {
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .btn-popup-cancel {
     background-color: rgba(255, 255, 255, 0.1) !important;
     backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .btn-popup-cancel:hover {
@@ -1523,7 +1533,7 @@ body.dark-mode .btn-popup-cancel:hover {
 
 body.dark-mode .btn-popup-confirm {
     background-color: var(--brand-color) !important;
-    color: #ffffff !important;
+    color: var(--white) !important;
     border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
@@ -1593,7 +1603,7 @@ body.dark-mode .step-nav-item,
 body.dark-mode .recipe-main-image,
 body.dark-mode .fridge-input-card-custom,
 body.dark-mode .profile-details-card {
-    background-color: #1e1e1e !important;
+    background-color: var(--bg-dark) !important;
     border: 1px solid #2c2c2c !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
 }
@@ -1601,7 +1611,7 @@ body.dark-mode .profile-details-card {
 body.dark-mode .recipe-card-premium .recipe-card-footer,
 body.dark-mode .recipe-card .recipe-card-footer,
 body.dark-mode .event-card .recipe-card-footer {
-    background-color: #1e1e1e !important;
+    background-color: var(--bg-dark) !important;
     border-top: 1px solid #2c2c2c !important;
 }
 
@@ -1620,7 +1630,7 @@ body.dark-mode select,
 body.dark-mode .input-beige {
     background-color: #262626 !important;
     border: 1px solid #383838 !important;
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 /* Duplicate dark mode auth-divider removed */
@@ -1701,8 +1711,8 @@ select.page-select-dropdown,
 
 select.page-select-dropdown option,
 .page-select-dropdown option {
-    background-color: #ffffff !important;
-    color: #4a3a31 !important;
+    background-color: var(--white) !important;
+    color: var(--text-primary) !important;
     font-weight: 600;
 }
 
@@ -1717,7 +1727,7 @@ body.dark-mode .page-select-dropdown {
 body.dark-mode select.page-select-dropdown option,
 body.dark-mode .page-select-dropdown option {
     background-color: #121212 !important;
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 /* 5. Ícones SVG Padronizados */
@@ -1793,14 +1803,14 @@ body.dark-mode .page-select-dropdown option {
 
 /* Ocultar seta nativa no select e estilizar as opções */
 .rating-filter-select-hidden option {
-    background-color: #ffffff !important;
-    color: #4a3a31 !important;
+    background-color: var(--white) !important;
+    color: var(--text-primary) !important;
     font-weight: 600;
 }
 
 body.dark-mode .rating-filter-select-hidden option {
-    background-color: #1e1e1e !important;
-    color: #e0e0e0 !important;
+    background-color: var(--bg-dark) !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .rating-filter-wrapper.active .rating-display-text {
@@ -1820,7 +1830,7 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
     width: 180px;
     height: 45px;
     background-color: var(--brand-color);
-    color: #ffffff;
+    color: var(--white);
     border: none;
     border-radius: 8px;
     font-size: 24px;
@@ -1881,7 +1891,7 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }
 
-.recipe-icon-large { font-size: 64px; color: #D1CDBC; opacity: 0.6; }
+.recipe-icon-large { font-size: 64px; color: var(--border-main); opacity: 0.6; }
 .recipe-image-placeholder {
     height: 220px; /* Aumentado de 180px para maior visibilidade */
     background-color: #f9f9f9;
@@ -1894,12 +1904,12 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 .recipe-card-footer {
     height: 50px;
     width: 100%;
-    background-color: #ffffff;
+    background-color: var(--white);
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    border-top: 1px solid #EAEAEA;
+    border-top: 1px solid var(--border-divider);
     overflow: hidden;
     padding: 0 10px;
     box-sizing: border-box;
@@ -1907,7 +1917,7 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 
 .recipe-card-footer .ingredient-name {
     font-weight: 700;
-    color: #4A3A31;
+    color: var(--text-primary);
     font-size: 0.95rem;
     overflow: hidden;
 }
@@ -1948,13 +1958,13 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 .form-group label {
     font-weight: 700;
     font-size: 1.2rem;
-    color: #4A3A31;
+    color: var(--text-primary);
     text-align: left;
 }
 
 .input-beige {
-    background-color: #FDFBEE;
-    border: 1px solid #EAE6D6;
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-soft);
     border-radius: 15px;
     padding: 15px 20px;
     font-size: 1rem;
@@ -1974,17 +1984,17 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 .item-number {
     font-weight: 800;
     font-size: 1.1rem;
-    color: #4A3A31;
+    color: var(--text-primary);
     min-width: 25px;
 }
 
 .btn-add-dashed {
     width: 100%;
     background: transparent;
-    border: 2px dashed #D1CDBC;
+    border: 2px dashed var(--border-main);
     border-radius: 50px;
     padding: 12px;
-    color: #D1CDBC;
+    color: var(--border-main);
     font-size: 1.5rem;
     cursor: pointer;
     transition: all 0.2s;
@@ -2003,9 +2013,9 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
     position: relative;
     width: 100%;
     aspect-ratio: 1 / 1;
-    border: 2px dashed #D1CDBC;
+    border: 2px dashed var(--border-main);
     border-radius: 20px;
-    background-color: #FDFBEE;
+    background-color: var(--bg-light);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2027,8 +2037,8 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 
 .btn-cancel {
     background-color: white;
-    border: 1.5px solid #4A3A31;
-    color: #4A3A31;
+    border: 1.5px solid var(--text-primary);
+    color: var(--text-primary);
     padding: 12px 35px;
     border-radius: 30px;
     font-weight: 700;
@@ -2071,8 +2081,8 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 .recipe-main-image {
     flex: 2;
     aspect-ratio: 16 / 9;
-    background-color: #FDFBEE;
-    border: 1px solid #EAEAEA;
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-divider);
     border-radius: 15px;
     display: flex;
     align-items: center;
@@ -2087,12 +2097,12 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 }
 
 .step-nav-item {
-    background: #ffffff;
-    border: 1px solid #EAEAEA;
+    background: var(--white);
+    border: 1px solid var(--border-divider);
     padding: 15px;
     text-align: center;
     border-radius: 8px;
-    color: #716259;
+    color: var(--text-secondary);
     font-weight: 600;
 }
 
@@ -2124,7 +2134,7 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
     border-radius: 15px;
     padding: 25px;
     min-height: 100px;
-    color: #4A3A31;
+    color: var(--text-primary);
     text-align: left;
     overflow-wrap: break-word;
     word-break: break-word;
@@ -2134,7 +2144,7 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 .section-subtitle {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #4A3A31;
+    color: var(--text-primary);
     margin-bottom: 15px;
     display: block;
     text-align: left;
@@ -2218,7 +2228,7 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 }
 
 .btn-popup-confirm {
-    background-color: #4A3A31;
+    background-color: var(--text-primary);
     background-image: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.1) 100%);
     border: 1px solid rgba(255,255,255,0.1);
     color: white;
@@ -2277,7 +2287,7 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 }
 
 .comments-title {
-    border-bottom: 2px solid #D1CDBC;
+    border-bottom: 2px solid var(--border-main);
     padding-bottom: 10px;
     margin-bottom: 20px;
     color: #333;
@@ -2295,11 +2305,11 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
     min-height: 100px;
     padding: 15px;
     border-radius: 8px;
-    border: 1px solid #D1CDBC;
+    border: 1px solid var(--border-main);
     color: black;
     font-family: inherit;
     resize: vertical;
-    background-color: #fff;
+    background-color: var(--white);
 }
 
 .btn-publish-comment {
@@ -2346,7 +2356,7 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 }
 
 .comment-avatar {
-    background-color: #D1CDBC;
+    background-color: var(--border-main);
     border-radius: 50%;
     width: 28px;
     height: 28px;
@@ -2404,14 +2414,14 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 .mt-50 { margin-top: 50px !important; }
 .text-empty-state { grid-column: 1 / -1; color: #888; }
 .text-empty-state-center { grid-column: 1 / -1; text-align: center; margin-top: 20px; }
-.recipe-icon-large { font-size: 40px; color: #D1CDBC; }
+.recipe-icon-large { font-size: 40px; color: var(--border-main); }
 .cursor-pointer { cursor: pointer; }
 .profile-grid-full { margin: 0; max-width: 100%; }
 .flex-center { display: flex; justify-content: center; align-items: center; }
 .loading-container { padding: 50px; text-align: center; }
 .recipe-header-container { text-align: left; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
 .recipe-rating-text { font-size: 18px; font-weight: bold; color: var(--brand-color); }
-.recipe-main-icon { font-size: 80px; color: #D1CDBC; font-weight: 100; }
+.recipe-main-icon { font-size: 80px; color: var(--border-main); font-weight: 100; }
 .mt-auto { margin-top: auto; }
 .recipe-bottom-row-flex { display: flex; gap: 20px; flex-wrap: wrap; }
 .recipe-col-2 { flex: 2; min-width: 300px; }
@@ -2430,16 +2440,16 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 .fridge-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
 .m-0 { margin: 0; }
 .btn-rounded-20 { border-radius: 20px; }
-.fridge-input-card-custom { background-color: #F8F6F0; padding: 25px; border-radius: 15px; border: 1px solid #D1CDBC; margin-bottom: 40px; }
+.fridge-input-card-custom { background-color: #F8F6F0; padding: 25px; border-radius: 15px; border: 1px solid var(--border-main); margin-bottom: 40px; }
 .fridge-form-flex { display: flex; gap: 20px; align-items: flex-end; }
 .flex-1 { flex: 1; min-width: 0; width: 100%; }
-.fridge-label { color: #4A3A31; margin-bottom: 10px; display: block; font-weight: bold; }
+.fridge-label { color: var(--text-primary); margin-bottom: 10px; display: block; font-weight: bold; }
 .select-fridge { height: 50px; cursor: pointer; width: 100%; max-width: 450px; font-size: 1.1rem; padding: 0 15px; box-sizing: border-box; display: block; }
 .btn-add-fridge { width: auto; padding: 0 30px; height: 50px; font-size: 16px; }
-.fridge-content-title { color: var(--brand-color); margin-bottom: 20px; border-bottom: 2px solid #D1CDBC; padding-bottom: 10px; }
+.fridge-content-title { color: var(--brand-color); margin-bottom: 20px; border-bottom: 2px solid var(--border-main); padding-bottom: 10px; }
 .ingredients-grid-flex { display: flex; flex-wrap: wrap; gap: 15px; }
 .fridge-empty-text { font-style: italic; color: #888; }
-.ingredient-tag-custom { display: flex; align-items: center; background-color: #e2ddcc; padding: 10px 20px; border-radius: 25px; color: #4A3A31; font-weight: 600; width: auto; height: auto; }
+.ingredient-tag-custom { display: flex; align-items: center; background-color: #e2ddcc; padding: 10px 20px; border-radius: 25px; color: var(--text-primary); font-weight: 600; width: auto; height: auto; }
 .remove-btn-custom { background: transparent; border: none; color: #8b4b4b; cursor: pointer; font-weight: bold; font-size: 18px; margin-right: 10px; display: flex; align-items: center; position: static; }
 
 .fridge-empty-clean-text {
@@ -2466,11 +2476,11 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 .ingredient-chip-premium {
     display: flex;
     align-items: center;
-    background: #FDFBEE;
-    border: 1.5px solid #EAE6D6;
+    background: var(--bg-light);
+    border: 1.5px solid var(--border-soft);
     padding: 8px 18px;
     border-radius: 50px;
-    color: #4A3A31;
+    color: var(--text-primary);
     font-weight: 600;
     font-size: 0.95rem;
     gap: 12px;
@@ -2480,7 +2490,7 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 
 .ingredient-chip-premium:hover {
     border-color: var(--brand-color);
-    background: #ffffff;
+    background: var(--white);
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(46, 74, 53, 0.1);
 }
@@ -2539,7 +2549,7 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
     padding: 60px 20px;
     background: #F9F9F9;
     border-radius: 20px;
-    border: 2px dashed #EAEAEA;
+    border: 2px dashed var(--border-divider);
 }
 
 .empty-icon {
@@ -2556,7 +2566,7 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 }
 
 .recipe-card-premium {
-    background: #ffffff;
+    background: var(--white);
     border-radius: 22px;
     overflow: hidden;
     border: 1px solid #f0f0f0;
@@ -2594,8 +2604,8 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
     justify-content: center; /* Garante que o teu span de texto fica perfeitamente centrado */
     padding: 10px 18px;
     border-radius: 12px;
-    border: 1.5px solid #4A3A31;
-    background-color: #ffffff;
+    border: 1.5px solid var(--text-primary);
+    background-color: var(--white);
     cursor: pointer;
     position: relative;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -2604,7 +2614,7 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 }
 
 .calendar-filter-wrapper:hover {
-    background-color: #F6F4E9;
+    background-color: var(--bg-hover);
     border-color: var(--brand-color);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(46, 74, 53, 0.08);
@@ -2659,12 +2669,12 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 
 .calendar-filter-wrapper.active .clear-date-btn {
     background: rgba(255, 255, 255, 0.2);
-    color: #ffffff;
+    color: var(--white);
 }
 
 .calendar-filter-wrapper.active .clear-date-btn:hover {
     background: rgba(255, 255, 255, 0.4);
-    color: #ffffff;
+    color: var(--white);
 }
 
 .calendar-filter-wrapper .recipe-icon-svg {
@@ -2711,13 +2721,13 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 }
 
 body.dark-mode .event-metadata-single-line {
-    background-color: #1e1e1e !important;
+    background-color: var(--bg-dark) !important;
     border-color: #2c2c2c !important;
 }
 
 body.dark-mode .form-group label,
 body.dark-mode .item-number {
-    color: #ffffff !important;
+    color: var(--white) !important;
 }
 
 body.dark-mode .image-upload-placeholder {
@@ -2728,7 +2738,7 @@ body.dark-mode .image-upload-placeholder {
 body.dark-mode .btn-cancel {
     background-color: #262626 !important;
     border-color: #383838 !important;
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .btn-cancel:hover {
@@ -2743,7 +2753,7 @@ body.dark-mode .btn-add-dashed:hover {
 
 body.dark-mode select option {
     background-color: #262626 !important;
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 /* Novos Estilos Sem Inline para Criar Evento / Receita */
@@ -2772,8 +2782,8 @@ body.dark-mode select option {
     text-align-last: center;
     padding: 0 15px;
     border-radius: 15px;
-    border: 1px solid #EAE6D6;
-    background-color: #FDFBEE;
+    border: 1px solid var(--border-soft);
+    background-color: var(--bg-light);
 }
 
 .create-event-two-column-grid {
@@ -2828,10 +2838,10 @@ body.dark-mode select option {
 .btn-add-dashed {
     width: 100%;
     background: transparent;
-    border: 2px dashed #D1CDBC;
+    border: 2px dashed var(--border-main);
     border-radius: 50px;
     padding: 12px 0;
-    color: #D1CDBC;
+    color: var(--border-main);
     font-size: 1.2rem;
     cursor: pointer;
     transition: all 0.2s;
@@ -2861,7 +2871,7 @@ body.dark-mode select option {
 
 .image-upload-info {
     text-align: center;
-    color: #D1CDBC;
+    color: var(--border-main);
 }
 
 .image-upload-icon {
@@ -2877,7 +2887,7 @@ body.dark-mode select option {
     margin-top: 10px;
     align-self: center;
     background-color: #8b4b4b !important; /* Vermelho do site */
-    color: #ffffff !important;
+    color: var(--white) !important;
     border: none !important;
     padding: 8px 20px !important;
     border-radius: 20px !important;
@@ -2892,7 +2902,7 @@ body.dark-mode select option {
 
 body.dark-mode .btn-remove-photo {
     background-color: #ef5350 !important;
-    color: #ffffff !important;
+    color: var(--white) !important;
 }
 body.dark-mode .btn-remove-photo:hover {
     background-color: #e53935 !important;
@@ -2945,13 +2955,13 @@ body.dark-mode .admin-table th, body.dark-mode .admin-table td {
 
 .admin-table th {
     background-color: rgba(255,255,255,0.5);
-    color: #4A3A31 !important;
+    color: var(--text-primary) !important;
     font-weight: 700;
 }
 
 body.dark-mode .admin-table th {
     background-color: rgba(0,0,0,0.3);
-    color: #ffffff !important;
+    color: var(--white) !important;
 }
 
 .admin-table td {
@@ -2959,7 +2969,7 @@ body.dark-mode .admin-table th {
 }
 
 body.dark-mode .admin-table td {
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 .admin-table tr:last-child td {
@@ -2986,13 +2996,13 @@ body.dark-mode .admin-table td {
 body.dark-mode .admin-role-select {
     border-color: rgba(255,255,255,0.1);
     background-color: rgba(0,0,0,0.3);
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 .admin-btn-save {
-    background-color: #4A3A31;
+    background-color: var(--text-primary);
     background-image: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.1) 100%);
-    color: #ffffff;
+    color: var(--white);
     border: 1px solid rgba(255,255,255,0.1);
     padding: 8px 16px;
     border-radius: 30px;
@@ -3025,7 +3035,7 @@ body.dark-mode .admin-btn-save {
     background-color: rgba(30, 30, 30, 0.5);
     background-image: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.2) 100%);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #e0e0e0;
+    color: var(--gray-light);
     box-shadow: 0 4px 15px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.15);
 }
 
@@ -3049,7 +3059,7 @@ body.dark-mode .admin-btn-save:disabled {
     backdrop-filter: blur(15px);
     background-image: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.0) 100%);
     border: 1px solid rgba(0, 0, 0, 0.08);
-    color: #4A3A31;
+    color: var(--text-primary);
     padding: 8px 16px;
     border-radius: 30px;
     font-weight: 600;
@@ -3067,7 +3077,7 @@ body.dark-mode .admin-btn-delete {
     background-color: rgba(30, 30, 30, 0.5);
     background-image: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.2) 100%);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #e0e0e0;
+    color: var(--gray-light);
     box-shadow: 0 4px 15px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.15);
 }
 
@@ -3119,7 +3129,7 @@ body.dark-mode .admin-btn-delete:hover {
 /* Botões de Ação na visualização de Receita e Evento */
 .btn-action-edit {
     background-color: #f1c40f !important; /* Amarelo dourado do site */
-    color: #4A3A31 !important; /* Letras em castanho escuro para legibilidade */
+    color: var(--text-primary) !important; /* Letras em castanho escuro para legibilidade */
     border: none !important;
     cursor: pointer;
     font-weight: 700;
@@ -3131,7 +3141,7 @@ body.dark-mode .admin-btn-delete:hover {
 
 body.dark-mode .btn-action-edit {
     background-color: #f39c12 !important; /* Laranja dourado no dark mode */
-    color: #ffffff !important;
+    color: var(--white) !important;
 }
 body.dark-mode .btn-action-edit:hover {
     background-color: #d68910 !important;
@@ -3139,7 +3149,7 @@ body.dark-mode .btn-action-edit:hover {
 
 .btn-action-delete {
     background-color: #d32f2f !important; /* Vermelho mais brilhante em light mode */
-    color: #ffffff !important;
+    color: var(--white) !important;
     border: none !important;
     cursor: pointer;
     font-weight: 700;
@@ -3151,7 +3161,7 @@ body.dark-mode .btn-action-edit:hover {
 
 body.dark-mode .btn-action-delete {
     background-color: #ef5350 !important; /* Vermelho vibrante mas elegante em dark mode */
-    color: #ffffff !important;
+    color: var(--white) !important;
 }
 body.dark-mode .btn-action-delete:hover {
     background-color: #e53935 !important;
@@ -3177,14 +3187,14 @@ body.dark-mode .btn-action-delete:hover {
 .event-description-box { min-height: 150px; white-space: pre-wrap; line-height: 1.6; }
 .relative-container { position: relative; }
 .cover-image-large-rounded { width: 100%; height: 100%; object-fit: cover; border-radius: 18px; }
-.avatar-placeholder-container { text-align: center; color: #D1CDBC; }
+.avatar-placeholder-container { text-align: center; color: var(--border-main); }
 .avatar-placeholder-icon { font-size: 48px; margin-bottom: 10px; }
 .text-small { font-size: 0.9rem; }
 .mt-8-center { margin-top: 8px; align-self: center; }
 .profile-container-inner { max-width: none; margin: 0; width: 100%; }
 .flex-center-overflow-hidden { display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .profile-name-text { color: var(--brand-color); margin: 0; }
-.profile-username-text { color: #716259; font-size: 0.9rem; }
+.profile-username-text { color: var(--text-secondary); font-size: 0.9rem; }
 .btn-saved { background-color: #8a9b8e !important; }
 .pagination-btn { padding: 10px 25px; }
 .pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -3202,7 +3212,7 @@ body.dark-mode .btn-action-delete:hover {
 .logo-slider-title {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #716259;
+    color: var(--text-secondary);
     margin-bottom: 25px;
     letter-spacing: -0.02em;
 }
@@ -3240,12 +3250,12 @@ body.dark-mode .logo-slider-title {
 
 .logo-slider-container::before {
     left: 0;
-    background: linear-gradient(to right, #ffffff, transparent);
+    background: linear-gradient(to right, var(--white), transparent);
 }
 
 .logo-slider-container::after {
     right: 0;
-    background: linear-gradient(to left, #ffffff, transparent);
+    background: linear-gradient(to left, var(--white), transparent);
 }
 
 body.dark-mode .logo-slider-container::before {
@@ -3343,7 +3353,7 @@ body.dark-mode .partner-logo-img:hover {
     font-family: 'Inter', sans-serif;
     font-weight: 700;
     font-size: 0.95rem;
-    color: #716259;
+    color: var(--text-secondary);
     margin-bottom: 12px;
     text-align: center;
     letter-spacing: -0.01em;
@@ -3429,7 +3439,7 @@ body.dark-mode .partner-logo-img:hover {
 
 /* Dark Mode Support */
 body.dark-mode .cookie-clicker-container {
-    background: linear-gradient(135deg, #242424 0%, #1e1e1e 100%);
+    background: linear-gradient(135deg, #242424 0%, var(--bg-dark) 100%);
     border: 1px solid #333333;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
@@ -3520,7 +3530,7 @@ body.dark-mode .counter-number-mini {
 
 /* --- TEMA ESCURO (body.dark-mode) --- */
 body.dark-mode .horario-row {
-    background-color: #1E1E1E;
+    background-color: var(--bg-dark);
     border: 1px solid #333333;
 }
 
@@ -3531,7 +3541,7 @@ body.dark-mode .horario-row th {
 }
 
 body.dark-mode .horario-row td {
-    color: #E0E0E0;
+    color: var(--gray-light);
 }
 
 /* Linha vertical no modo escuro */
@@ -3575,7 +3585,7 @@ body.dark-mode .counter-number-mini {
     height: 8px;
 }
 .horizontal-scroll-container::-webkit-scrollbar-track {
-    background: #EAEAEA;
+    background: var(--border-divider);
     border-radius: 10px;
 }
 .horizontal-scroll-container::-webkit-scrollbar-thumb {
@@ -3585,8 +3595,8 @@ body.dark-mode .counter-number-mini {
 
 .feedback-card {
     flex: 0 0 300px;
-    background: #FDFBEE;
-    border: 1px solid #D1CDBC;
+    background: var(--bg-light);
+    border: 1px solid var(--border-main);
     border-radius: 15px;
     padding: 20px;
     scroll-snap-align: start;
@@ -3598,7 +3608,7 @@ body.dark-mode .counter-number-mini {
 
 .feedback-text {
     font-style: italic;
-    color: #4A3A31;
+    color: var(--text-primary);
     margin-bottom: 15px;
     overflow-wrap: break-word;
 }
@@ -3648,7 +3658,7 @@ body.dark-mode .horario-row th {
     /* Overlay gradient para dar profundidade de luz (3D) mantendo a cor original */
     background-image: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.15) 100%) !important;
     border: 1px solid rgba(255, 255, 255, 0.25) !important;
-    color: #ffffff !important;
+    color: var(--white) !important;
     text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
     transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), filter 0.2s !important;
     box-shadow: 0 4px 15px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.4) !important;
@@ -3681,7 +3691,7 @@ body.dark-mode .horario-row th {
     backdrop-filter: blur(15px) !important;
     background-image: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.0) 100%) !important;
     border: 1px solid rgba(0, 0, 0, 0.08) !important;
-    color: #4A3A31;
+    color: var(--text-primary);
     transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), filter 0.2s !important;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05), inset 0 1px 2px rgba(255,255,255,0.8) !important;
 }
@@ -3689,7 +3699,7 @@ body.dark-mode .horario-row th {
 body.dark-mode .shortcut-card, body.dark-mode .calendar-filter-wrapper, body.dark-mode .btn-filter-fridge:not(.active), body.dark-mode .rating-filter-wrapper:not(.active),
 body.dark-mode .btn-cancel, body.dark-mode .btn-cancel-small, body.dark-mode .btn-edit-profile, body.dark-mode .btn-logout-link {
     background-color: rgba(30, 30, 30, 0.5) !important;
-    color: #e0e0e0;
+    color: var(--gray-light);
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     background-image: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.2) 100%) !important;
     box-shadow: 0 4px 15px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.15) !important;
@@ -3715,7 +3725,7 @@ body.dark-mode .btn-cancel:hover, body.dark-mode .btn-cancel-small:hover, body.d
     background-color: var(--brand-color) !important;
     background-image: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(0,0,0,0.15) 100%) !important;
     border: 1px solid rgba(255, 255, 255, 0.25) !important;
-    color: #ffffff !important;
+    color: var(--white) !important;
     transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), filter 0.2s !important;
     box-shadow: 0 4px 15px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.4) !important;
 }
@@ -3736,7 +3746,7 @@ body.dark-mode .btn-cancel:hover, body.dark-mode .btn-cancel-small:hover, body.d
     backdrop-filter: blur(12px) !important;
     border: 1px solid rgba(0, 0, 0, 0.1) !important;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.05) !important;
-    color: #4A3A31 !important;
+    color: var(--text-primary) !important;
     transition: all 0.3s ease !important;
 }
 
@@ -3749,7 +3759,7 @@ body.dark-mode .btn-cancel:hover, body.dark-mode .btn-cancel-small:hover, body.d
 body.dark-mode .auth-input, body.dark-mode .search-container, body.dark-mode .recipe-search-box, body.dark-mode .comment-textarea, body.dark-mode .input-beige {
     background-color: rgba(0, 0, 0, 0.3) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
     box-shadow: inset 0 2px 5px rgba(0,0,0,0.2) !important;
 }
 
@@ -3810,7 +3820,7 @@ body.dark-mode .feedback-card {
     font-family: 'Outfit', 'Inter', sans-serif;
     font-weight: 800;
     font-size: 2.5rem;
-    color: #4A3A31;
+    color: var(--text-primary);
     text-align: center;
     text-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
@@ -3901,7 +3911,7 @@ body.dark-mode .leaderboard-row.placeholder.rank-3 {
 }
 
 .rank-2 {
-    background: linear-gradient(135deg, #F5F5F5 0%, #E0E0E0 100%);
+    background: linear-gradient(135deg, #F5F5F5 0%, var(--gray-light) 100%);
     border-color: #BDBDBD;
 }
 
@@ -3923,14 +3933,14 @@ body.dark-mode .leaderboard-row.placeholder.rank-3 {
     height: 45px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #EAEAEA;
-    background: #FFF;
+    border: 2px solid var(--border-divider);
+    background: var(--white);
 }
 
 .leaderboard-username {
     font-weight: 700;
     font-size: 1.2rem;
-    color: #4A3A31;
+    color: var(--text-primary);
 }
 
 .leaderboard-score {
@@ -3957,7 +3967,7 @@ body.dark-mode .leaderboard-row.placeholder.rank-3 {
 
 /* Dark Mode Overrides */
 body.dark-mode .leaderboard-title {
-    color: #EAE6D6;
+    color: var(--border-soft);
 }
 
 body.dark-mode .leaderboard-container {
@@ -4017,7 +4027,7 @@ body.dark-mode .score-label {
    ========================================= */
 .main-footer {
     background-color: #2E4A35;
-    color: #ffffff;
+    color: var(--white);
     padding: 30px 20px 15px;
     text-align: center;
     font-family: 'Inter', sans-serif;
@@ -4057,7 +4067,7 @@ body.dark-mode .score-label {
 }
 
 .footer-links a {
-    color: #D1CDBC;
+    color: var(--border-main);
     text-decoration: none;
     font-size: 15px;
     font-weight: 500;
@@ -4085,7 +4095,7 @@ body.dark-mode .footer-links a {
     color: #aaa;
 }
 body.dark-mode .footer-links a:hover {
-    color: #fff;
+    color: var(--white);
 }
 
 /* Password Eye Styles */
@@ -4124,7 +4134,7 @@ body.dark-mode .auth-password-eye img {
     border-radius: 8px;
     border: 2px solid transparent;
     background-color: #344938;
-    color: #ffffff;
+    color: var(--white);
     font-weight: 600;
     cursor: pointer;
     margin-right: 15px;
@@ -4158,7 +4168,7 @@ body.dark-mode .language-selector:hover {
 }
 body.dark-mode .theme-toggle-btn {
     background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%);
-    color: #ffffff !important;
+    color: var(--white) !important;
     text-shadow: 0 1px 3px rgba(0,0,0,0.4);
 }
 .theme-toggle-btn:hover {
@@ -4175,11 +4185,11 @@ body.dark-mode .theme-toggle-btn {
 /* Light Mode DatePicker Styles */
 .react-datepicker {
     font-family: 'Inter', sans-serif !important;
-    background-color: #FDFBEE !important;
-    border: 1px solid #D1CDBC !important;
+    background-color: var(--bg-light) !important;
+    border: 1px solid var(--border-main) !important;
     border-radius: 12px !important;
     box-shadow: 0 10px 25px rgba(74, 58, 49, 0.15) !important;
-    color: #4A3A31 !important;
+    color: var(--text-primary) !important;
     overflow: hidden;
     width: 320px !important;
 }
@@ -4197,8 +4207,8 @@ body.dark-mode .theme-toggle-btn {
 }
 
 .react-datepicker__header {
-    background-color: #F6F4E9 !important;
-    border-bottom: 1px solid #D1CDBC !important;
+    background-color: var(--bg-hover) !important;
+    border-bottom: 1px solid var(--border-main) !important;
     border-top-left-radius: 12px !important;
     border-top-right-radius: 12px !important;
     padding-top: 12px !important;
@@ -4206,14 +4216,14 @@ body.dark-mode .theme-toggle-btn {
 
 .react-datepicker__current-month,
 .react-datepicker-year-header {
-    color: #4A3A31 !important;
+    color: var(--text-primary) !important;
     font-weight: 700 !important;
     font-size: 1rem !important;
 }
 
 .react-datepicker__month-text,
 .react-datepicker__year-text {
-    color: #4A3A31 !important;
+    color: var(--text-primary) !important;
     font-weight: 600 !important;
     padding: 10px 0 !important;
     margin: 6px 4px !important;
@@ -4236,13 +4246,13 @@ body.dark-mode .theme-toggle-btn {
 .react-datepicker__year-text--selected,
 .react-datepicker__year-text--keyboard-selected {
     background-color: var(--brand-color) !important;
-    color: #ffffff !important;
+    color: var(--white) !important;
 }
 
 .react-datepicker__month-text--selected:hover,
 .react-datepicker__year-text--selected:hover {
     background-color: var(--brand-color) !important;
-    color: #ffffff !important;
+    color: var(--white) !important;
 }
 
 .react-datepicker__navigation {
@@ -4250,7 +4260,7 @@ body.dark-mode .theme-toggle-btn {
 }
 
 .react-datepicker__navigation-icon::before {
-    border-color: #4A3A31 !important;
+    border-color: var(--text-primary) !important;
     border-width: 2px 2px 0 0 !important;
 }
 
@@ -4259,7 +4269,7 @@ body.dark-mode .react-datepicker {
     background-color: #1a1a1a !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .react-datepicker__header {
@@ -4269,7 +4279,7 @@ body.dark-mode .react-datepicker__header {
 
 body.dark-mode .react-datepicker__current-month,
 body.dark-mode .react-datepicker-year-header {
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .react-datepicker__month-text,
@@ -4280,7 +4290,7 @@ body.dark-mode .react-datepicker__year-text {
 body.dark-mode .react-datepicker__month-text:hover,
 body.dark-mode .react-datepicker__year-text:hover {
     background-color: rgba(255, 255, 255, 0.08) !important;
-    color: #ffffff !important;
+    color: var(--white) !important;
 }
 
 body.dark-mode .react-datepicker__month-text--selected,
@@ -4288,11 +4298,11 @@ body.dark-mode .react-datepicker__month-text--keyboard-selected,
 body.dark-mode .react-datepicker__year-text--selected,
 body.dark-mode .react-datepicker__year-text--keyboard-selected {
     background-color: var(--brand-color) !important;
-    color: #ffffff !important;
+    color: var(--white) !important;
 }
 
 body.dark-mode .react-datepicker__navigation-icon::before {
-    border-color: #e0e0e0 !important;
+    border-color: var(--gray-light) !important;
 }
 
 /* --- ISSUE 50: USER PROFILE INFO HIGHLIGHTS --- */
@@ -4337,7 +4347,7 @@ body.dark-mode .react-datepicker__navigation-icon::before {
 
 .profile-info-item:hover .profile-info-icon {
     background: var(--brand-color);
-    color: #ffffff;
+    color: var(--white);
 }
 
 .info-icon {
@@ -4364,7 +4374,7 @@ body.dark-mode .react-datepicker__navigation-icon::before {
 .profile-info-value {
     font-size: 0.95rem;
     font-weight: 500;
-    color: #4A3A31;
+    color: var(--text-primary);
     line-height: 1.5;
     word-wrap: break-word;
     word-break: break-word;
@@ -4396,12 +4406,12 @@ body.dark-mode .profile-info-item:hover {
 
 body.dark-mode .profile-info-icon {
     background: rgba(255, 255, 255, 0.06) !important;
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .profile-info-item:hover .profile-info-icon {
-    background: #e0e0e0 !important;
-    color: #1e1e1e !important;
+    background: var(--gray-light) !important;
+    color: var(--bg-dark) !important;
 }
 
 body.dark-mode .profile-info-label {
@@ -4409,7 +4419,7 @@ body.dark-mode .profile-info-label {
 }
 
 body.dark-mode .profile-info-value {
-    color: #e0e0e0 !important;
+    color: var(--gray-light) !important;
 }
 
 body.dark-mode .profile-bio-text {
@@ -4420,4 +4430,287 @@ body.dark-mode .profile-no-bio {
     color: #666666 !important;
 }
 
+/* --- REVIEW SLIDER --- */
+.review-slider-wrapper {
+    width: 100%;
+    margin-top: 50px;
+    margin-bottom: 60px;
+    text-align: center;
+}
 
+.review-slider-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    letter-spacing: -0.02em;
+}
+
+.review-slider-subtitle {
+    margin-bottom: 30px;
+    color: #716259;
+}
+
+body.dark-mode .review-slider-title,
+body.dark-mode .review-slider-subtitle {
+    color: #a89a90;
+}
+
+.review-slider-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 30px 0;
+    display: flex;
+    align-items: center;
+}
+
+.review-slider-container::before,
+.review-slider-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 150px;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.review-slider-container::before {
+    left: 0;
+    background: linear-gradient(to right, var(--white), transparent);
+}
+
+.review-slider-container::after {
+    right: 0;
+    background: linear-gradient(to left, var(--white), transparent);
+}
+
+body.dark-mode .review-slider-container::before {
+    background: linear-gradient(to right, #121212, transparent);
+}
+
+body.dark-mode .review-slider-container::after {
+    background: linear-gradient(to left, #121212, transparent);
+}
+
+@keyframes review-scroll {
+    0% {
+        transform: translateX(-50%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.review-slider-track {
+    display: flex;
+    width: max-content;
+    animation: review-scroll 40s linear infinite; /* Left to right scroll */
+}
+
+.review-slider-container:hover .review-slider-track {
+    animation-play-state: paused;
+}
+
+.review-slide-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 0 50px;
+    max-width: 400px;
+}
+
+.review-slide-text {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.review-slide-author {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--primary);
+    text-align: center;
+}
+
+body.dark-mode .review-slide-text {
+    color: var(--gray-light);
+}
+
+body.dark-mode .review-slide-author {
+    color: #e09b6b;
+}
+
+/* ==========================================================================
+   ANDROID & MOBILE RESPONSIVENESS (MAX-WIDTH: 768PX)
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* 1. Global Resets for Touch and Narrow Screens */
+    html, body {
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    /* 2. Main Layout Containers */
+    .body-wrapper {
+        flex-direction: column;
+    }
+
+    .main-wrapper {
+        flex-direction: column;
+        padding-bottom: 80px; /* Make room for the bottom navigation bar */
+    }
+
+    .content-home {
+        width: 100%;
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .home-container, .eventos-container, .receitas-container, .profile-container, .feedback-container {
+        width: 100%;
+        padding: 10px;
+        margin: 0;
+    }
+
+    /* 3. Bottom Navigation Bar (Sidebar Replacement) */
+    .sidebar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 75px;
+        flex-direction: row;
+        z-index: 9999;
+        border-radius: 0;
+        border-right: none;
+        border-top: 1px solid var(--border-color);
+        padding: 0;
+        justify-content: center;
+        align-items: center;
+        background: var(--white);
+        box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+        transition: none; /* Disable expansion animations */
+    }
+
+    body.dark-mode .sidebar {
+        background: var(--bg-dark-secondary);
+        border-top-color: #333;
+    }
+
+    .sidebar-header-section {
+        display: none !important; /* Hide hamburger and title on bottom nav */
+    }
+
+    .nav-list {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+    }
+
+    .nav-item {
+        flex-direction: column;
+        padding: 8px 5px;
+        margin: 0;
+        width: auto;
+        border-radius: 8px;
+        justify-content: center;
+    }
+
+    .nav-icon-img {
+        width: 24px;
+        height: 24px;
+        margin-bottom: 4px;
+        margin-right: 0 !important;
+    }
+
+    .nav-text {
+        display: block !important;
+        font-size: 0.65rem;
+        margin-left: 0 !important;
+        text-align: center;
+        opacity: 1 !important;
+    }
+
+    .cookie-clicker-container {
+        display: none !important; /* Hide cookie clicker on mobile to save space */
+    }
+
+    /* 4. Grids - Single Vertical Column */
+    .grid-receitas,
+    .grid-eventos,
+    .feedback-grid {
+        grid-template-columns: 1fr !important;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .receita-card, .evento-card, .feedback-item {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    /* 5. Header and Typography Adjustments */
+    .main-header {
+        flex-direction: column;
+        padding: 15px;
+        height: auto;
+        gap: 15px;
+    }
+
+    .header-logo img {
+        height: 40px;
+    }
+
+    .home-hero-section {
+        padding: 20px 10px;
+    }
+
+    .home-welcome-title {
+        font-size: 2rem;
+    }
+
+    .search-container {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .main-search-input {
+        width: 100%;
+        margin-bottom: 10px;
+        border-radius: 12px;
+    }
+
+    .btn-search-home {
+        width: 100%;
+        border-radius: 12px;
+    }
+
+    /* 6. Sliders (Logos & Reviews) */
+    .logo-slider-title, .review-slider-title {
+        font-size: 1.5rem;
+    }
+    
+    .full-width-section {
+        width: 100vw;
+        margin-left: -15px; /* Adjust to negative padding of content-home */
+        margin-right: -15px;
+    }
+    
+    .review-slide-item {
+        padding: 0 20px;
+        max-width: 300px;
+    }
+}

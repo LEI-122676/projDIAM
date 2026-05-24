@@ -8,9 +8,11 @@ import PopupModal from '../maincomponents/popupModal.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
 import DisplayCard from '../maincomponents/DisplayCard.jsx';
 import Footer from '../maincomponents/Footer.jsx';
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 
 const OsMeusEventos = () => {
     const navigate = useNavigate();
+    const { t } = useLanguage();
 
     const URL_BASE = 'http://localhost:8000';
     const URL_EVENTOS = `${URL_BASE}/idjango/api/eventos/`;
@@ -36,10 +38,11 @@ const OsMeusEventos = () => {
         if (!userId) {
             setPopupConfig({
                 isOpen: true,
-                title: 'Acesso Restrito',
-                message: 'Precisas de iniciar sessão para ver as tuas receitas.',
+                title: t('eventos.popups.acesso_restrito_titulo'),
+                message: t('eventos.popups.acesso_restrito_eventos_msg'),
                 singleButton: false,
-                confirmText: 'Iniciar Sessão',
+                confirmText: t('comum.iniciar_sessao'),
+                cancelText: t('comum.cancelar'),
                 onConfirm: () => navigate('/login'),
                 onCancel: () => navigate('/')
             });
@@ -73,13 +76,13 @@ const OsMeusEventos = () => {
                 <main className="content-profile">
                     <div className="profile-grid profile-grid-full">
 
-                        <h1 className="page-title-underline">Os Meus Eventos</h1>
+                        <h1 className="page-title-underline">{t('eventos.meus_eventos')}</h1>
 
                         <div className="recipes-action-bar">
                             <div className="recipes-search-container">
                                 <input
                                     type="text"
-                                    placeholder="Pesquisar eventos..."
+                                    placeholder={t('eventos.pesquisar_eventos')}
                                     className="main-search-input recipe-search-box text-black"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -93,7 +96,7 @@ const OsMeusEventos = () => {
                         </div>
 
                         <div className="mt-30">
-                            <h2 className="my-recipes-section-title">Criados por Mim</h2>
+                            <h2 className="my-recipes-section-title">{t('eventos.criados_por_mim')}</h2>
                             <div className="recipes-grid mt-20">
                                 {(() => {
                                     const reversedCriados = [...criadasPorMim].reverse();
@@ -119,7 +122,7 @@ const OsMeusEventos = () => {
                                 })()}
                                 {criadasPorMim.length === 0 && (
                                     <p className="text-empty-state">
-                                        Ainda não tens nenhum evento criado.
+                                        {t('eventos.sem_eventos_criados')}
                                     </p>
                                 )}
                             </div>
@@ -132,7 +135,7 @@ const OsMeusEventos = () => {
                         </div>
 
                         <div className="mt-50">
-                            <h2 className="my-recipes-section-title">Eventos Inscritos</h2>
+                            <h2 className="my-recipes-section-title">{t('eventos.eventos_inscritos')}</h2>
                             <div className="recipes-grid mt-20">
                                 {(() => {
                                     const reversedInscritos = [...eventosInscritos].reverse();
@@ -158,7 +161,7 @@ const OsMeusEventos = () => {
                                 })()}
                                 {eventosInscritos.length === 0 && (
                                     <p className="text-empty-state">
-                                        Ainda não se inscreveu em nenhum evento.
+                                        {t('eventos.sem_eventos_inscritos')}
                                     </p>
                                 )}
                             </div>
@@ -181,8 +184,8 @@ const OsMeusEventos = () => {
                 title={popupConfig.title}
                 message={popupConfig.message}
                 singleButton={popupConfig.singleButton}
-                confirmText={popupConfig.confirmText || 'OK'}
-                cancelText={popupConfig.cancelText || 'Cancelar'}
+                confirmText={popupConfig.confirmText || t('comum.ok')}
+                cancelText={popupConfig.cancelText || t('comum.cancelar')}
                 onConfirm={popupConfig.onConfirm}
                 onCancel={popupConfig.onCancel}
             />

@@ -7,7 +7,10 @@
         "anterior": "Previous",
         "seguinte": "Next",
         "pagina": "Page",
-        "de": "of"
+        "de": "of",
+        "a_carregar": "Loading...",
+        "a_carregar_marcas": "Loading brands...",
+        "marcas_parceiras": "Partner Brands"
     },
     "footer": {
         "sobre_nos": "About Us",
@@ -111,7 +114,8 @@
             "receita_criada_titulo": "Recipe Created!",
             "receita_atualizada_titulo": "Recipe Updated!",
             "receita_criada_msg": "Your recipe was successfully created!",
-            "receita_atualizada_msg": "Your recipe was successfully updated!"
+            "receita_atualizada_msg": "Your recipe was successfully updated!",
+            "acesso_restrito_receitas_msg": "You need to log in to view your recipes."
         },
         "criar_receita": {
             "titulo_criar": "Create Recipe",
@@ -127,7 +131,11 @@
             "remover_foto": "Remove photo",
             "guardar": "Save",
             "criar": "Create"
-        }
+        },
+        "criadas_por_mim": "Created by Me",
+        "sem_receitas_criadas": "You don't have any created recipes yet.",
+        "receitas_guardadas": "Saved Recipes",
+        "sem_receitas_guardadas": "You haven't saved any recipes yet."
     },
     "autenticacao": {
         "login": "Login",
@@ -203,8 +211,15 @@
             "erro_ao_atualizar": "Error Updating Event",
             "erro_ao_criar": "Error Creating Event",
             "evento_atualizado": "Your event was successfully updated!",
-            "evento_criado": "Your event was successfully created!"
-        }
+            "evento_criado": "Your event was successfully created!",
+            "acesso_restrito_titulo": "Restricted Access",
+            "acesso_restrito_eventos_msg": "You need to log in to view your events."
+        },
+        "meus_eventos": "My Events",
+        "criados_por_mim": "Created by Me",
+        "sem_eventos_criados": "You don't have any created events yet.",
+        "eventos_inscritos": "Registered Events",
+        "sem_eventos_inscritos": "You have not registered for any events yet."
     },
     "feedback": {
         "titulo": "Help Us Improve",

@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 import '../../css/styles.css';
 
 const LogoSlider = () => {
+  const { t } = useLanguage();
   const URL_BASE = 'http://localhost:8000';
   const mediaBaseUrl = `${URL_BASE}/idjango/media/infinite_logo_slider/`;
   const [logos, setLogos] = useState([]);
@@ -34,7 +36,7 @@ const LogoSlider = () => {
   if (loading) {
     return (
       <div className="logo-slider-wrapper">
-        <p style={{ color: '#716259', fontWeight: 'bold' }}>A carregar marcas...</p>
+        <p style={{ color: '#716259', fontWeight: 'bold' }}>{t('comum.a_carregar_marcas')}</p>
       </div>
     );
   }
@@ -49,7 +51,7 @@ const LogoSlider = () => {
 
   return (
     <div className="logo-slider-wrapper">
-      <h3 className="logo-slider-title">Marcas Parceiras</h3>
+      <h3 className="logo-slider-title">{t('comum.marcas_parceiras')}</h3>
       <div className="logo-slider-container">
         <div className="logo-slider-track">
           {duplicatedLogos.map((logo, index) => (

@@ -10,9 +10,11 @@ import PopupModal from '../maincomponents/popupModal.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
 import DisplayCard from '../maincomponents/DisplayCard.jsx';
 import Footer from '../maincomponents/Footer.jsx';
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 
 const AsMinhasReceitas = () => {
     const navigate = useNavigate();
+    const { t } = useLanguage();
 
     const URL_BASE = 'http://localhost:8000';
     const RECEITAS_URL = `${URL_BASE}/idjango/api/receitas/`;
@@ -42,10 +44,11 @@ const AsMinhasReceitas = () => {
         if (!userId) {
             setPopupConfig({
                 isOpen: true,
-                title: 'Acesso Restrito',
-                message: 'Precisas de iniciar sessão para ver as tuas receitas.',
+                title: t('receitas.popups.acesso_restrito_titulo'),
+                message: t('receitas.popups.acesso_restrito_receitas_msg'),
                 singleButton: false,
-                confirmText: 'Iniciar Sessão',
+                confirmText: t('comum.iniciar_sessao'),
+                cancelText: t('comum.cancelar'),
                 onConfirm: () => navigate('/login'),
                 onCancel: () => navigate('/')
             });
@@ -77,10 +80,11 @@ const AsMinhasReceitas = () => {
                 if (!ingredientes || ingredientes.length === 0) {
                     setPopupConfig({
                         isOpen: true,
-                        title: 'Frigorífico Vazio',
-                        message: 'Ainda não tens nenhum ingrediente no teu frigorífico! Queres ir adicioná-los agora?',
+                        title: t('receitas.popups.frigorifico_vazio_titulo'),
+                        message: t('receitas.popups.frigorifico_vazio_msg'),
                         singleButton: false,
-                        confirmText: 'Ir para o Frigorífico',
+                        confirmText: t('receitas.popups.ir_para_frigorifico'),
+                        cancelText: t('comum.cancelar'),
                         onConfirm: () => navigate('/frigorifico'),
                         onCancel: closePopup
                     });
@@ -91,15 +95,16 @@ const AsMinhasReceitas = () => {
             })
             .catch(err => {
                 console.error("Erro ao carregar frigorífico:", err);
-                setPopupConfig({
-                    isOpen: true,
-                    title: 'Sem Frigorífico',
-                    message: 'O teu frigorífico está vazio ou ainda não existe. Queres ir adicioná-los agora?',
-                    singleButton: false,
-                    confirmText: 'Ir para o Frigorífico',
-                    onConfirm: () => navigate('/frigorifico'),
-                    onCancel: closePopup
-                });
+                    setPopupConfig({
+                        isOpen: true,
+                        title: t('receitas.popups.sem_frigorifico_titulo'),
+                        message: t('receitas.popups.sem_frigorifico_msg'),
+                        singleButton: false,
+                        confirmText: t('receitas.popups.ir_para_frigorifico'),
+                        cancelText: t('comum.cancelar'),
+                        onConfirm: () => navigate('/frigorifico'),
+                        onCancel: closePopup
+                    });
             });
     };
 
@@ -139,13 +144,13 @@ const AsMinhasReceitas = () => {
                 <main className="content-profile">
                     <div className="profile-grid profile-grid-full">
 
-                        <h1 className="page-title-underline">As Minhas Receitas</h1>
+                        <h1 className="page-title-underline">{t('perfil.as_minhas_receitas')}</h1>
 
                         <div className="recipes-action-bar">
                             <div className="recipes-search-container">
                                 <input
                                     type="text"
-                                    placeholder="Pesquisar receitas..."
+                                    placeholder={t('receitas.pesquisar_placeholder')}
                                     className="main-search-input recipe-search-box text-black"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -159,7 +164,7 @@ const AsMinhasReceitas = () => {
                                     onClick={handleFridgeFilterToggle}
                                 >
                                     <img src={iconeFiltro} alt="Filtro" className="recipe-icon-svg icon-mr-8" />
-                                    Frigorífico
+                                    {t('receitas.filtro_frigorifico')}
                                     <img src={iconeFrig} alt="Frigorifico" className="recipe-icon-svg icon-ml-8" />
                                 </button>
 
@@ -168,7 +173,7 @@ const AsMinhasReceitas = () => {
                         </div>
 
                         <div className="mt-30">
-                            <h2 className="my-recipes-section-title">Criadas por Mim</h2>
+                            <h2 className="my-recipes-section-title">{t('receitas.criadas_por_mim')}</h2>
                             <div className="recipes-grid mt-20">
                                 {(() => {
                                     const reversedCriadas = [...criadasPorMim].reverse();
@@ -189,7 +194,7 @@ const AsMinhasReceitas = () => {
                                 })()}
                                 {criadasPorMim.length === 0 && (
                                     <p className="text-empty-state">
-                                        Ainda não tens nenhuma receita criada.
+                                        {t('receitas.sem_receitas_criadas')}
                                     </p>
                                 )}
                             </div>
@@ -202,7 +207,7 @@ const AsMinhasReceitas = () => {
                         </div>
 
                         <div className="mt-50">
-                            <h2 className="my-recipes-section-title">Receitas Guardadas</h2>
+                            <h2 className="my-recipes-section-title">{t('receitas.receitas_guardadas')}</h2>
                             <div className="recipes-grid mt-20">
                                 {(() => {
                                     const reversedGuardadas = [...receitasGuardadas].reverse();
@@ -223,7 +228,7 @@ const AsMinhasReceitas = () => {
                                 })()}
                                 {receitasGuardadas.length === 0 && (
                                     <p className="text-empty-state">
-                                        Ainda não guardaste nenhuma receita.
+                                        {t('receitas.sem_receitas_guardadas')}
                                     </p>
                                 )}
                             </div>
@@ -248,8 +253,8 @@ const AsMinhasReceitas = () => {
                 title={popupConfig.title}
                 message={popupConfig.message}
                 singleButton={popupConfig.singleButton}
-                confirmText={popupConfig.confirmText || 'OK'}
-                cancelText={popupConfig.cancelText || 'Cancelar'}
+                confirmText={popupConfig.confirmText || t('comum.ok')}
+                cancelText={popupConfig.cancelText || t('comum.cancelar')}
                 onConfirm={popupConfig.onConfirm}
                 onCancel={popupConfig.onCancel}
             />

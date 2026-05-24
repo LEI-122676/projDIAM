@@ -7,7 +7,10 @@
         "anterior": "Anterior",
         "seguinte": "Siguiente",
         "pagina": "Página",
-        "de": "de"
+        "de": "de",
+        "a_carregar": "Cargando...",
+        "a_carregar_marcas": "Cargando marcas...",
+        "marcas_parceiras": "Marcas Asociadas"
     },
     "footer": {
         "sobre_nos": "Sobre Nosotros",
@@ -111,7 +114,8 @@
             "receita_criada_titulo": "¡Receta Creada!",
             "receita_atualizada_titulo": "¡Receta Actualizada!",
             "receita_criada_msg": "¡Tu receta fue creada con éxito!",
-            "receita_atualizada_msg": "¡Tu receta fue actualizada con éxito!"
+            "receita_atualizada_msg": "¡Tu receta fue actualizada con éxito!",
+            "acesso_restrito_receitas_msg": "Necesitas iniciar sesión para ver tus recetas."
         },
         "criar_receita": {
             "titulo_criar": "Crear Receta",
@@ -127,7 +131,11 @@
             "remover_foto": "Eliminar foto",
             "guardar": "Guardar",
             "criar": "Crear"
-        }
+        },
+        "criadas_por_mim": "Creadas por Mí",
+        "sem_receitas_criadas": "Aún no tienes ninguna receta creada.",
+        "receitas_guardadas": "Recetas Guardadas",
+        "sem_receitas_guardadas": "Aún no has guardado ninguna receta."
     },
     "autenticacao": {
         "login": "Login",
@@ -203,8 +211,15 @@
             "erro_ao_atualizar": "Error al Actualizar Evento",
             "erro_ao_criar": "Error al Crear Evento",
             "evento_atualizado": "¡Tu evento fue actualizado con éxito!",
-            "evento_criado": "¡Tu evento fue creado con éxito!"
-        }
+            "evento_criado": "¡Tu evento fue creado con éxito!",
+            "acesso_restrito_titulo": "Acceso Restringido",
+            "acesso_restrito_eventos_msg": "Necesitas iniciar sesión para ver tus eventos."
+        },
+        "meus_eventos": "Mis Eventos",
+        "criados_por_mim": "Creados por Mí",
+        "sem_eventos_criados": "Aún no tienes ningún evento creado.",
+        "eventos_inscritos": "Eventos Inscritos",
+        "sem_eventos_inscritos": "Aún no te has inscrito en ningún evento."
     },
     "feedback": {
         "titulo": "Ayúdanos a Mejorar",

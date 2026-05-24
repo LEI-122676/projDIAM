@@ -62,18 +62,20 @@ const Home = () => {
             <Slideshow />
             
             {feedbackStats && (
-              <div className="feedback-highlights-section" style={{ width: '100%', marginTop: '50px', marginBottom: '50px' }}>
-                <h2 className="section-subtitle" style={{ textAlign: 'center', fontSize: '2rem' }}>{t('homepage.o_que_dizem')}</h2>
-                <p style={{ textAlign: 'center', marginBottom: '20px', color: '#716259' }}>
+              <div className="review-slider-wrapper full-width-section">
+                <h2 className="review-slider-title">{t('homepage.o_que_dizem')}</h2>
+                <p className="review-slider-subtitle">
                   {t('homepage.funcionalidade_melhor_avaliada')} <strong>{feedbackStats.melhor_categoria?.nome || ''}</strong> {t('homepage.com')} ⭐ {feedbackStats.melhor_categoria?.nota || 0}/5!
                 </p>
-                <div className="horizontal-scroll-container">
-                  {feedbackStats.comentarios_recentes?.map(f => (
-                    <div key={f.id} className="feedback-card">
-                      <p className="feedback-text">"{f.comentario_livre}"</p>
-                      <p className="feedback-author">- {f.utilizador_nome}</p>
-                    </div>
-                  ))}
+                <div className="review-slider-container">
+                  <div className="review-slider-track">
+                    {feedbackStats.comentarios_recentes && [...feedbackStats.comentarios_recentes, ...feedbackStats.comentarios_recentes].map((f, index) => (
+                      <div key={`${f.id}-${index}`} className="review-slide-item">
+                        <p className="review-slide-text">"{f.comentario_livre}"</p>
+                        <p className="review-slide-author">- {f.utilizador_nome}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}

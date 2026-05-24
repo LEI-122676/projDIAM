@@ -7,7 +7,10 @@
         "anterior": "Anterior",
         "seguinte": "Seguinte",
         "pagina": "Página",
-        "de": "de"
+        "de": "de",
+        "a_carregar": "A carregar...",
+        "a_carregar_marcas": "A carregar marcas...",
+        "marcas_parceiras": "Marcas Parceiras"
     },
     "footer": {
         "sobre_nos": "Sobre Nós",
@@ -111,7 +114,8 @@
             "receita_criada_titulo": "Receita Criada!",
             "receita_atualizada_titulo": "Receita Atualizada!",
             "receita_criada_msg": "A tua receita foi criada com sucesso!",
-            "receita_atualizada_msg": "A tua receita foi atualizada com sucesso!"
+            "receita_atualizada_msg": "A tua receita foi atualizada com sucesso!",
+            "acesso_restrito_receitas_msg": "Precisas de iniciar sessão para ver as tuas receitas."
         },
         "criar_receita": {
             "titulo_criar": "Criar Receita",
@@ -127,7 +131,11 @@
             "remover_foto": "Remover foto",
             "guardar": "Guardar",
             "criar": "Criar"
-        }
+        },
+        "criadas_por_mim": "Criadas por Mim",
+        "sem_receitas_criadas": "Ainda não tens nenhuma receita criada.",
+        "receitas_guardadas": "Receitas Guardadas",
+        "sem_receitas_guardadas": "Ainda não guardaste nenhuma receita."
     },
     "autenticacao": {
         "login": "Login",
@@ -203,8 +211,15 @@
             "erro_ao_atualizar": "Erro ao Atualizar Evento",
             "erro_ao_criar": "Erro ao Criar Evento",
             "evento_atualizado": "O teu evento foi atualizado com sucesso!",
-            "evento_criado": "O teu evento foi criado com sucesso!"
-        }
+            "evento_criado": "O teu evento foi criado com sucesso!",
+            "acesso_restrito_titulo": "Acesso Restrito",
+            "acesso_restrito_eventos_msg": "Precisas de iniciar sessão para ver os teus eventos."
+        },
+        "meus_eventos": "Os Meus Eventos",
+        "criados_por_mim": "Criados por Mim",
+        "sem_eventos_criados": "Ainda não tens nenhum evento criado.",
+        "eventos_inscritos": "Eventos Inscritos",
+        "sem_eventos_inscritos": "Ainda não se inscreveu em nenhum evento."
     },
     "feedback": {
         "titulo": "Ajuda-nos a Melhorar",

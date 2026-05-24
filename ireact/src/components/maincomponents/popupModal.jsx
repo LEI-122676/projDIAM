@@ -1,8 +1,13 @@
 import 'react';
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 import '../../css/styles.css';
 
-const PopupModal = ({ isOpen, title, message, onConfirm, onCancel, confirmText = "OK", cancelText = "Cancelar", singleButton = false }) => {
+const PopupModal = ({ isOpen, title, message, onConfirm, onCancel, confirmText, cancelText, singleButton = false }) => {
+    const { t } = useLanguage();
     if (!isOpen) return null;
+
+    const finalConfirmText = confirmText || t('comum.ok');
+    const finalCancelText = cancelText || t('comum.cancelar');
 
     return (
         <div className="popup-overlay">
@@ -19,14 +24,14 @@ const PopupModal = ({ isOpen, title, message, onConfirm, onCancel, confirmText =
                             onClick={onCancel}
                             className="btn-popup-cancel"
                         >
-                            {cancelText}
+                            {finalCancelText}
                         </button>
                     )}
                     <button
                         onClick={onConfirm}
                         className="btn-popup-confirm"
                     >
-                        {confirmText}
+                        {finalConfirmText}
                     </button>
                 </div>
             </div>

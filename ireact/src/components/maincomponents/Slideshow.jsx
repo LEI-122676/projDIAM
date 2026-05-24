@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 import '../../css/styles.css';
 
 const Slideshow = () => {
+  const { t } = useLanguage();
   const [slides, setSlides] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -56,7 +58,7 @@ const Slideshow = () => {
     return (
       <div className="slideshow-wrapper">
         <div className="slideshow-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <p style={{ color: '#716259', fontWeight: 'bold' }}>A carregar...</p>
+          <p style={{ color: '#716259', fontWeight: 'bold' }}>{t('comum.a_carregar')}</p>
         </div>
       </div>
     );
