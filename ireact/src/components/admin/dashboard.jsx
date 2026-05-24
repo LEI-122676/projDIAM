@@ -207,6 +207,7 @@ const Dashboard = () => {
                     ) : (
                         <p style={{ textAlign: 'center', marginTop: '40px' }}>{stats?.msg || t('dashboard.sem_dados')}</p>
                     )}
+                    <div className="footer-spacer"></div>
                     <Footer />
                 </main>
             </div>
