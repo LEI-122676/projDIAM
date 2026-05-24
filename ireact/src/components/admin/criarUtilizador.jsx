@@ -24,6 +24,7 @@ const AdminCriarUtilizador = () => {
         role: 'User'
     });
     const [image, setImage] = useState(null);
+    const [showPassword, setShowPassword] = useState(false);
     const [previewUrl, setPreviewUrl] = useState(null);
     const [limits, setLimits] = useState({});
     const [modalConfig, setModalConfig] = useState({ isOpen: false, title: '', message: '', onConfirm: null });
@@ -137,7 +138,7 @@ const AdminCriarUtilizador = () => {
                     <h1 className="page-title-underline">{t('admin.criar_utilizador')}</h1>
                     
                     <div className="create-recipe-container">
-                        <form onSubmit={handleSubmit} className="recipe-form-section">
+                        <form onSubmit={handleSubmit} className="recipe-form-section" style={{ maxWidth: '600px' }}>
                             <div className="form-group">
                                 <label>{t('autenticacao.nome')}* <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({formData.firstName.length}/{limits.user_first_name_max_length || 30})</span></label>
                                 <input 
@@ -185,20 +186,33 @@ const AdminCriarUtilizador = () => {
                                     className="input-beige text-black" 
                                     value={formData.email} 
                                     onChange={handleChange} 
+                                    maxLength={254}
                                     required 
                                 />
                             </div>
 
                             <div className="form-group">
                                 <label>{t('autenticacao.password')}*</label>
-                                <input 
-                                    type="password" 
-                                    name="password" 
-                                    className="input-beige text-black" 
-                                    value={formData.password} 
-                                    onChange={handleChange} 
-                                    required 
-                                />
+                                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                                    <input 
+                                        type={showPassword ? "text" : "password"} 
+                                        name="password" 
+                                        className="input-beige text-black" 
+                                        value={formData.password} 
+                                        onChange={handleChange} 
+                                        maxLength={128}
+                                        style={{ width: '100%', paddingRight: '40px' }}
+                                        required 
+                                    />
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        style={{ position: 'absolute', right: '15px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', padding: 0 }}
+                                        title={showPassword ? t('autenticacao.ocultar') || 'Ocultar' : t('autenticacao.mostrar') || 'Mostrar'}
+                                    >
+                                        {showPassword ? "🙈" : "👁️"}
+                                    </button>
+                                </div>
                             </div>
 
                             <div className="form-group">
