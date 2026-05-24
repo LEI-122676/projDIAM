@@ -4647,12 +4647,14 @@ body.dark-mode .review-slide-author {
     }
 
     .nav-item {
+        flex: 1;
         flex-direction: column;
-        padding: 8px 5px;
+        padding: 8px 0;
         margin: 0;
-        width: auto;
         border-radius: 8px;
         justify-content: center;
+        align-items: center;
+        text-align: center;
     }
 
     .nav-icon-img {
@@ -4759,6 +4761,13 @@ body.dark-mode .review-slide-author {
     .btn-search-home {
         width: 100%;
         border-radius: 12px;
+        padding: 16px 20px !important; 
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+        font-size: 1.1rem !important;
+        margin-top: 5px;
     }
 
     /* 6. Sliders (Logos & Reviews) */
@@ -4767,7 +4776,7 @@ body.dark-mode .review-slide-author {
     }
     
     .full-width-section {
-        width: 100vw;
+        width: calc(100% + 30px);
         margin-left: -15px; /* Adjust to negative padding of content-home */
         margin-right: -15px;
     }
