@@ -355,7 +355,7 @@ const CriarEvento = () => {
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClick(e); }}
                 style={{ 
                     width: '100%', 
-                    minWidth: '500px', 
+                    minWidth: '0px', 
                     boxSizing: 'border-box',
                     height: '48px',               
                     borderRadius: '12px',         
@@ -459,7 +459,7 @@ const CriarEvento = () => {
                                 boxSizing: 'border-box'
                             }}>
                                 {/* Data do Evento */}
-                                <div className="form-group" style={{ flex: 1 }}>
+                                <div className="form-group" style={{ flex: 1, minWidth: '200px' }}>
                                     <label className="event-metadata-label" style={{ marginBottom: '6px', display: 'block', fontWeight: '600' }}>{t('eventos.data_evento')}</label>
                                     <div className="datepicker-anchor" style={{ width: '100%' }}>
                                         <DatePicker
@@ -473,7 +473,7 @@ const CriarEvento = () => {
                                 </div>
 
                                 {/* Capacidade */}
-                                <div className="form-group" style={{ flex: 1 }}>
+                                <div className="form-group" style={{ flex: 1, minWidth: '200px' }}>
                                     <label className="event-metadata-label" style={{ marginBottom: '6px', display: 'block', fontWeight: '600' }}>{t('eventos.capacidade')}</label>
                                     <select
                                         className="input-beige text-black event-metadata-select"
