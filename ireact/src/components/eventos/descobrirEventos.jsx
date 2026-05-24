@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import '../../css/styles.css';
 import axios from 'axios';
 import { useEffect } from 'react';
-import { useState, forwardRef } from 'react'; // 1. ADDED forwardRef HERE
+import { useState, forwardRef } from 'react';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
 import DatePicker from 'react-datepicker';
@@ -16,6 +16,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 import DisplayCard from '../maincomponents/DisplayCard.jsx';
 import Footer from '../maincomponents/Footer.jsx';
+import SearchBar from '../maincomponents/SearchBar.jsx';
 
 const ExplorarEventos = () => {
     const { t, language } = useLanguage();
@@ -141,16 +142,11 @@ const ExplorarEventos = () => {
                     <div className="profile-grid event-grid-full">
                         <h1 className="page-title-underline">{t('eventos.descobrir_eventos')}</h1>
                             <div className="recipes-action-bar">
-                                <div className="recipes-search-container">
-                                    <input
-                                        type="text"
-                                        placeholder={t('eventos.pesquisar_eventos')}
-                                        className="main-search-input recipe-search-box"
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-                                    />
-                                    <img src={iconeLupa} alt="Lupa" className="recipe-icon-svg search-icon-pos" />
-                                </div>
+                                <SearchBar
+                                    placeholder={t('eventos.pesquisar_eventos')}
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
                                 
                                 <div className="recipes-button-group">
                                     <div className="datepicker-anchor">
@@ -162,6 +158,10 @@ const ExplorarEventos = () => {
                                                 customInput={<CustomCalendarInput />}
                                                 popperPlacement="bottom-end"
                                                 popperModifiers={[
+                                                    {
+                                                        name: "flip",
+                                                        enabled: false
+                                                    },
                                                     {
                                                         name: "preventOverflow",
                                                         options: { 
