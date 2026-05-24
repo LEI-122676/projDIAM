@@ -10,29 +10,23 @@ def get_role(request):
         return 'User'
 
 class EventoACL(permissions.BasePermission):
-    def has_permission(self, request, view):
-        role = get_role(request)
-        if request.method in permissions.SAFE_METHODS:
-            return True # Admin, User, Guest, EventOrganizer can Read
-        if role in ['Admin', 'EventOrganizer']:
-            return True # CRUD
-        if role == 'User' and request.method in ['PUT', 'PATCH']:
-            return True # RU
-        return False
-
     def has_object_permission(self, request, view, obj):
         role = get_role(request)
+        
+
         if role == 'Admin':
             return True
+        
         if request.method in permissions.SAFE_METHODS:
             return True
+
+        if request.method == 'PATCH' and set(request.data.keys()) == {'inscritos'}:
+            return request.user.is_authenticated
+
         if role == 'EventOrganizer':
             if request.method in ['PUT', 'PATCH', 'DELETE']:
                 return obj.criador.user == request.user
-            return True
-        if role == 'User':
-            if request.method in ['PUT', 'PATCH']:
-                return True
+        
         return False
 
 class UtilizadorACL(permissions.BasePermission):
