@@ -377,7 +377,7 @@ const VerReceita = () => {
                                 )}
                             </div>
 
-                            <div className="recipe-steps-nav">
+                            <div className="recipe-steps-nav" style={{ width: '100%', maxWidth: '100%' }}>
                                 {receita.instrucao.map((passo, index) => (
                                     <div
                                         key={index}
