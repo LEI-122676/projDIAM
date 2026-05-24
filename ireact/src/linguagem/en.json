@@ -361,7 +361,17 @@
     "morango": "Strawberry",
     "chocolate": "Chocolate",
     "canela": "Cinnamon",
-    "salsa": "Parsley"
+    "salsa": "Parsley",
+    "carne_de_vaca": "Beef",
+    "porco": "Pork",
+    "salmao": "Salmon",
+    "atum": "Tuna",
+    "ovo": "Egg",
+    "massa": "Pasta",
+    "grao": "Chickpeas",
+    "coentros": "Coriander",
+    "chourico": "Chorizo",
+    "farinheira": "Farinheira"
   },
   "admin": {
     "gerir_utilizadores": "Manage Users",

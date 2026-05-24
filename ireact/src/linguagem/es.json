@@ -361,7 +361,17 @@
     "morango": "Fresa",
     "chocolate": "Chocolate",
     "canela": "Canela",
-    "salsa": "Perejil"
+    "salsa": "Perejil",
+    "carne_de_vaca": "Carne de Vacuno",
+    "porco": "Cerdo",
+    "salmao": "Salmón",
+    "atum": "Atún",
+    "ovo": "Huevo",
+    "massa": "Pasta",
+    "grao": "Garbanzos",
+    "coentros": "Cilantro",
+    "chourico": "Chorizo",
+    "farinheira": "Farinheira"
   },
   "admin": {
     "gerir_utilizadores": "Gestionar Usuarios",

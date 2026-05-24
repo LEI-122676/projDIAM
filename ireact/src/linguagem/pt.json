@@ -361,7 +361,17 @@
     "morango": "Morango",
     "chocolate": "Chocolate",
     "canela": "Canela",
-    "salsa": "Salsa"
+    "salsa": "Salsa",
+    "carne_de_vaca": "Carne de Vaca",
+    "porco": "Porco",
+    "salmao": "Salmão",
+    "atum": "Atum",
+    "ovo": "Ovo",
+    "massa": "Massa",
+    "grao": "Grão",
+    "coentros": "Coentros",
+    "chourico": "Chouriço",
+    "farinheira": "Farinheira"
   },
   "admin": {
     "gerir_utilizadores": "Gerir Utilizadores",
