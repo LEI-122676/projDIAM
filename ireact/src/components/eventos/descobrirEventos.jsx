@@ -155,19 +155,18 @@ const ExplorarEventos = () => {
                                                 onChange={(date) => setStartDate(date)}
                                                 dateFormat="MM/yyyy"
                                                 showMonthYearPicker
+                                                renderMonthContent={(month, shortMonth, longMonth, day) => {
+                                                    return t(`eventos.meses.${month}`);
+                                                }}
                                                 customInput={<CustomCalendarInput />}
                                                 popperPlacement="bottom-end"
+                                                showPopperArrow={false}
                                                 popperModifiers={[
-                                                    {
-                                                        name: "flip",
-                                                        enabled: false
-                                                    },
-                                                    {
-                                                        name: "preventOverflow",
-                                                        options: { 
-                                                            boundary: "viewport",
-                                                            altAxis: true 
-                                                        }
+                                                    { name: "flip", enabled: false },
+                                                    { 
+                                                        name: "preventOverflow", 
+                                                        enabled: true,
+                                                        options: { boundary: "viewport", altAxis: true, padding: 10 }
                                                     }
                                                 ]}
                                             />

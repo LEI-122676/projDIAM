@@ -11,6 +11,7 @@ import Pagination from '../maincomponents/pagination.jsx';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 import DisplayCard from '../maincomponents/DisplayCard.jsx';
 import Footer from '../maincomponents/Footer.jsx';
+import SearchBar from '../maincomponents/SearchBar.jsx';
 
 const ExplorarReceitas = () => {
     const navigate = useNavigate();
@@ -180,16 +181,11 @@ const ExplorarReceitas = () => {
                         <h1 className="page-title-underline">{t('receitas.explorar_titulo')}</h1>
 
                         <div className="recipes-action-bar">
-                            <div className="recipes-search-container">
-                                <input
-                                    type="text"
-                                    placeholder={t('receitas.pesquisar_placeholder')}
-                                    className="main-search-input recipe-search-box text-black"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                />
-                                <img src={iconeLupa} alt="Lupa" className="recipe-icon-svg search-icon-pos" />
-                            </div>
+                            <SearchBar
+                                placeholder={t('receitas.pesquisar_placeholder')}
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
 
                             <div className="recipes-button-group">
                                 <div className={`rating-filter-wrapper ${ratingFilter !== 'all' ? 'active' : ''}`}>

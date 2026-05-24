@@ -11,6 +11,7 @@ import Pagination from '../maincomponents/pagination.jsx';
 import DisplayCard from '../maincomponents/DisplayCard.jsx';
 import Footer from '../maincomponents/Footer.jsx';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
+import SearchBar from '../maincomponents/SearchBar.jsx';
 
 const AsMinhasReceitas = () => {
     const navigate = useNavigate();
@@ -147,16 +148,11 @@ const AsMinhasReceitas = () => {
                         <h1 className="page-title-underline">{t('perfil.as_minhas_receitas')}</h1>
 
                         <div className="recipes-action-bar">
-                            <div className="recipes-search-container">
-                                <input
-                                    type="text"
-                                    placeholder={t('receitas.pesquisar_placeholder')}
-                                    className="main-search-input recipe-search-box text-black"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                />
-                                <img src={iconeLupa} alt="Lupa" className="recipe-icon-svg search-icon-pos" />
-                            </div>
+                            <SearchBar
+                                placeholder={t('receitas.pesquisar_placeholder')}
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
 
                             <div className="recipes-button-group">
                                 <button

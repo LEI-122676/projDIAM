@@ -9,6 +9,7 @@ import { getCSRFToken } from '../../utils/csrf.js';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
 import Footer from '../maincomponents/Footer.jsx';
+import SearchBar from '../maincomponents/SearchBar.jsx';
 
 const GerirUtilizadores = () => {
     const { t } = useLanguage();
@@ -19,6 +20,7 @@ const GerirUtilizadores = () => {
     const [utilizadores, setUtilizadores] = useState([]);
     const [originalUtilizadores, setOriginalUtilizadores] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchQuery, setSearchQuery] = useState('');
     const itemsPerPage = 10;
     const [popupConfig, setPopupConfig] = useState({
         isOpen: false,
@@ -151,11 +153,23 @@ const GerirUtilizadores = () => {
         });
     };
 
-    // Pagination logic
+    // Pagination and filtering logic
+    const filteredUsers = utilizadores.filter(u => {
+        const query = searchQuery.toLowerCase();
+        return (u.username || '').toLowerCase().includes(query) ||
+               (u.first_name || '').toLowerCase().includes(query) ||
+               (u.last_name || '').toLowerCase().includes(query) ||
+               (u.email || '').toLowerCase().includes(query);
+    });
+
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = utilizadores.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(utilizadores.length / itemsPerPage);
+    const currentItems = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery]);
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -172,7 +186,15 @@ const GerirUtilizadores = () => {
                         </button>
                     </div>
 
-                    <div className="premium-card" style={{ padding: '0', overflow: 'hidden', marginTop: '20px' }}>
+                    <div style={{ marginTop: '20px', marginBottom: '15px' }}>
+                        <SearchBar 
+                            placeholder={t('admin.tabela.username')}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="premium-card" style={{ padding: '0', overflow: 'hidden' }}>
                         <table className="users-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                             <thead style={{ backgroundColor: 'var(--brand-color)', color: '#fff' }}>
                                 <tr>
@@ -223,7 +245,7 @@ const GerirUtilizadores = () => {
                                         </tr>
                                     );
                                 })}
-                                {utilizadores.length === 0 && (
+                                {filteredUsers.length === 0 && (
                                     <tr>
                                         <td colSpan="5" className="admin-table-empty" style={{ padding: '15px', textAlign: 'center' }}>{t('admin.tabela.vazio')}</td>
                                     </tr>
@@ -233,7 +255,7 @@ const GerirUtilizadores = () => {
                         {totalPages > 1 && (
                             <Pagination 
                                 currentPage={currentPage}
-                                totalItems={utilizadores.length}
+                                totalItems={filteredUsers.length}
                                 itemsPerPage={itemsPerPage}
                                 onPageChange={paginate}
                             />
