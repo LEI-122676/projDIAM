@@ -46,5 +46,3 @@ python manage.py migrate
 # 5. Iniciar o servidor (em http://localhost:8000)
 python manage.py runserver
 ```
-
-> **Aviso:** Se mais tarde adicionarem mais pacotes de Python, lembrem-se de criar um ficheiro `requirements.txt` correndo `pip freeze > requirements.txt`! Se esse ficheiro existir, basta fazer instalá-lo com `pip install -r requirements.txt` no passo 3.
