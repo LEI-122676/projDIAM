@@ -4614,7 +4614,7 @@ body.dark-mode .review-slide-author {
         padding-bottom: 90px !important;
     }
 
-    .home-container, .eventos-container, .receitas-container, .profile-container, .feedback-container {
+    .home-container, .eventos-container, .receitas-container, .profile-container {
         width: 100%;
         padding: 10px;
         margin: 0;
