@@ -408,7 +408,7 @@
     "cookies": "Cookies"
   },
   "dashboard": {
-    "titulo": "Dashboard (Admin)",
+    "titulo": "Dashboard",
     "a_carregar": "Loading data...",
     "total_respostas": "Total Feedback Responses",
     "medias_classificacao": "Average Ratings (1 to 5)",
