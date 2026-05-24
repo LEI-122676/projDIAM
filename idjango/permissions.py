@@ -25,7 +25,7 @@ class EventoACL(permissions.BasePermission):
 
         if role == 'EventOrganizer':
             if request.method in ['PUT', 'PATCH', 'DELETE']:
-                return obj.criador.user == request.user
+                return True
         
         return False
 
