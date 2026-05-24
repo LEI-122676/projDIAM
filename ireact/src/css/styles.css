@@ -821,6 +821,7 @@ body.dark-mode .slideshow-container {
     margin-bottom: 50px;
     width: 100%;
     max-width: 750px;
+    max-height: 80px;
 }
 
 .main-search-input {
@@ -1040,6 +1041,8 @@ body.dark-mode .slideshow-container {
     margin-bottom: 40px;
     gap: 20px;
     width: 100%;
+    position: relative;
+    z-index: 50;
 }
 
 /* 4. Contentor da Pesquisa */
@@ -1051,7 +1054,7 @@ body.dark-mode .slideshow-container {
 }
 
 /* Caixa de Input de Pesquisa */
-.recipe-search-box {
+.search-box {
     border: 1px solid var(--border-main) !important;
     border-radius: 10px !important;
     background-color: var(--bg-light) !important;
@@ -1182,7 +1185,7 @@ body.dark-mode .modal-text {
 }
 
 body.dark-mode .auth-input,
-body.dark-mode .recipe-search-box,
+body.dark-mode .search-box,
 body.dark-mode .event-search-box,
 body.dark-mode .input-group input,
 body.dark-mode textarea,
@@ -1622,7 +1625,7 @@ body.dark-mode .shortcut-card,
 body.dark-mode .quick-card,
 body.dark-mode .btn-filter-fridge:not(.active),
 body.dark-mode .auth-input,
-body.dark-mode .recipe-search-box,
+body.dark-mode .search-box,
 body.dark-mode .event-search-box,
 body.dark-mode .input-group input,
 body.dark-mode textarea,
@@ -2621,6 +2624,7 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 }
 .datepicker-anchor {
     position: relative;
+    z-index: 50;
 }
 
 /* Esconde o ícone nativo de relógio/calendário para não colidir com o teu layout */
@@ -2634,17 +2638,7 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
     cursor: pointer;
 }
 
-/* The actual injected container inside the popper */
-.react-datepicker-popper > div {
-    display: flex !important;
-    justify-content: flex-end !important; /* Aligns the inner calendar component to the right edge */
-}
-
-/* Ensuring the component itself respects the right-side alignment boundary */
-.react-datepicker {
-    left: auto !important;
-    right: 0 !important;
-}
+/* Removed bad flex overrides for DatePicker */
 .clear-date-btn {
     background: rgba(139, 75, 75, 0.1);
     border: none;
@@ -2688,18 +2682,15 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
 
 .react-datepicker-wrapper {
     display: inline-block;
-    position: relative; /* Provides a local positioning boundary context */
 }
 
 .react-datepicker-popper {
     z-index: 9999 !important;
-    position: absolute !important;
-    bottom: 100% !important;       /* Aligns bottom edge of calendar with top edge of button */
-    top: auto !important;          /* Clears default top alignments */
+    top: 100% !important;
+    right: 0 !important;
     left: auto !important;
-    right: -100px    !important;           /* Snaps perfectly to the right side of the field (top-end layout) */
-    transform: none !important;    /* Safely bypasses dynamic positioning calculations */
-    margin-bottom: 12px !important; /* Adds visual breathing room between calendar and button */
+    transform: none !important;
+    margin-top: 8px !important;
 }
 .create-recipe-container {
     display: flex;
@@ -3741,7 +3732,7 @@ body.dark-mode .btn-cancel:hover, body.dark-mode .btn-cancel-small:hover, body.d
 }
 
 /* --- PREMIUM INPUT FIELDS (Barras de escrever e comentários) --- */
-.auth-input, .search-container, .recipe-search-box, .comment-textarea, .input-beige {
+.auth-input, .search-container, .search-box, .comment-textarea, .input-beige {
     background-color: rgba(255, 255, 255, 0.5) !important;
     backdrop-filter: blur(12px) !important;
     border: 1px solid rgba(0, 0, 0, 0.1) !important;
@@ -3750,20 +3741,20 @@ body.dark-mode .btn-cancel:hover, body.dark-mode .btn-cancel-small:hover, body.d
     transition: all 0.3s ease !important;
 }
 
-.auth-input:focus, .search-container:focus-within, .recipe-search-box:focus, .comment-textarea:focus, .input-beige:focus {
+.auth-input:focus, .search-container:focus-within, .search-box:focus, .comment-textarea:focus, .input-beige:focus {
     background-color: rgba(255, 255, 255, 0.85) !important;
     border-color: var(--brand-color) !important;
     box-shadow: 0 0 15px rgba(0,0,0,0.05), inset 0 2px 4px rgba(0,0,0,0.05) !important;
 }
 
-body.dark-mode .auth-input, body.dark-mode .search-container, body.dark-mode .recipe-search-box, body.dark-mode .comment-textarea, body.dark-mode .input-beige {
+body.dark-mode .auth-input, body.dark-mode .search-container, body.dark-mode .search-box, body.dark-mode .comment-textarea, body.dark-mode .input-beige {
     background-color: rgba(0, 0, 0, 0.3) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     color: var(--gray-light) !important;
     box-shadow: inset 0 2px 5px rgba(0,0,0,0.2) !important;
 }
 
-body.dark-mode .auth-input:focus, body.dark-mode .search-container:focus-within, body.dark-mode .recipe-search-box:focus, body.dark-mode .comment-textarea:focus, body.dark-mode .input-beige:focus {
+body.dark-mode .auth-input:focus, body.dark-mode .search-container:focus-within, body.dark-mode .search-box:focus, body.dark-mode .comment-textarea:focus, body.dark-mode .input-beige:focus {
     background-color: rgba(0, 0, 0, 0.6) !important;
     border-color: rgba(255, 255, 255, 0.3) !important;
     box-shadow: 0 0 15px rgba(0,0,0,0.3), inset 0 2px 5px rgba(0,0,0,0.2) !important;
@@ -4191,7 +4182,6 @@ body.dark-mode .theme-toggle-btn {
     box-shadow: 0 10px 25px rgba(74, 58, 49, 0.15) !important;
     color: var(--text-primary) !important;
     overflow: hidden;
-    width: 320px !important;
 }
 
 .react-datepicker__month {
