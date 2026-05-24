@@ -213,6 +213,7 @@ const FeedbackPage = () => {
                                     {['Receitas', 'Eventos', 'Frigorifico', 'Estetica'].map(f => (
                                         <button key={f} 
                                                 className={`btn-profile-pill ${funcFavorita === f ? '' : 'secondary'}`}
+                                                style={{ padding: '12px 24px', fontSize: '1rem', flex: '1 1 120px' }}
                                                 onClick={() => setFuncFavorita(f)}>
                                             {f === 'Frigorifico' ? t('feedback.frigorifico') : f === 'Estetica' ? t('feedback.estetica') : f === 'Receitas' ? t('feedback.receitas') : t('feedback.eventos')}
                                         </button>
