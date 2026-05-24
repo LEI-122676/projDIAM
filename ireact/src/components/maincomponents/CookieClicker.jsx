@@ -307,11 +307,7 @@ const CookieClicker = ({ sidebarOpen }) => {
         </span>
       </div>
 
-      <div className="cliques-display" style={{ marginTop: '8px' }}>
-        {sidebarOpen && (
-          <span className="counter-label">{t('cookies.cliques')}</span>
-        )}
-      </div>
+      
     </div>
   );
 };
