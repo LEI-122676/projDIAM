@@ -9,7 +9,6 @@ import { getCSRFToken } from '../../utils/csrf.js';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
 import Footer from '../maincomponents/Footer.jsx';
-import SearchBar from '../maincomponents/SearchBar.jsx';
 
 const GerirUtilizadores = () => {
     const { t } = useLanguage();
@@ -20,7 +19,6 @@ const GerirUtilizadores = () => {
     const [utilizadores, setUtilizadores] = useState([]);
     const [originalUtilizadores, setOriginalUtilizadores] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [searchQuery, setSearchQuery] = useState('');
     const itemsPerPage = 10;
     const [popupConfig, setPopupConfig] = useState({
         isOpen: false,
@@ -153,23 +151,11 @@ const GerirUtilizadores = () => {
         });
     };
 
-    // Pagination and filtering logic
-    const filteredUsers = utilizadores.filter(u => {
-        const query = searchQuery.toLowerCase();
-        return (u.username || '').toLowerCase().includes(query) ||
-               (u.first_name || '').toLowerCase().includes(query) ||
-               (u.last_name || '').toLowerCase().includes(query) ||
-               (u.email || '').toLowerCase().includes(query);
-    });
-
+    // Pagination logic
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
-
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [searchQuery]);
+    const currentItems = utilizadores.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(utilizadores.length / itemsPerPage);
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -186,83 +172,82 @@ const GerirUtilizadores = () => {
                         </button>
                     </div>
 
-                    <div style={{ marginTop: '20px', marginBottom: '15px' }}>
-                        <SearchBar 
-                            placeholder={t('admin.tabela.username')}
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                    </div>
-
-                    <div className="premium-card" style={{ padding: '0', overflow: 'hidden' }}>
-                        <table className="users-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                            <thead style={{ backgroundColor: 'var(--brand-color)', color: '#fff' }}>
-                                <tr>
-                                    <th style={{ padding: '15px' }}>{t('admin.tabela.username')}</th>
-                                    <th style={{ padding: '15px' }}>{t('admin.tabela.nome_completo')}</th>
-                                    <th style={{ padding: '15px' }}>{t('admin.tabela.email')}</th>
-                                    <th style={{ padding: '15px' }}>{t('admin.tabela.permissao')}</th>
-                                    <th style={{ padding: '15px' }}>{t('admin.tabela.acoes')}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {currentItems.map(user => {
-                                    const origUser = originalUtilizadores.find(u => u.id === user.id);
-                                    const hasChanges = origUser && origUser.role !== user.role;
-
-                                    return (
-                                        <tr key={user.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
-                                            <td style={{ padding: '15px', fontWeight: 'bold' }}>{user.username}</td>
-                                            <td style={{ padding: '15px' }}>{user.first_name} {user.last_name}</td>
-                                            <td style={{ padding: '15px' }}>{user.email}</td>
-                                            <td style={{ padding: '15px' }}>
-                                                <select
-                                                    className="admin-role-select"
-                                                    value={user.role}
-                                                    onChange={(e) => handleRoleChange(user.id, e.target.value)}
-                                                >
-                                                    <option value="User">User</option>
-                                                    <option value="EventOrganizer">EventOrganizer</option>
-                                                    <option value="Admin">Admin</option>
-                                                </select>
-                                            </td>
-                                            <td style={{ padding: '15px' }}>
-                                                <button
-                                                    className="admin-btn-save"
-                                                    disabled={!hasChanges}
-                                                    onClick={() => handleSaveRole(user)}
-                                                >
-                                                    {t('admin.botoes.guardar')}
-                                                </button>
-                                                <button
-                                                    className="admin-btn-delete"
-                                                    style={{ marginLeft: '10px' }}
-                                                    onClick={() => handleDeleteUser(user)}
-                                                >
-                                                    {t('admin.botoes.eliminar')}
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                                {filteredUsers.length === 0 && (
+                    <div style={{ marginTop: '20px' }}>
+                        <div className="premium-card" style={{ padding: '0', overflow: 'hidden' }}>
+                            {/* FIX: tableLayout: 'fixed' added here */}
+                            <table className="users-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', tableLayout: 'fixed' }}>
+                                <thead style={{ backgroundColor: 'var(--brand-color)', color: '#fff' }}>
                                     <tr>
-                                        <td colSpan="5" className="admin-table-empty" style={{ padding: '15px', textAlign: 'center' }}>{t('admin.tabela.vazio')}</td>
+                                        {/* FIX: Width percentages added to prevent columns from crushing each other */}
+                                        <th style={{ padding: '15px', width: '20%' }}>{t('admin.tabela.username')}</th>
+                                        <th style={{ padding: '15px', width: '25%' }}>{t('admin.tabela.nome_completo')}</th>
+                                        <th style={{ padding: '15px', width: '25%' }}>{t('admin.tabela.email')}</th>
+                                        <th style={{ padding: '15px', width: '15%' }}>{t('admin.tabela.permissao')}</th>
+                                        <th style={{ padding: '15px', width: '15%' }}>{t('admin.tabela.acoes')}</th>
                                     </tr>
-                                )}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {currentItems.map(user => {
+                                        const origUser = originalUtilizadores.find(u => u.id === user.id);
+                                        const hasChanges = origUser && origUser.role !== user.role;
+
+                                        return (
+                                            <tr key={user.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
+                                                {/* FIX: wordBreak and overflowWrap added to all text-heavy cells */}
+                                                <td style={{ padding: '15px', fontWeight: 'bold', wordBreak: 'break-word', overflowWrap: 'break-word' }}>{user.username}</td>
+                                                <td style={{ padding: '15px', wordBreak: 'break-word', overflowWrap: 'break-word' }}>{user.first_name} {user.last_name}</td>
+                                                <td style={{ padding: '15px', wordBreak: 'break-word', overflowWrap: 'break-word' }}>{user.email}</td>
+                                                <td style={{ padding: '15px' }}>
+                                                    <select
+                                                        className="admin-role-select"
+                                                        value={user.role}
+                                                        onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                                                        style={{ width: '100%' }}
+                                                    >
+                                                        <option value="User">User</option>
+                                                        <option value="EventOrganizer">EventOrganizer</option>
+                                                        <option value="Admin">Admin</option>
+                                                    </select>
+                                                </td>
+                                                <td style={{ padding: '15px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                                                    <button
+                                                        className="admin-btn-save"
+                                                        disabled={!hasChanges}
+                                                        onClick={() => handleSaveRole(user)}
+                                                    >
+                                                        {t('admin.botoes.guardar')}
+                                                    </button>
+                                                    <button
+                                                        className="admin-btn-delete"
+                                                        onClick={() => handleDeleteUser(user)}
+                                                    >
+                                                        {t('admin.botoes.eliminar')}
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                    {utilizadores.length === 0 && (
+                                        <tr>
+                                            <td colSpan="5" className="admin-table-empty" style={{ padding: '15px', textAlign: 'center' }}>{t('admin.tabela.vazio')}</td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+
                         {totalPages > 1 && (
                             <Pagination 
                                 currentPage={currentPage}
-                                totalItems={filteredUsers.length}
+                                totalItems={utilizadores.length}
                                 itemsPerPage={itemsPerPage}
                                 onPageChange={paginate}
                             />
                         )}
                     </div>
+                    
                     <div className="footer-spacer"></div>
-          <Footer />
+                    <Footer />
                 </main>
             </div>
 
