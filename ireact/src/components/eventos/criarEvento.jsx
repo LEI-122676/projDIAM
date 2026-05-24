@@ -402,7 +402,9 @@ const CriarEvento = () => {
             <div className="main-wrapper">
                 <Sidebar />
                 <main className="content-profile">
-                    <h1 className="page-title-underline" style={{ width: 'fit-content' }}>{editEvento ? t('eventos.editar_evento') : t('eventos.criar_evento')}</h1>
+                    <div>
+                        <h1 className="page-title-underline">{editEvento ? t('eventos.editar_evento') : t('eventos.criar_evento')}</h1>
+                    </div>
                     <form onSubmit={handleSubmit} style={{ width: '100%' }}>
 
                     <div className="create-recipe-container">
@@ -577,7 +579,7 @@ const CriarEvento = () => {
                                                 </button>
                                             </div>
                                         ))}
-                                        <button type="button" className="btn-add-dashed" style= {{ width: '100%', height: '45px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={handleAddAtividade}>
+                                        <button type="button" className="btn-add-dashed" style= {{ width: '100%', height: '45px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={handleAddAtividade}>
                                             {t('eventos.adicionar_atividade')}
                                         </button>
                                     </div>
