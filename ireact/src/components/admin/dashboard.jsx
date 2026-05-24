@@ -5,7 +5,7 @@ import Header from '../maincomponents/header.jsx';
 import Sidebar from '../maincomponents/sidebar.jsx';
 import PopupModal from '../maincomponents/popupModal.jsx';
 import Pagination from '../maincomponents/pagination.jsx';
-import Footer from '../maincomponents/footer.jsx';
+import Footer from '../maincomponents/Footer.jsx';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 import SearchBar from '../maincomponents/SearchBar.jsx';
 import '../../css/styles.css';
