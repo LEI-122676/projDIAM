@@ -149,11 +149,6 @@ const Perfil = () => {
                 <div className="shortcut-card" onClick={() => navigate('/perfil/meus-eventos')}>
                   {t('perfil.os_meus_eventos')}
                 </div>
-                {userData.role === 'Admin' && (
-                  <div className="shortcut-card" onClick={() => navigate('/admin/gerir-utilizadores')}>
-                    {t('perfil.gerir_utilizadores')}
-                  </div>
-                )}
               </div>
 
             </div>
@@ -162,7 +157,7 @@ const Perfil = () => {
             
             <div className="footer-spacer"></div>
           <Footer />
-                </main>
+        </main>
       </div>
       <PopupModal 
         isOpen={popupConfig.isOpen}

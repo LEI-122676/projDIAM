@@ -101,6 +101,12 @@ const EditarPerfil = () => {
       return;
     }
 
+    const emailValidation = validateInput(email, limits.user_email_max_length || 254);
+    if (!emailValidation.isValid) {
+      showPopup(t('receitas.popups.erro_validacao_titulo'), `${t('perfil.email')}: ${emailValidation.error}`);
+      return;
+    }
+
     const nameValidation = validateInput(firstName, limits.user_first_name_max_length || 30);
     if (!nameValidation.isValid) {
       showPopup(t('receitas.popups.erro_validacao_titulo'), `${t('perfil.nome')}: ${nameValidation.error}`);
@@ -155,15 +161,7 @@ const EditarPerfil = () => {
         withCredentials: true
       });
 
-      setPopupConfig({
-        isOpen: true,
-        title: t('perfil.popups.perfil_atualizado_titulo'),
-        message: t('perfil.popups.perfil_atualizado_msg'),
-        singleButton: true,
-        confirmText: t('comum.ok'),
-        onConfirm: () => navigate('/perfil'), 
-        onCancel: () => navigate('/perfil')
-      });
+      navigate('/perfil');
 
     } catch (err) {
       console.error(err);
@@ -205,13 +203,14 @@ const EditarPerfil = () => {
                 />
               </div>
               <div className="form-group">
-                <label>{t('perfil.email')}:</label>
+                <label>{t('perfil.email')} <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'normal' }}>({email.length}/{limits.user_email_max_length || 254})</span>:</label>
                 <input 
                   type="email" 
                   className="input-beige text-black" 
                   placeholder={userData.email || t('perfil.exemplo_email')} 
                   value={email} 
                   onChange={(e) => setEmail(e.target.value)} 
+                  maxLength={limits.user_email_max_length || 254}
                 />
               </div>
               <div className="form-group">

@@ -7,6 +7,7 @@ import iconeEventos from '../../assets/calendario.svg';
 import iconeFrigorifico from '../../assets/frigorifico.svg';
 import iconePerfil from '../../assets/perfil.svg';
 import iconeDashboard from '../../assets/dashboard.svg';
+import iconeGerirUsers from '../../assets/edit-user.svg';
 import CookieClicker from './CookieClicker.jsx';
 import { useLanguage } from '../../linguagem/LanguageContext.jsx';
 
@@ -79,10 +80,16 @@ const Sidebar = () => {
         </li>
         
         {userRole === 'Admin' && (
-          <li className="nav-item" onClick={() => navigate('/admin/dashboard')}>
-            <img src={iconeDashboard} alt="Dashboard" className="nav-icon-img" />
-            {isOpen && <span className="nav-text">Dashboard</span>}
-          </li>
+          <>
+            <li className="nav-item" onClick={() => navigate('/admin/dashboard')}>
+              <img src={iconeDashboard} alt="Dashboard" className="nav-icon-img" />
+              {isOpen && <span className="nav-text">Dashboard</span>}
+            </li>
+            <li className="nav-item" onClick={() => navigate('/admin/gerir-utilizadores')}>
+              <img src={iconeGerirUsers} alt="Gerir Utilizadores" className="nav-icon-img" />
+              {isOpen && <span className="nav-text">{t('admin.gerir_utilizadores') || 'Gerir Utilizadores'}</span>}
+            </li>
+          </>
         )}
       </ul>
 
