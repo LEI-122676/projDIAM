@@ -585,22 +585,7 @@ body.dark-mode .btn-logout-link:hover {
     font-family: serif; /* Estilo mais elegante para o "OR" */
 }
 
-@media (max-width: 900px) {
-    .auth-divider {
-        flex-direction: row;
-        width: 100%;
-        max-width: 400px;
-        min-height: 40px;
-    }
-    .auth-divider::before,
-    .auth-divider::after {
-        height: 1px;
-        width: auto;
-    }
-    .auth-divider span {
-        padding: 0 20px;
-    }
-}
+
 
 
 /* --- HOME PAGE STYLES --- */
@@ -784,22 +769,7 @@ body.dark-mode .slideshow-container {
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
 }
 
-@media (max-width: 768px) {
-    .slideshow-container {
-        height: 300px;
-    }
-    .slide-title {
-        font-size: 1.6rem;
-    }
-    .slide-description {
-        font-size: 0.95rem;
-    }
-    .slideshow-arrow {
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
-    }
-}
+
 
 .home-welcome-title {
     font-size: 50px;
@@ -1847,23 +1817,11 @@ body.dark-mode .rating-filter-wrapper.active .recipe-icon-svg {
     width: 100%;
 }
 
-@media (max-width: 1200px) {
-    .recipes-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
 
-@media (max-width: 900px) {
-    .recipes-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
 
-@media (max-width: 600px) {
-    .recipes-grid {
-        grid-template-columns: 1fr;
-    }
-}
+
+
+
 
 /* Card Individual */
 .recipe-card {
@@ -4525,7 +4483,43 @@ body.dark-mode .review-slide-author {
 /* ==========================================================================
    ANDROID & MOBILE RESPONSIVENESS (MAX-WIDTH: 768PX)
    ========================================================================== */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+    /* -- SMARTPHONE VERTICAL STACKING OVERRIDES -- */
+    .recipes-grid { grid-template-columns: 1fr !important; }
+    .create-recipe-container { flex-direction: column !important; }
+    .auth-container { flex-direction: column !important; }
+    .main-wrapper { flex-direction: column !important; }
+    .home-quick-actions { flex-direction: column !important; }
+    .recipe-top-row, .recipe-bottom-row { flex-direction: column !important; }
+    .fridge-form { flex-direction: column !important; align-items: stretch !important; }
+    
+    /* Profile Mobile Fixes */
+    .profile-layout-container { flex-direction: column !important; }
+    .profile-details-card { min-width: 0 !important; width: 100% !important; }
+    .profile-shortcuts-grid { grid-template-columns: 1fr !important; width: 100% !important; }
+    
+    /* Fix filters and search bars */
+    .recipes-action-bar { flex-direction: column !important; align-items: stretch !important; gap: 15px !important; }
+    .recipes-search-container { max-width: 100% !important; }
+    .recipes-button-group { flex-direction: column !important; width: 100% !important; gap: 15px !important; }
+    .recipes-button-group > * { width: 100% !important; justify-content: center !important; }
+    
+    .auth-divider {
+        flex-direction: row;
+        width: 100%;
+        max-width: 400px;
+        min-height: 40px;
+    }
+    .auth-divider::before,
+    .auth-divider::after {
+        height: 1px;
+        width: auto;
+    }
+    .slideshow-container { height: 300px; }
+    .slide-title { font-size: 1.6rem; }
+    .slide-description { font-size: 0.95rem; }
+    .slideshow-arrow { width: 40px; height: 40px; font-size: 1.2rem; }
+    
     /* 1. Global Resets for Touch and Narrow Screens */
     html, body {
         overflow-x: hidden;
