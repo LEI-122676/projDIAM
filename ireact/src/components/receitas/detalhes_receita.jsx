@@ -430,9 +430,10 @@ const VerReceita = () => {
 
                             <div className="recipe-descriptions-column recipe-col-2">
                                 {receita.instrucao.map((passo, index) => {
-                                    const hasPrefix = passo.match(/^(Passo \d+:\s*|Step \d+:\s*|Paso \d+:\s*)(.*)/i);
+                                    const text = typeof passo === 'string' ? passo : (passo.descricao || JSON.stringify(passo));
+                                    const hasPrefix = typeof text === 'string' ? text.match(/^(Passo \d+:\s*|Step \d+:\s*|Paso \d+:\s*)(.*)/i) : null;
                                     const subtitle = `${t('receitas.detalhes.passo')} ${index + 1}`;
-                                    const description = hasPrefix ? hasPrefix[2] : passo;
+                                    const description = hasPrefix ? hasPrefix[2] : text;
 
                                     return (
                                         <div key={index} id={`passo-${index}`} className="step-detail mb-15">

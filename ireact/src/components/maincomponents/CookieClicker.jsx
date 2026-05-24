@@ -134,7 +134,18 @@ const CookieClicker = ({ sidebarOpen }) => {
     }
   }, [utilizadorId]);
 
-  // Periodic synchronization interval (every 3 seconds)
+  const [syncIntervalMs, setSyncIntervalMs] = useState(3000);
+
+  useEffect(() => {
+    fetch('/refresh_intervals.json')
+      .then(res => res.json())
+      .then(data => {
+        if (data.cookie_clicker_sync_ms) setSyncIntervalMs(data.cookie_clicker_sync_ms);
+      })
+      .catch(err => console.error("Error loading refresh config:", err));
+  }, []);
+
+  // Periodic synchronization interval
   useEffect(() => {
     if (!isLoaded) return;
 
@@ -163,10 +174,10 @@ const CookieClicker = ({ sidebarOpen }) => {
           console.error("Error syncing cookie clicks:", err);
         });
       }
-    }, 3000);
+    }, syncIntervalMs);
 
     return () => clearInterval(intervalId);
-  }, [isLoaded, utilizadorId]);
+  }, [isLoaded, utilizadorId, syncIntervalMs]);
 
   // Sync on unmount
   useEffect(() => {

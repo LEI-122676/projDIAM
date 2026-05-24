@@ -9,13 +9,27 @@ const CookieLeaderboard = () => {
     const [loading, setLoading] = useState(true);
     const { t } = useLanguage();
 
+    const [refreshInterval, setRefreshInterval] = useState(10000);
+    const URL_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/idjango/api';
+
     useEffect(() => {
-        const URL_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/idjango/api';
-        
+        // Fetch refresh interval
+        fetch('/refresh_intervals.json')
+            .then(res => res.json())
+            .then(data => {
+                if (data.cookie_leaderboard_refresh_ms) {
+                    setRefreshInterval(data.cookie_leaderboard_refresh_ms);
+                }
+            })
+            .catch(err => console.error("Error loading refresh config:", err));
+    }, []);
+
+    useEffect(() => {
         const fetchLeaderboard = () => {
             axios.get(`${URL_BASE}/cookie-leaderboard/`)
                 .then(res => {
-                    setLeaderboard(res.data);
+                    const sortedData = res.data.sort((a, b) => b.cookie_clicks - a.cookie_clicks);
+                    setLeaderboard(sortedData);
                     setLoading(false);
                 })
                 .catch(err => {
@@ -24,14 +38,13 @@ const CookieLeaderboard = () => {
                 });
         };
 
-        // Fetch immediately on mount
         fetchLeaderboard();
 
-        // Auto-refresh every 10 seconds
-        const intervalId = setInterval(fetchLeaderboard, 10000);
-
+        // Refresh at specified interval
+        const intervalId = setInterval(fetchLeaderboard, refreshInterval);
+        
         return () => clearInterval(intervalId);
-    }, []);
+    }, [refreshInterval]);
 
     if (loading) return null; // Or a sleek skeleton loader
     if (!leaderboard) return null;

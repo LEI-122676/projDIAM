@@ -32,13 +32,24 @@ const Slideshow = () => {
     }
   }, []);
 
+  const [transitionIntervalMs, setTransitionIntervalMs] = useState(5000);
+
+  useEffect(() => {
+    fetch('/refresh_intervals.json')
+      .then(res => res.json())
+      .then(data => {
+        if (data.slideshow_transition_ms) setTransitionIntervalMs(data.slideshow_transition_ms);
+      })
+      .catch(err => console.error("Error loading refresh config:", err));
+  }, []);
+
   useEffect(() => {
     if (slides.length <= 1) return;
     const timer = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
-    }, 5000);
+    }, transitionIntervalMs);
     return () => clearInterval(timer);
-  }, [slides]);
+  }, [slides, transitionIntervalMs]);
 
   const handlePrev = () => {
     if (slides.length === 0) return;
