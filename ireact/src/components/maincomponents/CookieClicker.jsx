@@ -45,7 +45,8 @@ const CookieClicker = ({ sidebarOpen }) => {
   const URL_BASE = 'http://localhost:8000';
   const URL_UTILIZADORES = `${URL_BASE}/idjango/api/utilizadores/`;
   const URL_CLICK_SOUND = `${URL_BASE}/idjango/media/cookie-clicker-click-sound.mp3`;
-
+  
+  const syncIntervalMs = 3000;
   const [utilizadorId, setUtilizadorId] = useState(getSafeUserId);
 
   const [count, setCount] = useState(() => {
