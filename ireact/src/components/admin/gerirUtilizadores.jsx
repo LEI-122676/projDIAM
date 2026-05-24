@@ -173,9 +173,9 @@ const GerirUtilizadores = () => {
                     </div>
 
                     <div style={{ marginTop: '20px' }}>
-                        <div className="premium-card" style={{ padding: '0', overflow: 'hidden' }}>
+                        <div className="premium-card" style={{ padding: '0', overflowX: 'auto' }}>
                             {/* FIX: tableLayout: 'fixed' added here */}
-                            <table className="users-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', tableLayout: 'fixed' }}>
+                            <table className="users-table" style={{ width: '100%', minWidth: '800px', borderCollapse: 'collapse', textAlign: 'left', tableLayout: 'fixed' }}>
                                 <thead style={{ backgroundColor: 'var(--brand-color)', color: '#fff' }}>
                                     <tr>
                                         {/* FIX: Width percentages added to prevent columns from crushing each other */}

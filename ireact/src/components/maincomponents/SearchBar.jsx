@@ -13,7 +13,7 @@ const SearchBar = ({ value, onChange, placeholder, onSubmit, buttonText, classNa
                 onChange={onChange}
             />
             {buttonText ? (
-                <button type="submit" className="btn-search-home">
+                <button type="button" className="btn-search-home" onClick={onSubmit}>
                   {buttonText}
                 </button>
             ) : (
