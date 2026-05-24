@@ -356,7 +356,9 @@ const VerReceita = () => {
                 <main className="content-profile">
 
                     <div className="recipe-header-container">
-                        <h1 className="page-title-underline">{receita.nome}</h1>
+                        <div>
+                            <h1 className="page-title-underline">{receita.nome}</h1>
+                        </div>
                         <div className="recipe-rating-text">
                             ⭐ {(receita.classificacao !== undefined && receita.classificacao !== null && Number(receita.classificacao) > 0) ? Number(receita.classificacao).toFixed(1) : "0.0"} / 5
                         </div>
