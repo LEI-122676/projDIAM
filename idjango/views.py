@@ -6,6 +6,7 @@ from .serializers import *
 from .models import *
 import os
 
+
 #Imports de Autenticação
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -196,7 +197,7 @@ def avaliar_receita(request):
 @permission_classes([EventoACL])
 def eventos(request):
     if request.method == 'GET':
-        evento_list = Evento.objects.filter(is_active=True)
+        evento_list = Evento.objects.filter(is_active=True)[:QUERY_LIMIT]
         serializer = EventoSerializer(evento_list, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
@@ -390,7 +391,8 @@ def signup(request):
         password=password, 
         email=email,
         first_name=firstName,
-        last_name=lastName
+        last_name=lastName,
+        is_active=True
     )
 
     novo_frigorifico = Frigorifico.objects.create()
@@ -664,7 +666,7 @@ def csrf(request):
 @permission_classes([AllowAny])
 @authentication_classes([])
 def cookie_leaderboard(request):
-    top_utilizadores = Utilizador.objects.filter(is_active=True, user__is_active=True, cookie_clicks__gt=0).exclude(role='Guest').order_by('-cookie_clicks').values('user__username', 'cookie_clicks')[:5]
+    top_utilizadores = Utilizador.objects.filter(is_active=True, cookie_clicks__gt=0).exclude(role='Guest').order_by('-cookie_clicks').values('user__username', 'cookie_clicks')[:5]
     
     data = [
         {

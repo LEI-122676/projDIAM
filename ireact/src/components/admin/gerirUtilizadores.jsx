@@ -186,15 +186,7 @@ const GerirUtilizadores = () => {
                         </button>
                     </div>
 
-                    <div style={{ marginTop: '20px', marginBottom: '15px' }}>
-                        <SearchBar 
-                            placeholder={t('admin.tabela.username')}
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                    </div>
-
-                    <div className="premium-card" style={{ padding: '0', overflow: 'hidden' }}>
+                    <div className="premium-card" style={{ padding: '0', overflow: 'hidden', marginTop: '20px' }}>
                         <table className="users-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                             <thead style={{ backgroundColor: 'var(--brand-color)', color: '#fff' }}>
                                 <tr>
@@ -245,7 +237,7 @@ const GerirUtilizadores = () => {
                                         </tr>
                                     );
                                 })}
-                                {filteredUsers.length === 0 && (
+                                {utilizadores.length === 0 && (
                                     <tr>
                                         <td colSpan="5" className="admin-table-empty" style={{ padding: '15px', textAlign: 'center' }}>{t('admin.tabela.vazio')}</td>
                                     </tr>
@@ -261,8 +253,9 @@ const GerirUtilizadores = () => {
                             />
                         )}
                     </div>
+                    
                     <div className="footer-spacer"></div>
-          <Footer />
+                    <Footer />
                 </main>
             </div>
 
